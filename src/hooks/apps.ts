@@ -12,30 +12,21 @@ export default (queryConfig: QueryClientConfig) => {
   };
 
   return {
-//     useApps: () =>
-//       useQuery({
-//         queryKey: APPS_KEY,
-//         queryFn: () => Api.getApps(queryConfig).then((data) => List(data)),
-//         ...defaultOptions,
-//       }),
-
     useAppResources: (
-        token: string,
-        apiHost: string,
-        itemId: string,
-        // reFetch: boolean,
+      token: string,
+      apiHost: string,
+      itemId: string,
+      // reFetch: boolean,
     ) => {
-        const cache = useQueryClient();
-        useQuery({
-            queryKey: RESOURCES_KEY,
-            queryFn: () => Api.useGetAppResources(token, apiHost, itemId),
-            ...defaultOptions,
-            onSuccess: () => {
-                cache.invalidateQueries(RESOURCES_KEY);
-            }
-        });
-
-    }
+      const cache = useQueryClient();
+      useQuery({
+        queryKey: RESOURCES_KEY,
+        queryFn: () => Api.useGetAppResources(token, apiHost, itemId),
+        ...defaultOptions,
+        onSuccess: () => {
+          cache.invalidateQueries(RESOURCES_KEY);
+        },
+      });
+    },
   };
 };
-

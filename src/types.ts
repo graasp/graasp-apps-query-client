@@ -1,11 +1,8 @@
-export type Notifier = (e: any) => void;
+export type Notifier = (e: unknown) => void;
 
 export type QueryClientConfig = {
   API_HOST: string;
-  S3_FILES_HOST: string;
   SHOW_NOTIFICATIONS: boolean;
-  WS_HOST: string;
-  enableWebsocket: boolean;
   notifier?: Notifier;
   staleTime: number;
   cacheTime: number;
@@ -25,7 +22,7 @@ export type Item = {
   path: string;
   type: string;
   description: string;
-  extra: {};
+  extra: unknown;
 };
 
 type MemberExtra = {
@@ -61,26 +58,26 @@ export type ItemTag = {
 export type CategoryType = {
   id: UUID;
   name: string;
-}
+};
 
 export type Category = {
   id: UUID;
   name: string;
   type: UUID;
-}
+};
 
 export type ItemCategory = {
   id: UUID;
   itemId: UUID;
   categoryId: UUID;
-}
+};
 
 export class UndefinedArgument extends Error {
   constructor() {
     super();
     this.message = 'UnexpectedInput';
     this.name = 'UnexpectedInput';
-    this.stack = (<any>new Error()).stack;
+    this.stack = (new Error()).stack;
   }
 }
 
@@ -128,4 +125,4 @@ export type GraaspError = {
   statusCode?: number;
   message: string;
   data?: unknown;
-}
+};
