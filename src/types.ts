@@ -38,38 +38,8 @@ export type Member = {
   extra: MemberExtra;
 };
 
-export type Membership = {
+export type AppData = {
   id: UUID;
-  memberId: string;
-  itemId: string;
-  permission: string;
-};
-
-export type ExtendedItem = Item & {
-  parentId: UUID;
-};
-
-export type Permission = string;
-
-export type ItemTag = {
-  id: UUID;
-};
-
-export type CategoryType = {
-  id: UUID;
-  name: string;
-};
-
-export type Category = {
-  id: UUID;
-  name: string;
-  type: UUID;
-};
-
-export type ItemCategory = {
-  id: UUID;
-  itemId: UUID;
-  categoryId: UUID;
 };
 
 export class UndefinedArgument extends Error {
@@ -77,47 +47,9 @@ export class UndefinedArgument extends Error {
     super();
     this.message = 'UnexpectedInput';
     this.name = 'UnexpectedInput';
-    this.stack = (new Error()).stack;
+    this.stack = new Error().stack;
   }
 }
-
-export enum ITEM_LOGIN_SCHEMAS {
-  USERNAME = 'username',
-  USERNAME_AND_PASSWORD = 'username+password',
-}
-
-export type ItemLogin = {
-  loginSchema: ITEM_LOGIN_SCHEMAS;
-};
-
-// todo: use types from graasp types
-export enum ITEM_TYPES {
-  FOLDER = 'folder',
-}
-
-export enum PERMISSION_LEVELS {
-  READ = 'read',
-  WRITE = 'write',
-  ADMIN = 'admin',
-}
-
-export type PartialChatMessage = {
-  chatId: string;
-  body: string;
-};
-
-export type ChatMessage = {
-  chatId: string;
-  creator: string;
-  createdAt: string;
-  body: string;
-};
-
-export interface Chat {
-  id: string;
-  messages: Array<ChatMessage>;
-}
-
 // todo: get from graasp types
 export type GraaspError = {
   name: string;

@@ -3,6 +3,7 @@ import { QueryClient, QueryClientProvider, useMutation, Hydrate, dehydrate } fro
 import { ReactQueryDevtools } from 'react-query/devtools';
 import { CACHE_TIME_MILLISECONDS, STALE_TIME_MILLISECONDS } from './config/constants';
 import configureHooks from './hooks';
+import configureMutations from './mutations';
 import type { QueryClientConfig } from './types';
 
 // Query client retry function decides when and how many times a request should be retried
@@ -53,13 +54,13 @@ export default (config: Partial<QueryClientConfig>) => {
 
   // set up mutations given config
   // mutations are attached to queryClient
-  // configureMutations(queryClient, queryConfig);
+  configureMutations(queryClient, queryConfig);
 
   // set up hooks given config
   // const websocketClient = queryConfig.enableWebsocket
   //   ? configureWebsocketClient(queryConfig)
   //   : undefined;
-  const hooks = configureHooks(queryConfig);
+  const hooks = configureHooks(queryClient, queryConfig);
 
   // returns the queryClient and relative instances
   return {

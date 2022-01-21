@@ -1,32 +1,28 @@
-import { useQuery, useQueryClient } from 'react-query';
+import { QueryClient, useQuery } from 'react-query';
 import * as Api from '../api';
-import { RESOURCES_KEY } from '../config/keys';
+import { buildAppContextKey, buildAppDataKey } from '../config/keys';
 import { QueryClientConfig } from '../types';
 
-export default (queryConfig: QueryClientConfig) => {
+export default (_queryClient: QueryClient, queryConfig: QueryClientConfig) => {
   const { retry, cacheTime, staleTime } = queryConfig;
   const defaultOptions = {
     retry,
     cacheTime,
     staleTime,
   };
-
   return {
-    useAppResources: (
-      token: string,
-      apiHost: string,
-      itemId: string,
-      // reFetch: boolean,
-    ) => {
-      const cache = useQueryClient();
+    useAppResources: (payload: { token: string; itemId: string }) =>
       useQuery({
-        queryKey: RESOURCES_KEY,
-        queryFn: () => Api.useGetAppResources(token, apiHost, itemId),
+        queryKey: buildAppDataKey(payload.itemId),
+        queryFn: () => Api.getAppData(payload, queryConfig),
         ...defaultOptions,
-        onSuccess: () => {
-          cache.invalidateQueries(RESOURCES_KEY);
-        },
-      });
-    },
+      }),
+
+    useAppContext: (payload: { token: string; itemId: string }) =>
+      useQuery({
+        queryKey: buildAppContextKey(payload.itemId),
+        queryFn: () => Api.getContext(payload, queryConfig),
+        ...defaultOptions,
+      }),
   };
 };
