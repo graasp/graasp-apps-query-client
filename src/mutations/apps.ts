@@ -5,7 +5,7 @@ import { buildAppDataKey, MUTATION_KEYS } from '../config/keys';
 import { QueryClientConfig, AppData } from '../types';
 
 export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
-  queryClient.setMutationDefaults(MUTATION_KEYS.DELETE_RESOURCE, {
+  queryClient.setMutationDefaults(MUTATION_KEYS.DELETE_APP_DATA, {
     mutationFn: (payload: { token: string; itemId: string; id: string }) =>
       Api.deleteAppData(payload, queryConfig),
 
@@ -25,8 +25,8 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
         queryClient.setQueryData(buildAppDataKey(payload.itemId), prevData);
       }
     },
-    onSettled: (_data, _error, itemId) => {
-      queryClient.invalidateQueries(buildAppDataKey(itemId));
+    onSettled: (_data, _error, payload) => {
+      queryClient.invalidateQueries(buildAppDataKey(payload.itemId));
     },
   });
 };

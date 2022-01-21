@@ -1,5 +1,5 @@
 {
-  "name": "@graasp/graasp-apps-query-client",
+  "name": "@graasp/apps-query-client",
   "version": "0.1.0",
   "description": "Query client repository for Graasp apps",
   "main": "dist/index.js",
@@ -7,6 +7,9 @@
   "source": "src/index.ts",
   "repository": "git@github.com:graasp/graasp-apps-query-client.git",
   "author": "Graasp Association",
+  "workspaces": [
+    "example"
+  ],
   "license": "MIT",
   "dependencies": {
     "axios": "0.24.0",
@@ -23,6 +26,9 @@
     "@testing-library/react-hooks": "7.0.2",
     "@types/jest": "27.0.1",
     "@types/node": "^17.0.10",
+    "@types/react": "17.0.38",
+    "@types/react-query": "1.2.9",
+    "@types/uuid": "^8.3.4",
     "@typescript-eslint/eslint-plugin": "5.4.0",
     "@typescript-eslint/parser": "5.4.0",
     "eslint": "^7.13.0",
@@ -32,6 +38,7 @@
     "microbundle-crl": "0.13.11",
     "nock": "13.2.1",
     "prettier": "2.5.1",
+    "react-test-renderer": "17.0.2",
     "ts-jest": "27.0.7",
     "ts-node": "10.4.0",
     "typescript": "^4.5.4"

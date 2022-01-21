@@ -40,6 +40,7 @@ export type Member = {
 
 export type AppData = {
   id: UUID;
+  data: unknown;
 };
 
 export class UndefinedArgument extends Error {
@@ -57,4 +58,8 @@ export type GraaspError = {
   statusCode?: number;
   message: string;
   data?: unknown;
+};
+
+export type Context = {
+  members: Member[];
 };

@@ -1,4 +1,5 @@
-import { Member } from '../src/types';
+import { v4 } from 'uuid';
+import { AppData, Member } from '../src/types';
 
 export const API_HOST = 'http://localhost:3000';
 export const UNAUTHORIZED_RESPONSE = { some: 'error' };
@@ -52,3 +53,29 @@ export const APPS = [
     },
   },
 ];
+
+export const FIXTURE_APP_DATA: AppData[] = [
+  {
+    id: v4(),
+    data: {
+      some: 'data',
+    },
+  },
+  {
+    id: v4(),
+    data: {
+      some: 'data',
+    },
+  },
+  {
+    id: v4(),
+    data: {
+      some: 'data',
+    },
+  },
+];
+
+export const FIXTURE_TOKEN = 'some-token';
+export const FIXTURE_CONTEXT = {
+  members: MEMBERS_RESPONSE,
+};

@@ -57,9 +57,6 @@ export default (config: Partial<QueryClientConfig>) => {
   configureMutations(queryClient, queryConfig);
 
   // set up hooks given config
-  // const websocketClient = queryConfig.enableWebsocket
-  //   ? configureWebsocketClient(queryConfig)
-  //   : undefined;
   const hooks = configureHooks(queryClient, queryConfig);
 
   // returns the queryClient and relative instances

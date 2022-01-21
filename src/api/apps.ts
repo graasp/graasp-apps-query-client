@@ -35,7 +35,7 @@ export const getContext = async (
         Authorization: `Bearer ${token}`,
       },
     })
-    .then(({ data }) => data?.members);
+    .then(({ data }) => data);
 };
 
 export const deleteAppData = (
@@ -48,7 +48,7 @@ export const deleteAppData = (
 ) => {
   const { token, itemId, id } = args;
   return axios
-    .delete(`${API_HOST}/${buildDeleteAppDataRoute(itemId, id)}`, {
+    .delete(`${API_HOST}/${buildDeleteAppDataRoute({ itemId, id })}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
