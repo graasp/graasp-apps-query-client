@@ -1,32 +1,31 @@
-import { useQuery, useQueryClient } from 'react-query';
+import { List, Map } from 'immutable';
+import { QueryClient, useQuery } from 'react-query';
 import * as Api from '../api';
-import { RESOURCES_KEY } from '../config/keys';
+import { buildAppContextKey, buildAppDataKey } from '../config/keys';
 import { QueryClientConfig } from '../types';
 
-export default (queryConfig: QueryClientConfig) => {
+export default (_queryClient: QueryClient, queryConfig: QueryClientConfig) => {
   const { retry, cacheTime, staleTime } = queryConfig;
   const defaultOptions = {
     retry,
     cacheTime,
     staleTime,
   };
-
   return {
-    useAppResources: (
-      token: string,
-      apiHost: string,
-      itemId: string,
-      // reFetch: boolean,
-    ) => {
-      const cache = useQueryClient();
+    useAppData: (payload: { token: string; itemId: string }) =>
       useQuery({
-        queryKey: RESOURCES_KEY,
-        queryFn: () => Api.useGetAppResources(token, apiHost, itemId),
+        queryKey: buildAppDataKey(payload.itemId),
+        queryFn: () => Api.getAppData(payload, queryConfig).then((data) => List(data)),
         ...defaultOptions,
-        onSuccess: () => {
-          cache.invalidateQueries(RESOURCES_KEY);
-        },
-      });
-    },
+        enabled: Boolean(payload.itemId) && Boolean(payload.token),
+      }),
+
+    useAppContext: (payload: { token: string; itemId: string }) =>
+      useQuery({
+        queryKey: buildAppContextKey(payload.itemId),
+        queryFn: () => Api.getContext(payload, queryConfig).then((data) => Map(data)),
+        ...defaultOptions,
+        enabled: Boolean(payload.itemId) && Boolean(payload.token),
+      }),
   };
 };

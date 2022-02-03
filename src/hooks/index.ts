@@ -1,8 +1,9 @@
+import { QueryClient } from 'react-query';
 import { QueryClientConfig } from '../types';
 import configureAppsHooks from './apps';
 
-export default (queryConfig: QueryClientConfig) => {
+export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
   return {
-    ...configureAppsHooks(queryConfig),
+    ...configureAppsHooks(queryClient, queryConfig),
   };
 };
