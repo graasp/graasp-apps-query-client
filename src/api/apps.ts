@@ -1,19 +1,19 @@
-import { buildDeleteAppDataRoute, buildGetAppDataRoute, buildGetContextRoute } from './routes';
-import { QueryClientConfig } from '../types';
+import {
+  buildDeleteAppDataRoute,
+  buildGetAppDataRoute,
+  buildGetContextRoute,
+  buildPatchAppDataRoute,
+  buildPatchSettingsRoute,
+  buildPostAppDataRoute,
+} from './routes';
 import configureAxios from './axios';
 
 const axios = configureAxios();
 
-export const getAppData = async (
-  args: {
-    token: string;
-    itemId: string;
-  },
-  { API_HOST }: QueryClientConfig,
-) => {
-  const { token, itemId } = args;
+export const getContext = async (args: { token: string; itemId: string; apiHost: string }) => {
+  const { token, itemId, apiHost } = args;
   return axios
-    .get(`${API_HOST}/${buildGetAppDataRoute(itemId)}`, {
+    .get(`${apiHost}/${buildGetContextRoute(itemId)}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -21,16 +21,10 @@ export const getAppData = async (
     .then(({ data }) => data);
 };
 
-export const getContext = async (
-  args: {
-    token: string;
-    itemId: string;
-  },
-  { API_HOST }: QueryClientConfig,
-) => {
-  const { token, itemId } = args;
+export const getAppData = async (args: { token: string; itemId: string; apiHost: string }) => {
+  const { token, itemId, apiHost } = args;
   return axios
-    .get(`${API_HOST}/${buildGetContextRoute(itemId)}`, {
+    .get(`${apiHost}/${buildGetAppDataRoute(itemId)}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -38,17 +32,69 @@ export const getContext = async (
     .then(({ data }) => data);
 };
 
-export const deleteAppData = (
-  args: {
-    token: string;
-    itemId: string;
-    id: string;
-  },
-  { API_HOST }: QueryClientConfig,
-) => {
-  const { token, itemId, id } = args;
+export const postAppData = (args: {
+  token: string;
+  itemId: string;
+  body: any;
+  apiHost: string;
+}) => {
+  const { token, itemId, apiHost, body } = args;
   return axios
-    .delete(`${API_HOST}/${buildDeleteAppDataRoute({ itemId, id })}`, {
+    .post(`${apiHost}/${buildPostAppDataRoute({ itemId })}`, body, {
+      // data: body,
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+    .then(({ data }) => data);
+};
+
+export const patchAppData = (args: {
+  token: string;
+  itemId: string;
+  id: string;
+  apiHost: string;
+  data: any;
+}) => {
+  const { token, itemId, id, apiHost, data } = args;
+  return axios
+    .patch(
+      `${apiHost}/${buildPatchAppDataRoute({ itemId, id })}`,
+      { data },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    )
+    .then(({ data }) => data);
+};
+
+export const deleteAppData = (args: {
+  token: string;
+  itemId: string;
+  id: string;
+  apiHost: string;
+}) => {
+  const { token, itemId, id, apiHost } = args;
+  return axios
+    .delete(`${apiHost}/${buildDeleteAppDataRoute({ itemId, id })}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+    .then(({ data }) => data);
+};
+
+export const patchSettings = (args: {
+  token: string;
+  itemId: string;
+  apiHost: string;
+  settings: any;
+}) => {
+  const { token, itemId, apiHost, settings } = args;
+  return axios
+    .patch(`${apiHost}/${buildPatchSettingsRoute({ itemId })}`, settings, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

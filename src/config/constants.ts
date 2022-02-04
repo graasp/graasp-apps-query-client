@@ -20,3 +20,6 @@ export const THUMBNAIL_SIZES = {
   ORIGINAL: 'original',
 };
 export const DEFAULT_THUMBNAIL_SIZES = THUMBNAIL_SIZES.SMALL;
+
+export const DEFAULT_MODE = 'read';
+export const DEFAULT_VIEW = 'standalone';

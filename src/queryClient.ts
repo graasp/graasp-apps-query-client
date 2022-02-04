@@ -1,6 +1,14 @@
 import { getReasonPhrase, StatusCodes } from 'http-status-codes';
-import { QueryClient, QueryClientProvider, useMutation, Hydrate, dehydrate, useQuery } from 'react-query';
+import {
+  QueryClient,
+  QueryClientProvider,
+  useMutation,
+  Hydrate,
+  dehydrate,
+  useQuery,
+} from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
+import { MUTATION_KEYS, HOOK_KEYS, POST_MESSAGE_KEYS } from './config/keys';
 import { CACHE_TIME_MILLISECONDS, STALE_TIME_MILLISECONDS } from './config/constants';
 import configureHooks from './hooks';
 import configureMutations from './mutations';
@@ -26,7 +34,7 @@ const retry = (failureCount: number, error: Error) => {
 
 export default (config: Partial<QueryClientConfig>) => {
   const baseConfig = {
-    API_HOST: config?.API_HOST || process.env.REACT_APP_API_HOST || 'http://localhost:3000',
+    // API_HOST: config?.API_HOST || process.env.REACT_APP_API_HOST || 'http://localhost:3000',
     SHOW_NOTIFICATIONS:
       config?.SHOW_NOTIFICATIONS || process.env.REACT_APP_SHOW_NOTIFICATIONS === 'true' || false,
     keepPreviousData: config?.keepPreviousData || false,
@@ -35,6 +43,7 @@ export default (config: Partial<QueryClientConfig>) => {
   // define config for query client
   const queryConfig: QueryClientConfig = {
     ...baseConfig,
+    GRAASP_APP_ID: config.GRAASP_APP_ID,
     notifier: config?.notifier,
     // time until data in cache considered stale if cache not invalidated
     staleTime: config?.staleTime || STALE_TIME_MILLISECONDS,
@@ -68,6 +77,9 @@ export default (config: Partial<QueryClientConfig>) => {
     ReactQueryDevtools,
     dehydrate,
     Hydrate,
-    useQuery
+    useQuery,
+    MUTATION_KEYS,
+    HOOK_KEYS,
+    POST_MESSAGE_KEYS,
   };
 };

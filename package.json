@@ -14,7 +14,7 @@
   "dependencies": {
     "axios": "0.24.0",
     "http-status-codes": "2.1.4",
-    "immutable": "4.0.0-rc.12",
+    "immutable": "4.0.0",
     "qs": "6.10.1",
     "react-query": "3.31.0",
     "tsc": "2.0.3",
