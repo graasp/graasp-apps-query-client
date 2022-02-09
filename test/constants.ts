@@ -88,7 +88,12 @@ export enum REQUEST_METHODS {
   PATCH = 'PATCH',
 }
 
-export const MOCK_LOCAL_CONTEXT = {
+export const buildMockLocalContext = ({
+  itemId = v4(),
+  memberId = v4(),
+}: { itemId?: string | null; memberId?: string | null } = {}) => ({
   apiHost: API_HOST,
-};
+  itemId,
+  memberId,
+});
 export const MOCK_APP_ORIGIN = 'http://localhost';

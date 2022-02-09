@@ -26,9 +26,14 @@ export const getData = (queryClient: QueryClient) => {
   const token = queryClient.getQueryData<string>(AUTH_TOKEN_KEY);
   const itemId = data?.get('itemId');
   const memberId = data?.get('memberId');
-  if (!data || !itemId || !memberId || !token) {
+  return { itemId, memberId, token };
+};
+
+export const getDataOrThrow = (queryClient: QueryClient) => {
+  const { itemId, memberId, token } = getData(queryClient);
+  if (!itemId || !memberId || !token) {
     throw new Error(
-      `itemId ${itemId}, memberId ${memberId}, token are necessary data, but some are missing!`,
+      `itemId '${itemId}', memberId '${memberId}', token are necessary data, but some are missing!`,
     );
   }
   return { itemId, memberId, token };

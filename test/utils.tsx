@@ -20,7 +20,10 @@ export const setUpTest = (args?: Args) => {
   } = args ?? {};
   const queryConfig: QueryClientConfig = {
     API_HOST,
-    retry: undefined,
+    retry: () => {
+      return false;
+    },
+    shouldRetry: false,
     cacheTime: 0,
     staleTime: 0,
     SHOW_NOTIFICATIONS: false,
@@ -94,7 +97,6 @@ export const mockHook = async ({ endpoints, hook, wrapper, enabled }: MockHookAr
     return result.current;
   }
   await waitFor(() => {
-    // console.log(result.current);
     return result.current.isSuccess || result.current.isError;
   });
 

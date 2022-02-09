@@ -57,7 +57,7 @@ export default (config: Partial<QueryClientConfig>) => {
     defaultOptions: {
       queries: {
         refetchOnWindowFocus: config?.refetchOnWindowFocus || false,
-        retry: Boolean(config?.retry),
+        retry: config?.shouldRetry ?? true
       },
     },
   });

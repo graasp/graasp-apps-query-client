@@ -60,7 +60,7 @@
     "release": "standard-version",
     "start": "microbundle-crl watch --no-compress --format modern,cjs",
     "start:example": "yarn workspace graasp-query-client-example start",
-    "test": "jest src/hooks/postMessage.test.ts --forceExit --coverage --verbose",
+    "test": "jest  --forceExit --coverage --verbose",
     "test:watch": "yarn test --watchAll",
     "test:ci": "yarn && cd example && yarn && cd .. && yarn test"
   },

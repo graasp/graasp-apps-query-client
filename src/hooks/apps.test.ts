@@ -11,7 +11,7 @@ import {
   UNAUTHORIZED_RESPONSE,
   FIXTURE_TOKEN,
   FIXTURE_CONTEXT,
-  MOCK_LOCAL_CONTEXT,
+  buildMockLocalContext,
 } from '../../test/constants';
 import { MissingApiHostError } from '../config/utils';
 
@@ -32,7 +32,7 @@ describe('App Hooks', () => {
 
     it('Receive app data', async () => {
       // preset context
-      queryClient.setQueryData(LOCAL_CONTEXT_KEY, Map(MOCK_LOCAL_CONTEXT));
+      queryClient.setQueryData(LOCAL_CONTEXT_KEY, Map(buildMockLocalContext()));
 
       const response = FIXTURE_APP_DATA;
       const endpoints = [{ route, response }];
@@ -84,7 +84,7 @@ describe('App Hooks', () => {
     });
     it('Unauthorized', async () => {
       // preset context
-      queryClient.setQueryData(LOCAL_CONTEXT_KEY, Map(MOCK_LOCAL_CONTEXT));
+      queryClient.setQueryData(LOCAL_CONTEXT_KEY, Map(buildMockLocalContext()));
       const endpoints = [
         {
           route,
@@ -112,7 +112,7 @@ describe('App Hooks', () => {
 
     it('Receive app context', async () => {
       // preset context
-      queryClient.setQueryData(LOCAL_CONTEXT_KEY, Map(MOCK_LOCAL_CONTEXT));
+      queryClient.setQueryData(LOCAL_CONTEXT_KEY, Map(buildMockLocalContext()));
 
       const response = FIXTURE_CONTEXT;
       const endpoints = [{ route, response }];
@@ -164,7 +164,7 @@ describe('App Hooks', () => {
     });
     it('Unauthorized', async () => {
       // preset context
-      queryClient.setQueryData(LOCAL_CONTEXT_KEY, Map(MOCK_LOCAL_CONTEXT));
+      queryClient.setQueryData(LOCAL_CONTEXT_KEY, Map(buildMockLocalContext()));
       const endpoints = [
         {
           route,

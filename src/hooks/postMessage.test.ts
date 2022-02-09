@@ -3,7 +3,7 @@ import { Record } from 'immutable';
 import { mockHook, mockWindowForPostMessage, setUpTest } from '../../test/utils';
 import { Context, LocalContext } from '../types';
 import { AUTH_TOKEN_KEY, LOCAL_CONTEXT_KEY, POST_MESSAGE_KEYS } from '../config/keys';
-import { API_HOST, MOCK_LOCAL_CONTEXT } from '../../test/constants';
+import { API_HOST, buildMockLocalContext } from '../../test/constants';
 import { DEFAULT_LANG, DEFAULT_PERMISSION, DEFAULT_VIEW, MOCK_TOKEN } from '../config/constants';
 import {
   MissingAppIdError,
@@ -173,7 +173,7 @@ describe('PostMessage Hooks', () => {
           ports: [port],
           data: JSON.stringify({
             type: POST_MESSAGE_KEYS.GET_CONTEXT_SUCCEEDED,
-            payload: MOCK_LOCAL_CONTEXT,
+            payload: buildMockLocalContext(),
           }),
         } as unknown as MessageEvent;
         mockWindowForPostMessage(event);

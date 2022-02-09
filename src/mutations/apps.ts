@@ -3,13 +3,13 @@ import { List, Map, Record } from 'immutable';
 import * as Api from '../api';
 import { buildAppDataKey, LOCAL_CONTEXT_KEY, MUTATION_KEYS } from '../config/keys';
 import { AppData, LocalContext } from '../types';
-import { getApiHost, getData } from '../config/utils';
+import { getApiHost, getData, getDataOrThrow } from '../config/utils';
 
 export default (queryClient: QueryClient) => {
   queryClient.setMutationDefaults(MUTATION_KEYS.POST_APP_DATA, {
     mutationFn: (payload: { data: unknown; verb: string }) => {
       const apiHost = getApiHost(queryClient);
-      const data = getData(queryClient);
+      const data = getDataOrThrow(queryClient);
       return Api.postAppData({ ...data, body: payload, apiHost }).then((data) => List(data));
     },
 
@@ -22,7 +22,7 @@ export default (queryClient: QueryClient) => {
   queryClient.setMutationDefaults(MUTATION_KEYS.PATCH_APP_DATA, {
     mutationFn: (payload: { id: string; data: unknown }) => {
       const apiHost = getApiHost(queryClient);
-      const data = getData(queryClient);
+      const data = getDataOrThrow(queryClient);
       return Api.patchAppData({ ...data, id: payload.id, data: payload.data, apiHost }).then(
         (data) => Map(data),
       );
@@ -61,12 +61,12 @@ export default (queryClient: QueryClient) => {
   queryClient.setMutationDefaults(MUTATION_KEYS.DELETE_APP_DATA, {
     mutationFn: (payload: { id: string }) => {
       const apiHost = getApiHost(queryClient);
-      const data = getData(queryClient);
+      const data = getDataOrThrow(queryClient);
       return Api.deleteAppData({ ...data, id: payload.id, apiHost });
     },
 
     onMutate: async (payload) => {
-      const { itemId } = getData(queryClient);
+      const { itemId } = getDataOrThrow(queryClient);
       const prevData = queryClient.getQueryData<List<AppData>>(buildAppDataKey(itemId));
       if (prevData && itemId) {
         queryClient.setQueryData(
@@ -77,21 +77,25 @@ export default (queryClient: QueryClient) => {
       return prevData;
     },
     onError: (_error, _payload, prevData) => {
-      const { itemId } = getData(queryClient);
-      const data = queryClient.getQueryData<List<AppData>>(buildAppDataKey(itemId));
-      if (data) {
-        queryClient.setQueryData(buildAppDataKey(itemId), prevData);
+      if (prevData) {
+        const { itemId } = getData(queryClient);
+        const data = queryClient.getQueryData<List<AppData>>(buildAppDataKey(itemId));
+        if (itemId && data) {
+          queryClient.setQueryData(buildAppDataKey(itemId), prevData);
+        }
       }
     },
     onSettled: () => {
       const { itemId } = getData(queryClient);
-      queryClient.invalidateQueries(buildAppDataKey(itemId));
+      if (itemId) {
+        queryClient.invalidateQueries(buildAppDataKey(itemId));
+      }
     },
   });
   queryClient.setMutationDefaults(MUTATION_KEYS.PATCH_SETTINGS, {
     mutationFn: (settings: unknown) => {
       const apiHost = getApiHost(queryClient);
-      const data = getData(queryClient);
+      const data = getDataOrThrow(queryClient);
       return Api.patchSettings({ ...data, settings, apiHost });
     },
     onMutate: async (payload) => {
