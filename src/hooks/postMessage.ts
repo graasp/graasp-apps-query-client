@@ -1,8 +1,23 @@
+/**
+ * This file contains hooks using window.parent.postMessage
+ * These are used before the app requests a token
+ */
+
 import { QueryClient, useQuery } from 'react-query';
 import { Map } from 'immutable';
-import { DEFAULT_MODE, DEFAULT_VIEW } from '../config/constants';
+import { DEFAULT_LANG, DEFAULT_PERMISSION, DEFAULT_VIEW } from '../config/constants';
 import { AUTH_TOKEN_KEY, LOCAL_CONTEXT_KEY, POST_MESSAGE_KEYS } from '../config/keys';
 import { LocalContext, QueryClientConfig, WindowPostMessage } from '../types';
+import { MissingMessageChannelPortError } from '../config/errors';
+import { buildAppIdAndOriginPayload } from '../config/utils';
+
+const postMessage: WindowPostMessage = (data) => {
+  if (window.parent.postMessage) {
+    window.parent.postMessage(JSON.stringify(data), '*');
+  } else {
+    console.error('unable to find postMessage');
+  }
+};
 
 const configurePostMessageHooks = (_queryClient: QueryClient, queryConfig: QueryClientConfig) => {
   let port2: MessagePort;
@@ -13,18 +28,15 @@ const configurePostMessageHooks = (_queryClient: QueryClient, queryConfig: Query
       apiHost,
       memberId,
       itemId,
-      permission = DEFAULT_MODE, // write, admin, read
+      permission = DEFAULT_PERMISSION, // write, admin, read
       context = DEFAULT_VIEW, // builder, explorer..., null = standalone
-      lang = 'en',
-      offline = 'false',
-      dev = 'false',
+      lang = DEFAULT_LANG,
+      offline = false,
+      dev = false,
       settings = {},
     } = payload;
 
-    const offlineBool = offline === 'true';
-
     // use fake api
-    const devBool = dev === 'true';
 
     const standalone = context === null;
 
@@ -35,8 +47,8 @@ const configurePostMessageHooks = (_queryClient: QueryClient, queryConfig: Query
       itemId,
       memberId,
       lang,
-      offline: offlineBool,
-      dev: devBool,
+      offline,
+      dev,
       standalone,
       settings,
     };
@@ -67,7 +79,6 @@ const configurePostMessageHooks = (_queryClient: QueryClient, queryConfig: Query
     (event: MessageEvent) => {
       const { type, payload } = JSON.parse(event.data) || {};
       const format = formatResolvedValue ?? ((data: { payload: unknown }) => data.payload);
-
       // get init message getting the Message Channel port
       if (type === successType) {
         resolve(format({ payload, event }));
@@ -79,13 +90,12 @@ const configurePostMessageHooks = (_queryClient: QueryClient, queryConfig: Query
     };
 
   let getLocalContextFunction: ((event: MessageEvent) => void) | null = null;
-  const useGetLocalContext = (
-    payload: { app: string; origin: string },
-    postMessage: WindowPostMessage,
-  ) =>
+  const useGetLocalContext = () =>
     useQuery({
       queryKey: LOCAL_CONTEXT_KEY,
-      queryFn: () => {
+      queryFn: async () => {
+        const postMessagePayload = buildAppIdAndOriginPayload(queryConfig);
+
         const formatResolvedValue = (result: { event: MessageEvent; payload: LocalContext }) => {
           const { event, payload } = result;
           // get init message getting the Message Channel port
@@ -113,11 +123,13 @@ const configurePostMessageHooks = (_queryClient: QueryClient, queryConfig: Query
           // request parent to provide item data (item id, settings...) and access token
           postMessage({
             type: POST_MESSAGE_KEYS.GET_CONTEXT,
-            payload,
+            payload: postMessagePayload,
           });
         });
       },
-
+      onError: () => {
+        console.error('an error occured while fetching the context');
+      },
       onSettled: () => {
         // stop to listen to window message
         if (getLocalContextFunction) {
@@ -132,8 +144,9 @@ const configurePostMessageHooks = (_queryClient: QueryClient, queryConfig: Query
       queryKey: AUTH_TOKEN_KEY,
       queryFn: () => {
         if (!port2) {
-          throw new Error('Get context first');
+          throw new MissingMessageChannelPortError();
         }
+        const postMessagePayload = buildAppIdAndOriginPayload(queryConfig);
 
         return new Promise((resolve, reject) => {
           getAuthTokenFunction = receiveContextMessage(
@@ -149,20 +162,14 @@ const configurePostMessageHooks = (_queryClient: QueryClient, queryConfig: Query
           );
 
           port2.onmessage = getAuthTokenFunction;
-
-          port2?.postMessage(
+          port2.postMessage(
             JSON.stringify({
               type: POST_MESSAGE_KEYS.GET_AUTH_TOKEN,
-              payload: {
-                app: queryConfig.GRAASP_APP_ID,
-                origin: window.location.origin,
-              },
+              payload: postMessagePayload,
             }),
           );
         });
       },
-
-      enabled: Boolean(port2),
     });
 
   return {

@@ -2,11 +2,15 @@ import { act } from '@testing-library/react-hooks';
 import nock from 'nock';
 import { v4 } from 'uuid';
 import { List } from 'immutable';
-import { FIXTURE_APP_DATA, FIXTURE_TOKEN, UNAUTHORIZED_RESPONSE } from '../../test/constants';
+import {
+  FIXTURE_APP_DATA,
+  FIXTURE_TOKEN,
+  REQUEST_METHODS,
+  UNAUTHORIZED_RESPONSE,
+} from '../../test/constants';
 import { mockMutation, setUpTest, waitForMutation } from '../../test/utils';
 import { buildDeleteAppDataRoute } from '../api/routes';
 import { buildAppDataKey, MUTATION_KEYS } from '../config/keys';
-import { REQUEST_METHODS } from '../api/utils';
 import { AppData } from '../types';
 import { StatusCodes } from 'http-status-codes';
 

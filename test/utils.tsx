@@ -1,29 +1,31 @@
 import React from 'react';
+import { v4 } from 'uuid';
 import { renderHook, RenderResult, WaitFor } from '@testing-library/react-hooks';
 import nock from 'nock';
 import { StatusCodes } from 'http-status-codes';
 import { QueryObserverBaseResult, MutationObserverResult } from 'react-query';
 import configureHooks from '../src/hooks';
 import { Notifier, QueryClientConfig } from '../src/types';
-import { API_HOST } from './constants';
+import { API_HOST, MOCK_APP_ORIGIN, REQUEST_METHODS } from './constants';
 import configureQueryClient from '../src/queryClient';
-import { REQUEST_METHODS } from '../src/api/utils';
 
-type Args = { enableWebsocket?: boolean; notifier?: Notifier };
+type Args = { enableWebsocket?: boolean; notifier?: Notifier; GRAASP_APP_ID?: string | null };
 
 export const setUpTest = (args?: Args) => {
   const {
     notifier = () => {
       // do nothing
     },
+    GRAASP_APP_ID = v4(),
   } = args ?? {};
   const queryConfig: QueryClientConfig = {
     API_HOST,
-    retry: 0,
+    retry: undefined,
     cacheTime: 0,
     staleTime: 0,
     SHOW_NOTIFICATIONS: false,
     notifier,
+    GRAASP_APP_ID,
   };
 
   const { queryClient, QueryClientProvider, useMutation } = configureQueryClient(queryConfig);
@@ -48,7 +50,7 @@ export type Endpoint = {
 };
 
 interface MockArguments {
-  endpoints: Endpoint[];
+  endpoints?: Endpoint[];
   wrapper: (args: { children: React.ReactNode }) => JSX.Element;
 }
 
@@ -76,7 +78,7 @@ export const mockEndpoints = (endpoints: Endpoint[]) => {
 };
 
 export const mockHook = async ({ endpoints, hook, wrapper, enabled }: MockHookArguments) => {
-  mockEndpoints(endpoints);
+  endpoints && mockEndpoints(endpoints);
 
   // wait for rendering hook
   const {
@@ -91,15 +93,17 @@ export const mockHook = async ({ endpoints, hook, wrapper, enabled }: MockHookAr
   if (enabled === false) {
     return result.current;
   }
-
-  await waitFor(() => result.current.isSuccess || result.current.isError);
+  await waitFor(() => {
+    // console.log(result.current);
+    return result.current.isSuccess || result.current.isError;
+  });
 
   // return hook data
   return result.current;
 };
 
 export const mockMutation = async ({ mutation, wrapper, endpoints }: MockMutationArguments) => {
-  mockEndpoints(endpoints);
+  endpoints && mockEndpoints(endpoints);
 
   // wait for rendering hook
   const {
@@ -123,4 +127,22 @@ export const waitForMutation = async (t = 500) => {
   await new Promise((r) => {
     setTimeout(r, t);
   });
+};
+
+export const mockWindowForPostMessage = (
+  event: MessageEvent,
+  origin: string | null = MOCK_APP_ORIGIN,
+) => {
+  global.window = {
+    location: { origin },
+    parent: {
+      postMessage: jest.fn(),
+    },
+    removeEventListener: jest.fn(),
+    // eslint-disable-next-line @typescript-eslint/ban-types
+    addEventListener: (_event: string, f: Function) => {
+      // check event listener works as expected given mock input
+      return f(event);
+    },
+  } as unknown as Window & typeof globalThis;
 };

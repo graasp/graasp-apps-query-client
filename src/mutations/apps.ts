@@ -96,7 +96,6 @@ export default (queryClient: QueryClient) => {
     },
     onMutate: async (payload) => {
       const prevData = queryClient.getQueryData<Record<LocalContext>>(LOCAL_CONTEXT_KEY);
-      console.log('prevData: ', prevData);
       if (prevData) {
         queryClient.setQueryData(LOCAL_CONTEXT_KEY, prevData.set('settings', payload));
       }

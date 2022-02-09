@@ -21,5 +21,7 @@ export const THUMBNAIL_SIZES = {
 };
 export const DEFAULT_THUMBNAIL_SIZES = THUMBNAIL_SIZES.SMALL;
 
-export const DEFAULT_MODE = 'read';
+export const DEFAULT_PERMISSION = 'read';
 export const DEFAULT_VIEW = 'standalone';
+export const DEFAULT_LANG = 'en';
+export const MOCK_TOKEN = 'mock-token';

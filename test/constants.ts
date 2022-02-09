@@ -87,3 +87,8 @@ export enum REQUEST_METHODS {
   PUT = 'PUT',
   PATCH = 'PATCH',
 }
+
+export const MOCK_LOCAL_CONTEXT = {
+  apiHost: API_HOST,
+};
+export const MOCK_APP_ORIGIN = 'http://localhost';

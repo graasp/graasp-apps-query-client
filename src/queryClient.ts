@@ -15,7 +15,7 @@ import configureMutations from './mutations';
 import type { QueryClientConfig } from './types';
 
 // Query client retry function decides when and how many times a request should be retried
-const retry = (failureCount: number, error: Error) => {
+const defaultRetryFunction = (failureCount: number, error: Error) => {
   // do not retry if the request was not authorized
   // the user is probably not signed in
   const codes = [
@@ -38,6 +38,7 @@ export default (config: Partial<QueryClientConfig>) => {
     SHOW_NOTIFICATIONS:
       config?.SHOW_NOTIFICATIONS || process.env.REACT_APP_SHOW_NOTIFICATIONS === 'true' || false,
     keepPreviousData: config?.keepPreviousData || false,
+    retry: config?.retry ?? defaultRetryFunction,
   };
 
   // define config for query client
@@ -49,7 +50,6 @@ export default (config: Partial<QueryClientConfig>) => {
     staleTime: config?.staleTime || STALE_TIME_MILLISECONDS,
     // time before cache labeled as inactive to be garbage collected
     cacheTime: config?.cacheTime || CACHE_TIME_MILLISECONDS,
-    retry,
   };
 
   // create queryclient with given config
@@ -57,6 +57,7 @@ export default (config: Partial<QueryClientConfig>) => {
     defaultOptions: {
       queries: {
         refetchOnWindowFocus: config?.refetchOnWindowFocus || false,
+        retry: Boolean(config?.retry),
       },
     },
   });

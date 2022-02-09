@@ -6,10 +6,10 @@ export type QueryClientConfig = {
   notifier?: Notifier;
   staleTime: number;
   cacheTime: number;
-  retry: number | boolean | ((failureCount: number, error: Error) => boolean);
+  retry?: number | boolean | ((failureCount: number, error: Error) => boolean);
   refetchOnWindowFocus?: boolean;
   keepPreviousData?: boolean;
-  GRAASP_APP_ID?: string;
+  GRAASP_APP_ID?: string | null;
 };
 
 // Graasp Core Types
