@@ -2,17 +2,26 @@ import { QueryClient } from 'react-query';
 import { List, Map, Record } from 'immutable';
 import * as Api from '../api';
 import { buildAppDataKey, LOCAL_CONTEXT_KEY, MUTATION_KEYS } from '../config/keys';
-import { AppData, LocalContext } from '../types';
+import { AppData, LocalContext, QueryClientConfig } from '../types';
 import { getApiHost, getData, getDataOrThrow } from '../config/utils';
+import { deleteAppDataRoutine, patchAppDataRoutine, patchSettingsRoutine, postAppDataRoutine } from '../routines';
 
-export default (queryClient: QueryClient) => {
+export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
   queryClient.setMutationDefaults(MUTATION_KEYS.POST_APP_DATA, {
     mutationFn: (payload: { data: unknown; verb: string }) => {
       const apiHost = getApiHost(queryClient);
       const data = getDataOrThrow(queryClient);
-      return Api.postAppData({ ...data, body: payload, apiHost }).then((data) => List(data));
+      return Api.postAppData({ ...data, body: payload, apiHost });
     },
-
+    onSuccess: (newAppData: AppData) => {
+      const { itemId } = getData(queryClient);
+      const key = buildAppDataKey(itemId);
+      const prevData = queryClient.getQueryData<List<AppData>>(key);
+      queryClient.setQueryData(key, prevData?.push(newAppData));
+    },
+    onError: (error) => {
+      queryConfig?.notifier?.({ type: postAppDataRoutine.FAILURE, payload: { error } });
+    },
     onSettled: () => {
       const { itemId } = getData(queryClient);
       queryClient.invalidateQueries(buildAppDataKey(itemId));
@@ -27,7 +36,6 @@ export default (queryClient: QueryClient) => {
         (data) => Map(data),
       );
     },
-
     onMutate: async (payload: { id: string; data: any }) => {
       let context = null;
       const { itemId } = getData(queryClient);
@@ -43,7 +51,9 @@ export default (queryClient: QueryClient) => {
       }
       return context;
     },
-    onError: (_error, _payload, prevData) => {
+    onError: (error, _payload, prevData) => {
+      queryConfig?.notifier?.({ type: patchAppDataRoutine.FAILURE, payload: { error } });
+
       if (prevData) {
         const { itemId } = getData(queryClient);
         const data = queryClient.getQueryData<List<AppData>>(buildAppDataKey(itemId));
@@ -64,7 +74,6 @@ export default (queryClient: QueryClient) => {
       const data = getDataOrThrow(queryClient);
       return Api.deleteAppData({ ...data, id: payload.id, apiHost });
     },
-
     onMutate: async (payload) => {
       const { itemId } = getDataOrThrow(queryClient);
       const prevData = queryClient.getQueryData<List<AppData>>(buildAppDataKey(itemId));
@@ -76,7 +85,9 @@ export default (queryClient: QueryClient) => {
       }
       return prevData;
     },
-    onError: (_error, _payload, prevData) => {
+    onError: (error, _payload, prevData) => {
+      queryConfig?.notifier?.({ type: deleteAppDataRoutine.FAILURE, payload: { error } });
+
       if (prevData) {
         const { itemId } = getData(queryClient);
         const data = queryClient.getQueryData<List<AppData>>(buildAppDataKey(itemId));
@@ -92,6 +103,7 @@ export default (queryClient: QueryClient) => {
       }
     },
   });
+
   queryClient.setMutationDefaults(MUTATION_KEYS.PATCH_SETTINGS, {
     mutationFn: (settings: unknown) => {
       const apiHost = getApiHost(queryClient);
@@ -105,9 +117,11 @@ export default (queryClient: QueryClient) => {
       }
       return prevData;
     },
-    onError: (_error, _payload, prevData) => {
+    onError: (error, _payload, prevData) => {
+      queryConfig?.notifier?.({ type: patchSettingsRoutine.FAILURE, payload: { error } });
+
       if (prevData) {
-        queryClient.setQueryData(LOCAL_CONTEXT_KEY, prevData.set('settings', prevData));
+        queryClient.setQueryData(LOCAL_CONTEXT_KEY, prevData);
       }
     },
     onSettled: () => {

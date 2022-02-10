@@ -7,13 +7,15 @@ import {
   buildMockLocalContext,
   REQUEST_METHODS,
   UNAUTHORIZED_RESPONSE,
+  buildAppData,
 } from '../../test/constants';
 import { mockMutation, setUpTest, waitForMutation } from '../../test/utils';
-import { buildDeleteAppDataRoute } from '../api/routes';
+import { buildDeleteAppDataRoute, buildPatchAppDataRoute, buildPatchSettingsRoute, buildPostAppDataRoute } from '../api/routes';
 import { AUTH_TOKEN_KEY, buildAppDataKey, LOCAL_CONTEXT_KEY, MUTATION_KEYS } from '../config/keys';
 import { AppData } from '../types';
 import { StatusCodes } from 'http-status-codes';
 import { MOCK_TOKEN } from '../config/constants';
+import { patchAppDataRoutine, patchSettingsRoutine, postAppDataRoutine } from '../routines';
 
 const mockedNotifier = jest.fn();
 const { wrapper, queryClient, useMutation } = setUpTest({
@@ -26,12 +28,13 @@ describe('Apps Mutations', () => {
     nock.cleanAll();
   });
 
-  describe(MUTATION_KEYS.DELETE_APP_DATA, () => {
+  describe(MUTATION_KEYS.POST_APP_DATA, () => {
     const itemId = v4();
     const key = buildAppDataKey(itemId);
-    const toDelete = FIXTURE_APP_DATA[0];
-    const route = `/${buildDeleteAppDataRoute({ itemId, id: toDelete.id })}`;
-    const mutation = () => useMutation(MUTATION_KEYS.DELETE_APP_DATA);
+    const toAdd = buildAppData();
+    const initData = List(FIXTURE_APP_DATA);
+    const route = `/${buildPostAppDataRoute({ itemId })}`;
+    const mutation = () => useMutation(MUTATION_KEYS.POST_APP_DATA);
 
     describe('Successful requests', () => {
       beforeEach(() => {
@@ -40,10 +43,374 @@ describe('Apps Mutations', () => {
         queryClient.setQueryData(LOCAL_CONTEXT_KEY, Map(buildMockLocalContext({ itemId })));
       });
 
-      it('Delete app data', async () => {
-        queryClient.setQueryData(key, List([toDelete]));
+      it('Create app data', async () => {
+        queryClient.setQueryData(key, initData);
 
-        const response = toDelete;
+        const response = toAdd;
+
+        const endpoints = [
+          {
+            response,
+            method: REQUEST_METHODS.POST,
+            route,
+          },
+        ];
+
+        const mockedMutation = await mockMutation({
+          endpoints,
+          mutation,
+          wrapper,
+        });
+
+        await act(async () => {
+          await mockedMutation.mutate({ data: toAdd.data, verb: toAdd.type });
+          await waitForMutation();
+        });
+
+        expect(queryClient.getQueryState(key)?.isInvalidated).toBeTruthy();
+        expect(queryClient.getQueryData<List<AppData>>(key)).toEqual(initData.push(toAdd));
+      });
+    });
+
+    describe('Failed requests', () => {
+      it('Unauthorized', async () => {
+        // set necessary data
+        queryClient.setQueryData(AUTH_TOKEN_KEY, MOCK_TOKEN);
+        queryClient.setQueryData(LOCAL_CONTEXT_KEY, Map(buildMockLocalContext({ itemId })));
+
+        queryClient.setQueryData(key, initData);
+
+        const response = UNAUTHORIZED_RESPONSE;
+
+        const endpoints = [
+          {
+            response,
+            statusCode: StatusCodes.UNAUTHORIZED,
+            method: REQUEST_METHODS.POST,
+            route,
+          },
+        ];
+
+        const mockedMutation = await mockMutation({
+          endpoints,
+          mutation,
+          wrapper,
+        });
+
+        await act(async () => {
+          await mockedMutation.mutate({ data: toAdd.data, verb: toAdd.type });
+          await waitForMutation();
+        });
+
+        expect(mockedNotifier).toHaveBeenCalledWith(expect.objectContaining({
+          type: postAppDataRoutine.FAILURE,
+        }));
+        expect(queryClient.getQueryState(key)?.isInvalidated).toBeTruthy();
+        expect(queryClient.getQueryData<List<AppData>>(key)).toEqual(initData);
+      });
+
+      it('Throw if itemId is undefined', async () => {
+        // set necessary data
+        queryClient.setQueryData(AUTH_TOKEN_KEY, MOCK_TOKEN);
+        queryClient.setQueryData(LOCAL_CONTEXT_KEY, Map(buildMockLocalContext({ itemId: null })));
+        queryClient.setQueryData(key, initData);
+
+        const endpoints = [
+          {
+            response: toAdd,
+            method: REQUEST_METHODS.POST,
+            route,
+          },
+        ];
+
+        const mockedMutation = await mockMutation({
+          endpoints,
+          mutation,
+          wrapper,
+        });
+
+        await act(async () => {
+          await mockedMutation.mutate({ data: toAdd.data, verb: toAdd.type });
+          await waitForMutation();
+        });
+
+        expect(mockedNotifier).toHaveBeenCalledWith(expect.objectContaining({
+          type: postAppDataRoutine.FAILURE,
+        }));
+        expect(queryClient.getQueryData(key)).toEqual(initData);
+        // since the itemid is not defined, we do not check data for its key
+      });
+
+      it('Throw if memberId is undefined', async () => {
+        // set necessary data
+        queryClient.setQueryData(AUTH_TOKEN_KEY, MOCK_TOKEN);
+        queryClient.setQueryData(
+          LOCAL_CONTEXT_KEY,
+          Map(buildMockLocalContext({ itemId, memberId: null })),
+        );
+        queryClient.setQueryData(key, initData);
+
+        const endpoints = [
+          {
+            response: toAdd,
+            method: REQUEST_METHODS.POST,
+            route,
+          },
+        ];
+
+        const mockedMutation = await mockMutation({
+          endpoints,
+          mutation,
+          wrapper,
+        });
+
+        await act(async () => {
+          await mockedMutation.mutate({ id: toAdd.id });
+          await waitForMutation();
+        });
+
+        expect(mockedNotifier).toHaveBeenCalledWith(expect.objectContaining({
+          type: postAppDataRoutine.FAILURE,
+        }));
+        expect(queryClient.getQueryData(key)).toEqual(initData);
+        expect(queryClient.getQueryState(key)?.isInvalidated).toBeTruthy();
+      });
+
+      it('Throw if token is undefined', async () => {
+        // set necessary data
+        queryClient.setQueryData(LOCAL_CONTEXT_KEY, Map(buildMockLocalContext({ itemId })));
+        queryClient.setQueryData(key, initData);
+
+        const endpoints = [
+          {
+            response: toAdd,
+            method: REQUEST_METHODS.POST,
+            route,
+          },
+        ];
+
+        const mockedMutation = await mockMutation({
+          endpoints,
+          mutation,
+          wrapper,
+        });
+
+        await act(async () => {
+          await mockedMutation.mutate({ id: toAdd.id });
+          await waitForMutation();
+        });
+
+        expect(mockedNotifier).toHaveBeenCalledWith(expect.objectContaining({
+          type: postAppDataRoutine.FAILURE,
+        }));
+        expect(queryClient.getQueryData(key)).toEqual(initData);
+        expect(queryClient.getQueryState(key)?.isInvalidated).toBeTruthy();
+      });
+    });
+  });
+
+  describe(MUTATION_KEYS.PATCH_APP_DATA, () => {
+    const initData = List(FIXTURE_APP_DATA);
+    const itemId = v4();
+    const appDataId = initData.first()?.id ?? v4();
+    const key = buildAppDataKey(itemId);
+    const toPatch = buildAppData({ id: appDataId, data: { new: 'data' } });
+    const updatedData = List([toPatch, ...initData.delete(0).toJS()]);
+    const route = `/${buildPatchAppDataRoute({ id: toPatch.id, itemId })}`;
+    const mutation = () => useMutation(MUTATION_KEYS.PATCH_APP_DATA);
+
+    describe('Successful requests', () => {
+      beforeEach(() => {
+        // set necessary data
+        queryClient.setQueryData(AUTH_TOKEN_KEY, MOCK_TOKEN);
+        queryClient.setQueryData(LOCAL_CONTEXT_KEY, Map(buildMockLocalContext({ itemId })));
+      });
+
+      it('Patch app data', async () => {
+        queryClient.setQueryData(key, initData);
+
+        const response = toPatch;
+
+        const endpoints = [
+          {
+            response,
+            method: REQUEST_METHODS.PATCH,
+            route,
+          },
+        ];
+
+        const mockedMutation = await mockMutation({
+          endpoints,
+          mutation,
+          wrapper,
+        });
+
+        await act(async () => {
+          await mockedMutation.mutate({ data: toPatch.data, id: appDataId });
+          await waitForMutation();
+        });
+
+        expect(queryClient.getQueryState(key)?.isInvalidated).toBeTruthy();
+        expect(queryClient.getQueryData<List<AppData>>(key)).toEqual(updatedData);
+      });
+    });
+
+    describe('Failed requests', () => {
+      it('Unauthorized', async () => {
+        // set necessary data
+        queryClient.setQueryData(AUTH_TOKEN_KEY, MOCK_TOKEN);
+        queryClient.setQueryData(LOCAL_CONTEXT_KEY, Map(buildMockLocalContext({ itemId })));
+
+        queryClient.setQueryData(key, initData);
+
+        const response = UNAUTHORIZED_RESPONSE;
+
+        const endpoints = [
+          {
+            response,
+            statusCode: StatusCodes.UNAUTHORIZED,
+            method: REQUEST_METHODS.PATCH,
+            route,
+          },
+        ];
+
+        const mockedMutation = await mockMutation({
+          endpoints,
+          mutation,
+          wrapper,
+        });
+
+        await act(async () => {
+          await mockedMutation.mutate({ data: toPatch.data, id: appDataId });
+          await waitForMutation();
+        });
+
+        expect(mockedNotifier).toHaveBeenCalledWith(expect.objectContaining({
+          type: patchAppDataRoutine.FAILURE,
+        }));
+        expect(queryClient.getQueryState(key)?.isInvalidated).toBeTruthy();
+        expect(queryClient.getQueryData<List<AppData>>(key)).toEqual(initData);
+      });
+
+      it('Throw if itemId is undefined', async () => {
+        // set necessary data
+        queryClient.setQueryData(AUTH_TOKEN_KEY, MOCK_TOKEN);
+        queryClient.setQueryData(LOCAL_CONTEXT_KEY, Map(buildMockLocalContext({ itemId: null })));
+        queryClient.setQueryData(key, initData);
+
+        const endpoints = [
+          {
+            response: toPatch,
+            method: REQUEST_METHODS.PATCH,
+            route,
+          },
+        ];
+
+        const mockedMutation = await mockMutation({
+          endpoints,
+          mutation,
+          wrapper,
+        });
+
+        await act(async () => {
+          await mockedMutation.mutate({ data: toPatch.data, id: appDataId });
+          await waitForMutation();
+        });
+
+        expect(mockedNotifier).toHaveBeenCalledWith(expect.objectContaining({
+          type: patchAppDataRoutine.FAILURE,
+        }));
+        expect(queryClient.getQueryData(key)).toEqual(initData);
+        // since the itemid is not defined, we do not check data for its key
+      });
+
+      it('Throw if memberId is undefined', async () => {
+        // set necessary data
+        queryClient.setQueryData(AUTH_TOKEN_KEY, MOCK_TOKEN);
+        queryClient.setQueryData(
+          LOCAL_CONTEXT_KEY,
+          Map(buildMockLocalContext({ itemId, memberId: null })),
+        );
+        queryClient.setQueryData(key, initData);
+
+        const endpoints = [
+          {
+            response: toPatch,
+            method: REQUEST_METHODS.PATCH,
+            route,
+          },
+        ];
+
+        const mockedMutation = await mockMutation({
+          endpoints,
+          mutation,
+          wrapper,
+        });
+
+        await act(async () => {
+          await mockedMutation.mutate({ data: toPatch.data, id: appDataId });
+          await waitForMutation();
+        });
+
+        expect(mockedNotifier).toHaveBeenCalledWith(expect.objectContaining({
+          type: patchAppDataRoutine.FAILURE,
+        }));
+        expect(queryClient.getQueryData(key)).toEqual(initData);
+        expect(queryClient.getQueryState(key)?.isInvalidated).toBeTruthy();
+      });
+
+      it('Throw if token is undefined', async () => {
+        // set necessary data
+        queryClient.setQueryData(LOCAL_CONTEXT_KEY, Map(buildMockLocalContext({ itemId })));
+        queryClient.setQueryData(key, initData);
+
+        const endpoints = [
+          {
+            response: toPatch,
+            method: REQUEST_METHODS.PATCH,
+            route,
+          },
+        ];
+
+        const mockedMutation = await mockMutation({
+          endpoints,
+          mutation,
+          wrapper,
+        });
+
+        await act(async () => {
+          await mockedMutation.mutate({ data: toPatch.data, id: appDataId });
+          await waitForMutation();
+        });
+
+        expect(mockedNotifier).toHaveBeenCalledWith(expect.objectContaining({
+          type: patchAppDataRoutine.FAILURE,
+        }));
+        expect(queryClient.getQueryData(key)).toEqual(initData);
+        expect(queryClient.getQueryState(key)?.isInvalidated).toBeTruthy();
+      });
+    });
+  });
+
+  describe(MUTATION_KEYS.DELETE_APP_DATA, () => {
+    const itemId = v4();
+    const key = buildAppDataKey(itemId);
+    const toDelete = FIXTURE_APP_DATA[0];
+    const initData = List([toDelete, FIXTURE_APP_DATA[1]]);
+    const route = `/${buildDeleteAppDataRoute({ itemId, id: toDelete.id })}`;
+    const mutation = () => useMutation(MUTATION_KEYS.DELETE_APP_DATA);
+
+    describe('Successful requests', () => {
+      const response = toDelete;
+      beforeEach(() => {
+        // set necessary data
+        queryClient.setQueryData(AUTH_TOKEN_KEY, MOCK_TOKEN);
+        queryClient.setQueryData(LOCAL_CONTEXT_KEY, Map(buildMockLocalContext({ itemId })));
+      });
+
+      it('Delete app data', async () => {
+        queryClient.setQueryData(key, initData);
+
 
         const endpoints = [
           {
@@ -65,7 +432,7 @@ describe('Apps Mutations', () => {
         });
 
         expect(queryClient.getQueryState(key)?.isInvalidated).toBeTruthy();
-        expect(queryClient.getQueryData<List<AppData>>(key)).toEqual(List());
+        expect(queryClient.getQueryData<List<AppData>>(key)).toEqual(List([FIXTURE_APP_DATA[1]]));
       });
     });
 
@@ -111,12 +478,9 @@ describe('Apps Mutations', () => {
         const initData = List([toDelete]);
         queryClient.setQueryData(key, initData);
 
-        const response = UNAUTHORIZED_RESPONSE;
-
         const endpoints = [
           {
-            response,
-            statusCode: StatusCodes.UNAUTHORIZED,
+            response: toDelete,
             method: REQUEST_METHODS.DELETE,
             route,
           },
@@ -148,12 +512,9 @@ describe('Apps Mutations', () => {
         const initData = List([toDelete]);
         queryClient.setQueryData(key, initData);
 
-        const response = UNAUTHORIZED_RESPONSE;
-
         const endpoints = [
           {
-            response,
-            statusCode: StatusCodes.UNAUTHORIZED,
+            response: toDelete,
             method: REQUEST_METHODS.DELETE,
             route,
           },
@@ -181,12 +542,9 @@ describe('Apps Mutations', () => {
         const initData = List([toDelete]);
         queryClient.setQueryData(key, initData);
 
-        const response = UNAUTHORIZED_RESPONSE;
-
         const endpoints = [
           {
-            response,
-            statusCode: StatusCodes.UNAUTHORIZED,
+            response: toDelete,
             method: REQUEST_METHODS.DELETE,
             route,
           },
@@ -203,6 +561,182 @@ describe('Apps Mutations', () => {
           await waitForMutation();
         });
 
+        expect(queryClient.getQueryData(key)).toEqual(initData);
+        expect(queryClient.getQueryState(key)?.isInvalidated).toBeTruthy();
+      });
+    });
+  });
+
+  describe(MUTATION_KEYS.PATCH_SETTINGS, () => {
+    const itemId = v4();
+    const key = LOCAL_CONTEXT_KEY;
+    const toPatch = { headerVisible: true };
+    const route = `/${buildPatchSettingsRoute({ itemId })}`;
+    const mutation = () => useMutation(MUTATION_KEYS.PATCH_SETTINGS);
+
+    describe('Successful requests', () => {
+      const initData = Map(buildMockLocalContext({ itemId }));
+      beforeEach(() => {
+        // set necessary data
+        queryClient.setQueryData(AUTH_TOKEN_KEY, MOCK_TOKEN);
+      });
+
+      it('Patch settings', async () => {
+        queryClient.setQueryData(LOCAL_CONTEXT_KEY, initData);
+
+        const response = toPatch;
+
+        const endpoints = [
+          {
+            response,
+            method: REQUEST_METHODS.PATCH,
+            route,
+          },
+        ];
+
+        const mockedMutation = await mockMutation({
+          endpoints,
+          mutation,
+          wrapper,
+        });
+
+        await act(async () => {
+          await mockedMutation.mutate(toPatch);
+          await waitForMutation();
+        });
+
+        expect(queryClient.getQueryState(key)?.isInvalidated).toBeTruthy();
+        expect(queryClient.getQueryData<List<AppData>>(key)).toEqual(initData.set('settings', toPatch));
+      });
+    });
+
+    describe('Failed requests', () => {
+      it('Unauthorized', async () => {
+        // set necessary data
+        queryClient.setQueryData(AUTH_TOKEN_KEY, MOCK_TOKEN);
+        const initData = Map(buildMockLocalContext({ itemId }))
+        queryClient.setQueryData(LOCAL_CONTEXT_KEY, initData);
+
+        const response = UNAUTHORIZED_RESPONSE;
+
+        const endpoints = [
+          {
+            response,
+            statusCode: StatusCodes.UNAUTHORIZED,
+            method: REQUEST_METHODS.PATCH,
+            route,
+          },
+        ];
+
+        const mockedMutation = await mockMutation({
+          endpoints,
+          mutation,
+          wrapper,
+        });
+
+        await act(async () => {
+          await mockedMutation.mutate(toPatch);
+          await waitForMutation();
+        });
+
+        expect(mockedNotifier).toHaveBeenCalledWith(expect.objectContaining({
+          type: patchSettingsRoutine.FAILURE,
+        }));
+        expect(queryClient.getQueryState(key)?.isInvalidated).toBeTruthy();
+        expect(queryClient.getQueryData<List<AppData>>(key)).toEqual(initData);
+      });
+
+      it('Throw if itemId is undefined', async () => {
+        // set necessary data
+        queryClient.setQueryData(AUTH_TOKEN_KEY, MOCK_TOKEN);
+        const initData = Map(buildMockLocalContext({ itemId: null }))
+        queryClient.setQueryData(key, initData);
+
+        const endpoints = [
+          {
+            response: toPatch,
+            method: REQUEST_METHODS.PATCH,
+            route,
+          },
+        ];
+
+        const mockedMutation = await mockMutation({
+          endpoints,
+          mutation,
+          wrapper,
+        });
+
+        await act(async () => {
+          await mockedMutation.mutate(toPatch);
+          await waitForMutation();
+        });
+
+        expect(mockedNotifier).toHaveBeenCalledWith(expect.objectContaining({
+          type: patchSettingsRoutine.FAILURE,
+        }));
+        expect(queryClient.getQueryData(key)).toEqual(initData);
+        // since the itemid is not defined, we do not check data for its key
+      });
+
+      it('Throw if memberId is undefined', async () => {
+        // set necessary data
+        queryClient.setQueryData(AUTH_TOKEN_KEY, MOCK_TOKEN);
+        const initData = Map(buildMockLocalContext({ itemId, memberId: null }))
+        queryClient.setQueryData(key, initData);
+
+        const endpoints = [
+          {
+            response: toPatch,
+            method: REQUEST_METHODS.PATCH,
+            route,
+          },
+        ];
+
+        const mockedMutation = await mockMutation({
+          endpoints,
+          mutation,
+          wrapper,
+        });
+
+        await act(async () => {
+          await mockedMutation.mutate(toPatch);
+          await waitForMutation();
+        });
+
+        expect(mockedNotifier).toHaveBeenCalledWith(expect.objectContaining({
+          type: patchSettingsRoutine.FAILURE,
+        }));
+        expect(queryClient.getQueryData(key)).toEqual(initData);
+        expect(queryClient.getQueryState(key)?.isInvalidated).toBeTruthy();
+      });
+
+      it('Throw if token is undefined', async () => {
+        // set necessary data
+        const initData = Map(buildMockLocalContext({ itemId }))
+        queryClient.setQueryData(LOCAL_CONTEXT_KEY, initData);
+
+        const endpoints = [
+          {
+            response: toPatch,
+            method: REQUEST_METHODS.PATCH,
+            route,
+          },
+        ];
+
+        const mockedMutation = await mockMutation({
+          endpoints,
+          mutation,
+          wrapper,
+        });
+
+        await act(async () => {
+          await mockedMutation.mutate(toPatch);
+          await waitForMutation();
+        });
+
+        expect(mockedNotifier).toHaveBeenCalledWith(expect.objectContaining({
+          type: patchSettingsRoutine.FAILURE,
+        }));
         expect(queryClient.getQueryData(key)).toEqual(initData);
         expect(queryClient.getQueryState(key)?.isInvalidated).toBeTruthy();
       });
