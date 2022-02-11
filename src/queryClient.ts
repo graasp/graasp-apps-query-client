@@ -13,6 +13,7 @@ import { CACHE_TIME_MILLISECONDS, STALE_TIME_MILLISECONDS } from './config/const
 import configureHooks from './hooks';
 import configureMutations from './mutations';
 import type { QueryClientConfig } from './types';
+import { API_ROUTES } from './api/routes';
 
 // Query client retry function decides when and how many times a request should be retried
 const defaultRetryFunction = (failureCount: number, error: Error) => {
@@ -34,7 +35,6 @@ const defaultRetryFunction = (failureCount: number, error: Error) => {
 
 export default (config: Partial<QueryClientConfig>) => {
   const baseConfig = {
-    // API_HOST: config?.API_HOST || process.env.REACT_APP_API_HOST || 'http://localhost:3000',
     SHOW_NOTIFICATIONS:
       config?.SHOW_NOTIFICATIONS || process.env.REACT_APP_SHOW_NOTIFICATIONS === 'true' || false,
     keepPreviousData: config?.keepPreviousData || false,
@@ -57,7 +57,7 @@ export default (config: Partial<QueryClientConfig>) => {
     defaultOptions: {
       queries: {
         refetchOnWindowFocus: config?.refetchOnWindowFocus || false,
-        retry: config?.shouldRetry ?? true
+        retry: config?.shouldRetry ?? true,
       },
     },
   });
@@ -82,5 +82,6 @@ export default (config: Partial<QueryClientConfig>) => {
     MUTATION_KEYS,
     HOOK_KEYS,
     POST_MESSAGE_KEYS,
+    API_ROUTES,
   };
 };

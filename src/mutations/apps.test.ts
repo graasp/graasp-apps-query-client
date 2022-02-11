@@ -10,7 +10,12 @@ import {
   buildAppData,
 } from '../../test/constants';
 import { mockMutation, setUpTest, waitForMutation } from '../../test/utils';
-import { buildDeleteAppDataRoute, buildPatchAppDataRoute, buildPatchSettingsRoute, buildPostAppDataRoute } from '../api/routes';
+import {
+  buildDeleteAppDataRoute,
+  buildPatchAppDataRoute,
+  buildPatchSettingsRoute,
+  buildPostAppDataRoute,
+} from '../api/routes';
 import { AUTH_TOKEN_KEY, buildAppDataKey, LOCAL_CONTEXT_KEY, MUTATION_KEYS } from '../config/keys';
 import { AppData } from '../types';
 import { StatusCodes } from 'http-status-codes';
@@ -102,9 +107,11 @@ describe('Apps Mutations', () => {
           await waitForMutation();
         });
 
-        expect(mockedNotifier).toHaveBeenCalledWith(expect.objectContaining({
-          type: postAppDataRoutine.FAILURE,
-        }));
+        expect(mockedNotifier).toHaveBeenCalledWith(
+          expect.objectContaining({
+            type: postAppDataRoutine.FAILURE,
+          }),
+        );
         expect(queryClient.getQueryState(key)?.isInvalidated).toBeTruthy();
         expect(queryClient.getQueryData<List<AppData>>(key)).toEqual(initData);
       });
@@ -134,9 +141,11 @@ describe('Apps Mutations', () => {
           await waitForMutation();
         });
 
-        expect(mockedNotifier).toHaveBeenCalledWith(expect.objectContaining({
-          type: postAppDataRoutine.FAILURE,
-        }));
+        expect(mockedNotifier).toHaveBeenCalledWith(
+          expect.objectContaining({
+            type: postAppDataRoutine.FAILURE,
+          }),
+        );
         expect(queryClient.getQueryData(key)).toEqual(initData);
         // since the itemid is not defined, we do not check data for its key
       });
@@ -169,9 +178,11 @@ describe('Apps Mutations', () => {
           await waitForMutation();
         });
 
-        expect(mockedNotifier).toHaveBeenCalledWith(expect.objectContaining({
-          type: postAppDataRoutine.FAILURE,
-        }));
+        expect(mockedNotifier).toHaveBeenCalledWith(
+          expect.objectContaining({
+            type: postAppDataRoutine.FAILURE,
+          }),
+        );
         expect(queryClient.getQueryData(key)).toEqual(initData);
         expect(queryClient.getQueryState(key)?.isInvalidated).toBeTruthy();
       });
@@ -200,9 +211,11 @@ describe('Apps Mutations', () => {
           await waitForMutation();
         });
 
-        expect(mockedNotifier).toHaveBeenCalledWith(expect.objectContaining({
-          type: postAppDataRoutine.FAILURE,
-        }));
+        expect(mockedNotifier).toHaveBeenCalledWith(
+          expect.objectContaining({
+            type: postAppDataRoutine.FAILURE,
+          }),
+        );
         expect(queryClient.getQueryData(key)).toEqual(initData);
         expect(queryClient.getQueryState(key)?.isInvalidated).toBeTruthy();
       });
@@ -285,9 +298,11 @@ describe('Apps Mutations', () => {
           await waitForMutation();
         });
 
-        expect(mockedNotifier).toHaveBeenCalledWith(expect.objectContaining({
-          type: patchAppDataRoutine.FAILURE,
-        }));
+        expect(mockedNotifier).toHaveBeenCalledWith(
+          expect.objectContaining({
+            type: patchAppDataRoutine.FAILURE,
+          }),
+        );
         expect(queryClient.getQueryState(key)?.isInvalidated).toBeTruthy();
         expect(queryClient.getQueryData<List<AppData>>(key)).toEqual(initData);
       });
@@ -317,9 +332,11 @@ describe('Apps Mutations', () => {
           await waitForMutation();
         });
 
-        expect(mockedNotifier).toHaveBeenCalledWith(expect.objectContaining({
-          type: patchAppDataRoutine.FAILURE,
-        }));
+        expect(mockedNotifier).toHaveBeenCalledWith(
+          expect.objectContaining({
+            type: patchAppDataRoutine.FAILURE,
+          }),
+        );
         expect(queryClient.getQueryData(key)).toEqual(initData);
         // since the itemid is not defined, we do not check data for its key
       });
@@ -352,9 +369,11 @@ describe('Apps Mutations', () => {
           await waitForMutation();
         });
 
-        expect(mockedNotifier).toHaveBeenCalledWith(expect.objectContaining({
-          type: patchAppDataRoutine.FAILURE,
-        }));
+        expect(mockedNotifier).toHaveBeenCalledWith(
+          expect.objectContaining({
+            type: patchAppDataRoutine.FAILURE,
+          }),
+        );
         expect(queryClient.getQueryData(key)).toEqual(initData);
         expect(queryClient.getQueryState(key)?.isInvalidated).toBeTruthy();
       });
@@ -383,9 +402,11 @@ describe('Apps Mutations', () => {
           await waitForMutation();
         });
 
-        expect(mockedNotifier).toHaveBeenCalledWith(expect.objectContaining({
-          type: patchAppDataRoutine.FAILURE,
-        }));
+        expect(mockedNotifier).toHaveBeenCalledWith(
+          expect.objectContaining({
+            type: patchAppDataRoutine.FAILURE,
+          }),
+        );
         expect(queryClient.getQueryData(key)).toEqual(initData);
         expect(queryClient.getQueryState(key)?.isInvalidated).toBeTruthy();
       });
@@ -410,7 +431,6 @@ describe('Apps Mutations', () => {
 
       it('Delete app data', async () => {
         queryClient.setQueryData(key, initData);
-
 
         const endpoints = [
           {
@@ -606,7 +626,9 @@ describe('Apps Mutations', () => {
         });
 
         expect(queryClient.getQueryState(key)?.isInvalidated).toBeTruthy();
-        expect(queryClient.getQueryData<List<AppData>>(key)).toEqual(initData.set('settings', toPatch));
+        expect(queryClient.getQueryData<List<AppData>>(key)).toEqual(
+          initData.set('settings', toPatch),
+        );
       });
     });
 
@@ -614,7 +636,7 @@ describe('Apps Mutations', () => {
       it('Unauthorized', async () => {
         // set necessary data
         queryClient.setQueryData(AUTH_TOKEN_KEY, MOCK_TOKEN);
-        const initData = Map(buildMockLocalContext({ itemId }))
+        const initData = Map(buildMockLocalContext({ itemId }));
         queryClient.setQueryData(LOCAL_CONTEXT_KEY, initData);
 
         const response = UNAUTHORIZED_RESPONSE;
@@ -639,9 +661,11 @@ describe('Apps Mutations', () => {
           await waitForMutation();
         });
 
-        expect(mockedNotifier).toHaveBeenCalledWith(expect.objectContaining({
-          type: patchSettingsRoutine.FAILURE,
-        }));
+        expect(mockedNotifier).toHaveBeenCalledWith(
+          expect.objectContaining({
+            type: patchSettingsRoutine.FAILURE,
+          }),
+        );
         expect(queryClient.getQueryState(key)?.isInvalidated).toBeTruthy();
         expect(queryClient.getQueryData<List<AppData>>(key)).toEqual(initData);
       });
@@ -649,7 +673,7 @@ describe('Apps Mutations', () => {
       it('Throw if itemId is undefined', async () => {
         // set necessary data
         queryClient.setQueryData(AUTH_TOKEN_KEY, MOCK_TOKEN);
-        const initData = Map(buildMockLocalContext({ itemId: null }))
+        const initData = Map(buildMockLocalContext({ itemId: null }));
         queryClient.setQueryData(key, initData);
 
         const endpoints = [
@@ -671,9 +695,11 @@ describe('Apps Mutations', () => {
           await waitForMutation();
         });
 
-        expect(mockedNotifier).toHaveBeenCalledWith(expect.objectContaining({
-          type: patchSettingsRoutine.FAILURE,
-        }));
+        expect(mockedNotifier).toHaveBeenCalledWith(
+          expect.objectContaining({
+            type: patchSettingsRoutine.FAILURE,
+          }),
+        );
         expect(queryClient.getQueryData(key)).toEqual(initData);
         // since the itemid is not defined, we do not check data for its key
       });
@@ -681,7 +707,7 @@ describe('Apps Mutations', () => {
       it('Throw if memberId is undefined', async () => {
         // set necessary data
         queryClient.setQueryData(AUTH_TOKEN_KEY, MOCK_TOKEN);
-        const initData = Map(buildMockLocalContext({ itemId, memberId: null }))
+        const initData = Map(buildMockLocalContext({ itemId, memberId: null }));
         queryClient.setQueryData(key, initData);
 
         const endpoints = [
@@ -703,16 +729,18 @@ describe('Apps Mutations', () => {
           await waitForMutation();
         });
 
-        expect(mockedNotifier).toHaveBeenCalledWith(expect.objectContaining({
-          type: patchSettingsRoutine.FAILURE,
-        }));
+        expect(mockedNotifier).toHaveBeenCalledWith(
+          expect.objectContaining({
+            type: patchSettingsRoutine.FAILURE,
+          }),
+        );
         expect(queryClient.getQueryData(key)).toEqual(initData);
         expect(queryClient.getQueryState(key)?.isInvalidated).toBeTruthy();
       });
 
       it('Throw if token is undefined', async () => {
         // set necessary data
-        const initData = Map(buildMockLocalContext({ itemId }))
+        const initData = Map(buildMockLocalContext({ itemId }));
         queryClient.setQueryData(LOCAL_CONTEXT_KEY, initData);
 
         const endpoints = [
@@ -734,9 +762,11 @@ describe('Apps Mutations', () => {
           await waitForMutation();
         });
 
-        expect(mockedNotifier).toHaveBeenCalledWith(expect.objectContaining({
-          type: patchSettingsRoutine.FAILURE,
-        }));
+        expect(mockedNotifier).toHaveBeenCalledWith(
+          expect.objectContaining({
+            type: patchSettingsRoutine.FAILURE,
+          }),
+        );
         expect(queryClient.getQueryData(key)).toEqual(initData);
         expect(queryClient.getQueryState(key)?.isInvalidated).toBeTruthy();
       });

@@ -10,7 +10,7 @@ export type QueryClientConfig = {
   refetchOnWindowFocus?: boolean;
   keepPreviousData?: boolean;
   GRAASP_APP_ID?: string | null;
-  shouldRetry?: boolean
+  shouldRetry?: boolean;
 };
 
 // Graasp Core Types

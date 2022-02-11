@@ -10,6 +10,7 @@ import { AUTH_TOKEN_KEY, LOCAL_CONTEXT_KEY, POST_MESSAGE_KEYS } from '../config/
 import { LocalContext, QueryClientConfig, WindowPostMessage } from '../types';
 import { MissingMessageChannelPortError } from '../config/errors';
 import { buildAppIdAndOriginPayload } from '../config/utils';
+import { getAuthTokenRoutine, getLocalContextRoutine } from '../routines';
 
 const postMessage: WindowPostMessage = (data) => {
   if (window.parent.postMessage) {
@@ -77,15 +78,19 @@ const configurePostMessageHooks = (_queryClient: QueryClient, queryConfig: Query
       formatResolvedValue?: (data: { payload: any; event: MessageEvent }) => unknown,
     ) =>
     (event: MessageEvent) => {
-      const { type, payload } = JSON.parse(event.data) || {};
-      const format = formatResolvedValue ?? ((data: { payload: unknown }) => data.payload);
-      // get init message getting the Message Channel port
-      if (type === successType) {
-        resolve(format({ payload, event }));
-      } else if (type === errorType) {
-        reject({ payload, event });
-      } else {
-        reject('the type is not recognised');
+      try {
+        const { type, payload } = JSON.parse(event.data) || {};
+        const format = formatResolvedValue ?? ((data: { payload: unknown }) => data.payload);
+        // get init message getting the Message Channel port
+        if (type === successType) {
+          resolve(format({ payload, event }));
+        } else if (type === errorType) {
+          reject({ payload, event });
+        } else {
+          reject('the type is not recognised');
+        }
+      } catch (e) {
+        reject('an error occured');
       }
     };
 
@@ -110,8 +115,8 @@ const configurePostMessageHooks = (_queryClient: QueryClient, queryConfig: Query
 
         return new Promise((resolve, reject) => {
           getLocalContextFunction = receiveContextMessage(
-            POST_MESSAGE_KEYS.GET_CONTEXT_SUCCEEDED,
-            POST_MESSAGE_KEYS.GET_CONTEXT_FAILED,
+            POST_MESSAGE_KEYS.GET_CONTEXT_SUCCESS,
+            POST_MESSAGE_KEYS.GET_CONTEXT_FAILURE,
             {
               resolve,
               reject,
@@ -127,8 +132,11 @@ const configurePostMessageHooks = (_queryClient: QueryClient, queryConfig: Query
           });
         });
       },
-      onError: () => {
-        console.error('an error occured while fetching the context');
+      onError: (error) => {
+        queryConfig?.notifier?.({
+          type: getLocalContextRoutine.FAILURE,
+          payload: { error },
+        });
       },
       onSettled: () => {
         // stop to listen to window message
@@ -144,14 +152,16 @@ const configurePostMessageHooks = (_queryClient: QueryClient, queryConfig: Query
       queryKey: AUTH_TOKEN_KEY,
       queryFn: () => {
         if (!port2) {
-          throw new MissingMessageChannelPortError();
+          const error = new MissingMessageChannelPortError();
+          console.error(error);
+          throw error;
         }
         const postMessagePayload = buildAppIdAndOriginPayload(queryConfig);
 
         return new Promise((resolve, reject) => {
           getAuthTokenFunction = receiveContextMessage(
-            POST_MESSAGE_KEYS.GET_AUTH_TOKEN_SUCCEEDED,
-            POST_MESSAGE_KEYS.GET_AUTH_TOKEN_FAILED,
+            POST_MESSAGE_KEYS.GET_AUTH_TOKEN_SUCCESS,
+            POST_MESSAGE_KEYS.GET_AUTH_TOKEN_FAILURE,
             {
               resolve,
               reject,
@@ -168,6 +178,12 @@ const configurePostMessageHooks = (_queryClient: QueryClient, queryConfig: Query
               payload: postMessagePayload,
             }),
           );
+        });
+      },
+      onError: (error) => {
+        queryConfig?.notifier?.({
+          type: getAuthTokenRoutine.FAILURE,
+          payload: { error },
         });
       },
     });

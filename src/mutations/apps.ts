@@ -4,7 +4,12 @@ import * as Api from '../api';
 import { buildAppDataKey, LOCAL_CONTEXT_KEY, MUTATION_KEYS } from '../config/keys';
 import { AppData, LocalContext, QueryClientConfig } from '../types';
 import { getApiHost, getData, getDataOrThrow } from '../config/utils';
-import { deleteAppDataRoutine, patchAppDataRoutine, patchSettingsRoutine, postAppDataRoutine } from '../routines';
+import {
+  deleteAppDataRoutine,
+  patchAppDataRoutine,
+  patchSettingsRoutine,
+  postAppDataRoutine,
+} from '../routines';
 
 export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
   queryClient.setMutationDefaults(MUTATION_KEYS.POST_APP_DATA, {

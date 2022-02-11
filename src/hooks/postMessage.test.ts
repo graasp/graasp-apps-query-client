@@ -27,7 +27,7 @@ describe('PostMessage Hooks', () => {
         const event = {
           ports: ['mock-port'],
           data: JSON.stringify({
-            type: POST_MESSAGE_KEYS.GET_CONTEXT_SUCCEEDED,
+            type: POST_MESSAGE_KEYS.GET_CONTEXT_SUCCESS,
             // the server does not give any data, the context should be built with default values
             payload: {},
           }),
@@ -68,7 +68,7 @@ describe('PostMessage Hooks', () => {
         const event = {
           ports: ['mock-port'],
           data: JSON.stringify({
-            type: POST_MESSAGE_KEYS.GET_CONTEXT_SUCCEEDED,
+            type: POST_MESSAGE_KEYS.GET_CONTEXT_SUCCESS,
             payload: serverResponse,
           }),
         } as unknown as MessageEvent;
@@ -92,7 +92,7 @@ describe('PostMessage Hooks', () => {
         const hook = () => hooks.useGetLocalContext();
         const event = {
           data: JSON.stringify({
-            type: POST_MESSAGE_KEYS.GET_CONTEXT_FAILED,
+            type: POST_MESSAGE_KEYS.GET_CONTEXT_FAILURE,
             payload: {},
           }),
         } as unknown as MessageEvent;
@@ -113,7 +113,7 @@ describe('PostMessage Hooks', () => {
         const hook = () => hooks.useGetLocalContext();
         const event = {
           data: JSON.stringify({
-            type: POST_MESSAGE_KEYS.GET_CONTEXT_FAILED,
+            type: POST_MESSAGE_KEYS.GET_CONTEXT_FAILURE,
             payload: {},
           }),
         } as unknown as MessageEvent;
@@ -172,7 +172,7 @@ describe('PostMessage Hooks', () => {
         const event = {
           ports: [port],
           data: JSON.stringify({
-            type: POST_MESSAGE_KEYS.GET_CONTEXT_SUCCEEDED,
+            type: POST_MESSAGE_KEYS.GET_CONTEXT_SUCCESS,
             payload: buildMockLocalContext(),
           }),
         } as unknown as MessageEvent;
@@ -181,7 +181,7 @@ describe('PostMessage Hooks', () => {
 
         const event1 = {
           data: JSON.stringify({
-            type: POST_MESSAGE_KEYS.GET_AUTH_TOKEN_SUCCEEDED,
+            type: POST_MESSAGE_KEYS.GET_AUTH_TOKEN_SUCCESS,
             payload: { token: MOCK_TOKEN },
           }),
         } as unknown as MessageEvent;
@@ -204,7 +204,7 @@ describe('PostMessage Hooks', () => {
 
         const event = {
           data: JSON.stringify({
-            type: POST_MESSAGE_KEYS.GET_AUTH_TOKEN_SUCCEEDED,
+            type: POST_MESSAGE_KEYS.GET_AUTH_TOKEN_SUCCESS,
             payload: { token: MOCK_TOKEN },
           }),
         } as unknown as MessageEvent;
