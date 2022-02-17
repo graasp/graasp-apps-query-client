@@ -1,3 +1,5 @@
+import { UUID } from '../types';
+
 export class MissingTokenError extends Error {
   constructor() {
     super('Auth token is missing!');
@@ -25,5 +27,13 @@ export class MissingAppOriginError extends Error {
 export class MissingMessageChannelPortError extends Error {
   constructor() {
     super('Message channel port is missing!');
+  }
+}
+
+export class MissingNecessaryDataError extends Error {
+  constructor({ itemId, memberId, token }: { itemId?: UUID; memberId?: UUID; token?: string }) {
+    super(
+      `itemId '${itemId}', memberId '${memberId}', token of length ${token?.length} are necessary data, but some are missing!`,
+    );
   }
 }

@@ -3,7 +3,8 @@ import { Record } from 'immutable';
 import { LocalContext, QueryClientConfig } from '../types';
 import { AUTH_TOKEN_KEY, LOCAL_CONTEXT_KEY } from './keys';
 import { StatusCodes } from 'http-status-codes';
-import { MissingAppIdError, MissingAppOriginError } from './errors';
+import { MissingAppIdError, MissingAppOriginError, MissingNecessaryDataError } from './errors';
+
 export class MissingApiHostError extends Error {
   statusCode: number;
   constructor() {
@@ -32,9 +33,7 @@ export const getData = (queryClient: QueryClient) => {
 export const getDataOrThrow = (queryClient: QueryClient) => {
   const { itemId, memberId, token } = getData(queryClient);
   if (!itemId || !memberId || !token) {
-    throw new Error(
-      `itemId '${itemId}', memberId '${memberId}', token are necessary data, but some are missing!`,
-    );
+    throw new MissingNecessaryDataError({ itemId, memberId, token });
   }
   return { itemId, memberId, token };
 };

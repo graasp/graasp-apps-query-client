@@ -41,7 +41,6 @@ export const postAppData = (args: {
   const { token, itemId, apiHost, body } = args;
   return axios
     .post(`${apiHost}/${buildPostAppDataRoute({ itemId })}`, body, {
-      // data: body,
       headers: {
         Authorization: `Bearer ${token}`,
       },
