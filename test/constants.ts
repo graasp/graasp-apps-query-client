@@ -54,28 +54,36 @@ export const APPS = [
   },
 ];
 
-export const FIXTURE_APP_DATA: AppData[] = [
-  {
-    id: v4(),
-    data: {
-      some: 'data',
-    },
-  },
-  {
-    id: v4(),
-    data: {
-      some: 'data',
-    },
-  },
-  {
-    id: v4(),
-    data: {
-      some: 'data',
-    },
-  },
-];
+export const buildAppData = (
+  { id, data }: { id: string; data: unknown } = { id: v4(), data: {} },
+) => ({
+  id,
+  data,
+  type: 'verb',
+});
+
+export const FIXTURE_APP_DATA: AppData[] = [buildAppData(), buildAppData(), buildAppData()];
 
 export const FIXTURE_TOKEN = 'some-token';
 export const FIXTURE_CONTEXT = {
   members: MEMBERS_RESPONSE,
 };
+
+export enum REQUEST_METHODS {
+  GET = 'GET',
+  POST = 'POST',
+  DELETE = 'DELETE',
+  PUT = 'PUT',
+  PATCH = 'PATCH',
+}
+
+export const buildMockLocalContext = ({
+  itemId = v4(),
+  memberId = v4(),
+}: { itemId?: string | null; memberId?: string | null } = {}) => ({
+  apiHost: API_HOST,
+  itemId,
+  memberId,
+  settings: {},
+});
+export const MOCK_APP_ORIGIN = 'http://localhost';

@@ -4,14 +4,16 @@ import { StatusCodes } from 'http-status-codes';
 import { List, Record, Map } from 'immutable';
 import { mockHook, setUpTest } from '../../test/utils';
 import { buildGetAppDataRoute, buildGetContextRoute } from '../api/routes';
-import { AppData, Context } from '../types';
-import { buildAppContextKey, buildAppDataKey } from '../config/keys';
+import { AppData, LocalContext } from '../types';
+import { buildAppContextKey, buildAppDataKey, LOCAL_CONTEXT_KEY } from '../config/keys';
 import {
   FIXTURE_APP_DATA,
   UNAUTHORIZED_RESPONSE,
   FIXTURE_TOKEN,
   FIXTURE_CONTEXT,
+  buildMockLocalContext,
 } from '../../test/constants';
+import { MissingApiHostError } from '../config/utils';
 
 const { hooks, wrapper, queryClient } = setUpTest();
 const token = FIXTURE_TOKEN;
@@ -29,6 +31,9 @@ describe('App Hooks', () => {
     const hook = () => hooks.useAppData({ itemId, token });
 
     it('Receive app data', async () => {
+      // preset context
+      queryClient.setQueryData(LOCAL_CONTEXT_KEY, Map(buildMockLocalContext()));
+
       const response = FIXTURE_APP_DATA;
       const endpoints = [{ route, response }];
       const { data } = await mockHook({ endpoints, hook, wrapper });
@@ -38,7 +43,48 @@ describe('App Hooks', () => {
       // verify cache keys
       expect(queryClient.getQueryData(key)).toEqual(List(response));
     });
+    it('Cannot fetch app data if context does not exist', async () => {
+      const response = FIXTURE_APP_DATA;
+      const endpoints = [{ route, response }];
+      const { error } = await mockHook({ endpoints, hook, wrapper });
+
+      // verify cache keys
+      expect(queryClient.getQueryData(key)).toBeFalsy();
+      expect((error as Error).message).toEqual(new MissingApiHostError().message);
+    });
+    it('Does not fetch if itemId is missing', async () => {
+      const response = FIXTURE_APP_DATA;
+      const endpoints = [{ route, response }];
+      const disabledHook = () => hooks.useAppContext({ token });
+      const { isFetched } = await mockHook({
+        endpoints,
+        hook: disabledHook,
+        wrapper,
+        enabled: false,
+      });
+
+      // verify cache keys
+      expect(queryClient.getQueryData(key)).toBeFalsy();
+      expect(isFetched).toBeFalsy();
+    });
+    it('Does not fetch if token is missing', async () => {
+      const response = FIXTURE_APP_DATA;
+      const endpoints = [{ route, response }];
+      const disabledHook = () => hooks.useAppContext({ itemId });
+      const { isFetched } = await mockHook({
+        endpoints,
+        hook: disabledHook,
+        wrapper,
+        enabled: false,
+      });
+
+      // verify cache keys
+      expect(queryClient.getQueryData(key)).toBeFalsy();
+      expect(isFetched).toBeFalsy();
+    });
     it('Unauthorized', async () => {
+      // preset context
+      queryClient.setQueryData(LOCAL_CONTEXT_KEY, Map(buildMockLocalContext()));
       const endpoints = [
         {
           route,
@@ -51,7 +97,6 @@ describe('App Hooks', () => {
         wrapper,
         endpoints,
       });
-
       expect(data).toBeFalsy();
       expect(isError).toBeTruthy();
       // verify cache keys
@@ -66,17 +111,60 @@ describe('App Hooks', () => {
     const hook = () => hooks.useAppContext({ itemId, token });
 
     it('Receive app context', async () => {
+      // preset context
+      queryClient.setQueryData(LOCAL_CONTEXT_KEY, Map(buildMockLocalContext()));
+
       const response = FIXTURE_CONTEXT;
       const endpoints = [{ route, response }];
       const { data } = await mockHook({ endpoints, hook, wrapper });
 
-      expect((data as Record<Context>).toJS()).toEqual(response);
+      expect((data as Record<LocalContext>).toJS()).toEqual(response);
 
       // verify cache keys
       expect(queryClient.getQueryData(key)).toEqual(Map(response));
     });
+    it('Cannot fetch context if local context does not exist', async () => {
+      const response = FIXTURE_CONTEXT;
+      const endpoints = [{ route, response }];
+      const { error } = await mockHook({ endpoints, hook, wrapper });
 
+      // verify cache keys
+      expect(queryClient.getQueryData(key)).toBeFalsy();
+      expect((error as Error).message).toEqual(new MissingApiHostError().message);
+    });
+    it('Does not fetch if itemId is missing', async () => {
+      const response = FIXTURE_CONTEXT;
+      const endpoints = [{ route, response }];
+      const disabledHook = () => hooks.useAppContext({ token });
+      const { isFetched } = await mockHook({
+        endpoints,
+        hook: disabledHook,
+        wrapper,
+        enabled: false,
+      });
+
+      // verify cache keys
+      expect(queryClient.getQueryData(key)).toBeFalsy();
+      expect(isFetched).toBeFalsy();
+    });
+    it('Does not fetch if token is missing', async () => {
+      const response = FIXTURE_CONTEXT;
+      const endpoints = [{ route, response }];
+      const disabledHook = () => hooks.useAppContext({ itemId });
+      const { isFetched } = await mockHook({
+        endpoints,
+        hook: disabledHook,
+        wrapper,
+        enabled: false,
+      });
+
+      // verify cache keys
+      expect(queryClient.getQueryData(key)).toBeFalsy();
+      expect(isFetched).toBeFalsy();
+    });
     it('Unauthorized', async () => {
+      // preset context
+      queryClient.setQueryData(LOCAL_CONTEXT_KEY, Map(buildMockLocalContext()));
       const endpoints = [
         {
           route,

@@ -1,32 +1,136 @@
 import { QueryClient } from 'react-query';
-import { List } from 'immutable';
+import { List, Map, Record } from 'immutable';
 import * as Api from '../api';
-import { buildAppDataKey, MUTATION_KEYS } from '../config/keys';
-import { QueryClientConfig, AppData } from '../types';
+import { buildAppDataKey, LOCAL_CONTEXT_KEY, MUTATION_KEYS } from '../config/keys';
+import { AppData, LocalContext, QueryClientConfig } from '../types';
+import { getApiHost, getData, getDataOrThrow } from '../config/utils';
+import {
+  deleteAppDataRoutine,
+  patchAppDataRoutine,
+  patchSettingsRoutine,
+  postAppDataRoutine,
+} from '../routines';
 
 export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
-  queryClient.setMutationDefaults(MUTATION_KEYS.DELETE_APP_DATA, {
-    mutationFn: (payload: { token: string; itemId: string; id: string }) =>
-      Api.deleteAppData(payload, queryConfig),
+  queryClient.setMutationDefaults(MUTATION_KEYS.POST_APP_DATA, {
+    mutationFn: (payload: { data: unknown; verb: string }) => {
+      const apiHost = getApiHost(queryClient);
+      const data = getDataOrThrow(queryClient);
+      return Api.postAppData({ ...data, body: payload, apiHost });
+    },
+    onSuccess: (newAppData: AppData) => {
+      const { itemId } = getData(queryClient);
+      const key = buildAppDataKey(itemId);
+      const prevData = queryClient.getQueryData<List<AppData>>(key);
+      queryClient.setQueryData(key, prevData?.push(newAppData));
+    },
+    onError: (error) => {
+      queryConfig?.notifier?.({ type: postAppDataRoutine.FAILURE, payload: { error } });
+    },
+    onSettled: () => {
+      const { itemId } = getData(queryClient);
+      queryClient.invalidateQueries(buildAppDataKey(itemId));
+    },
+  });
 
-    onMutate: async (payload) => {
-      const prevData = queryClient.getQueryData<List<AppData>>(buildAppDataKey(payload.itemId));
+  queryClient.setMutationDefaults(MUTATION_KEYS.PATCH_APP_DATA, {
+    mutationFn: (payload: { id: string; data: unknown }) => {
+      const apiHost = getApiHost(queryClient);
+      const data = getDataOrThrow(queryClient);
+      return Api.patchAppData({ ...data, id: payload.id, data: payload.data, apiHost }).then(
+        (data) => Map(data),
+      );
+    },
+    onMutate: async (payload: { id: string; data: any }) => {
+      let context = null;
+      const { itemId } = getData(queryClient);
+      const prevData = queryClient.getQueryData<List<AppData>>(buildAppDataKey(itemId));
+      if (itemId && prevData) {
+        const newData = prevData.map((appData) =>
+          appData.id === payload.id
+            ? { ...appData, data: { ...appData.data, ...payload.data } }
+            : appData,
+        );
+        queryClient.setQueryData(buildAppDataKey(itemId), newData);
+        context = prevData;
+      }
+      return context;
+    },
+    onError: (error, _payload, prevData) => {
+      queryConfig?.notifier?.({ type: patchAppDataRoutine.FAILURE, payload: { error } });
+
       if (prevData) {
+        const { itemId } = getData(queryClient);
+        const data = queryClient.getQueryData<List<AppData>>(buildAppDataKey(itemId));
+        if (itemId && data) {
+          queryClient.setQueryData(buildAppDataKey(itemId), prevData);
+        }
+      }
+    },
+    onSettled: () => {
+      const data = getData(queryClient);
+      queryClient.invalidateQueries(buildAppDataKey(data?.itemId));
+    },
+  });
+
+  queryClient.setMutationDefaults(MUTATION_KEYS.DELETE_APP_DATA, {
+    mutationFn: (payload: { id: string }) => {
+      const apiHost = getApiHost(queryClient);
+      const data = getDataOrThrow(queryClient);
+      return Api.deleteAppData({ ...data, id: payload.id, apiHost });
+    },
+    onMutate: async (payload) => {
+      const { itemId } = getDataOrThrow(queryClient);
+      const prevData = queryClient.getQueryData<List<AppData>>(buildAppDataKey(itemId));
+      if (prevData && itemId) {
         queryClient.setQueryData(
-          buildAppDataKey(payload.itemId),
+          buildAppDataKey(itemId),
           prevData?.filter(({ id: appDataId }) => appDataId !== payload.id),
         );
       }
       return prevData;
     },
-    onError: (_error, payload, prevData) => {
-      const data = queryClient.getQueryData<List<AppData>>(buildAppDataKey(payload.itemId));
-      if (data) {
-        queryClient.setQueryData(buildAppDataKey(payload.itemId), prevData);
+    onError: (error, _payload, prevData) => {
+      queryConfig?.notifier?.({ type: deleteAppDataRoutine.FAILURE, payload: { error } });
+
+      if (prevData) {
+        const { itemId } = getData(queryClient);
+        const data = queryClient.getQueryData<List<AppData>>(buildAppDataKey(itemId));
+        if (itemId && data) {
+          queryClient.setQueryData(buildAppDataKey(itemId), prevData);
+        }
       }
     },
-    onSettled: (_data, _error, payload) => {
-      queryClient.invalidateQueries(buildAppDataKey(payload.itemId));
+    onSettled: () => {
+      const { itemId } = getData(queryClient);
+      if (itemId) {
+        queryClient.invalidateQueries(buildAppDataKey(itemId));
+      }
+    },
+  });
+
+  queryClient.setMutationDefaults(MUTATION_KEYS.PATCH_SETTINGS, {
+    mutationFn: (settings: unknown) => {
+      const apiHost = getApiHost(queryClient);
+      const data = getDataOrThrow(queryClient);
+      return Api.patchSettings({ ...data, settings, apiHost });
+    },
+    onMutate: async (payload) => {
+      const prevData = queryClient.getQueryData<Record<LocalContext>>(LOCAL_CONTEXT_KEY);
+      if (prevData) {
+        queryClient.setQueryData(LOCAL_CONTEXT_KEY, prevData.set('settings', payload));
+      }
+      return prevData;
+    },
+    onError: (error, _payload, prevData) => {
+      queryConfig?.notifier?.({ type: patchSettingsRoutine.FAILURE, payload: { error } });
+
+      if (prevData) {
+        queryClient.setQueryData(LOCAL_CONTEXT_KEY, prevData);
+      }
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries(LOCAL_CONTEXT_KEY);
     },
   });
 };

@@ -1,14 +1,16 @@
 export type Notifier = (e: unknown) => void;
 
 export type QueryClientConfig = {
-  API_HOST: string;
+  API_HOST?: string; // set during usecontext
   SHOW_NOTIFICATIONS: boolean;
   notifier?: Notifier;
   staleTime: number;
   cacheTime: number;
-  retry: number | boolean | ((failureCount: number, error: Error) => boolean);
+  retry?: number | boolean | ((failureCount: number, error: Error) => boolean);
   refetchOnWindowFocus?: boolean;
   keepPreviousData?: boolean;
+  GRAASP_APP_ID?: string | null;
+  shouldRetry?: boolean;
 };
 
 // Graasp Core Types
@@ -40,7 +42,7 @@ export type Member = {
 
 export type AppData = {
   id: UUID;
-  data: unknown;
+  data: any;
 };
 
 export class UndefinedArgument extends Error {
@@ -60,6 +62,29 @@ export type GraaspError = {
   data?: unknown;
 };
 
-export type Context = {
-  members: Member[];
+export type WindowPostMessage = (message: unknown) => void;
+
+// todo: factor out in graasp-constants
+export enum Context {
+  PLAYER = 'player',
+  BUILDER = 'builder',
+  ANALYZER = 'analyzer',
+  EXPLORER = 'explorer',
+}
+export enum PermissionLevel {
+  ADMIN = 'admin',
+  READ = 'read',
+  WRITE = 'write',
+}
+
+export type LocalContext = {
+  apiHost: string;
+  itemId: string;
+  memberId?: string;
+  settings?: unknown;
+  dev?: string;
+  offline?: string;
+  lang?: string;
+  context?: Context;
+  permission?: string;
 };

@@ -1,13 +1,22 @@
 import { getReasonPhrase, StatusCodes } from 'http-status-codes';
-import { QueryClient, QueryClientProvider, useMutation, Hydrate, dehydrate } from 'react-query';
+import {
+  QueryClient,
+  QueryClientProvider,
+  useMutation,
+  Hydrate,
+  dehydrate,
+  useQuery,
+} from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
+import { MUTATION_KEYS, HOOK_KEYS, POST_MESSAGE_KEYS } from './config/keys';
 import { CACHE_TIME_MILLISECONDS, STALE_TIME_MILLISECONDS } from './config/constants';
 import configureHooks from './hooks';
 import configureMutations from './mutations';
 import type { QueryClientConfig } from './types';
+import { API_ROUTES } from './api/routes';
 
 // Query client retry function decides when and how many times a request should be retried
-const retry = (failureCount: number, error: Error) => {
+const defaultRetryFunction = (failureCount: number, error: Error) => {
   // do not retry if the request was not authorized
   // the user is probably not signed in
   const codes = [
@@ -26,21 +35,21 @@ const retry = (failureCount: number, error: Error) => {
 
 export default (config: Partial<QueryClientConfig>) => {
   const baseConfig = {
-    API_HOST: config?.API_HOST || process.env.REACT_APP_API_HOST || 'http://localhost:3000',
     SHOW_NOTIFICATIONS:
       config?.SHOW_NOTIFICATIONS || process.env.REACT_APP_SHOW_NOTIFICATIONS === 'true' || false,
     keepPreviousData: config?.keepPreviousData || false,
+    retry: config?.retry ?? defaultRetryFunction,
   };
 
   // define config for query client
   const queryConfig: QueryClientConfig = {
     ...baseConfig,
+    GRAASP_APP_ID: config.GRAASP_APP_ID,
     notifier: config?.notifier,
     // time until data in cache considered stale if cache not invalidated
     staleTime: config?.staleTime || STALE_TIME_MILLISECONDS,
     // time before cache labeled as inactive to be garbage collected
     cacheTime: config?.cacheTime || CACHE_TIME_MILLISECONDS,
-    retry,
   };
 
   // create queryclient with given config
@@ -48,6 +57,7 @@ export default (config: Partial<QueryClientConfig>) => {
     defaultOptions: {
       queries: {
         refetchOnWindowFocus: config?.refetchOnWindowFocus || false,
+        retry: config?.shouldRetry ?? true,
       },
     },
   });
@@ -68,5 +78,10 @@ export default (config: Partial<QueryClientConfig>) => {
     ReactQueryDevtools,
     dehydrate,
     Hydrate,
+    useQuery,
+    MUTATION_KEYS,
+    HOOK_KEYS,
+    POST_MESSAGE_KEYS,
+    API_ROUTES,
   };
 };
