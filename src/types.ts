@@ -11,6 +11,7 @@ export type QueryClientConfig = {
   keepPreviousData?: boolean;
   GRAASP_APP_ID?: string | null;
   shouldRetry?: boolean;
+  targetWindow?: Window;
 };
 
 // Graasp Core Types

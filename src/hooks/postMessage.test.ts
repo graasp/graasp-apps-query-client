@@ -4,7 +4,7 @@ import { mockHook, mockWindowForPostMessage, setUpTest } from '../../test/utils'
 import { Context, LocalContext } from '../types';
 import { AUTH_TOKEN_KEY, LOCAL_CONTEXT_KEY, POST_MESSAGE_KEYS } from '../config/keys';
 import { API_HOST, buildMockLocalContext } from '../../test/constants';
-import { DEFAULT_LANG, DEFAULT_PERMISSION, DEFAULT_VIEW, MOCK_TOKEN } from '../config/constants';
+import { DEFAULT_CONTEXT, DEFAULT_LANG, DEFAULT_PERMISSION, MOCK_TOKEN } from '../config/constants';
 import {
   MissingAppIdError,
   MissingAppOriginError,
@@ -40,7 +40,7 @@ describe('PostMessage Hooks', () => {
           apiHost: undefined,
           memberId: undefined,
           itemId: undefined,
-          context: DEFAULT_VIEW,
+          context: DEFAULT_CONTEXT,
           lang: DEFAULT_LANG,
           permission: DEFAULT_PERMISSION,
           settings: {},
