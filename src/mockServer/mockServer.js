@@ -1,6 +1,6 @@
-import { createServer, Model, Factory, RestSerializer } from 'miragejs';
+import { createServer, Model, Factory, RestSerializer, Response } from 'miragejs';
 import { v4 } from 'uuid';
-import { API_ROUTES } from '../api/routes';
+import { API_ROUTES, buildDownloadFileRoute } from '../api/routes';
 import { buildMockLocalContext } from './fixtures';
 
 const {
@@ -10,6 +10,7 @@ const {
   buildPatchAppDataRoute,
   buildDeleteAppDataRoute,
   buildPatchSettingsRoute,
+  buildUploadFilesRoute,
 } = API_ROUTES;
 
 const ApplicationSerializer = RestSerializer.extend({
@@ -23,9 +24,12 @@ const setupApi = ({
     members: [MOCK_SERVER_MEMBER],
   },
   appContext = buildMockLocalContext(),
+  errors = {},
 } = {}) => {
   const { appData, members } = database;
   const { itemId: currentItemId, memberId: currentMemberId, apiHost } = appContext;
+  // mocked errors
+  const { deleteAppDataShouldThrow } = errors;
 
   // we cannot use *Data
   // https://github.com/miragejs/miragejs/issues/782
@@ -98,6 +102,9 @@ const setupApi = ({
       this.delete(
         `/${buildDeleteAppDataRoute({ itemId: currentItemId, id: ':id' })}`,
         (schema, request) => {
+          if (deleteAppDataShouldThrow) {
+            return new Response(400, {}, { errors: [deleteAppDataShouldThrow] });
+          }
           const { id } = request.params;
           const appData = schema.appDataResources.findBy({ id });
           return appData.destroy();
@@ -117,6 +124,21 @@ const setupApi = ({
         const { requestBody } = request;
         const data = JSON.parse(requestBody);
         return data;
+      });
+
+      // files
+      this.get(`/${buildDownloadFileRoute(':id')}`, (schema, request) => {
+        const { id } = request.params;
+        const appData = schema.appDataResources.findBy({ id });
+        // this call returns the app data itself for simplification
+        return appData;
+      });
+      this.post(`/${buildUploadFilesRoute(currentItemId)})`, (schema, request) => {
+        return schema.appDataResources.create({
+          data: request,
+          itemId: currentItemId,
+          memberId: currentMemberId,
+        });
       });
     },
   });

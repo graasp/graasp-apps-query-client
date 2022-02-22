@@ -151,7 +151,7 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
       if (itemId) {
         const key = buildAppDataKey(itemId);
         const prevData = queryClient.getQueryData<List<AppData>>(key);
-        if (prevData) {
+        if (prevData && data) {
           queryClient.setQueryData(key, prevData.concat(data));
         }
       }
