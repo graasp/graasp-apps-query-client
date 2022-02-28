@@ -4,6 +4,7 @@ export const buildAppDataKey = (id?: UUID) => [id, 'app-data'];
 export const buildAppContextKey = (id?: UUID) => [id, 'context'];
 export const AUTH_TOKEN_KEY = 'AUTH_TOKEN_KEY';
 export const LOCAL_CONTEXT_KEY = 'LOCAL_CONTEXT_KEY';
+export const buildFileContentKey = (id?: UUID) => ['files', id, 'content'];
 
 export const POST_MESSAGE_KEYS = {
   GET_CONTEXT_SUCCESS: 'GET_CONTEXT_SUCCESS',

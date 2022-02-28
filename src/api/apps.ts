@@ -1,5 +1,6 @@
 import {
   buildDeleteAppDataRoute,
+  buildDownloadFilesRoute,
   buildGetAppDataRoute,
   buildGetContextRoute,
   buildPatchAppDataRoute,
@@ -100,3 +101,20 @@ export const patchSettings = (args: {
     })
     .then(({ data }) => data);
 };
+
+// todo: add public route
+export const getFileContent = async ({
+  id,
+  apiHost,
+  token,
+}: {
+  id: string;
+  apiHost: string;
+  token: string;
+}) =>
+  axios.get(`${apiHost}/${buildDownloadFilesRoute(id)}`, {
+    responseType: 'blob',
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });

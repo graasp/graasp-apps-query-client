@@ -47,7 +47,6 @@ const configurePostMessageHooks = (_queryClient: QueryClient, queryConfig: Query
 
   const postMessage: WindowPostMessage = (data) => {
     const targetWindow = queryConfig?.targetWindow;
-    console.log('targetWindow: ', targetWindow);
     if (targetWindow?.postMessage) {
       targetWindow.postMessage(JSON.stringify(data), '*');
     } else {
