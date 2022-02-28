@@ -15,6 +15,7 @@
     "axios": "0.24.0",
     "http-status-codes": "2.1.4",
     "immutable": "4.0.0",
+    "miragejs": "0.1.43",
     "qs": "6.10.1",
     "react-query": "3.31.0",
     "tsc": "2.0.3",

@@ -21,7 +21,19 @@ export const THUMBNAIL_SIZES = {
 };
 export const DEFAULT_THUMBNAIL_SIZES = THUMBNAIL_SIZES.SMALL;
 
-export const DEFAULT_PERMISSION = 'read';
-export const DEFAULT_VIEW = 'standalone';
+export const PERMISSION_LEVELS = {
+  WRITE: 'write',
+  READ: 'read',
+  ADMIN: 'admin',
+};
+export const DEFAULT_PERMISSION = PERMISSION_LEVELS.READ;
+export const CONTEXTS = {
+  BUILDER: 'builder',
+  PLAYER: 'player',
+  ANALYZER: 'analyzer',
+  STANDALONE: 'standalone',
+};
+
+export const DEFAULT_CONTEXT = CONTEXTS.STANDALONE;
 export const DEFAULT_LANG = 'en';
 export const MOCK_TOKEN = 'mock-token';

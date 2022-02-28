@@ -44,6 +44,7 @@ export default (config: Partial<QueryClientConfig>) => {
   // define config for query client
   const queryConfig: QueryClientConfig = {
     ...baseConfig,
+    targetWindow: config?.targetWindow,
     GRAASP_APP_ID: config.GRAASP_APP_ID,
     notifier: config?.notifier,
     // time until data in cache considered stale if cache not invalidated
