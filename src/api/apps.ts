@@ -123,10 +123,10 @@ export const getFileContent = async ({
       },
     })
     .catch(function (error) {
-      console.log('error: ', error);
-      if (error.request.url) {
-        return axios.get(error.request.url, {
+      if (error.request.responseURL) {
+        return axios.get(error.request.responseURL, {
           responseType: 'blob',
+          withCredentials: false,
         });
       }
       throw error;
