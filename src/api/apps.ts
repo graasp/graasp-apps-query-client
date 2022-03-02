@@ -1,3 +1,4 @@
+import fetch from 'node-fetch';
 import {
   buildDeleteAppDataRoute,
   buildDownloadFilesRoute,
@@ -103,6 +104,8 @@ export const patchSettings = (args: {
 };
 
 // todo: add public route
+// because of the bearer token, it triggers an error on s3 on redirect because the request has two auth methods
+// https://github.com/axios/axios/issues/2855
 export const getFileContent = async ({
   id,
   apiHost,
@@ -111,10 +114,21 @@ export const getFileContent = async ({
   id: string;
   apiHost: string;
   token: string;
-}) =>
-  axios.get(`${apiHost}/${buildDownloadFilesRoute(id)}`, {
-    responseType: 'blob',
+}) => {
+  const response = await fetch(`${apiHost}/${buildDownloadFilesRoute(id)}`, {
+    method: 'GET',
     headers: {
       Authorization: `Bearer ${token}`,
     },
   });
+  console.log(response);
+  const data = await response.blob();
+  console.log('data: ', data);
+  return data;
+  // axios.get(`${apiHost}/${buildDownloadFilesRoute(id)}`, {
+  //   responseType: 'blob',
+  //   headers: {
+  //     Authorization: `Bearer ${token}`,
+  //   },
+  // });
+};
