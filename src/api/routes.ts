@@ -18,6 +18,8 @@ export const buildPatchAppDataRoute = (payload: { itemId: string; id: string }) 
 export const buildDeleteAppDataRoute = (payload: { itemId: string; id: string }) =>
   `${APP_ITEMS_ROUTE}/${payload.itemId}/${APP_DATA_ENDPOINT}/${payload.id}`;
 
+export const buildDownloadFilesRoute = (id: string) => `${APP_ITEMS_ROUTE}/${id}/download`;
+
 export const buildUploadFilesRoute = (itemId: string) => `${APP_ITEMS_ROUTE}/upload?id=${itemId}`;
 
 export const buildPatchSettingsRoute = (payload: { itemId: string }) =>

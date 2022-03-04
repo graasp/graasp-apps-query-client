@@ -1,5 +1,6 @@
 import {
   buildDeleteAppDataRoute,
+  buildDownloadFilesRoute,
   buildGetAppDataRoute,
   buildGetContextRoute,
   buildPatchAppDataRoute,
@@ -100,3 +101,33 @@ export const patchSettings = (args: {
     })
     .then(({ data }) => data);
 };
+
+// todo: add public route
+// because of the bearer token, it triggers an error on s3 on redirect because the request has two auth methods
+// https://github.com/axios/axios/issues/2855
+// https://stackoverflow.com/questions/50861144/reactjs-remove-http-header-before-redirect/51252434#51252434
+export const getFileContent = async ({
+  id,
+  apiHost,
+  token,
+}: {
+  id: string;
+  apiHost: string;
+  token: string;
+}) =>
+  axios
+    .get(`${apiHost}/${buildDownloadFilesRoute(id)}`, {
+      responseType: 'blob',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+    .catch(function (error) {
+      if (error.request.responseURL) {
+        return axios.get(error.request.responseURL, {
+          responseType: 'blob',
+          withCredentials: false,
+        });
+      }
+      throw error;
+    });

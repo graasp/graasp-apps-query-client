@@ -12,6 +12,12 @@ export class MissingItemIdError extends Error {
   }
 }
 
+export class MissingFileIdError extends Error {
+  constructor() {
+    super('File id is missing!');
+  }
+}
+
 export class MissingAppIdError extends Error {
   constructor() {
     super('App id is missing!');

@@ -8,7 +8,7 @@ import {
   useQuery,
 } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
-import { MUTATION_KEYS, HOOK_KEYS, POST_MESSAGE_KEYS } from './config/keys';
+import { MUTATION_KEYS, HOOK_KEYS, buildPostMessageKeys } from './config/keys';
 import { CACHE_TIME_MILLISECONDS, STALE_TIME_MILLISECONDS } from './config/constants';
 import configureHooks from './hooks';
 import configureMutations from './mutations';
@@ -82,7 +82,7 @@ export default (config: Partial<QueryClientConfig>) => {
     useQuery,
     MUTATION_KEYS,
     HOOK_KEYS,
-    POST_MESSAGE_KEYS,
+    buildPostMessageKeys,
     API_ROUTES,
   };
 };
