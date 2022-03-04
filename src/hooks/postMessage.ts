@@ -6,7 +6,7 @@
 import { QueryClient, useQuery } from 'react-query';
 import { Map } from 'immutable';
 import { DEFAULT_CONTEXT, DEFAULT_LANG, DEFAULT_PERMISSION } from '../config/constants';
-import { AUTH_TOKEN_KEY, LOCAL_CONTEXT_KEY, POST_MESSAGE_KEYS } from '../config/keys';
+import { AUTH_TOKEN_KEY, LOCAL_CONTEXT_KEY, buildPostMessageKeys } from '../config/keys';
 import { LocalContext, QueryClientConfig, WindowPostMessage } from '../types';
 import { MissingMessageChannelPortError } from '../config/errors';
 import { buildAppIdAndOriginPayload } from '../config/utils';
@@ -94,10 +94,11 @@ const configurePostMessageHooks = (_queryClient: QueryClient, queryConfig: Query
     };
 
   let getLocalContextFunction: ((event: MessageEvent) => void) | null = null;
-  const useGetLocalContext = () =>
+  const useGetLocalContext = (itemId: string) =>
     useQuery({
       queryKey: LOCAL_CONTEXT_KEY,
       queryFn: async () => {
+        const POST_MESSAGE_KEYS = buildPostMessageKeys(itemId);
         const postMessagePayload = buildAppIdAndOriginPayload(queryConfig);
 
         const formatResolvedValue = (result: { event: MessageEvent; payload: LocalContext }) => {
@@ -146,10 +147,11 @@ const configurePostMessageHooks = (_queryClient: QueryClient, queryConfig: Query
     });
 
   let getAuthTokenFunction = null;
-  const useAuthToken = () =>
+  const useAuthToken = (itemId: string) =>
     useQuery({
       queryKey: AUTH_TOKEN_KEY,
       queryFn: () => {
+        const POST_MESSAGE_KEYS = buildPostMessageKeys(itemId);
         if (!port2) {
           const error = new MissingMessageChannelPortError();
           console.error(error);
