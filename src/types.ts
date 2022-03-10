@@ -45,6 +45,12 @@ export type AppData = {
   data: any;
 };
 
+export type AppAction = {
+  id: UUID;
+  verb: string;
+  data: AppData;
+}
+
 export class UndefinedArgument extends Error {
   constructor() {
     super();

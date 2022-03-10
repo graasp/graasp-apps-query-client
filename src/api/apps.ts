@@ -5,6 +5,7 @@ import {
   buildPatchAppDataRoute,
   buildPatchSettingsRoute,
   buildPostAppDataRoute,
+  buildPostAppActionsRoute,
 } from './routes';
 import configureAxios from './axios';
 
@@ -94,6 +95,22 @@ export const patchSettings = (args: {
   const { token, itemId, apiHost, settings } = args;
   return axios
     .patch(`${apiHost}/${buildPatchSettingsRoute({ itemId })}`, settings, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+    .then(({ data }) => data);
+};
+
+export const postAppAction = (args: {
+  token: string;
+  itemId: string;
+  body: any;
+  apiHost: string;
+}) => {
+  const { token, itemId, apiHost, body } = args;
+  return axios
+    .post(`${apiHost}/${buildPostAppActionsRoute({ itemId })}`, body, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

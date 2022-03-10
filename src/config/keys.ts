@@ -1,6 +1,7 @@
 import { UUID } from '../types';
 
 export const buildAppDataKey = (id?: UUID) => [id, 'app-data'];
+export const buildAppActionKey = (id?: UUID) => [id, 'app-action'];
 export const buildAppContextKey = (id?: UUID) => [id, 'context'];
 export const AUTH_TOKEN_KEY = 'AUTH_TOKEN_KEY';
 export const LOCAL_CONTEXT_KEY = 'LOCAL_CONTEXT_KEY';
@@ -19,9 +20,11 @@ export const MUTATION_KEYS = {
   PATCH_APP_DATA: 'PATCH_APP_DATA',
   DELETE_APP_DATA: 'DELETE_APP_DATA',
   PATCH_SETTINGS: 'PATCH_SETTINGS',
+  POST_APP_ACTION: 'POST_APP_ACTION',
 };
 
 export const HOOK_KEYS = {
   buildAppDataKey,
   buildAppContextKey,
+  buildAppActionKey,
 };

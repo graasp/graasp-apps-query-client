@@ -1,8 +1,8 @@
 import { QueryClient } from 'react-query';
 import { List, Map, Record } from 'immutable';
 import * as Api from '../api';
-import { buildAppDataKey, LOCAL_CONTEXT_KEY, MUTATION_KEYS } from '../config/keys';
-import { AppData, LocalContext, QueryClientConfig } from '../types';
+import { buildAppDataKey, buildAppActionKey, LOCAL_CONTEXT_KEY, MUTATION_KEYS } from '../config/keys';
+import { AppAction, AppData, LocalContext, QueryClientConfig } from '../types';
 import { getApiHost, getData, getDataOrThrow } from '../config/utils';
 import {
   deleteAppDataRoutine,
@@ -131,6 +131,27 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
     },
     onSettled: () => {
       queryClient.invalidateQueries(LOCAL_CONTEXT_KEY);
+    },
+  });
+
+  queryClient.setMutationDefaults(MUTATION_KEYS.POST_APP_ACTION, {
+    mutationFn: (payload: { data: unknown; verb: string }) => {
+      const apiHost = getApiHost(queryClient);
+      const data = getDataOrThrow(queryClient);
+      return Api.postAppAction({ ...data, body: payload, apiHost });
+    },
+    onSuccess: (newAppAction: AppAction) => {
+      const { itemId } = getData(queryClient);
+      const key = buildAppActionKey(itemId);
+      const prevData = queryClient.getQueryData<List<AppAction>>(key);
+      queryClient.setQueryData(key, prevData?.push(newAppAction));
+    },
+    onError: (error) => {
+      queryConfig?.notifier?.({ type: postAppDataRoutine.FAILURE, payload: { error } });
+    },
+    onSettled: () => {
+      const { itemId } = getData(queryClient);
+      queryClient.invalidateQueries(buildAppActionKey(itemId));
     },
   });
 };
