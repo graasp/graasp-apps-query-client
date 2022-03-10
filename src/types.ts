@@ -47,8 +47,8 @@ export type AppData = {
 
 export type AppAction = {
   id: UUID;
-  verb: string;
-  data: AppData;
+  type: string;
+  data: any;
 }
 
 export class UndefinedArgument extends Error {
