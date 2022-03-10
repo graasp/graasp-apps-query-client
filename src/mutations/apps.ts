@@ -9,9 +9,12 @@ import {
   patchAppDataRoutine,
   patchSettingsRoutine,
   postAppDataRoutine,
+  uploadFileRoutine,
 } from '../routines';
 
 export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
+  const { notifier } = queryConfig;
+
   queryClient.setMutationDefaults(MUTATION_KEYS.POST_APP_DATA, {
     mutationFn: (payload: { data: unknown; verb: string }) => {
       const apiHost = getApiHost(queryClient);
@@ -152,6 +155,36 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
     onSettled: () => {
       const { itemId } = getData(queryClient);
       queryClient.invalidateQueries(buildAppActionKey(itemId));
+    },
+  });
+  // this mutation is used for its callback and invalidate the keys
+  /**
+   * @param {UUID} id parent item id wher the file is uploaded in
+   * @param {error} [error] error occured during the file uploading
+   */
+  queryClient.setMutationDefaults(MUTATION_KEYS.FILE_UPLOAD, {
+    mutationFn: async ({ error }) => {
+      if (error) throw new Error(JSON.stringify(error));
+    },
+    onSuccess: (_result, { data }: { data: AppData }) => {
+      const { itemId } = getData(queryClient);
+      if (itemId) {
+        const key = buildAppDataKey(itemId);
+        const prevData = queryClient.getQueryData<List<AppData>>(key);
+        if (prevData && data) {
+          queryClient.setQueryData(key, prevData.concat(data));
+        }
+      }
+      notifier?.({ type: uploadFileRoutine.SUCCESS });
+    },
+    onError: (_error, { error }) => {
+      notifier?.({ type: uploadFileRoutine.FAILURE, payload: { error } });
+    },
+    onSettled: () => {
+      const { itemId } = getData(queryClient);
+      if (itemId) {
+        queryClient.invalidateQueries(buildAppDataKey(itemId));
+      }
     },
   });
 };

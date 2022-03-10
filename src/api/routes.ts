@@ -25,6 +25,8 @@ export const buildGetAppActionsRoute = (itemId: string) =>
 export const buildPostAppActionsRoute = (payload: { itemId: string }) =>
   `${APP_ITEMS_ROUTE}/${payload.itemId}/${APP_ACTIONS_ENDPOINT}`;
 
+export const buildDownloadFilesRoute = (id: string) => `${APP_ITEMS_ROUTE}/${id}/download`;
+
 export const buildUploadFilesRoute = (itemId: string) => `${APP_ITEMS_ROUTE}/upload?id=${itemId}`;
 
 export const buildPatchSettingsRoute = (payload: { itemId: string }) =>

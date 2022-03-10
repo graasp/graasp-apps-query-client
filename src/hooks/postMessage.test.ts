@@ -2,14 +2,17 @@ import { v4 } from 'uuid';
 import { Record } from 'immutable';
 import { mockHook, mockWindowForPostMessage, setUpTest } from '../../test/utils';
 import { Context, LocalContext } from '../types';
-import { AUTH_TOKEN_KEY, LOCAL_CONTEXT_KEY, POST_MESSAGE_KEYS } from '../config/keys';
+import { AUTH_TOKEN_KEY, LOCAL_CONTEXT_KEY, buildPostMessageKeys } from '../config/keys';
 import { API_HOST, buildMockLocalContext } from '../../test/constants';
-import { DEFAULT_LANG, DEFAULT_PERMISSION, DEFAULT_VIEW, MOCK_TOKEN } from '../config/constants';
+import { DEFAULT_CONTEXT, DEFAULT_LANG, DEFAULT_PERMISSION, MOCK_TOKEN } from '../config/constants';
 import {
   MissingAppIdError,
   MissingAppOriginError,
   MissingMessageChannelPortError,
 } from '../config/errors';
+
+const mockItemId = 'mock-item-id';
+const POST_MESSAGE_KEYS = buildPostMessageKeys(mockItemId);
 
 describe('PostMessage Hooks', () => {
   describe('useGetLocalContext', () => {
@@ -17,7 +20,7 @@ describe('PostMessage Hooks', () => {
 
     describe('Successful requests', () => {
       const { hooks, wrapper, queryClient } = setUpTest();
-      const hook = () => hooks.useGetLocalContext();
+      const hook = () => hooks.useGetLocalContext(mockItemId);
 
       afterEach(() => {
         queryClient.clear();
@@ -40,7 +43,7 @@ describe('PostMessage Hooks', () => {
           apiHost: undefined,
           memberId: undefined,
           itemId: undefined,
-          context: DEFAULT_VIEW,
+          context: DEFAULT_CONTEXT,
           lang: DEFAULT_LANG,
           permission: DEFAULT_PERMISSION,
           settings: {},
@@ -89,7 +92,7 @@ describe('PostMessage Hooks', () => {
     describe('Failed requests', () => {
       it('Gracefully fails on response error', async () => {
         const { hooks, wrapper, queryClient } = setUpTest({ GRAASP_APP_ID: v4() });
-        const hook = () => hooks.useGetLocalContext();
+        const hook = () => hooks.useGetLocalContext(mockItemId);
         const event = {
           data: JSON.stringify({
             type: POST_MESSAGE_KEYS.GET_CONTEXT_FAILURE,
@@ -110,7 +113,7 @@ describe('PostMessage Hooks', () => {
 
       it('Fails if app origin is undefined', async () => {
         const { hooks, wrapper, queryClient } = setUpTest({ GRAASP_APP_ID: v4() });
-        const hook = () => hooks.useGetLocalContext();
+        const hook = () => hooks.useGetLocalContext(mockItemId);
         const event = {
           data: JSON.stringify({
             type: POST_MESSAGE_KEYS.GET_CONTEXT_FAILURE,
@@ -131,7 +134,7 @@ describe('PostMessage Hooks', () => {
 
       it('Fails if app id is undefined', async () => {
         const { hooks, wrapper, queryClient } = setUpTest({ GRAASP_APP_ID: null });
-        const hook = () => hooks.useGetLocalContext();
+        const hook = () => hooks.useGetLocalContext(mockItemId);
         const event = {
           data: JSON.stringify({}),
         } as unknown as MessageEvent;
@@ -155,7 +158,7 @@ describe('PostMessage Hooks', () => {
 
     describe('Successful requests', () => {
       const { hooks, wrapper, queryClient } = setUpTest();
-      const hook = () => hooks.useAuthToken();
+      const hook = () => hooks.useAuthToken(mockItemId);
 
       // mock port: necessary to test auth token
       const port = {
@@ -177,7 +180,7 @@ describe('PostMessage Hooks', () => {
           }),
         } as unknown as MessageEvent;
         mockWindowForPostMessage(event);
-        await mockHook({ hook: () => hooks.useGetLocalContext(), wrapper });
+        await mockHook({ hook: () => hooks.useGetLocalContext(mockItemId), wrapper });
 
         const event1 = {
           data: JSON.stringify({
@@ -200,7 +203,7 @@ describe('PostMessage Hooks', () => {
     describe('Failed requests', () => {
       it('Fails if port2 is undefined', async () => {
         const { hooks, wrapper, queryClient } = setUpTest({ GRAASP_APP_ID: v4() });
-        const hook = () => hooks.useAuthToken();
+        const hook = () => hooks.useAuthToken(mockItemId);
 
         const event = {
           data: JSON.stringify({

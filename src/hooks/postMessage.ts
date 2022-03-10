@@ -1,58 +1,57 @@
 /**
- * This file contains hooks using window.parent.postMessage
+ * This file contains hooks using windowParent.postMessage
  * These are used before the app requests a token
  */
 
 import { QueryClient, useQuery } from 'react-query';
 import { Map } from 'immutable';
-import { DEFAULT_LANG, DEFAULT_PERMISSION, DEFAULT_VIEW } from '../config/constants';
-import { AUTH_TOKEN_KEY, LOCAL_CONTEXT_KEY, POST_MESSAGE_KEYS } from '../config/keys';
+import { DEFAULT_CONTEXT, DEFAULT_LANG, DEFAULT_PERMISSION } from '../config/constants';
+import { AUTH_TOKEN_KEY, LOCAL_CONTEXT_KEY, buildPostMessageKeys } from '../config/keys';
 import { LocalContext, QueryClientConfig, WindowPostMessage } from '../types';
 import { MissingMessageChannelPortError } from '../config/errors';
 import { buildAppIdAndOriginPayload } from '../config/utils';
 import { getAuthTokenRoutine, getLocalContextRoutine } from '../routines';
 
-const postMessage: WindowPostMessage = (data) => {
-  if (window.parent.postMessage) {
-    window.parent.postMessage(JSON.stringify(data), '*');
-  } else {
-    console.error('unable to find postMessage');
-  }
+// build context from given data and default values
+export const buildContext = (payload: LocalContext) => {
+  const {
+    apiHost,
+    memberId,
+    itemId,
+    permission = DEFAULT_PERMISSION, // write, admin, read
+    context = DEFAULT_CONTEXT, // builder, explorer..., null = standalone
+    lang = DEFAULT_LANG,
+    offline = false,
+    dev = false,
+    settings = {},
+  } = payload;
+
+  const standalone = context === null;
+
+  return {
+    apiHost,
+    context,
+    permission,
+    itemId,
+    memberId,
+    lang,
+    offline,
+    dev,
+    standalone,
+    settings,
+  };
 };
 
 const configurePostMessageHooks = (_queryClient: QueryClient, queryConfig: QueryClientConfig) => {
   let port2: MessagePort;
 
-  // build context from given data and default values
-  const buildContext = (payload: LocalContext) => {
-    const {
-      apiHost,
-      memberId,
-      itemId,
-      permission = DEFAULT_PERMISSION, // write, admin, read
-      context = DEFAULT_VIEW, // builder, explorer..., null = standalone
-      lang = DEFAULT_LANG,
-      offline = false,
-      dev = false,
-      settings = {},
-    } = payload;
-
-    // use fake api
-
-    const standalone = context === null;
-
-    return {
-      apiHost,
-      context,
-      permission,
-      itemId,
-      memberId,
-      lang,
-      offline,
-      dev,
-      standalone,
-      settings,
-    };
+  const postMessage: WindowPostMessage = (data) => {
+    const targetWindow = queryConfig?.targetWindow;
+    if (targetWindow?.postMessage) {
+      targetWindow.postMessage(JSON.stringify(data), '*');
+    } else {
+      console.error('unable to find postMessage');
+    }
   };
 
   /**
@@ -95,10 +94,11 @@ const configurePostMessageHooks = (_queryClient: QueryClient, queryConfig: Query
     };
 
   let getLocalContextFunction: ((event: MessageEvent) => void) | null = null;
-  const useGetLocalContext = () =>
+  const useGetLocalContext = (itemId: string) =>
     useQuery({
       queryKey: LOCAL_CONTEXT_KEY,
       queryFn: async () => {
+        const POST_MESSAGE_KEYS = buildPostMessageKeys(itemId);
         const postMessagePayload = buildAppIdAndOriginPayload(queryConfig);
 
         const formatResolvedValue = (result: { event: MessageEvent; payload: LocalContext }) => {
@@ -147,10 +147,11 @@ const configurePostMessageHooks = (_queryClient: QueryClient, queryConfig: Query
     });
 
   let getAuthTokenFunction = null;
-  const useAuthToken = () =>
+  const useAuthToken = (itemId: string) =>
     useQuery({
       queryKey: AUTH_TOKEN_KEY,
       queryFn: () => {
+        const POST_MESSAGE_KEYS = buildPostMessageKeys(itemId);
         if (!port2) {
           const error = new MissingMessageChannelPortError();
           console.error(error);
