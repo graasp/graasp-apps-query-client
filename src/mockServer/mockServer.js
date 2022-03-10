@@ -9,6 +9,8 @@ const {
   buildPostAppDataRoute,
   buildPatchAppDataRoute,
   buildDeleteAppDataRoute,
+  buildGetAppActionsRoute,
+  buildPostAppActionsRoute,
   buildPatchSettingsRoute,
   buildUploadFilesRoute,
 } = API_ROUTES;
@@ -21,12 +23,13 @@ const ApplicationSerializer = RestSerializer.extend({
 const setupApi = ({
   database = {
     appData: [],
+    appActions: [],
     members: [MOCK_SERVER_MEMBER],
   },
   appContext = buildMockLocalContext(),
   errors = {},
 } = {}) => {
-  const { appData, members } = database;
+  const { appData, appActions, members } = database;
   const { itemId: currentItemId, memberId: currentMemberId, apiHost } = appContext;
   // mocked errors
   const { deleteAppDataShouldThrow } = errors;
@@ -38,10 +41,26 @@ const setupApi = ({
     urlPrefix: apiHost,
     models: {
       appDataResource: Model,
+      appActionsResource: Model,
       member: Model,
     },
     factories: {
       appDataResource: Factory.extend({
+        createdAt: Date.now(),
+        settings: {},
+        data: (attrs) => {
+          return attrs.data;
+        },
+        type: (attrs) => {
+          return attrs.type;
+        },
+        id: (attrs) => {
+          return attrs?.id ?? v4();
+        },
+        itemId: currentItemId,
+        memberId: currentMemberId,
+      }),
+      appActionsResource: Factory.extend({
         createdAt: Date.now(),
         settings: {},
         data: (attrs) => {
@@ -65,11 +84,15 @@ const setupApi = ({
 
     serializers: {
       appDataResource: ApplicationSerializer,
+      appActionsResource: ApplicationSerializer,
       member: ApplicationSerializer,
     },
     seeds(server) {
       appData?.forEach((d) => {
         server.create('appDataResource', d);
+      });
+      appActions?.forEach((d) => {
+        server.create('appActionsResource', d);
       });
       members?.forEach((m) => {
         server.create('member', m);
@@ -110,6 +133,20 @@ const setupApi = ({
           return appData.destroy();
         },
       );
+
+      // app actions
+      this.get(`/${buildGetAppActionsRoute(currentItemId)}`, (schema) => {
+        return schema.appActionsResources.all();
+      });
+      this.post(`/${buildPostAppActionsRoute({ itemId: currentItemId })}`, (schema, request) => {
+        const { requestBody } = request;
+        const data = JSON.parse(requestBody);
+        return schema.appActionsResources.create({
+          ...data,
+          itemId: currentItemId,
+          memberId: currentMemberId,
+        });
+      });
 
       // context
       this.get(`/${buildGetContextRoute(currentItemId)}`, (schema) => {

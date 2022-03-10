@@ -43,4 +43,6 @@ export const API_ROUTES = {
   buildPostAppDataRoute,
   buildPatchSettingsRoute,
   buildPatchAppDataRoute,
+  buildGetAppActionsRoute,
+  buildPostAppActionsRoute,
 };
