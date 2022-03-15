@@ -1,6 +1,7 @@
 export const APP_DATA_ENDPOINT = 'app-data';
 export const ITEMS_ROUTE = 'items';
 export const APP_ITEMS_ROUTE = 'app-items';
+export const APP_ACTIONS_ENDPOINT = 'app-action';
 
 export const buildDownloadFileRoute = (id: string) => {
   return `${APP_ITEMS_ROUTE}/${id}/download`;
@@ -17,6 +18,12 @@ export const buildPatchAppDataRoute = (payload: { itemId: string; id: string }) 
 
 export const buildDeleteAppDataRoute = (payload: { itemId: string; id: string }) =>
   `${APP_ITEMS_ROUTE}/${payload.itemId}/${APP_DATA_ENDPOINT}/${payload.id}`;
+
+export const buildGetAppActionRoute = (itemId: string) =>
+  `${APP_ITEMS_ROUTE}/${itemId}/${APP_ACTIONS_ENDPOINT}`;
+
+export const buildPostAppActionRoute = (payload: { itemId: string }) =>
+  `${APP_ITEMS_ROUTE}/${payload.itemId}/${APP_ACTIONS_ENDPOINT}`;
 
 export const buildDownloadFilesRoute = (id: string) => `${APP_ITEMS_ROUTE}/${id}/download`;
 
@@ -36,4 +43,6 @@ export const API_ROUTES = {
   buildPostAppDataRoute,
   buildPatchSettingsRoute,
   buildPatchAppDataRoute,
+  buildGetAppActionRoute,
+  buildPostAppActionRoute,
 };

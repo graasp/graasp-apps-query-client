@@ -6,6 +6,8 @@ import {
   buildPatchAppDataRoute,
   buildPatchSettingsRoute,
   buildPostAppDataRoute,
+  buildGetAppActionRoute,
+  buildPostAppActionRoute,
 } from './routes';
 import configureAxios from './axios';
 
@@ -102,6 +104,32 @@ export const patchSettings = (args: {
     .then(({ data }) => data);
 };
 
+export const getAppActions = async (args: { token: string; itemId: string; apiHost: string }) => {
+  const { token, itemId, apiHost } = args;
+  return axios
+    .get(`${apiHost}/${buildGetAppActionRoute(itemId)}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+    .then(({ data }) => data);
+};
+
+export const postAppAction = (args: {
+  token: string;
+  itemId: string;
+  body: any;
+  apiHost: string;
+}) => {
+  const { token, itemId, apiHost, body } = args;
+  return axios
+    .post(`${apiHost}/${buildPostAppActionRoute({ itemId })}`, body, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+    .then(({ data }) => data);
+};
 // todo: add public route
 // because of the bearer token, it triggers an error on s3 on redirect because the request has two auth methods
 // https://github.com/axios/axios/issues/2855
