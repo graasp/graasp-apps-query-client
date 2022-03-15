@@ -29,7 +29,7 @@ const setupApi = ({
   appContext = buildMockLocalContext(),
   errors = {},
 } = {}) => {
-  const { appData, appActions, members } = database;
+  const { appData, appAction, members } = database;
   const { itemId: currentItemId, memberId: currentMemberId, apiHost } = appContext;
   // mocked errors
   const { deleteAppDataShouldThrow } = errors;
@@ -41,7 +41,7 @@ const setupApi = ({
     urlPrefix: apiHost,
     models: {
       appDataResource: Model,
-      appActionsResource: Model,
+      appActionResource: Model,
       member: Model,
     },
     factories: {
