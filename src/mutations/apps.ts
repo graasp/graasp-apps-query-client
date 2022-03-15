@@ -138,7 +138,7 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
   });
 
   queryClient.setMutationDefaults(MUTATION_KEYS.POST_APP_ACTION, {
-    mutationFn: (payload: { data: unknown; verb: string }) => {
+    mutationFn: (payload: { data: unknown; type: string }) => {
       const apiHost = getApiHost(queryClient);
       const data = getDataOrThrow(queryClient);
       return Api.postAppAction({ ...data, body: payload, apiHost });

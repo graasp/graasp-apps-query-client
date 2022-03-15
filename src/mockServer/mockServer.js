@@ -23,7 +23,7 @@ const ApplicationSerializer = RestSerializer.extend({
 const setupApi = ({
   database = {
     appData: [],
-    appActions: [],
+    appAction: [],
     members: [MOCK_SERVER_MEMBER],
   },
   appContext = buildMockLocalContext(),
@@ -60,9 +60,8 @@ const setupApi = ({
         itemId: currentItemId,
         memberId: currentMemberId,
       }),
-      appActionsResource: Factory.extend({
+      appActionResource: Factory.extend({
         createdAt: Date.now(),
-        settings: {},
         data: (attrs) => {
           return attrs.data;
         },
@@ -84,15 +83,15 @@ const setupApi = ({
 
     serializers: {
       appDataResource: ApplicationSerializer,
-      appActionsResource: ApplicationSerializer,
+      appActionResource: ApplicationSerializer,
       member: ApplicationSerializer,
     },
     seeds(server) {
       appData?.forEach((d) => {
         server.create('appDataResource', d);
       });
-      appActions?.forEach((d) => {
-        server.create('appActionsResource', d);
+      appAction?.forEach((d) => {
+        server.create('appActionResource', d);
       });
       members?.forEach((m) => {
         server.create('member', m);
@@ -135,13 +134,13 @@ const setupApi = ({
       );
 
       // app actions
-      this.get(`/${buildGetAppActionsRoute(currentItemId)}`, (schema) => {
-        return schema.appActionsResources.all();
+      this.get(`/${buildGetAppActionRoute(currentItemId)}`, (schema) => {
+        return schema.appActionResources.all();
       });
-      this.post(`/${buildPostAppActionsRoute({ itemId: currentItemId })}`, (schema, request) => {
+      this.post(`/${buildPostAppActionRoute({ itemId: currentItemId })}`, (schema, request) => {
         const { requestBody } = request;
         const data = JSON.parse(requestBody);
-        return schema.appActionsResources.create({
+        return schema.appActionResources.create({
           ...data,
           itemId: currentItemId,
           memberId: currentMemberId,
