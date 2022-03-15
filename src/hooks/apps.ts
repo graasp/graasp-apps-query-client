@@ -2,7 +2,12 @@ import { List, Map } from 'immutable';
 import { QueryClient, useQuery } from 'react-query';
 import * as Api from '../api';
 import { MissingFileIdError, MissingItemIdError, MissingTokenError } from '../config/errors';
-import { buildAppContextKey, buildAppDataKey, buildAppActionKey, buildFileContentKey } from '../config/keys';
+import {
+  buildAppActionKey,
+  buildAppContextKey,
+  buildAppDataKey,
+  buildFileContentKey,
+} from '../config/keys';
 import { getApiHost } from '../config/utils';
 import { QueryClientConfig } from '../types';
 
@@ -72,25 +77,25 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
       }),
 
     useFileContent: (
-      payload: { fileId: string; token: string; enabled: boolean },
+      payload?: { fileId: string; token: string },
       { enabled = true }: { enabled?: boolean } = {},
     ) =>
       useQuery({
-        queryKey: buildFileContentKey(payload.fileId),
+        queryKey: buildFileContentKey(payload?.fileId),
         queryFn: () => {
           const apiHost = getApiHost(queryClient);
-          const { token, fileId } = payload;
           // the following check are verified in enabled
-          if (!token) {
+          if (!payload?.token) {
             throw new MissingTokenError();
           }
-          if (!fileId) {
+          if (!payload?.fileId) {
             throw new MissingFileIdError();
           }
+          const { token, fileId } = payload;
           return Api.getFileContent({ id: fileId, apiHost, token }).then((data) => data);
         },
         ...defaultOptions,
-        enabled: Boolean(payload.fileId) && Boolean(payload.token) && enabled,
+        enabled: Boolean(payload?.fileId) && Boolean(payload?.token) && enabled,
       }),
   };
 };

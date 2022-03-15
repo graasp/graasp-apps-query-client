@@ -4,7 +4,6 @@ import {
   buildGetAppDataRoute,
   buildGetContextRoute,
   buildPatchAppDataRoute,
-  buildPatchSettingsRoute,
   buildPostAppDataRoute,
   buildGetAppActionRoute,
   buildPostAppActionRoute,
@@ -24,6 +23,7 @@ export const getContext = async (args: { token: string; itemId: string; apiHost:
     .then(({ data }) => data);
 };
 
+// APP DATA
 export const getAppData = async (args: { token: string; itemId: string; apiHost: string }) => {
   const { token, itemId, apiHost } = args;
   return axios
@@ -81,22 +81,6 @@ export const deleteAppData = (args: {
   const { token, itemId, id, apiHost } = args;
   return axios
     .delete(`${apiHost}/${buildDeleteAppDataRoute({ itemId, id })}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-    .then(({ data }) => data);
-};
-
-export const patchSettings = (args: {
-  token: string;
-  itemId: string;
-  apiHost: string;
-  settings: any;
-}) => {
-  const { token, itemId, apiHost, settings } = args;
-  return axios
-    .patch(`${apiHost}/${buildPatchSettingsRoute({ itemId })}`, settings, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

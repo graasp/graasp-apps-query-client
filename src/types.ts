@@ -50,7 +50,13 @@ export type AppAction = {
   id: UUID;
   type: string;
   data: any;
-}
+};
+
+export type AppSetting = {
+  id: UUID;
+  data: any;
+  name: string;
+};
 
 export class UndefinedArgument extends Error {
   constructor() {

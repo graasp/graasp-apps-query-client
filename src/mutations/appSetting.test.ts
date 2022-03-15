@@ -3,42 +3,47 @@ import nock from 'nock';
 import { v4 } from 'uuid';
 import { List, Map } from 'immutable';
 import {
-  FIXTURE_APP_DATA,
+  FIXTURE_APP_SETTINGS,
   buildMockLocalContext,
   REQUEST_METHODS,
   UNAUTHORIZED_RESPONSE,
-  buildAppData,
+  buildAppSetting,
 } from '../../test/constants';
 import { mockMutation, setUpTest, waitForMutation } from '../../test/utils';
 import {
-  buildDeleteAppDataRoute,
-  buildPatchAppDataRoute,
-  buildPostAppDataRoute,
+  buildDeleteAppSettingRoute,
+  buildPatchAppSettingRoute,
+  buildPostAppSettingRoute,
 } from '../api/routes';
-import { AUTH_TOKEN_KEY, buildAppDataKey, LOCAL_CONTEXT_KEY, MUTATION_KEYS } from '../config/keys';
-import { AppData } from '../types';
+import {
+  AUTH_TOKEN_KEY,
+  buildAppSettingsKey,
+  LOCAL_CONTEXT_KEY,
+  MUTATION_KEYS,
+} from '../config/keys';
+import { AppSetting } from '../types';
 import { StatusCodes } from 'http-status-codes';
 import { MOCK_TOKEN } from '../config/constants';
-import { patchAppDataRoutine, postAppDataRoutine } from '../routines';
+import { patchAppSettingRoutine, postAppSettingRoutine } from '../routines';
 
 const mockedNotifier = jest.fn();
 const { wrapper, queryClient, useMutation } = setUpTest({
   notifier: mockedNotifier,
 });
 
-describe('Apps Mutations', () => {
+describe('App Settings Mutations', () => {
   afterEach(() => {
     queryClient.clear();
     nock.cleanAll();
   });
 
-  describe(MUTATION_KEYS.POST_APP_DATA, () => {
+  describe(MUTATION_KEYS.POST_APP_SETTING, () => {
     const itemId = v4();
-    const key = buildAppDataKey(itemId);
-    const toAdd = buildAppData();
-    const initData = List(FIXTURE_APP_DATA);
-    const route = `/${buildPostAppDataRoute({ itemId })}`;
-    const mutation = () => useMutation(MUTATION_KEYS.POST_APP_DATA);
+    const key = buildAppSettingsKey(itemId);
+    const toAdd = buildAppSetting();
+    const initData = List(FIXTURE_APP_SETTINGS);
+    const route = `/${buildPostAppSettingRoute({ itemId })}`;
+    const mutation = () => useMutation(MUTATION_KEYS.POST_APP_SETTING);
 
     describe('Successful requests', () => {
       beforeEach(() => {
@@ -67,12 +72,12 @@ describe('Apps Mutations', () => {
         });
 
         await act(async () => {
-          await mockedMutation.mutate({ data: toAdd.data, verb: toAdd.type });
+          await mockedMutation.mutate({ data: toAdd.data, name: toAdd.name });
           await waitForMutation();
         });
 
         expect(queryClient.getQueryState(key)?.isInvalidated).toBeTruthy();
-        expect(queryClient.getQueryData<List<AppData>>(key)).toEqual(initData.push(toAdd));
+        expect(queryClient.getQueryData<List<AppSetting>>(key)).toEqual(initData.push(toAdd));
       });
     });
 
@@ -102,17 +107,17 @@ describe('Apps Mutations', () => {
         });
 
         await act(async () => {
-          await mockedMutation.mutate({ data: toAdd.data, verb: toAdd.type });
+          await mockedMutation.mutate({ data: toAdd.data, name: toAdd.name });
           await waitForMutation();
         });
 
         expect(mockedNotifier).toHaveBeenCalledWith(
           expect.objectContaining({
-            type: postAppDataRoutine.FAILURE,
+            type: postAppSettingRoutine.FAILURE,
           }),
         );
         expect(queryClient.getQueryState(key)?.isInvalidated).toBeTruthy();
-        expect(queryClient.getQueryData<List<AppData>>(key)).toEqual(initData);
+        expect(queryClient.getQueryData<List<AppSetting>>(key)).toEqual(initData);
       });
 
       it('Throw if itemId is undefined', async () => {
@@ -136,13 +141,13 @@ describe('Apps Mutations', () => {
         });
 
         await act(async () => {
-          await mockedMutation.mutate({ data: toAdd.data, verb: toAdd.type });
+          await mockedMutation.mutate({ data: toAdd.data, name: toAdd.name });
           await waitForMutation();
         });
 
         expect(mockedNotifier).toHaveBeenCalledWith(
           expect.objectContaining({
-            type: postAppDataRoutine.FAILURE,
+            type: postAppSettingRoutine.FAILURE,
           }),
         );
         expect(queryClient.getQueryData(key)).toEqual(initData);
@@ -179,7 +184,7 @@ describe('Apps Mutations', () => {
 
         expect(mockedNotifier).toHaveBeenCalledWith(
           expect.objectContaining({
-            type: postAppDataRoutine.FAILURE,
+            type: postAppSettingRoutine.FAILURE,
           }),
         );
         expect(queryClient.getQueryData(key)).toEqual(initData);
@@ -212,7 +217,7 @@ describe('Apps Mutations', () => {
 
         expect(mockedNotifier).toHaveBeenCalledWith(
           expect.objectContaining({
-            type: postAppDataRoutine.FAILURE,
+            type: postAppSettingRoutine.FAILURE,
           }),
         );
         expect(queryClient.getQueryData(key)).toEqual(initData);
@@ -221,15 +226,15 @@ describe('Apps Mutations', () => {
     });
   });
 
-  describe(MUTATION_KEYS.PATCH_APP_DATA, () => {
-    const initData = List(FIXTURE_APP_DATA);
+  describe(MUTATION_KEYS.PATCH_APP_SETTING, () => {
+    const initData = List(FIXTURE_APP_SETTINGS);
     const itemId = v4();
     const appDataId = initData.first()?.id ?? v4();
-    const key = buildAppDataKey(itemId);
-    const toPatch = buildAppData({ id: appDataId, data: { new: 'data' } });
+    const key = buildAppSettingsKey(itemId);
+    const toPatch = buildAppSetting({ id: appDataId, data: { new: 'data' } });
     const updatedData = List([toPatch, ...initData.delete(0).toJS()]);
-    const route = `/${buildPatchAppDataRoute({ id: toPatch.id, itemId })}`;
-    const mutation = () => useMutation(MUTATION_KEYS.PATCH_APP_DATA);
+    const route = `/${buildPatchAppSettingRoute({ id: toPatch.id, itemId })}`;
+    const mutation = () => useMutation(MUTATION_KEYS.PATCH_APP_SETTING);
 
     describe('Successful requests', () => {
       beforeEach(() => {
@@ -263,7 +268,7 @@ describe('Apps Mutations', () => {
         });
 
         expect(queryClient.getQueryState(key)?.isInvalidated).toBeTruthy();
-        expect(queryClient.getQueryData<List<AppData>>(key)).toEqual(updatedData);
+        expect(queryClient.getQueryData<List<AppSetting>>(key)).toEqual(updatedData);
       });
     });
 
@@ -299,11 +304,11 @@ describe('Apps Mutations', () => {
 
         expect(mockedNotifier).toHaveBeenCalledWith(
           expect.objectContaining({
-            type: patchAppDataRoutine.FAILURE,
+            type: patchAppSettingRoutine.FAILURE,
           }),
         );
         expect(queryClient.getQueryState(key)?.isInvalidated).toBeTruthy();
-        expect(queryClient.getQueryData<List<AppData>>(key)).toEqual(initData);
+        expect(queryClient.getQueryData<List<AppSetting>>(key)).toEqual(initData);
       });
 
       it('Throw if itemId is undefined', async () => {
@@ -333,7 +338,7 @@ describe('Apps Mutations', () => {
 
         expect(mockedNotifier).toHaveBeenCalledWith(
           expect.objectContaining({
-            type: patchAppDataRoutine.FAILURE,
+            type: patchAppSettingRoutine.FAILURE,
           }),
         );
         expect(queryClient.getQueryData(key)).toEqual(initData);
@@ -370,7 +375,7 @@ describe('Apps Mutations', () => {
 
         expect(mockedNotifier).toHaveBeenCalledWith(
           expect.objectContaining({
-            type: patchAppDataRoutine.FAILURE,
+            type: patchAppSettingRoutine.FAILURE,
           }),
         );
         expect(queryClient.getQueryData(key)).toEqual(initData);
@@ -403,7 +408,7 @@ describe('Apps Mutations', () => {
 
         expect(mockedNotifier).toHaveBeenCalledWith(
           expect.objectContaining({
-            type: patchAppDataRoutine.FAILURE,
+            type: patchAppSettingRoutine.FAILURE,
           }),
         );
         expect(queryClient.getQueryData(key)).toEqual(initData);
@@ -412,13 +417,13 @@ describe('Apps Mutations', () => {
     });
   });
 
-  describe(MUTATION_KEYS.DELETE_APP_DATA, () => {
+  describe(MUTATION_KEYS.DELETE_APP_SETTING, () => {
     const itemId = v4();
-    const key = buildAppDataKey(itemId);
-    const toDelete = FIXTURE_APP_DATA[0];
-    const initData = List([toDelete, FIXTURE_APP_DATA[1]]);
-    const route = `/${buildDeleteAppDataRoute({ itemId, id: toDelete.id })}`;
-    const mutation = () => useMutation(MUTATION_KEYS.DELETE_APP_DATA);
+    const key = buildAppSettingsKey(itemId);
+    const toDelete = FIXTURE_APP_SETTINGS[0];
+    const initData = List([toDelete, FIXTURE_APP_SETTINGS[1]]);
+    const route = `/${buildDeleteAppSettingRoute({ itemId, id: toDelete.id })}`;
+    const mutation = () => useMutation(MUTATION_KEYS.DELETE_APP_SETTING);
 
     describe('Successful requests', () => {
       const response = toDelete;
@@ -451,7 +456,9 @@ describe('Apps Mutations', () => {
         });
 
         expect(queryClient.getQueryState(key)?.isInvalidated).toBeTruthy();
-        expect(queryClient.getQueryData<List<AppData>>(key)).toEqual(List([FIXTURE_APP_DATA[1]]));
+        expect(queryClient.getQueryData<List<AppSetting>>(key)).toEqual(
+          List([FIXTURE_APP_SETTINGS[1]]),
+        );
       });
     });
 
@@ -486,7 +493,7 @@ describe('Apps Mutations', () => {
         });
 
         expect(queryClient.getQueryState(key)?.isInvalidated).toBeTruthy();
-        expect(queryClient.getQueryData<List<AppData>>(key)).toEqual(List([toDelete]));
+        expect(queryClient.getQueryData<List<AppSetting>>(key)).toEqual(List([toDelete]));
       });
 
       it('Throw if itemId is undefined', async () => {
