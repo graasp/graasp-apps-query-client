@@ -124,7 +124,6 @@ export const postAppAction = (args: {
   const { token, itemId, apiHost, body } = args;
   return axios
     .post(`${apiHost}/${buildPostAppActionRoute({ itemId })}`, body, {
-      responseType: 'blob',
       headers: {
         Authorization: `Bearer ${token}`,
       },
