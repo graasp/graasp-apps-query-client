@@ -1,13 +1,6 @@
 import { createServer, Model, Factory, RestSerializer, Response } from 'miragejs';
 import { v4 } from 'uuid';
-import {
-  API_ROUTES,
-  buildDeleteAppSettingRoute,
-  buildDownloadFileRoute,
-  buildGetAppSettingsRoute,
-  buildPatchAppSettingRoute,
-  buildPostAppSettingRoute,
-} from '../api/routes';
+import { API_ROUTES } from '../api/routes';
 import { buildMockLocalContext } from './fixtures';
 
 const {
@@ -16,10 +9,14 @@ const {
   buildPostAppDataRoute,
   buildPatchAppDataRoute,
   buildDeleteAppDataRoute,
-  buildGetAppActionsRoute,
-  buildPostAppActionsRoute,
-  buildPatchSettingsRoute,
   buildUploadFilesRoute,
+  buildDeleteAppSettingRoute,
+  buildDownloadFileRoute,
+  buildGetAppActionRoute,
+  buildGetAppSettingsRoute,
+  buildPatchAppSettingRoute,
+  buildPostAppActionRoute,
+  buildPostAppSettingRoute,
 } = API_ROUTES;
 
 const ApplicationSerializer = RestSerializer.extend({
