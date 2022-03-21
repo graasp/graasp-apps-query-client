@@ -1,13 +1,12 @@
 import { QueryClient } from 'react-query';
-import { List, Map, Record } from 'immutable';
+import { List, Map } from 'immutable';
 import * as Api from '../api';
-import { buildAppDataKey, buildAppActionKey, LOCAL_CONTEXT_KEY, MUTATION_KEYS } from '../config/keys';
-import { AppAction, AppData, LocalContext, QueryClientConfig } from '../types';
+import { buildAppActionKey, buildAppDataKey, MUTATION_KEYS } from '../config/keys';
+import { AppAction, AppData, QueryClientConfig } from '../types';
 import { getApiHost, getData, getDataOrThrow } from '../config/utils';
 import {
   deleteAppDataRoutine,
   patchAppDataRoutine,
-  patchSettingsRoutine,
   postAppDataRoutine,
   uploadFileRoutine,
 } from '../routines';
@@ -109,31 +108,6 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
       if (itemId) {
         queryClient.invalidateQueries(buildAppDataKey(itemId));
       }
-    },
-  });
-
-  queryClient.setMutationDefaults(MUTATION_KEYS.PATCH_SETTINGS, {
-    mutationFn: (settings: unknown) => {
-      const apiHost = getApiHost(queryClient);
-      const data = getDataOrThrow(queryClient);
-      return Api.patchSettings({ ...data, settings, apiHost });
-    },
-    onMutate: async (payload) => {
-      const prevData = queryClient.getQueryData<Record<LocalContext>>(LOCAL_CONTEXT_KEY);
-      if (prevData) {
-        queryClient.setQueryData(LOCAL_CONTEXT_KEY, prevData.set('settings', payload));
-      }
-      return prevData;
-    },
-    onError: (error, _payload, prevData) => {
-      queryConfig?.notifier?.({ type: patchSettingsRoutine.FAILURE, payload: { error } });
-
-      if (prevData) {
-        queryClient.setQueryData(LOCAL_CONTEXT_KEY, prevData);
-      }
-    },
-    onSettled: () => {
-      queryClient.invalidateQueries(LOCAL_CONTEXT_KEY);
     },
   });
 

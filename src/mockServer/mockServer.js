@@ -1,6 +1,6 @@
 import { createServer, Model, Factory, RestSerializer, Response } from 'miragejs';
 import { v4 } from 'uuid';
-import { API_ROUTES, buildDownloadFileRoute } from '../api/routes';
+import { API_ROUTES } from '../api/routes';
 import { buildMockLocalContext } from './fixtures';
 
 const {
@@ -9,10 +9,14 @@ const {
   buildPostAppDataRoute,
   buildPatchAppDataRoute,
   buildDeleteAppDataRoute,
-  buildGetAppActionsRoute,
-  buildPostAppActionsRoute,
-  buildPatchSettingsRoute,
   buildUploadFilesRoute,
+  buildDeleteAppSettingRoute,
+  buildDownloadFileRoute,
+  buildGetAppActionRoute,
+  buildGetAppSettingsRoute,
+  buildPatchAppSettingRoute,
+  buildPostAppActionRoute,
+  buildPostAppSettingRoute,
 } = API_ROUTES;
 
 const ApplicationSerializer = RestSerializer.extend({
@@ -24,12 +28,13 @@ const setupApi = ({
   database = {
     appData: [],
     appAction: [],
+    appSettings: [],
     members: [MOCK_SERVER_MEMBER],
   },
   appContext = buildMockLocalContext(),
   errors = {},
 } = {}) => {
-  const { appData, appAction, members } = database;
+  const { appData, appAction, appSettings, members } = database;
   const { itemId: currentItemId, memberId: currentMemberId, apiHost } = appContext;
   // mocked errors
   const { deleteAppDataShouldThrow } = errors;
@@ -42,12 +47,12 @@ const setupApi = ({
     models: {
       appDataResource: Model,
       appActionResource: Model,
+      appSetting: Model,
       member: Model,
     },
     factories: {
       appDataResource: Factory.extend({
         createdAt: Date.now(),
-        settings: {},
         data: (attrs) => {
           return attrs.data;
         },
@@ -68,11 +73,21 @@ const setupApi = ({
         type: (attrs) => {
           return attrs.type;
         },
+        memberId: currentMemberId,
+      }),
+      appSetting: Factory.extend({
+        createdAt: Date.now(),
+        updatedAt: Date.now(),
+        data: (attrs) => {
+          return attrs.data;
+        },
+        name: (attrs) => {
+          return attrs.name;
+        },
         id: (attrs) => {
           return attrs?.id ?? v4();
         },
         itemId: currentItemId,
-        memberId: currentMemberId,
       }),
       member: Factory.extend({
         id: (attrs) => {
@@ -84,6 +99,7 @@ const setupApi = ({
     serializers: {
       appDataResource: ApplicationSerializer,
       appActionResource: ApplicationSerializer,
+      appSetting: ApplicationSerializer,
       member: ApplicationSerializer,
     },
     seeds(server) {
@@ -92,6 +108,9 @@ const setupApi = ({
       });
       appAction?.forEach((d) => {
         server.create('appActionResource', d);
+      });
+      appSettings?.forEach((d) => {
+        server.create('appSetting', d);
       });
       members?.forEach((m) => {
         server.create('member', m);
@@ -147,19 +166,47 @@ const setupApi = ({
         });
       });
 
+      // app settings
+      this.get(`/${buildGetAppSettingsRoute(currentItemId)}`, (schema) => {
+        return schema.appSettings.all();
+      });
+
+      this.post(`/${buildPostAppSettingRoute({ itemId: currentItemId })}`, (schema, request) => {
+        const { requestBody } = request;
+        const data = JSON.parse(requestBody);
+        return schema.appSettings.create({
+          ...data,
+          itemId: currentItemId,
+          memberId: currentMemberId,
+        });
+      });
+      this.patch(
+        `/${buildPatchAppSettingRoute({ itemId: currentItemId, id: ':id' })}`,
+        (schema, request) => {
+          const { id } = request.params;
+          const { requestBody } = request;
+          const data = JSON.parse(requestBody);
+          const a = schema.appSettings.findBy({ id });
+          return a.update({ ...a.attrs, ...data });
+        },
+      );
+      this.delete(
+        `/${buildDeleteAppSettingRoute({ itemId: currentItemId, id: ':id' })}`,
+        (schema, request) => {
+          if (deleteAppDataShouldThrow) {
+            return new Response(400, {}, { errors: [deleteAppDataShouldThrow] });
+          }
+          const { id } = request.params;
+          const data = schema.appSettings.findBy({ id });
+          return data.destroy();
+        },
+      );
+
       // context
       this.get(`/${buildGetContextRoute(currentItemId)}`, (schema) => {
         return {
           members: schema.members.all().models,
         };
-      });
-
-      // settings
-      this.patch(`/${buildPatchSettingsRoute({ itemId: currentItemId })}`, (schema, request) => {
-        // query client edits the context
-        const { requestBody } = request;
-        const data = JSON.parse(requestBody);
-        return data;
       });
 
       // files

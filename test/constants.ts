@@ -1,5 +1,5 @@
 import { v4 } from 'uuid';
-import { AppData, Member } from '../src/types';
+import { AppData, AppSetting, Member } from '../src/types';
 
 export const API_HOST = 'http://localhost:3000';
 export const UNAUTHORIZED_RESPONSE = { some: 'error' };
@@ -63,6 +63,20 @@ export const buildAppData = (
 });
 
 export const FIXTURE_APP_DATA: AppData[] = [buildAppData(), buildAppData(), buildAppData()];
+
+export const buildAppSetting = (
+  { id, data }: { id: string; data: unknown } = { id: v4(), data: {} },
+) => ({
+  id,
+  data,
+  name: 'app-setting-name',
+});
+
+export const FIXTURE_APP_SETTINGS: AppSetting[] = [
+  buildAppSetting(),
+  buildAppSetting(),
+  buildAppSetting(),
+];
 
 export const FIXTURE_TOKEN = 'some-token';
 export const FIXTURE_CONTEXT = {
