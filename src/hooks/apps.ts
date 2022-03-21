@@ -19,7 +19,7 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
     staleTime,
   };
   return {
-    useAppData: (payload: { token?: string; itemId?: string }) =>
+    useAppData: (payload: { token?: string; itemId?: string }, refetchInterval: number | false = false) =>
       useQuery({
         queryKey: buildAppDataKey(payload.itemId),
         queryFn: () => {
@@ -36,6 +36,7 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
         },
         ...defaultOptions,
         enabled: Boolean(payload.itemId) && Boolean(payload.token),
+        refetchInterval,
       }),
 
     useAppActions: (payload: { token?: string; itemId?: string }) =>
