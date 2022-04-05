@@ -129,7 +129,6 @@ export const getFileContent = async ({
 }) => {
   const url = await axios
     .get(`${apiHost}/${buildDownloadFilesRoute(id)}`, {
-      responseType: 'blob',
       headers: {
         Authorization: `Bearer ${token}`,
       },
