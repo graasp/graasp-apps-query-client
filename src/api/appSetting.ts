@@ -94,8 +94,10 @@ export const getAppSettingFileContent = async ({
       },
     })
     .then(({ data }) => data);
-  return axios.get(url, {
-    responseType: 'blob',
-    withCredentials: false,
-  });
+  return axios
+    .get(url, {
+      responseType: 'blob',
+      withCredentials: false,
+    })
+    .then(({ data }) => data);
 };
