@@ -118,6 +118,7 @@ export const postAppAction = (args: {
 // because of the bearer token, it triggers an error on s3 on redirect because the request has two auth methods
 // https://github.com/axios/axios/issues/2855
 // https://stackoverflow.com/questions/50861144/reactjs-remove-http-header-before-redirect/51252434#51252434
+// so we removed automatic redirection for this endpoint
 export const getFileContent = async ({
   id,
   apiHost,
