@@ -85,23 +85,17 @@ export const getAppSettingFileContent = async ({
   id: string;
   apiHost: string;
   token: string;
-}) =>
-  axios
+}) => {
+  const url = await axios
     .get(`${apiHost}/${buildDownloadAppSettingFileRoute(id)}`, {
       responseType: 'blob',
       headers: {
         Authorization: `Bearer ${token}`,
       },
     })
-    .then(({ data }) => data)
-    .catch(function (error) {
-      if (error.request.responseURL) {
-        return axios
-          .get(error.request.responseURL, {
-            responseType: 'blob',
-            withCredentials: false,
-          })
-          .then(({ data }) => data);
-      }
-      throw error;
-    });
+    .then(({ data }) => data);
+  return axios.get(url, {
+    responseType: 'blob',
+    withCredentials: false,
+  });
+};

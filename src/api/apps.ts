@@ -126,20 +126,17 @@ export const getFileContent = async ({
   id: string;
   apiHost: string;
   token: string;
-}) =>
-  axios
+}) => {
+  const url = await axios
     .get(`${apiHost}/${buildDownloadFilesRoute(id)}`, {
       responseType: 'blob',
       headers: {
         Authorization: `Bearer ${token}`,
       },
     })
-    .catch(function (error) {
-      if (error.request.responseURL) {
-        return axios.get(error.request.responseURL, {
-          responseType: 'blob',
-          withCredentials: false,
-        });
-      }
-      throw error;
-    });
+    .then(({ data }) => data);
+  return axios.get(url, {
+    responseType: 'blob',
+    withCredentials: false,
+  });
+};
