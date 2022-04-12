@@ -118,6 +118,7 @@ export const postAppAction = (args: {
 // because of the bearer token, it triggers an error on s3 on redirect because the request has two auth methods
 // https://github.com/axios/axios/issues/2855
 // https://stackoverflow.com/questions/50861144/reactjs-remove-http-header-before-redirect/51252434#51252434
+// so we removed automatic redirection for this endpoint
 export const getFileContent = async ({
   id,
   apiHost,
@@ -126,20 +127,18 @@ export const getFileContent = async ({
   id: string;
   apiHost: string;
   token: string;
-}) =>
-  axios
+}) => {
+  const url = await axios
     .get(`${apiHost}/${buildDownloadFilesRoute(id)}`, {
-      responseType: 'blob',
       headers: {
         Authorization: `Bearer ${token}`,
       },
     })
-    .catch(function (error) {
-      if (error.request.responseURL) {
-        return axios.get(error.request.responseURL, {
-          responseType: 'blob',
-          withCredentials: false,
-        });
-      }
-      throw error;
-    });
+    .then(({ data }) => data);
+  return axios
+    .get(url, {
+      responseType: 'blob',
+      withCredentials: false,
+    })
+    .then(({ data }) => data);
+};

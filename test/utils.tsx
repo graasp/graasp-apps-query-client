@@ -69,7 +69,8 @@ interface MockMutationArguments extends MockArguments {
 
 export const mockEndpoints = (endpoints: Endpoint[]) => {
   // mock endpoint with given response
-  const server = nock(API_HOST);
+  // we open to all hosts specially for redirection to aws (get file endpoints)
+  const server = nock(/.*/);
   endpoints.forEach(({ route, method, statusCode, response, headers }) => {
     server[(method || REQUEST_METHODS.GET).toLowerCase()](route).reply(
       statusCode || StatusCodes.OK,

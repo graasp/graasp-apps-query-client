@@ -19,7 +19,10 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
     staleTime,
   };
   return {
-    useAppData: (payload: { token?: string; itemId?: string }, refetchInterval: number | false = false) =>
+    useAppData: (
+      payload: { token?: string; itemId?: string },
+      refetchInterval: number | false = false,
+    ) =>
       useQuery({
         queryKey: buildAppDataKey(payload.itemId),
         queryFn: () => {
