@@ -123,7 +123,10 @@ describe('App Settings Hooks', () => {
     it('Receive file content', async () => {
       queryClient.setQueryData(LOCAL_CONTEXT_KEY, Map(buildMockLocalContext()));
 
-      const endpoints = [{ route, response: responseFile }, { route: routeFile, response }];
+      const endpoints = [
+        { route, response: responseFile },
+        { route: routeFile, response },
+      ];
       const { data } = await mockHook({ endpoints, hook, wrapper });
 
       expect(data).toBeTruthy();

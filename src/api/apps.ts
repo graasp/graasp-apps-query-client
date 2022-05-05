@@ -38,7 +38,7 @@ export const getAppData = async (args: { token: string; itemId: string; apiHost:
 export const postAppData = (args: {
   token: string;
   itemId: string;
-  body: any;
+  body: unknown;
   apiHost: string;
 }) => {
   const { token, itemId, apiHost, body } = args;
@@ -56,7 +56,7 @@ export const patchAppData = (args: {
   itemId: string;
   id: string;
   apiHost: string;
-  data: any;
+  data: unknown;
 }) => {
   const { token, itemId, id, apiHost, data } = args;
   return axios
@@ -102,7 +102,7 @@ export const getAppActions = async (args: { token: string; itemId: string; apiHo
 export const postAppAction = (args: {
   token: string;
   itemId: string;
-  body: any;
+  body: unknown;
   apiHost: string;
 }) => {
   const { token, itemId, apiHost, body } = args;
