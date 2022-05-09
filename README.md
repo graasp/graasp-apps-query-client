@@ -22,9 +22,10 @@ REACT_APP_MOCK_API=true
 3. Define `mockContext` and `buildDatabase` depending on your needs in `src/data/db.js`. For an empty database, and to display the app for a writer in builder, use:
 
 ```js
+// todo: use constants
 export const mockContext = {
-  permission: PERMISSION_LEVELS.WRITE,
-  context: CONTEXTS.BUILDER,
+  permission: `write`,
+  context: 'builder',
 };
 
 const buildDatabase = (appContext) => ({
@@ -37,6 +38,8 @@ const buildDatabase = (appContext) => ({
     },
   ],
 });
+
+export default buildDatabase;
 ```
 
 4. Configure your query client with the following code. You can define `mockContext` with the property you need for your local development.
