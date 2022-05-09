@@ -1,10 +1,10 @@
 # Graasp Apps Query Client
 
-This repository implements the [react-query](https://react-query.tanstack.com/) hooks and mutations for apps to consume the Graasp Apps API. It also provides a fake API server based on [MirageJS](https://miragejs.com/) for local development.
+This repository implements the [react-query](https://react-query.tanstack.com/) hooks and mutations for apps to consume the Graasp Apps API. It also provides a mock API server based on [MirageJS](https://miragejs.com/) for local development.
 
-## Fake API Installation
+## Mock API Installation
 
-This apps-query-client package provides a fake API to mock any call an app might use to consume the Graasp API. It is based on MirageJS, which simulates the changes on a fake database as long as the app is not refreshed. This fake API is also particularly useful for continuous integration tests.  
+This apps-query-client package provides a mock API to mock any call an app might use to consume the Graasp API. It is based on MirageJS, which simulates the changes on a mock database as long as the app is not refreshed. This mock API is also particularly useful for continuous integration tests.  
 
 1. Install the `env-cmd` dependency. Change your `start` script in `package.json` for 
 
