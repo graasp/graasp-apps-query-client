@@ -16,3 +16,6 @@ test/tmp
 !.yarn/sdks
 !.yarn/versions
 yarn-error.log
+
+# editors
+.idea/

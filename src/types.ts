@@ -49,12 +49,12 @@ export type AppData = {
 export type AppAction = {
   id: UUID;
   type: string;
-  data: any;
+  data: unknown;
 };
 
 export type AppSetting = {
   id: UUID;
-  data: any;
+  data: unknown;
   name: string;
 };
 

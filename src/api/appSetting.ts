@@ -23,7 +23,7 @@ export const getAppSettings = async (args: { token: string; itemId: string; apiH
 export const postAppSetting = (args: {
   token: string;
   itemId: string;
-  body: any;
+  body: unknown;
   apiHost: string;
 }) => {
   const { token, itemId, apiHost, body } = args;
@@ -41,7 +41,7 @@ export const patchAppSetting = (args: {
   itemId: string;
   id: string;
   apiHost: string;
-  data: any;
+  data: unknown;
 }) => {
   const { token, itemId, id, apiHost, data } = args;
   return axios
