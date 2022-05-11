@@ -4,7 +4,11 @@ This repository implements the [react-query](https://react-query.tanstack.com/) 
 
 ## Mock API Installation
 
-This apps-query-client package provides a mock API to mock any call an app might use to consume the Graasp API. It is based on MirageJS, which simulates the changes on a mock database as long as the app is not refreshed. This mock API is also particularly useful for continuous integration tests.  
+This apps-query-client package provides a mock API to mock any call an app might use to consume the Graasp API. It is based on MirageJS, which simulates the network requests themselves, and can thus remember remote state in memory. So the database is preserved as long as the app is not refreshed. This mock API is also particularly useful for continuous integration tests. 
+
+The following steps are designed to take into account `Cypress`, our test framework. So the mock database can also receive data from the tests and apply them.
+
+**!WARNING: The mock API cannot fake uploading and downloading files!**
 
 1. Install the `env-cmd` dependency. Change your `start` script in `package.json` for 
 
@@ -12,14 +16,14 @@ This apps-query-client package provides a mock API to mock any call an app might
 env-cmd -f ./.env.development react-scripts start
 ```
 
-2. Create `.env.development` which will contain the variables below. The app id you will choose doesn't have to be valid, but need to exist.
+2. Create `.env.development` which will contain the variables below. The app id you will choose doesn't have to be valid, but needs to exist.
 
 ```
 REACT_APP_GRAASP_APP_ID=<your app id>
 REACT_APP_MOCK_API=true
 ```
 
-3. Define `mockContext` and `buildDatabase` depending on your needs in `src/data/db.js`. For an empty database, and to display the app for a writer in builder, use:
+3. Define `mockContext` and `buildDatabase` depending on your needs in `src/mock/db.js`. For an empty database, and to display the app for a writer in builder, use:
 
 ```js
 // todo: use constants
@@ -50,12 +54,12 @@ import {
   buildMockLocalContext,
   buildMockParentWindow,
 } from '@graasp/apps-query-client';
-import { mockContext } from '../data/db';
+import { mockContext } from '../mock/db';
 
 configureQueryClient({
   GRAASP_APP_ID: process.env.REACT_APP_GRAASP_APP_ID,
   targetWindow: MOCK_API
-    ? // build mock parent window given cypress context or mock data
+    ? // build mock parent window given cypress (app) context or mock data
       buildMockParentWindow(
         buildMockLocalContext(window.appContext ?? mockContext),
       )
@@ -67,7 +71,7 @@ configureQueryClient({
 
 ```js
 import { mockServer, buildMockLocalContext } from '@graasp/apps-query-client';
-import buildDatabase, { mockContext } from './data/db';
+import buildDatabase, { mockContext } from './mock/db';
 
 if (process.env.REACT_APP_MOCK_API) {
   const appContext = buildMockLocalContext(window.appContext ?? mockContext);
@@ -189,3 +193,43 @@ export const useAppData = () => {
 ```
 
 You can now start your app with the mock API installed. Don't forget to disable it when you build your app.
+
+### Cypress
+
+The next steps will help you set up Cypress to work with MirageJS. There is an [official tutorial](https://miragejs.com/quickstarts/cypress/) from MirageJS. But in our case, we followed a different strategy.
+
+1. Add in `cypress/support/commands.js`. You will need to define `MOCK_SERVER_ITEM`, `MEMBERS` and `CURRENT_MEMBER` to reuse them in your tests as well.
+
+```js
+Cypress.Commands.add(
+  'setUpApi',
+  ({ currentMember = CURRENT_MEMBER, database = {}, appContext } = {}) => {
+    // mock api and database
+    Cypress.on('window:before:load', (win) => {
+      win.database = {
+        currentMember,
+        currentItemId: MOCK_SERVER_ITEM.id,
+        members: Object.values(MEMBERS),
+        ...database,
+      };
+      win.appContext = appContext;
+    });
+  }
+);
+```
+
+2. Then in all your tests you will need to set up the database and context. The default values are configured so you can easily mount an empty and operational database.
+
+```js
+// start with an empty database
+cy.setUpApi();
+
+// start with one app data pre-saved in builder for an admin
+cy.setUpApi({ 
+  database: { appData: [MOCK_APP_DATA] }, 
+  appContext: {
+    permission: 'admin',
+    context: 'builder',
+  }, 
+});
+```
