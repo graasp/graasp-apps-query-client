@@ -20,7 +20,7 @@ export const buildPatchAppDataRoute = (payload: { itemId: string; id: string }) 
 export const buildDeleteAppDataRoute = (payload: { itemId: string; id: string }) =>
   `${APP_ITEMS_ROUTE}/${payload.itemId}/${APP_DATA_ENDPOINT}/${payload.id}`;
 
-export const buildGetAppActionRoute = (itemId: string) =>
+export const buildGetAppActionsRoute = (itemId: string) =>
   `${APP_ITEMS_ROUTE}/${itemId}/${APP_ACTIONS_ENDPOINT}`;
 
 export const buildPostAppActionRoute = (payload: { itemId: string }) =>
@@ -60,7 +60,7 @@ export const API_ROUTES = {
   buildGetContextRoute,
   buildPostAppDataRoute,
   buildPatchAppDataRoute,
-  buildGetAppActionRoute,
+  buildGetAppActionsRoute,
   buildPostAppActionRoute,
   buildGetAppSettingsRoute,
   buildPatchAppSettingRoute,

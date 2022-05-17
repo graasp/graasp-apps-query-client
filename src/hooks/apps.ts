@@ -3,7 +3,7 @@ import { QueryClient, useQuery } from 'react-query';
 import * as Api from '../api';
 import { MissingFileIdError, MissingItemIdError, MissingTokenError } from '../config/errors';
 import {
-  buildAppActionKey,
+  buildAppActionsKey,
   buildAppContextKey,
   buildAppDataKey,
   buildFileContentKey,
@@ -44,7 +44,7 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
 
     useAppActions: (payload: { token?: string; itemId?: string }) =>
       useQuery({
-        queryKey: buildAppActionKey(payload.itemId),
+        queryKey: buildAppActionsKey(payload.itemId),
         queryFn: () => {
           const apiHost = getApiHost(queryClient);
           const { token, itemId } = payload;
