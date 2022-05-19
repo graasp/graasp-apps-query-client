@@ -1,7 +1,7 @@
 import { createServer, Model, Factory, RestSerializer, Response } from 'miragejs';
 import { v4 } from 'uuid';
 import { API_ROUTES } from '../api/routes';
-import { buildMockLocalContext } from './fixtures';
+import { buildMockLocalContext, MOCK_SERVER_MEMBER } from './fixtures';
 
 const {
   buildGetAppDataRoute,
@@ -12,7 +12,7 @@ const {
   buildUploadFilesRoute,
   buildDeleteAppSettingRoute,
   buildDownloadFileRoute,
-  buildGetAppActionRoute,
+  buildGetAppActionsRoute,
   buildGetAppSettingsRoute,
   buildPatchAppSettingRoute,
   buildPostAppActionRoute,
@@ -27,14 +27,14 @@ const ApplicationSerializer = RestSerializer.extend({
 const setupApi = ({
   database = {
     appData: [],
-    appAction: [],
+    appActions: [],
     appSettings: [],
     members: [MOCK_SERVER_MEMBER],
   },
   appContext = buildMockLocalContext(),
   errors = {},
 } = {}) => {
-  const { appData, appAction, appSettings, members } = database;
+  const { appData, appActions, appSettings, members } = database;
   const { itemId: currentItemId, memberId: currentMemberId, apiHost } = appContext;
   // mocked errors
   const { deleteAppDataShouldThrow } = errors;
@@ -106,7 +106,7 @@ const setupApi = ({
       appData?.forEach((d) => {
         server.create('appDataResource', d);
       });
-      appAction?.forEach((d) => {
+      appActions?.forEach((d) => {
         server.create('appActionResource', d);
       });
       appSettings?.forEach((d) => {
@@ -153,7 +153,7 @@ const setupApi = ({
       );
 
       // app actions
-      this.get(`/${buildGetAppActionRoute(currentItemId)}`, (schema) => {
+      this.get(`/${buildGetAppActionsRoute(currentItemId)}`, (schema) => {
         return schema.appActionResources.all();
       });
       this.post(`/${buildPostAppActionRoute({ itemId: currentItemId })}`, (schema, request) => {

@@ -1,7 +1,7 @@
 import { QueryClient } from 'react-query';
 import { List, Map } from 'immutable';
 import * as Api from '../api';
-import { buildAppActionKey, buildAppDataKey, MUTATION_KEYS } from '../config/keys';
+import { buildAppActionsKey, buildAppDataKey, MUTATION_KEYS } from '../config/keys';
 import { AppAction, AppData, QueryClientConfig } from '../types';
 import { getApiHost, getData, getDataOrThrow } from '../config/utils';
 import {
@@ -119,7 +119,7 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
     },
     onSuccess: (newAppAction: AppAction) => {
       const { itemId } = getData(queryClient);
-      const key = buildAppActionKey(itemId);
+      const key = buildAppActionsKey(itemId);
       const prevData = queryClient.getQueryData<List<AppAction>>(key);
       queryClient.setQueryData(key, prevData?.push(newAppAction));
     },
@@ -128,7 +128,7 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
     },
     onSettled: () => {
       const { itemId } = getData(queryClient);
-      queryClient.invalidateQueries(buildAppActionKey(itemId));
+      queryClient.invalidateQueries(buildAppActionsKey(itemId));
     },
   });
   // this mutation is used for its callback and invalidate the keys

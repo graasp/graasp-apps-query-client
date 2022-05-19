@@ -5,7 +5,7 @@ import {
   buildGetContextRoute,
   buildPatchAppDataRoute,
   buildPostAppDataRoute,
-  buildGetAppActionRoute,
+  buildGetAppActionsRoute,
   buildPostAppActionRoute,
 } from './routes';
 import configureAxios from './axios';
@@ -91,7 +91,7 @@ export const deleteAppData = (args: {
 export const getAppActions = async (args: { token: string; itemId: string; apiHost: string }) => {
   const { token, itemId, apiHost } = args;
   return axios
-    .get(`${apiHost}/${buildGetAppActionRoute(itemId)}`, {
+    .get(`${apiHost}/${buildGetAppActionsRoute(itemId)}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
