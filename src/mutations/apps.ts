@@ -2,7 +2,7 @@ import { QueryClient } from 'react-query';
 import { List, Map } from 'immutable';
 import * as Api from '../api';
 import { buildAppActionsKey, buildAppDataKey, MUTATION_KEYS } from '../config/keys';
-import { AppAction, AppData, QueryClientConfig } from '../types';
+import { AppAction, AppData, DataPayload, QueryClientConfig } from '../types';
 import { getApiHost, getData, getDataOrThrow } from '../config/utils';
 import {
   deleteAppDataRoutine,
@@ -15,7 +15,7 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
   const { notifier } = queryConfig;
 
   queryClient.setMutationDefaults(MUTATION_KEYS.POST_APP_DATA, {
-    mutationFn: (payload: { data: unknown; verb: string }) => {
+    mutationFn: (payload: { data: unknown; type: string }) => {
       const apiHost = getApiHost(queryClient);
       const data = getDataOrThrow(queryClient);
       return Api.postAppData({ ...data, body: payload, apiHost });
@@ -43,15 +43,19 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
         (data) => Map(data),
       );
     },
-    onMutate: async (payload: { id: string; data: any }) => {
+    onMutate: async (payload: { id: string; data: unknown }) => {
       let context = null;
       const { itemId } = getData(queryClient);
       const prevData = queryClient.getQueryData<List<AppData>>(buildAppDataKey(itemId));
       if (itemId && prevData) {
-        const newData = prevData.map((appData) =>
-          appData.id === payload.id
-            ? { ...appData, data: { ...appData.data, ...payload.data } }
-            : appData,
+        const newData = prevData.map(
+          (appData): AppData =>
+            appData.id === payload.id
+              ? {
+                  ...appData,
+                  data: { ...(appData.data as DataPayload), ...(payload.data as DataPayload) },
+                }
+              : appData,
         );
         queryClient.setQueryData(buildAppDataKey(itemId), newData);
         context = prevData;

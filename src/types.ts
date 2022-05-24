@@ -41,9 +41,16 @@ export type Member = {
   extra: MemberExtra;
 };
 
+export type DataPayload = Record<string, unknown>;
+
+export type CreateAppSetting = {
+  data: DataPayload;
+  name: string;
+};
+
 export type AppData = {
   id: UUID;
-  data: any;
+  data: unknown;
 };
 
 export type AppAction = {
@@ -55,7 +62,11 @@ export type AppAction = {
 export type AppSetting = {
   id: UUID;
   data: unknown;
+  itemId: string;
   name: string;
+  creator: string;
+  createdAt: string;
+  updatedAt: string;
 };
 
 export class UndefinedArgument extends Error {
@@ -66,6 +77,7 @@ export class UndefinedArgument extends Error {
     this.stack = new Error().stack;
   }
 }
+
 // todo: get from graasp types
 export type GraaspError = {
   name: string;
@@ -84,6 +96,7 @@ export enum Context {
   ANALYZER = 'analyzer',
   EXPLORER = 'explorer',
 }
+
 export enum PermissionLevel {
   ADMIN = 'admin',
   READ = 'read',
