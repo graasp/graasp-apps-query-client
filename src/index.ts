@@ -6,4 +6,3 @@ export * as ROUTINES from './routines';
 export { default as mockServer } from './mockServer/mockServer';
 export { buildMockLocalContext } from './mockServer/fixtures';
 export { buildMockParentWindow } from './mockServer/mockParentWindow';
-export * as Mutations from './mutations/hooks';

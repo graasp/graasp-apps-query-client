@@ -48,6 +48,11 @@ export type CreateAppSetting = {
   name: string;
 };
 
+export type PatchAppSetting = {
+  id: string;
+  data: DataPayload;
+};
+
 export type AppData = {
   id: UUID;
   data: unknown;
