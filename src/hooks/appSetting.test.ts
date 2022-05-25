@@ -13,7 +13,6 @@ import {
 } from '../config/keys';
 import {
   UNAUTHORIZED_RESPONSE,
-  FIXTURE_TOKEN,
   buildMockLocalContext,
   FIXTURE_APP_SETTINGS,
   S3_FILE_BLOB_RESPONSE,
@@ -22,7 +21,6 @@ import { MissingApiHostError } from '../config/utils';
 import { MOCK_TOKEN } from '../config/constants';
 
 const { hooks, wrapper, queryClient } = setUpTest();
-const token = FIXTURE_TOKEN;
 const itemId = v4();
 
 describe('App Settings Hooks', () => {
@@ -39,7 +37,7 @@ describe('App Settings Hooks', () => {
   describe('useAppSettings', () => {
     const key = buildAppSettingsKey(itemId);
     const route = `/${buildGetAppSettingsRoute(itemId)}`;
-    const hook = () => hooks.useAppSettings({ itemId, token });
+    const hook = () => hooks.useAppSettings();
 
     it('Receive app settings', async () => {
       const response = FIXTURE_APP_SETTINGS;
@@ -122,7 +120,7 @@ describe('App Settings Hooks', () => {
     const responseFile = `${server}${routeFile}`;
     const id = 'some-id';
     const route = `/${buildDownloadAppSettingFileRoute(id)}`;
-    const hook = () => hooks.useAppSettingFile({ token, appSettingId: id });
+    const hook = () => hooks.useAppSettingFile({ appSettingId: id });
     const key = buildAppSettingFileContentKey(id);
 
     it('Receive file content', async () => {

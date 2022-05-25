@@ -50,7 +50,7 @@ configureQueryClient({
 import { mockServer, buildMockLocalContext } from '@graasp/apps-query-client';
 import buildDatabase, { mockContext } from './mock/db';
 
-if (process.env.REACT_APP_MOCK_API) {
+if (process.env.REACT_APP_MOCK_API === 'true') {
   const appContext = buildMockLocalContext();
   // automatically append item id as a query string
   const searchParams = new URLSearchParams(window.location.search);
