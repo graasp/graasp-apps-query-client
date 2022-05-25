@@ -123,7 +123,10 @@ describe('App Settings Mutations', () => {
       it('Throw if itemId is undefined', async () => {
         // set necessary data
         queryClient.setQueryData(AUTH_TOKEN_KEY, MOCK_TOKEN);
-        queryClient.setQueryData(LOCAL_CONTEXT_KEY, Map({ ...buildMockLocalContext(), itemId: null }));
+        queryClient.setQueryData(
+          LOCAL_CONTEXT_KEY,
+          Map({ ...buildMockLocalContext(), itemId: null }),
+        );
         queryClient.setQueryData(key, initData);
 
         const endpoints = [
@@ -265,12 +268,11 @@ describe('App Settings Mutations', () => {
           await waitForMutation();
         });
 
-
         expect(queryClient.getQueryState(key)?.isInvalidated).toBeTruthy();
-        const result = queryClient.getQueryData<List<AppSetting>>(key)
+        const result = queryClient.getQueryData<List<AppSetting>>(key);
         // check data and length
         expect(result?.first()?.data).toMatchObject(toPatch.data);
-        expect(result?.size).toBe(updatedData.size)
+        expect(result?.size).toBe(updatedData.size);
       });
     });
 
@@ -316,7 +318,10 @@ describe('App Settings Mutations', () => {
       it('Throw if itemId is undefined', async () => {
         // set necessary data
         queryClient.setQueryData(AUTH_TOKEN_KEY, MOCK_TOKEN);
-        queryClient.setQueryData(LOCAL_CONTEXT_KEY, Map({ ...buildMockLocalContext(), itemId: null }));
+        queryClient.setQueryData(
+          LOCAL_CONTEXT_KEY,
+          Map({ ...buildMockLocalContext(), itemId: null }),
+        );
         queryClient.setQueryData(key, initData);
 
         const endpoints = [
@@ -501,7 +506,10 @@ describe('App Settings Mutations', () => {
       it('Throw if itemId is undefined', async () => {
         // set necessary data
         queryClient.setQueryData(AUTH_TOKEN_KEY, MOCK_TOKEN);
-        queryClient.setQueryData(LOCAL_CONTEXT_KEY, Map({ ...buildMockLocalContext(), itemId: null }));
+        queryClient.setQueryData(
+          LOCAL_CONTEXT_KEY,
+          Map({ ...buildMockLocalContext(), itemId: null }),
+        );
 
         const initData = List([toDelete]);
         queryClient.setQueryData(key, initData);

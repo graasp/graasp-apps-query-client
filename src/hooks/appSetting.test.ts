@@ -126,7 +126,6 @@ describe('App Settings Hooks', () => {
     const key = buildAppSettingFileContentKey(id);
 
     it('Receive file content', async () => {
-
       const endpoints = [
         { route, response: responseFile },
         { route: routeFile, response },

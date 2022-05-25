@@ -76,22 +76,22 @@ const configurePostMessageHooks = (_queryClient: QueryClient, queryConfig: Query
       },
       formatResolvedValue?: (data: { payload: any; event: MessageEvent }) => unknown,
     ) =>
-      (event: MessageEvent) => {
-        try {
-          const { type, payload } = JSON.parse(event.data) || {};
-          const format = formatResolvedValue ?? ((data: { payload: unknown }) => data.payload);
-          // get init message getting the Message Channel port
-          if (type === successType) {
-            resolve(format({ payload, event }));
-          } else if (type === errorType) {
-            reject({ payload, event });
-          } else {
-            reject('the type is not recognised');
-          }
-        } catch (e) {
-          reject('an error occured');
+    (event: MessageEvent) => {
+      try {
+        const { type, payload } = JSON.parse(event.data) || {};
+        const format = formatResolvedValue ?? ((data: { payload: unknown }) => data.payload);
+        // get init message getting the Message Channel port
+        if (type === successType) {
+          resolve(format({ payload, event }));
+        } else if (type === errorType) {
+          reject({ payload, event });
+        } else {
+          reject('the type is not recognised');
         }
-      };
+      } catch (e) {
+        reject('an error occured');
+      }
+    };
 
   let getLocalContextFunction: ((event: MessageEvent) => void) | null = null;
   const useGetLocalContext = (itemId: string) =>

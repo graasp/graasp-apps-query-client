@@ -1,5 +1,5 @@
-import { createServer, Model, Factory, RestSerializer, Response } from 'miragejs';
 import { v4 } from 'uuid';
+import { createServer, Model, Factory, RestSerializer, Response } from 'miragejs';
 import { API_ROUTES } from '../api/routes';
 import { AppAction, AppData, AppSetting, Database, LocalContext, Member } from '../types';
 import { buildMockLocalContext, MOCK_SERVER_ITEM, MOCK_SERVER_MEMBER } from './fixtures';
@@ -25,7 +25,12 @@ const ApplicationSerializer = RestSerializer.extend({
   embed: true,
 });
 
-export const buildDatabase = ({ appData = [], appActions = [], appSettings = [], members = [MOCK_SERVER_MEMBER] }: Partial<Database> = {}) => ({
+export const buildDatabase = ({
+  appData = [],
+  appActions = [],
+  appSettings = [],
+  members = [MOCK_SERVER_MEMBER],
+}: Partial<Database> = {}) => ({
   appData,
   appActions,
   appSettings,
@@ -52,7 +57,6 @@ const setupApi = ({
   // mocked errors
   const { deleteAppDataShouldThrow } = errors;
 
-
   // we cannot use *Data
   // https://github.com/miragejs/miragejs/issues/782
   return createServer({
@@ -70,7 +74,7 @@ const setupApi = ({
         createdAt: () => Date.now().toString(),
         updatedAt: () => Date.now().toString(),
         data: () => ({}),
-        type: idx => `app-data-type-${idx}`,
+        type: (idx) => `app-data-type-${idx}`,
         itemId: currentItemId,
         memberId: currentMemberId,
         creator: currentMemberId,
@@ -149,7 +153,7 @@ const setupApi = ({
           a.update({
             ...a.attrs,
             updatedAt: Date.now(),
-            ...data
+            ...data,
           });
           return a.attrs;
         },
@@ -212,7 +216,8 @@ const setupApi = ({
           }
           a.update({
             ...a.attrs,
-            updatedAt: Date.now(), ...data
+            updatedAt: Date.now(),
+            ...data,
           });
           return a.attrs;
         },
@@ -248,7 +253,7 @@ const setupApi = ({
         // this call returns the app data itself for simplification
         return appData;
       });
-      this.post(`/${buildUploadFilesRoute(currentItemId)})`, (schema, _request) => {
+      this.post(`/${buildUploadFilesRoute(currentItemId)})`, (schema) => {
         // const appData: Partial<AppData> = {
         //   data: {},
         //   itemId: currentItemId,

@@ -52,14 +52,16 @@ describe('App Hooks', () => {
       expect(queryClient.getQueryData(key)).toEqual(List(response));
     });
     it('Cannot fetch app data if context does not exist', async () => {
-      queryClient.setQueryData(LOCAL_CONTEXT_KEY, Map({ ...buildMockLocalContext({ itemId }), apiHost: null }));
+      queryClient.setQueryData(
+        LOCAL_CONTEXT_KEY,
+        Map({ ...buildMockLocalContext({ itemId }), apiHost: null }),
+      );
 
       const response = FIXTURE_APP_DATA;
       const endpoints = [{ route, response }];
       try {
         await mockHook({ endpoints, hook, wrapper, enabled: false });
-      }
-      catch (error) {
+      } catch (error) {
         // verify cache keys
         expect(queryClient.getQueryData(key)).toBeFalsy();
         expect((error as Error).message).toEqual(new MissingApiHostError().message);
@@ -208,7 +210,6 @@ describe('App Hooks', () => {
     const key = buildFileContentKey(id);
 
     it('Receive file content', async () => {
-
       const endpoints = [
         { route, response: responseFile },
         { route: routeFile, response },

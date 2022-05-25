@@ -118,7 +118,10 @@ describe('Apps Mutations', () => {
       it('Throw if itemId is undefined', async () => {
         // set necessary data
         queryClient.setQueryData(AUTH_TOKEN_KEY, MOCK_TOKEN);
-        queryClient.setQueryData(LOCAL_CONTEXT_KEY, Map({ ...buildMockLocalContext(), itemId: null }));
+        queryClient.setQueryData(
+          LOCAL_CONTEXT_KEY,
+          Map({ ...buildMockLocalContext(), itemId: null }),
+        );
         queryClient.setQueryData(key, initData);
 
         const endpoints = [
@@ -264,9 +267,9 @@ describe('Apps Mutations', () => {
 
         expect(queryClient.getQueryState(key)?.isInvalidated).toBeTruthy();
         // check data and length
-        const result = queryClient.getQueryData<List<AppData>>(key)
+        const result = queryClient.getQueryData<List<AppData>>(key);
         expect(result?.first()?.data).toMatchObject(toPatch.data);
-        expect(result?.size).toBe(updatedData.size)
+        expect(result?.size).toBe(updatedData.size);
       });
     });
 
@@ -312,7 +315,10 @@ describe('Apps Mutations', () => {
       it('Throw if itemId is undefined', async () => {
         // set necessary data
         queryClient.setQueryData(AUTH_TOKEN_KEY, MOCK_TOKEN);
-        queryClient.setQueryData(LOCAL_CONTEXT_KEY, Map({ ...buildMockLocalContext(), itemId: null }));
+        queryClient.setQueryData(
+          LOCAL_CONTEXT_KEY,
+          Map({ ...buildMockLocalContext(), itemId: null }),
+        );
         queryClient.setQueryData(key, initData);
 
         const endpoints = [
@@ -495,7 +501,10 @@ describe('Apps Mutations', () => {
       it('Throw if itemId is undefined', async () => {
         // set necessary data
         queryClient.setQueryData(AUTH_TOKEN_KEY, MOCK_TOKEN);
-        queryClient.setQueryData(LOCAL_CONTEXT_KEY, Map({ ...buildMockLocalContext(), itemId: null }));
+        queryClient.setQueryData(
+          LOCAL_CONTEXT_KEY,
+          Map({ ...buildMockLocalContext(), itemId: null }),
+        );
 
         const initData = List([toDelete]);
         queryClient.setQueryData(key, initData);

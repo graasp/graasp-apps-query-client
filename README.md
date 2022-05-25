@@ -23,30 +23,7 @@ REACT_APP_GRAASP_APP_ID=<your app id>
 REACT_APP_MOCK_API=true
 ```
 
-3. Define `mockContext` and `buildDatabase` depending on your needs in `src/mock/db.js`. For an empty database, and to display the app for a writer in builder, use:
-
-```js
-// todo: use constants
-export const mockContext = {
-  permission: `write`,
-  context: 'builder',
-};
-
-const buildDatabase = (appContext) => ({
-  appData: [],
-  appActions: [],
-  members: [
-    {
-      id: appContext.memberId,
-      name: 'mock-member',
-    },
-  ],
-});
-
-export default buildDatabase;
-```
-
-4. Configure your query client with the following code. You can define `mockContext` with the property you need for your local development.
+3. Configure your query client with the following code.
 
 ```js
 import {
@@ -58,138 +35,47 @@ import { mockContext } from '../mock/db';
 
 configureQueryClient({
   GRAASP_APP_ID: process.env.REACT_APP_GRAASP_APP_ID,
+  // build mock parent window given cypress (app) context or mock data
   targetWindow: MOCK_API
-    ? // build mock parent window given cypress (app) context or mock data
-      buildMockParentWindow(
-        buildMockLocalContext(window.appContext ?? mockContext),
+    ? buildMockParentWindow(
+        buildMockLocalContext(window.appContext),
       )
     : window.parent,
 });
 ```
 
-5. Add the following content in `src/index.js`.
+4. Add the following content in `src/index.js`.
 
 ```js
 import { mockServer, buildMockLocalContext } from '@graasp/apps-query-client';
 import buildDatabase, { mockContext } from './mock/db';
 
 if (process.env.REACT_APP_MOCK_API) {
-  const appContext = buildMockLocalContext(window.appContext ?? mockContext);
-  // automatically redirects to the correct url
+  const appContext = buildMockLocalContext();
+  // automatically append item id as a query string
   const searchParams = new URLSearchParams(window.location.search);
   if (!searchParams.get('itemId')) {
     searchParams.set('itemId', appContext.itemId);
     window.location.search = searchParams.toString();
   }
-  // set up the mock database
-  const database = window.Cypress ? window.database : buildDatabase(appContext);
+  const database = buildDatabase({ appData: [] });
 
-  const errors = window.apiErrors;
-  mockServer({ database, appContext, errors });
+  mockServer({ database, appContext });
 }
 ```
 
-6. Add the `ContextContext` and the `TokenContext` files in your app in `src/components/context`. It will handle the authentication and fetching the local context automatically for you. Don't forget to always mount these contexts (in `<Root/>` and `<App/>`).
-
-#### TokenContext.js
+5. Add the `ContextContext` and the `TokenContext` files in your app in `src/components/context`. It will handle the authentication and fetching the local context automatically for you. Don't forget to always mount these contexts (in `<Root/>` and `<App/>`). For example:
 
 ```js
-import React, { createContext } from 'react';
-import PropTypes from 'prop-types';
-import qs from 'qs';
-import { hooks } from '../../config/queryClient';
-
-const TokenContext = createContext();
-
-const TokenProvider = ({ children }) => {
-  const { itemId } = qs.parse(window.location.search, {
-    ignoreQueryPrefix: true,
-  });
-  const { data, isLoading, isError } = hooks.useAuthToken(itemId);
-
-  if (isLoading) {
-    return 'loading...';
-  }
-
-  if (isError) {
-    console.error('An error occured while requesting the token.');
-  }
-
-  const value = data;
-  return (
-    <TokenContext.Provider value={value}>{children}</TokenContext.Provider>
-  );
-};
-
-TokenProvider.propTypes = {
-  children: PropTypes.node,
-};
-
-TokenProvider.defaultProps = {
-  children: null,
-};
-
-export { TokenContext, TokenProvider };
-```
-
-#### ContextContext.js
-
-```js
-import React, { createContext, useEffect } from 'react';
-import PropTypes from 'prop-types';
-import qs from 'qs';
-import { hooks } from '../../config/queryClient';
-
-const Context = createContext();
-
-const ContextProvider = ({ children }) => {
-  const { itemId } = qs.parse(window.location.search, {
-    ignoreQueryPrefix: true,
-  });
-  const {
-    data: context,
-    isLoading,
-    isError,
-  } = hooks.useGetLocalContext(itemId);
-
-// here is a good place to change the app language
-
-  if (isLoading) {
-    return 'loading...';
-  }
-
-  if (isError) {
-    console.error('An error occured while fetching the context.');
-  }
-
-  // todo: define a context to default to  
-  const value = context ?? DEFAULT_LOCAL_CONTEXT;
-
-  return <Context.Provider value={value}>{children}</Context.Provider>;
-};
-
-ContextProvider.propTypes = {
-  children: PropTypes.node,
-};
-
-ContextProvider.defaultProps = {
-  children: null,
-};
-
-export { Context, ContextProvider };
-```
-
-7. Optionally, you can create an util file for custom hooks. For instance, the following hook fetches the data from the local context and the token context to avoid redondance.
-
-```js
-export const useAppData = () => {
-  const context = useContext(Context);
-  const token = useContext(TokenContext);
-  const query = hooks.useAppData(
-    { token, itemId: context?.get('itemId') },
-  );
-  return query;
-};
+ <ContextProvider
+      LoadingComponent={<Loader />}
+      useGetLocalContext={hooks.useGetLocalContext}
+      onError={() => {
+        showErrorToast('An error occured while fetching the context.');
+      }}
+  >
+    <App />
+  </ContextProvider>
 ```
 
 You can now start your app with the mock API installed. Don't forget to disable it when you build your app.
@@ -198,7 +84,26 @@ You can now start your app with the mock API installed. Don't forget to disable 
 
 The next steps will help you set up Cypress to work with MirageJS. There is an [official tutorial](https://miragejs.com/quickstarts/cypress/) from MirageJS. But in our case, we followed a different strategy.
 
-1. Add in `cypress/support/commands.js`. You will need to define `MOCK_SERVER_ITEM`, `MEMBERS` and `CURRENT_MEMBER` to reuse them in your tests as well.
+1. Update your content in `index.js` to include some config defined from Cypress in the mock server:
+
+```js
+if (process.env.REACT_APP_MOCK_API) {
+  const appContext = buildMockLocalContext(window.appContext);
+  // automatically append item id as a query string
+  const searchParams = new URLSearchParams(window.location.search);
+  if (!searchParams.get('itemId')) {
+    searchParams.set('itemId', appContext.itemId);
+    window.location.search = searchParams.toString();
+  }
+  const database = window.Cypress
+    ? window.database
+    : buildDatabase({ appData: [] });
+
+  mockServer({ database, appContext });
+}
+```
+
+2. Add in `cypress/support/commands.js`. You will need to define `MEMBERS` and `CURRENT_MEMBER` to reuse them in your tests as well.
 
 ```js
 Cypress.Commands.add(
@@ -206,19 +111,17 @@ Cypress.Commands.add(
   ({ currentMember = CURRENT_MEMBER, database = {}, appContext } = {}) => {
     // mock api and database
     Cypress.on('window:before:load', (win) => {
-      win.database = {
-        currentMember,
-        currentItemId: MOCK_SERVER_ITEM.id,
+      win.database = buildDatabase({
         members: Object.values(MEMBERS),
         ...database,
-      };
+      });
       win.appContext = appContext;
     });
   }
 );
 ```
 
-2. Then in all your tests you will need to set up the database and context. The default values are configured so you can easily mount an empty and operational database.
+3. Then in all your tests you will need to set up the database and context. The default values are configured so you can easily mount an empty and operational database.
 
 ```js
 // start with an empty database
