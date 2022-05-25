@@ -66,10 +66,14 @@ export const FIXTURE_APP_DATA: AppData[] = [buildAppData(), buildAppData(), buil
 
 export const buildAppSetting = (
   { id, data }: { id: string; data: unknown } = { id: v4(), data: {} },
-) => ({
+): AppSetting => ({
   id,
   data,
   name: 'app-setting-name',
+  creator: 'creator-id',
+  itemId: 'item-id',
+  createdAt: new Date().toISOString(),
+  updatedAt: new Date().toISOString(),
 });
 
 export const FIXTURE_APP_SETTINGS: AppSetting[] = [
