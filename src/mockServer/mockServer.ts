@@ -25,20 +25,15 @@ const ApplicationSerializer = RestSerializer.extend({
   embed: true,
 });
 
-export const buildDatabase = ({ appData, appActions, appSettings, members }: Database) => ({
-  appData: appData ?? [],
-  appActions: appActions ?? [],
-  appSettings: appSettings ?? [],
-  members: members ?? [MOCK_SERVER_MEMBER],
+export const buildDatabase = ({ appData = [], appActions = [], appSettings = [], members = [MOCK_SERVER_MEMBER] }: Partial<Database> = {}) => ({
+  appData,
+  appActions,
+  appSettings,
+  members,
 });
 
 const setupApi = ({
-  database = {
-    appData: [],
-    appActions: [],
-    appSettings: [],
-    members: [MOCK_SERVER_MEMBER],
-  },
+  database = buildDatabase(),
   appContext = buildMockLocalContext(),
   errors = {},
 }: {
@@ -57,6 +52,7 @@ const setupApi = ({
   // mocked errors
   const { deleteAppDataShouldThrow } = errors;
 
+
   // we cannot use *Data
   // https://github.com/miragejs/miragejs/issues/782
   return createServer({
@@ -70,54 +66,36 @@ const setupApi = ({
     },
     factories: {
       appDataResource: Factory.extend<AppData>({
-        createdAt: Date.now().toString(),
-        updatedAt: Date.now().toString(),
-        data: (_attrs) => {
-          return {}; //attrs.data;
-        },
-        type: (_attrs) => {
-          return 'type'; //attrs.type;
-        },
-        id: (_attrs) => {
-          return v4(); //attrs?.id ??;
-        },
+        id: () => v4(),
+        createdAt: () => Date.now().toString(),
+        updatedAt: () => Date.now().toString(),
+        data: () => ({}),
+        type: idx => `app-data-type-${idx}`,
         itemId: currentItemId,
         memberId: currentMemberId,
         creator: currentMemberId,
       }),
       appActionResource: Factory.extend<AppAction>({
-        createdAt: Date.now().toString(),
-        data: (_attrs) => {
-          return {}; // attrs.data;
-        },
-        type: (_attrs) => {
-          return 'typeac'; //attrs.type;
-        },
-        memberId: currentMemberId,
-        id: v4(),
+        id: () => v4(),
         itemId: currentItemId,
+        memberId: currentMemberId,
+        createdAt: Date.now().toString(),
+        data: () => ({}),
+        type: 'app-action-type',
       }),
       appSetting: Factory.extend<AppSetting>({
+        id: () => v4(),
+        data: () => ({}),
         createdAt: Date.now().toString(),
         updatedAt: Date.now().toString(),
-        data: (_attrs) => {
-          return {}; //attrs.data;
-        },
-        name: (_attrs) => {
-          return 'ef'; // attrs.name;
-        },
-        id: (_attrs) => {
-          return v4(); //attrs?.id ??
-        },
+        name: (idx) => `app-setting-${idx}`,
         itemId: currentItemId,
       }),
       member: Factory.extend<Member>({
-        id: (_attrs) => {
-          return v4(); //attrs?.id ??
-        },
-        email: 'email',
-        name: 'name',
-        extra: {},
+        id: () => v4(),
+        extra: () => ({}),
+        email: (idx) => `app-setting-email-${idx}`,
+        name: (idx) => `member-${idx}`,
       }),
     },
 
@@ -128,14 +106,14 @@ const setupApi = ({
       member: ApplicationSerializer,
     },
     seeds(server) {
-      appData?.forEach((d) => {
-        server.create('appDataResource', d);
+      appData?.forEach((data) => {
+        server.create('appDataResource', data);
       });
-      appActions?.forEach((d) => {
-        server.create('appActionResource', d);
+      appActions?.forEach((data) => {
+        server.create('appActionResource', data);
       });
-      appSettings?.forEach((d) => {
-        server.create('appSetting', d);
+      appSettings?.forEach((data) => {
+        server.create('appSetting', data);
       });
       members?.forEach((m) => {
         server.create('member', m);
@@ -150,9 +128,12 @@ const setupApi = ({
         const { requestBody } = request;
         const data = JSON.parse(requestBody);
         return schema.create('appDataResource', {
-          ...data,
           itemId: currentItemId,
           memberId: currentMemberId,
+          creator: currentMemberId,
+          createdAt: Date.now(),
+          updatedAt: Date.now(),
+          ...data,
         });
       });
       this.patch(
@@ -165,7 +146,11 @@ const setupApi = ({
           if (!a) {
             return new Response(404, {}, { errors: ['not found'] });
           }
-          a.update({ ...a.attrs, ...data });
+          a.update({
+            ...a.attrs,
+            updatedAt: Date.now(),
+            ...data
+          });
           return a.attrs;
         },
       );
@@ -208,9 +193,11 @@ const setupApi = ({
         const { requestBody } = request;
         const data = JSON.parse(requestBody);
         return schema.create('appSetting', {
-          ...data,
+          createdAt: Date.now(),
+          updatedAt: Date.now(),
           itemId: currentItemId,
           memberId: currentMemberId,
+          ...data,
         });
       });
       this.patch(
@@ -223,7 +210,10 @@ const setupApi = ({
           if (!a) {
             return new Response(404, {}, { errors: ['not found'] });
           }
-          a.update({ ...a.attrs, ...data });
+          a.update({
+            ...a.attrs,
+            updatedAt: Date.now(), ...data
+          });
           return a.attrs;
         },
       );

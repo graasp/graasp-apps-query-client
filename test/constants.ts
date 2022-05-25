@@ -59,7 +59,8 @@ export const buildAppData = ({ id = v4(), data = {} }: Partial<AppData> = {}): A
   data,
   type: 'type',
   creator: v4(),
-  createdAt: 'createdAt',
+  createdAt: Date.now().toString(),
+  updatedAt: Date.now().toString(), memberId: 'memberId', itemId: 'itemId'
 });
 
 export const FIXTURE_APP_DATA: AppData[] = [buildAppData(), buildAppData(), buildAppData()];
@@ -71,6 +72,8 @@ export const buildAppSetting = ({
   id,
   data,
   name: 'app-setting-name',
+  createdAt: Date.now().toString(),
+  updatedAt: Date.now().toString(), itemId: 'itemId'
 });
 
 export const FIXTURE_APP_SETTINGS: AppSetting[] = [

@@ -32,6 +32,7 @@ export const getData = (queryClient: QueryClient) => {
 
 export const getDataOrThrow = (queryClient: QueryClient) => {
   const { itemId, memberId, token } = getData(queryClient);
+  console.log('itemId, memberId, token: ', itemId, memberId, token);
   if (!itemId || !memberId || !token) {
     throw new MissingNecessaryDataError({ itemId, memberId, token });
   }
