@@ -54,21 +54,20 @@ export const APPS = [
   },
 ];
 
-export const buildAppData = (
-  { id = v4(), data = {} }: Partial<AppData> = {}
-): AppData => ({
+export const buildAppData = ({ id = v4(), data = {} }: Partial<AppData> = {}): AppData => ({
   id,
   data,
   type: 'type',
   creator: v4(),
-  createdAt: 'createdAt'
+  createdAt: 'createdAt',
 });
 
 export const FIXTURE_APP_DATA: AppData[] = [buildAppData(), buildAppData(), buildAppData()];
 
-export const buildAppSetting = (
-  { id = v4(), data = {} }: Partial<AppSetting> = {},
-): AppSetting => ({
+export const buildAppSetting = ({
+  id = v4(),
+  data = {},
+}: Partial<AppSetting> = {}): AppSetting => ({
   id,
   data,
   name: 'app-setting-name',

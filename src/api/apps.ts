@@ -36,9 +36,11 @@ export const getAppData = async (args: ApiData) => {
     .then(({ data }) => data);
 };
 
-export const postAppData = (args: ApiData & {
-  body: unknown;
-}) => {
+export const postAppData = (
+  args: ApiData & {
+    body: unknown;
+  },
+) => {
   const { token, itemId, apiHost, body } = args;
   return axios
     .post(`${apiHost}/${buildPostAppDataRoute({ itemId })}`, body, {
@@ -64,9 +66,11 @@ export const patchAppData = (args: ApiData & Partial<AppData> & { id: UUID }) =>
     .then(({ data }) => data);
 };
 
-export const deleteAppData = (args: ApiData & {
-  id: string;
-}) => {
+export const deleteAppData = (
+  args: ApiData & {
+    id: string;
+  },
+) => {
   const { token, itemId, id, apiHost } = args;
   return axios
     .delete(`${apiHost}/${buildDeleteAppDataRoute({ itemId, id })}`, {
@@ -88,9 +92,11 @@ export const getAppActions = async (args: ApiData) => {
     .then(({ data }) => data);
 };
 
-export const postAppAction = (args: ApiData & {
-  body: unknown;
-}) => {
+export const postAppAction = (
+  args: ApiData & {
+    body: unknown;
+  },
+) => {
   const { token, itemId, apiHost, body } = args;
   return axios
     .post(`${apiHost}/${buildPostAppActionRoute({ itemId })}`, body, {

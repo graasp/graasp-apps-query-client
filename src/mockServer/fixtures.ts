@@ -6,7 +6,7 @@ export const MOCK_SERVER_MEMBER: Member = {
   id: 'mock-member-id',
   name: 'mock-member-name',
   email: 'email@email.com',
-  extra: {}
+  extra: {},
 };
 
 export const MOCK_SERVER_ITEM = { id: 'mock-item-id', name: 'mock-item-name' };

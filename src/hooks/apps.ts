@@ -19,9 +19,7 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
     staleTime,
   };
   return {
-    useAppData: (
-      refetchInterval: number | false = false,
-    ) => {
+    useAppData: (refetchInterval: number | false = false) => {
       const apiHost = getApiHost(queryClient);
       const { token, itemId } = getDataOrThrow(queryClient);
       return useQuery({
@@ -32,7 +30,7 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
         ...defaultOptions,
         enabled: Boolean(itemId) && Boolean(token),
         refetchInterval,
-      })
+      });
     },
 
     useAppActions: () => {
@@ -59,11 +57,11 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
         },
         ...defaultOptions,
         enabled: Boolean(itemId) && Boolean(token),
-      })
+      });
     },
 
     useFileContent: (
-      payload?: { fileId: string; },
+      payload?: { fileId: string },
       { enabled = true }: { enabled?: boolean } = {},
     ) => {
       const apiHost = getApiHost(queryClient);
@@ -79,7 +77,7 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
         },
         ...defaultOptions,
         enabled: Boolean(payload?.fileId) && Boolean(token) && enabled,
-      })
+      });
     },
   };
 };

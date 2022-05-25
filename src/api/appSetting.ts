@@ -21,9 +21,11 @@ export const getAppSettings = async (args: ApiData) => {
     .then(({ data }) => data);
 };
 
-export const postAppSetting = (args: ApiData & {
-  body: unknown;
-}) => {
+export const postAppSetting = (
+  args: ApiData & {
+    body: unknown;
+  },
+) => {
   const { token, itemId, apiHost, body } = args;
   return axios
     .post(`${apiHost}/${buildPostAppSettingRoute({ itemId })}`, body, {
@@ -34,11 +36,12 @@ export const postAppSetting = (args: ApiData & {
     .then(({ data }) => data);
 };
 
-export const patchAppSetting = (args: ApiData & {
-
-  id: string;
-  data: unknown;
-}) => {
+export const patchAppSetting = (
+  args: ApiData & {
+    id: string;
+    data: unknown;
+  },
+) => {
   const { token, itemId, id, apiHost, data } = args;
   return axios
     .patch(
@@ -53,9 +56,11 @@ export const patchAppSetting = (args: ApiData & {
     .then(({ data }) => data);
 };
 
-export const deleteAppSetting = (args: ApiData & {
-  id: string;
-}) => {
+export const deleteAppSetting = (
+  args: ApiData & {
+    id: string;
+  },
+) => {
   const { token, itemId, id, apiHost } = args;
   return axios
     .delete(`${apiHost}/${buildDeleteAppSettingRoute({ itemId, id })}`, {

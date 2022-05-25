@@ -1,7 +1,7 @@
 import { createServer, Model, Factory, RestSerializer, Response } from 'miragejs';
 import { v4 } from 'uuid';
 import { API_ROUTES } from '../api/routes';
-import { AppAction, AppData, AppSetting, Database, LocalContext, Member, } from '../types';
+import { AppAction, AppData, AppSetting, Database, LocalContext, Member } from '../types';
 import { buildMockLocalContext, MOCK_SERVER_ITEM, MOCK_SERVER_MEMBER } from './fixtures';
 
 const {
@@ -25,12 +25,7 @@ const ApplicationSerializer = RestSerializer.extend({
   embed: true,
 });
 
-export const buildDatabase = ({
-  appData,
-  appActions,
-  appSettings,
-  members,
-}: Database) => ({
+export const buildDatabase = ({ appData, appActions, appSettings, members }: Database) => ({
   appData: appData ?? [],
   appActions: appActions ?? [],
   appSettings: appSettings ?? [],
@@ -50,14 +45,17 @@ const setupApi = ({
   database?: Database;
   appContext?: LocalContext;
   errors?: {
-    deleteAppDataShouldThrow?: boolean
-  }
+    deleteAppDataShouldThrow?: boolean;
+  };
 } = {}) => {
   const { appData, appActions, appSettings, members } = database;
-  const { itemId: currentItemId = MOCK_SERVER_ITEM.id, memberId: currentMemberId = MOCK_SERVER_MEMBER.id, apiHost } = appContext;
+  const {
+    itemId: currentItemId = MOCK_SERVER_ITEM.id,
+    memberId: currentMemberId = MOCK_SERVER_MEMBER.id,
+    apiHost,
+  } = appContext;
   // mocked errors
   const { deleteAppDataShouldThrow } = errors;
-
 
   // we cannot use *Data
   // https://github.com/miragejs/miragejs/issues/782
@@ -75,10 +73,10 @@ const setupApi = ({
         createdAt: Date.now().toString(),
         updatedAt: Date.now().toString(),
         data: (_attrs) => {
-          return {};//attrs.data;
+          return {}; //attrs.data;
         },
         type: (_attrs) => {
-          return 'type';//attrs.type;
+          return 'type'; //attrs.type;
         },
         id: (_attrs) => {
           return v4(); //attrs?.id ??;
@@ -90,23 +88,23 @@ const setupApi = ({
       appActionResource: Factory.extend<AppAction>({
         createdAt: Date.now().toString(),
         data: (_attrs) => {
-          return {};// attrs.data;
+          return {}; // attrs.data;
         },
         type: (_attrs) => {
-          return 'typeac';//attrs.type;
+          return 'typeac'; //attrs.type;
         },
         memberId: currentMemberId,
         id: v4(),
-        itemId: currentItemId
+        itemId: currentItemId,
       }),
       appSetting: Factory.extend<AppSetting>({
         createdAt: Date.now().toString(),
         updatedAt: Date.now().toString(),
         data: (_attrs) => {
-          return {};//attrs.data;
+          return {}; //attrs.data;
         },
         name: (_attrs) => {
-          return 'ef';// attrs.name;
+          return 'ef'; // attrs.name;
         },
         id: (_attrs) => {
           return v4(); //attrs?.id ??
@@ -119,7 +117,7 @@ const setupApi = ({
         },
         email: 'email',
         name: 'name',
-        extra: {}
+        extra: {},
       }),
     },
 

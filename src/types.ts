@@ -1,11 +1,11 @@
 export type Notifier = (e: unknown) => void;
 
-export type Data = { [key: string]: unknown; };
-export type AppDataData = Data
-export type AppActionData = Data
-export type AppSettingData = Data
+export type Data = { [key: string]: unknown };
+export type AppDataData = Data;
+export type AppActionData = Data;
+export type AppSettingData = Data;
 
-export type Token = string
+export type Token = string;
 
 export type QueryClientConfig = {
   API_HOST?: string; // set during usecontext
@@ -50,28 +50,28 @@ export type Member = {
 
 export type AppData = {
   id: UUID;
-  data: AppDataData
+  data: AppDataData;
   type: string;
   creator: string;
   createdAt: string;
   updatedAt: string;
   memberId: UUID;
-  itemId: UUID
+  itemId: UUID;
 };
 
 export type AppAction = {
   id: UUID;
   type: string;
-  data: AppActionData
+  data: AppActionData;
   memberId: UUID;
   itemId: UUID;
   createdAt: string;
 };
 
 export type AppSetting = {
-  itemId: UUID
+  itemId: UUID;
   id: UUID;
-  data: AppSettingData
+  data: AppSettingData;
   name: string;
   createdAt: string;
   updatedAt: string;
@@ -102,7 +102,7 @@ export enum Context {
   BUILDER = 'builder',
   ANALYZER = 'analyzer',
   EXPLORER = 'explorer',
-  STANDALONE = 'standalone'
+  STANDALONE = 'standalone',
 }
 export enum PermissionLevel {
   ADMIN = 'admin',
@@ -120,7 +120,6 @@ export type LocalContext = {
   lang?: string;
   context?: Context;
   permission?: string;
-
 };
 
 export interface ApiData {
@@ -130,8 +129,8 @@ export interface ApiData {
 }
 
 export interface Database {
-  appData: AppData[],
-  appActions: AppAction[],
-  appSettings: AppSetting[],
-  members: Member[],
+  appData: AppData[];
+  appActions: AppAction[];
+  appSettings: AppSetting[];
+  members: Member[];
 }

@@ -72,7 +72,7 @@ const configurePostMessageHooks = (_queryClient: QueryClient, queryConfig: Query
         reject,
       }: {
         resolve: (value: unknown) => void;
-        reject: (reason?: any) => void;
+        reject: (reason?: unknown) => void;
       },
       formatResolvedValue?: (data: { payload: any; event: MessageEvent }) => unknown,
     ) =>
