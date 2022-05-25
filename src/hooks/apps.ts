@@ -50,7 +50,7 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
     useAppContext: () => {
       const apiHost = getApiHost(queryClient);
       const { token, itemId } = getDataOrThrow(queryClient);
-      useQuery({
+      return useQuery({
         queryKey: buildAppContextKey(itemId),
         queryFn: () => {
           return Api.getContext({ itemId, token, apiHost }).then((data) => Map(data));
@@ -66,7 +66,7 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
     ) => {
       const apiHost = getApiHost(queryClient);
       const { token } = getDataOrThrow(queryClient);
-      useQuery({
+      return useQuery({
         queryKey: buildFileContentKey(payload?.fileId),
         queryFn: () => {
           if (!payload?.fileId) {
