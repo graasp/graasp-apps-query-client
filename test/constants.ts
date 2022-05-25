@@ -1,5 +1,5 @@
 import { v4 } from 'uuid';
-import { AppData, AppSetting, Member } from '../src/types';
+import { AppData, AppSetting, LocalContext, Member } from '../src/types';
 
 export const API_HOST = 'http://localhost:3000';
 export const UNAUTHORIZED_RESPONSE = { some: 'error' };
@@ -55,18 +55,20 @@ export const APPS = [
 ];
 
 export const buildAppData = (
-  { id, data }: { id: string; data: unknown } = { id: v4(), data: {} },
-) => ({
+  { id = v4(), data = {} }: Partial<AppData> = {}
+): AppData => ({
   id,
   data,
-  type: 'verb',
+  type: 'type',
+  creator: v4(),
+  createdAt: 'createdAt'
 });
 
 export const FIXTURE_APP_DATA: AppData[] = [buildAppData(), buildAppData(), buildAppData()];
 
 export const buildAppSetting = (
-  { id, data }: { id: string; data: unknown } = { id: v4(), data: {} },
-) => ({
+  { id = v4(), data = {} }: Partial<AppSetting> = {},
+): AppSetting => ({
   id,
   data,
   name: 'app-setting-name',
@@ -94,10 +96,11 @@ export enum REQUEST_METHODS {
 export const buildMockLocalContext = ({
   itemId = v4(),
   memberId = v4(),
-}: { itemId?: string | null; memberId?: string | null } = {}) => ({
+}: Partial<LocalContext> = {}) => ({
   apiHost: API_HOST,
   itemId,
   memberId,
   settings: {},
 });
+
 export const MOCK_APP_ORIGIN = 'http://localhost';

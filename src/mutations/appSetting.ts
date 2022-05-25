@@ -15,7 +15,7 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
   const { notifier } = queryConfig;
 
   queryClient.setMutationDefaults(MUTATION_KEYS.POST_APP_SETTING, {
-    mutationFn: (payload: { data: unknown; verb: string }) => {
+    mutationFn: (payload: Partial<AppSetting>) => {
       const apiHost = getApiHost(queryClient);
       const data = getDataOrThrow(queryClient);
       return Api.postAppSetting({ ...data, body: payload, apiHost });
@@ -36,14 +36,14 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
   });
 
   queryClient.setMutationDefaults(MUTATION_KEYS.PATCH_APP_SETTING, {
-    mutationFn: (payload: { id: string; data: unknown }) => {
+    mutationFn: (payload: Partial<AppSetting> & { id: string }) => {
       const apiHost = getApiHost(queryClient);
       const data = getDataOrThrow(queryClient);
       return Api.patchAppSetting({ ...data, id: payload.id, data: payload.data, apiHost }).then(
         (data) => Map(data),
       );
     },
-    onMutate: async (payload: { id: string; data: any }) => {
+    onMutate: async (payload) => {
       let context = null;
       const { itemId } = getData(queryClient);
       const prevData = queryClient.getQueryData<List<AppData>>(buildAppSettingsKey(itemId));

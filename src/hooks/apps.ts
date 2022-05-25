@@ -1,14 +1,14 @@
 import { List, Map } from 'immutable';
 import { QueryClient, useQuery } from 'react-query';
 import * as Api from '../api';
-import { MissingFileIdError, MissingItemIdError, MissingTokenError } from '../config/errors';
+import { MissingFileIdError } from '../config/errors';
 import {
   buildAppActionsKey,
   buildAppContextKey,
   buildAppDataKey,
   buildFileContentKey,
 } from '../config/keys';
-import { getApiHost } from '../config/utils';
+import { getApiHost, getDataOrThrow } from '../config/utils';
 import { QueryClientConfig } from '../types';
 
 export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
@@ -20,86 +20,66 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
   };
   return {
     useAppData: (
-      payload: { token?: string; itemId?: string },
       refetchInterval: number | false = false,
-    ) =>
-      useQuery({
-        queryKey: buildAppDataKey(payload.itemId),
+    ) => {
+      const apiHost = getApiHost(queryClient);
+      const { token, itemId } = getDataOrThrow(queryClient);
+      return useQuery({
+        queryKey: buildAppDataKey(itemId),
         queryFn: () => {
-          const apiHost = getApiHost(queryClient);
-          const { token, itemId } = payload;
-          // the following check are verified in enabled
-          if (!token) {
-            throw new MissingTokenError();
-          }
-          if (!itemId) {
-            throw new MissingItemIdError();
-          }
           return Api.getAppData({ itemId, token, apiHost }).then((data) => List(data));
         },
         ...defaultOptions,
-        enabled: Boolean(payload.itemId) && Boolean(payload.token),
+        enabled: Boolean(itemId) && Boolean(token),
         refetchInterval,
-      }),
+      })
+    },
 
-    useAppActions: (payload: { token?: string; itemId?: string }) =>
-      useQuery({
-        queryKey: buildAppActionsKey(payload.itemId),
+    useAppActions: () => {
+      const apiHost = getApiHost(queryClient);
+      const { token, itemId } = getDataOrThrow(queryClient);
+
+      return useQuery({
+        queryKey: buildAppActionsKey(itemId),
         queryFn: () => {
-          const apiHost = getApiHost(queryClient);
-          const { token, itemId } = payload;
-          // the following check are verified in enabled
-          if (!token) {
-            throw new MissingTokenError();
-          }
-          if (!itemId) {
-            throw new MissingItemIdError();
-          }
           return Api.getAppActions({ itemId, token, apiHost }).then((data) => List(data));
         },
         ...defaultOptions,
-        enabled: Boolean(payload.itemId) && Boolean(payload.token),
-      }),
+        enabled: Boolean(itemId) && Boolean(token),
+      });
+    },
 
-    useAppContext: (payload: { token?: string; itemId?: string }) =>
+    useAppContext: () => {
+      const apiHost = getApiHost(queryClient);
+      const { token, itemId } = getDataOrThrow(queryClient);
       useQuery({
-        queryKey: buildAppContextKey(payload.itemId),
+        queryKey: buildAppContextKey(itemId),
         queryFn: () => {
-          const apiHost = getApiHost(queryClient);
-          const { token, itemId } = payload;
-          // the following check are verified in enabled
-          if (!token) {
-            throw new MissingTokenError();
-          }
-          if (!itemId) {
-            throw new MissingItemIdError();
-          }
           return Api.getContext({ itemId, token, apiHost }).then((data) => Map(data));
         },
         ...defaultOptions,
-        enabled: Boolean(payload.itemId) && Boolean(payload.token),
-      }),
+        enabled: Boolean(itemId) && Boolean(token),
+      })
+    },
 
     useFileContent: (
-      payload?: { fileId: string; token: string },
+      payload?: { fileId: string; },
       { enabled = true }: { enabled?: boolean } = {},
-    ) =>
+    ) => {
+      const apiHost = getApiHost(queryClient);
+      const { token } = getDataOrThrow(queryClient);
       useQuery({
         queryKey: buildFileContentKey(payload?.fileId),
         queryFn: () => {
-          const apiHost = getApiHost(queryClient);
-          // the following check are verified in enabled
-          if (!payload?.token) {
-            throw new MissingTokenError();
-          }
           if (!payload?.fileId) {
             throw new MissingFileIdError();
           }
-          const { token, fileId } = payload;
+          const { fileId } = payload;
           return Api.getFileContent({ id: fileId, apiHost, token }).then((data) => data);
         },
         ...defaultOptions,
-        enabled: Boolean(payload?.fileId) && Boolean(payload?.token) && enabled,
-      }),
+        enabled: Boolean(payload?.fileId) && Boolean(token) && enabled,
+      })
+    },
   };
 };

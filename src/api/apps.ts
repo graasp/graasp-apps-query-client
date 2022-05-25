@@ -9,10 +9,11 @@ import {
   buildPostAppActionRoute,
 } from './routes';
 import configureAxios from './axios';
+import { ApiData, AppData, UUID } from '../types';
 
 const axios = configureAxios();
 
-export const getContext = async (args: { token: string; itemId: string; apiHost: string }) => {
+export const getContext = async (args: ApiData) => {
   const { token, itemId, apiHost } = args;
   return axios
     .get(`${apiHost}/${buildGetContextRoute(itemId)}`, {
@@ -24,7 +25,7 @@ export const getContext = async (args: { token: string; itemId: string; apiHost:
 };
 
 // APP DATA
-export const getAppData = async (args: { token: string; itemId: string; apiHost: string }) => {
+export const getAppData = async (args: ApiData) => {
   const { token, itemId, apiHost } = args;
   return axios
     .get(`${apiHost}/${buildGetAppDataRoute(itemId)}`, {
@@ -35,11 +36,8 @@ export const getAppData = async (args: { token: string; itemId: string; apiHost:
     .then(({ data }) => data);
 };
 
-export const postAppData = (args: {
-  token: string;
-  itemId: string;
+export const postAppData = (args: ApiData & {
   body: unknown;
-  apiHost: string;
 }) => {
   const { token, itemId, apiHost, body } = args;
   return axios
@@ -51,13 +49,7 @@ export const postAppData = (args: {
     .then(({ data }) => data);
 };
 
-export const patchAppData = (args: {
-  token: string;
-  itemId: string;
-  id: string;
-  apiHost: string;
-  data: unknown;
-}) => {
+export const patchAppData = (args: ApiData & Partial<AppData> & { id: UUID }) => {
   const { token, itemId, id, apiHost, data } = args;
   return axios
     .patch(
@@ -72,11 +64,8 @@ export const patchAppData = (args: {
     .then(({ data }) => data);
 };
 
-export const deleteAppData = (args: {
-  token: string;
-  itemId: string;
+export const deleteAppData = (args: ApiData & {
   id: string;
-  apiHost: string;
 }) => {
   const { token, itemId, id, apiHost } = args;
   return axios
@@ -88,7 +77,7 @@ export const deleteAppData = (args: {
     .then(({ data }) => data);
 };
 
-export const getAppActions = async (args: { token: string; itemId: string; apiHost: string }) => {
+export const getAppActions = async (args: ApiData) => {
   const { token, itemId, apiHost } = args;
   return axios
     .get(`${apiHost}/${buildGetAppActionsRoute(itemId)}`, {
@@ -99,11 +88,8 @@ export const getAppActions = async (args: { token: string; itemId: string; apiHo
     .then(({ data }) => data);
 };
 
-export const postAppAction = (args: {
-  token: string;
-  itemId: string;
+export const postAppAction = (args: ApiData & {
   body: unknown;
-  apiHost: string;
 }) => {
   const { token, itemId, apiHost, body } = args;
   return axios

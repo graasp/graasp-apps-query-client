@@ -1,5 +1,7 @@
 export type Notifier = (e: unknown) => void;
 
+export type Token = string
+
 export type QueryClientConfig = {
   API_HOST?: string; // set during usecontext
   SHOW_NOTIFICATIONS: boolean;
@@ -43,18 +45,24 @@ export type Member = {
 
 export type AppData = {
   id: UUID;
-  data: any;
+  data: { [key: string]: string; };
+  type: string;
+  creator: string;
+  createdAt: string;
+  memberId: UUID
 };
 
 export type AppAction = {
   id: UUID;
   type: string;
-  data: unknown;
+  data: { [key: string]: string; };
+  memberId: UUID;
+  itemId: UUID;
 };
 
 export type AppSetting = {
   id: UUID;
-  data: unknown;
+  data: { [key: string]: string; };
   name: string;
 };
 
@@ -83,6 +91,7 @@ export enum Context {
   BUILDER = 'builder',
   ANALYZER = 'analyzer',
   EXPLORER = 'explorer',
+  STANDALONE = 'standalone'
 }
 export enum PermissionLevel {
   ADMIN = 'admin',
@@ -96,8 +105,16 @@ export type LocalContext = {
   memberId?: string;
   settings?: unknown;
   dev?: string;
-  offline?: string;
+  offline?: boolean;
   lang?: string;
   context?: Context;
   permission?: string;
+
 };
+
+export interface ApiData {
+  token: Token;
+  itemId: UUID;
+  apiHost: string;
+}
+

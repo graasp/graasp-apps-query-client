@@ -6,10 +6,11 @@ import {
   buildPostAppSettingRoute,
 } from './routes';
 import configureAxios from './axios';
+import { ApiData } from '../types';
 
 const axios = configureAxios();
 
-export const getAppSettings = async (args: { token: string; itemId: string; apiHost: string }) => {
+export const getAppSettings = async (args: ApiData) => {
   const { token, itemId, apiHost } = args;
   return axios
     .get(`${apiHost}/${buildGetAppSettingsRoute(itemId)}`, {
@@ -20,11 +21,8 @@ export const getAppSettings = async (args: { token: string; itemId: string; apiH
     .then(({ data }) => data);
 };
 
-export const postAppSetting = (args: {
-  token: string;
-  itemId: string;
+export const postAppSetting = (args: ApiData & {
   body: unknown;
-  apiHost: string;
 }) => {
   const { token, itemId, apiHost, body } = args;
   return axios
@@ -36,11 +34,9 @@ export const postAppSetting = (args: {
     .then(({ data }) => data);
 };
 
-export const patchAppSetting = (args: {
-  token: string;
-  itemId: string;
+export const patchAppSetting = (args: ApiData & {
+
   id: string;
-  apiHost: string;
   data: unknown;
 }) => {
   const { token, itemId, id, apiHost, data } = args;
@@ -57,11 +53,8 @@ export const patchAppSetting = (args: {
     .then(({ data }) => data);
 };
 
-export const deleteAppSetting = (args: {
-  token: string;
-  itemId: string;
+export const deleteAppSetting = (args: ApiData & {
   id: string;
-  apiHost: string;
 }) => {
   const { token, itemId, id, apiHost } = args;
   return axios
