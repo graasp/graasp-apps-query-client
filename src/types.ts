@@ -1,5 +1,10 @@
 export type Notifier = (e: unknown) => void;
 
+export type Data = { [key: string]: unknown; };
+export type AppDataData = Data
+export type AppActionData = Data
+export type AppSettingData = Data
+
 export type Token = string
 
 export type QueryClientConfig = {
@@ -45,25 +50,31 @@ export type Member = {
 
 export type AppData = {
   id: UUID;
-  data: { [key: string]: string; };
+  data: AppDataData
   type: string;
   creator: string;
   createdAt: string;
-  memberId: UUID
+  updatedAt: string;
+  memberId: UUID;
+  itemId: UUID
 };
 
 export type AppAction = {
   id: UUID;
   type: string;
-  data: { [key: string]: string; };
+  data: AppActionData
   memberId: UUID;
   itemId: UUID;
+  createdAt: string;
 };
 
 export type AppSetting = {
+  itemId: UUID
   id: UUID;
-  data: { [key: string]: string; };
+  data: AppSettingData
   name: string;
+  createdAt: string;
+  updatedAt: string;
 };
 
 export class UndefinedArgument extends Error {
@@ -104,7 +115,7 @@ export type LocalContext = {
   itemId: string;
   memberId?: string;
   settings?: unknown;
-  dev?: string;
+  dev?: boolean;
   offline?: boolean;
   lang?: string;
   context?: Context;
@@ -118,3 +129,9 @@ export interface ApiData {
   apiHost: string;
 }
 
+export interface Database {
+  appData: AppData[],
+  appActions: AppAction[],
+  appSettings: AppSetting[],
+  members: Member[],
+}

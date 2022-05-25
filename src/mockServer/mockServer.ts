@@ -1,7 +1,8 @@
 import { createServer, Model, Factory, RestSerializer, Response } from 'miragejs';
 import { v4 } from 'uuid';
 import { API_ROUTES } from '../api/routes';
-import { buildMockLocalContext, MOCK_SERVER_MEMBER } from './fixtures';
+import { AppAction, AppData, AppSetting, Database, LocalContext, Member, } from '../types';
+import { buildMockLocalContext, MOCK_SERVER_ITEM, MOCK_SERVER_MEMBER } from './fixtures';
 
 const {
   buildGetAppDataRoute,
@@ -24,6 +25,18 @@ const ApplicationSerializer = RestSerializer.extend({
   embed: true,
 });
 
+export const buildDatabase = ({
+  appData,
+  appActions,
+  appSettings,
+  members,
+}: Database) => ({
+  appData: appData ?? [],
+  appActions: appActions ?? [],
+  appSettings: appSettings ?? [],
+  members: members ?? [MOCK_SERVER_MEMBER],
+});
+
 const setupApi = ({
   database = {
     appData: [],
@@ -33,11 +46,18 @@ const setupApi = ({
   },
   appContext = buildMockLocalContext(),
   errors = {},
+}: {
+  database?: Database;
+  appContext?: LocalContext;
+  errors?: {
+    deleteAppDataShouldThrow?: boolean
+  }
 } = {}) => {
   const { appData, appActions, appSettings, members } = database;
-  const { itemId: currentItemId, memberId: currentMemberId, apiHost } = appContext;
+  const { itemId: currentItemId = MOCK_SERVER_ITEM.id, memberId: currentMemberId = MOCK_SERVER_MEMBER.id, apiHost } = appContext;
   // mocked errors
   const { deleteAppDataShouldThrow } = errors;
+
 
   // we cannot use *Data
   // https://github.com/miragejs/miragejs/issues/782
@@ -51,48 +71,55 @@ const setupApi = ({
       member: Model,
     },
     factories: {
-      appDataResource: Factory.extend({
-        createdAt: Date.now(),
-        data: (attrs) => {
-          return attrs.data;
+      appDataResource: Factory.extend<AppData>({
+        createdAt: Date.now().toString(),
+        updatedAt: Date.now().toString(),
+        data: (_attrs) => {
+          return {};//attrs.data;
         },
-        type: (attrs) => {
-          return attrs.type;
+        type: (_attrs) => {
+          return 'type';//attrs.type;
         },
-        id: (attrs) => {
-          return attrs?.id ?? v4();
+        id: (_attrs) => {
+          return v4(); //attrs?.id ??;
         },
         itemId: currentItemId,
         memberId: currentMemberId,
+        creator: currentMemberId,
       }),
-      appActionResource: Factory.extend({
-        createdAt: Date.now(),
-        data: (attrs) => {
-          return attrs.data;
+      appActionResource: Factory.extend<AppAction>({
+        createdAt: Date.now().toString(),
+        data: (_attrs) => {
+          return {};// attrs.data;
         },
-        type: (attrs) => {
-          return attrs.type;
+        type: (_attrs) => {
+          return 'typeac';//attrs.type;
         },
         memberId: currentMemberId,
+        id: v4(),
+        itemId: currentItemId
       }),
-      appSetting: Factory.extend({
-        createdAt: Date.now(),
-        updatedAt: Date.now(),
-        data: (attrs) => {
-          return attrs.data;
+      appSetting: Factory.extend<AppSetting>({
+        createdAt: Date.now().toString(),
+        updatedAt: Date.now().toString(),
+        data: (_attrs) => {
+          return {};//attrs.data;
         },
-        name: (attrs) => {
-          return attrs.name;
+        name: (_attrs) => {
+          return 'ef';// attrs.name;
         },
-        id: (attrs) => {
-          return attrs?.id ?? v4();
+        id: (_attrs) => {
+          return v4(); //attrs?.id ??
         },
         itemId: currentItemId,
       }),
-      member: Factory.extend({
-        id: (attrs) => {
-          return attrs?.id ?? v4();
+      member: Factory.extend<Member>({
+        id: (_attrs) => {
+          return v4(); //attrs?.id ??
         },
+        email: 'email',
+        name: 'name',
+        extra: {}
       }),
     },
 
@@ -119,12 +146,12 @@ const setupApi = ({
     routes() {
       // app data
       this.get(`/${buildGetAppDataRoute(currentItemId)}`, (schema) => {
-        return schema.appDataResources.all();
+        return schema.all('appDataResource');
       });
       this.post(`/${buildPostAppDataRoute({ itemId: currentItemId })}`, (schema, request) => {
         const { requestBody } = request;
         const data = JSON.parse(requestBody);
-        return schema.appDataResources.create({
+        return schema.create('appDataResource', {
           ...data,
           itemId: currentItemId,
           memberId: currentMemberId,
@@ -136,8 +163,12 @@ const setupApi = ({
           const { id } = request.params;
           const { requestBody } = request;
           const data = JSON.parse(requestBody);
-          const a = schema.appDataResources.findBy({ id });
-          return a.update({ ...a.attrs, ...data });
+          const a = schema.findBy('appDataResource', { id });
+          if (!a) {
+            return new Response(404, {}, { errors: ['not found'] });
+          }
+          a.update({ ...a.attrs, ...data });
+          return a.attrs;
         },
       );
       this.delete(
@@ -147,19 +178,23 @@ const setupApi = ({
             return new Response(400, {}, { errors: [deleteAppDataShouldThrow] });
           }
           const { id } = request.params;
-          const appData = schema.appDataResources.findBy({ id });
-          return appData.destroy();
+          const appData = schema.findBy('appDataResource', { id });
+          if (!appData) {
+            return new Response(404, {}, { errors: ['not found'] });
+          }
+          appData.destroy();
+          return appData.attrs;
         },
       );
 
       // app actions
       this.get(`/${buildGetAppActionsRoute(currentItemId)}`, (schema) => {
-        return schema.appActionResources.all();
+        return schema.all('appActionResource');
       });
       this.post(`/${buildPostAppActionRoute({ itemId: currentItemId })}`, (schema, request) => {
         const { requestBody } = request;
         const data = JSON.parse(requestBody);
-        return schema.appActionResources.create({
+        return schema.create('appActionResource', {
           ...data,
           itemId: currentItemId,
           memberId: currentMemberId,
@@ -168,13 +203,13 @@ const setupApi = ({
 
       // app settings
       this.get(`/${buildGetAppSettingsRoute(currentItemId)}`, (schema) => {
-        return schema.appSettings.all();
+        return schema.all('appSetting');
       });
 
       this.post(`/${buildPostAppSettingRoute({ itemId: currentItemId })}`, (schema, request) => {
         const { requestBody } = request;
         const data = JSON.parse(requestBody);
-        return schema.appSettings.create({
+        return schema.create('appSetting', {
           ...data,
           itemId: currentItemId,
           memberId: currentMemberId,
@@ -186,8 +221,12 @@ const setupApi = ({
           const { id } = request.params;
           const { requestBody } = request;
           const data = JSON.parse(requestBody);
-          const a = schema.appSettings.findBy({ id });
-          return a.update({ ...a.attrs, ...data });
+          const a = schema.findBy('appSetting', { id });
+          if (!a) {
+            return new Response(404, {}, { errors: ['not found'] });
+          }
+          a.update({ ...a.attrs, ...data });
+          return a.attrs;
         },
       );
       this.delete(
@@ -197,31 +236,37 @@ const setupApi = ({
             return new Response(400, {}, { errors: [deleteAppDataShouldThrow] });
           }
           const { id } = request.params;
-          const data = schema.appSettings.findBy({ id });
-          return data.destroy();
+          const data = schema.findBy('appSetting', { id });
+          if (!data) {
+            return new Response(404, {}, { errors: ['not found'] });
+          }
+          data.destroy();
+          return data.attrs;
         },
       );
 
       // context
       this.get(`/${buildGetContextRoute(currentItemId)}`, (schema) => {
+        // todo: complete returned data
         return {
-          members: schema.members.all().models,
+          members: schema.all('member').models,
         };
       });
 
       // files
       this.get(`/${buildDownloadFileRoute(':id')}`, (schema, request) => {
         const { id } = request.params;
-        const appData = schema.appDataResources.findBy({ id });
+        const appData = schema.findBy('appDataResource', { id });
         // this call returns the app data itself for simplification
         return appData;
       });
-      this.post(`/${buildUploadFilesRoute(currentItemId)})`, (schema, request) => {
-        return schema.appDataResources.create({
-          data: request,
-          itemId: currentItemId,
-          memberId: currentMemberId,
-        });
+      this.post(`/${buildUploadFilesRoute(currentItemId)})`, (schema, _request) => {
+        // const appData: Partial<AppData> = {
+        //   data: {},
+        //   itemId: currentItemId,
+        //   memberId: currentMemberId,
+        // }
+        return schema.create('appDataResource');
       });
     },
   });
