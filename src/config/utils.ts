@@ -16,11 +16,10 @@ export class MissingApiHostError extends Error {
 export const getApiHost = (queryClient: QueryClient) => {
   const context = queryClient.getQueryData<Record<LocalContext>>(LOCAL_CONTEXT_KEY);
   const apiHost = context?.get('apiHost');
-  console.log('Query client apiHost', apiHost);
-  // if (!apiHost) {
-  //   throw new MissingApiHostError();
-  // }
-  return apiHost || 'mock-api-host';
+  if (!apiHost) {
+    throw new MissingApiHostError();
+  }
+  return apiHost;
 };
 
 export const getData = (queryClient: QueryClient) => {
