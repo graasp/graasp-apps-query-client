@@ -12,4 +12,4 @@ declare global {
 }
 
 // empty export to remove the "module" error
-export { };
+export {};
