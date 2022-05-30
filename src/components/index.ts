@@ -1,2 +1,2 @@
-export * from './ContextContext';
+export * from './withContext';
 export * from './TokenContext';
