@@ -45,22 +45,13 @@ const values = configureQueryClient({
 export values;
 ```
 
-4. Add the following content in `src/index.js`.
+4. Add the following content in `src/index.js`. `mockApi` can take a defined context and/or database if necessary (see the Cypress section)
 
 ```js
-import { mockServer, buildMockLocalContext, buildDatabase } from '@graasp/apps-query-client';
+import { mockApi } from '@graasp/apps-query-client';
 
 if (process.env.REACT_APP_MOCK_API === 'true') {
-  const appContext = buildMockLocalContext();
-  // automatically append item id as a query string
-  const searchParams = new URLSearchParams(window.location.search);
-  if (!searchParams.get('itemId')) {
-    searchParams.set('itemId', appContext.itemId);
-    window.location.search = searchParams.toString();
-  }
-  const database = buildDatabase();
-
-  mockServer({ database, appContext });
+  mockApi();
 }
 ```
 
@@ -88,18 +79,10 @@ The next steps will help you set up Cypress to work with MirageJS. There is an [
 
 ```js
 if (process.env.REACT_APP_MOCK_API === 'true') {
-  const appContext = buildMockLocalContext(window.appContext);
-  // automatically append item id as a query string
-  const searchParams = new URLSearchParams(window.location.search);
-  if (!searchParams.get('itemId')) {
-    searchParams.set('itemId', appContext.itemId);
-    window.location.search = searchParams.toString();
-  }
-  const database = window.Cypress
-    ? window.database
-    : buildDatabase();
-
-  mockServer({ database, appContext });
+  mockApi({
+    appContext: window.Cypress ? window.appContext : undefined,
+    database: window.Cypress ? window.database : undefined,
+  });
 }
 ```
 
