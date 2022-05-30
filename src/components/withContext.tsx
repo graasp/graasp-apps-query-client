@@ -23,7 +23,7 @@ const withContext =
     const { data: context, isLoading, isError, error } = useGetLocalContext(itemId);
 
     if (isLoading) {
-      return LoadingComponent ?? <div>'loading...'</div>;
+      return LoadingComponent ?? <div>loading...</div>;
     }
 
     if (isError) {

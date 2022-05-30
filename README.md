@@ -55,18 +55,16 @@ if (process.env.REACT_APP_MOCK_API === 'true') {
 }
 ```
 
-5. Add the [`ContextContext`](./src/components/ContextContext.tsx) and the [`TokenContext`]((./src/components/TokenContext.tsx)) files in your app in `src/components/context`. It will handle the authentication and fetching the local context automatically for you. Don't forget to always mount these contexts (in `<Root/>` and `<App/>`). For example:
+5. Use the [`withContext`](./src/components/withContext.tsx) and the [`withToken`]((./src/components/withToken.tsx)) files in your app. It will handle the authentication and fetching the local context automatically for you. For example:
 
 ```js
- <ContextProvider
-      LoadingComponent={<Loader />}
-      useGetLocalContext={hooks.useGetLocalContext}
-      onError={() => {
-        showErrorToast('An error occured while fetching the context.');
-      }}
-  >
-    <App />
-  </ContextProvider>
+  const AppWithContext = withContext(App, {
+    LoadingComponent: <Loader />,
+    useGetLocalContext: hooks.useGetLocalContext,
+    onError: () => {
+      showErrorToast('An error occured while fetching the context.');
+    },
+  });
 ```
 
 You can now start your app with the mock API installed. **Don't forget to disable it when you build your app.**
