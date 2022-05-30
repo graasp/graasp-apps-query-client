@@ -36,8 +36,9 @@ export const MUTATION_KEYS = {
   APP_SETTING_FILE_UPLOAD: 'APP_SETTING_FILE_UPLOAD',
 };
 
-export const HOOK_KEYS = {
+export const QUERY_KEYS = {
   buildAppDataKey,
   buildAppContextKey,
   buildAppActionsKey,
+  buildAppSettingsKey
 };
