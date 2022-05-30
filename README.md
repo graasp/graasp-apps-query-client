@@ -58,7 +58,15 @@ if (process.env.REACT_APP_MOCK_API === 'true') {
 5. Use the [`withContext`](./src/components/withContext.tsx) and the [`withToken`]((./src/components/withToken.tsx)) files in your app. It will handle the authentication and fetching the local context automatically for you. For example:
 
 ```js
-  const AppWithContext = withContext(App, {
+  const AppWithContext = withToken(App, {
+    LoadingComponent: <Loader />,
+    useAuthToken: hooks.useAuthToken,
+    onError: () => {
+      showErrorToast('An error occured while requesting the token.');
+    },
+  });
+
+  const AppWithContextAndToken = withContext(AppWithContext, {
     LoadingComponent: <Loader />,
     useGetLocalContext: hooks.useGetLocalContext,
     onError: () => {
