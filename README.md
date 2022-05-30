@@ -10,10 +10,10 @@ The following steps are designed to take into account `Cypress`, our test framew
 
 **!WARNING: The mock API cannot fake uploading and downloading files!**
 
-1. Install the `env-cmd` dependency. Change your `start` script in `package.json` for 
+1. Install the `env-cmd` dependency. Create a new script `start:local` in `package.json`:
 
-```
-env-cmd -f ./.env.development react-scripts start
+```json
+"start:local": "env-cmd -f ./.env.development react-scripts start"
 ```
 
 2. Create `.env.development` which will contain the variables below. The app id you will choose doesn't have to be valid, but needs to exist.
@@ -23,7 +23,7 @@ REACT_APP_GRAASP_APP_ID=<your app id>
 REACT_APP_MOCK_API=true
 ```
 
-3. Configure your query client with the following code.
+3. Configure your query client in `src/config/queryClient.js` with the following code.
 
 ```js
 import {
@@ -33,22 +33,22 @@ import {
 } from '@graasp/apps-query-client';
 import { mockContext } from '../mock/db';
 
-configureQueryClient({
+const values = configureQueryClient({
   GRAASP_APP_ID: process.env.REACT_APP_GRAASP_APP_ID,
   // build mock parent window given cypress (app) context or mock data
-  targetWindow: MOCK_API
+  targetWindow: process.env.REACT_APP_MOCK_API === 'true'
     ? buildMockParentWindow(
         buildMockLocalContext(window.appContext),
       )
     : window.parent,
 });
+export values;
 ```
 
 4. Add the following content in `src/index.js`.
 
 ```js
-import { mockServer, buildMockLocalContext } from '@graasp/apps-query-client';
-import buildDatabase, { mockContext } from './mock/db';
+import { mockServer, buildMockLocalContext, buildDatabase } from '@graasp/apps-query-client';
 
 if (process.env.REACT_APP_MOCK_API === 'true') {
   const appContext = buildMockLocalContext();
@@ -58,13 +58,13 @@ if (process.env.REACT_APP_MOCK_API === 'true') {
     searchParams.set('itemId', appContext.itemId);
     window.location.search = searchParams.toString();
   }
-  const database = buildDatabase({ appData: [] });
+  const database = buildDatabase();
 
   mockServer({ database, appContext });
 }
 ```
 
-5. Add the `ContextContext` and the `TokenContext` files in your app in `src/components/context`. It will handle the authentication and fetching the local context automatically for you. Don't forget to always mount these contexts (in `<Root/>` and `<App/>`). For example:
+5. Add the [`ContextContext`](./src/components/ContextContext.tsx) and the [`TokenContext`]((./src/components/TokenContext.tsx)) files in your app in `src/components/context`. It will handle the authentication and fetching the local context automatically for you. Don't forget to always mount these contexts (in `<Root/>` and `<App/>`). For example:
 
 ```js
  <ContextProvider
@@ -78,16 +78,16 @@ if (process.env.REACT_APP_MOCK_API === 'true') {
   </ContextProvider>
 ```
 
-You can now start your app with the mock API installed. Don't forget to disable it when you build your app.
+You can now start your app with the mock API installed. **Don't forget to disable it when you build your app.**
 
 ### Cypress
 
 The next steps will help you set up Cypress to work with MirageJS. There is an [official tutorial](https://miragejs.com/quickstarts/cypress/) from MirageJS. But in our case, we followed a different strategy.
 
-1. Update your content in `index.js` to include some config defined from Cypress in the mock server:
+1. Update your content in `src/index.js` to include some config defined from Cypress in the mock server:
 
 ```js
-if (process.env.REACT_APP_MOCK_API) {
+if (process.env.REACT_APP_MOCK_API === 'true') {
   const appContext = buildMockLocalContext(window.appContext);
   // automatically append item id as a query string
   const searchParams = new URLSearchParams(window.location.search);
@@ -97,15 +97,17 @@ if (process.env.REACT_APP_MOCK_API) {
   }
   const database = window.Cypress
     ? window.database
-    : buildDatabase({ appData: [] });
+    : buildDatabase();
 
   mockServer({ database, appContext });
 }
 ```
 
-2. Add in `cypress/support/commands.js`. You will need to define `MEMBERS` and `CURRENT_MEMBER` to reuse them in your tests as well.
+2. Add the following in `cypress/support/commands.js`. You will need to define `MEMBERS` and `CURRENT_MEMBER` to reuse them in your tests as well.
 
 ```js
+import { buildDatabase } from '@graasp/apps-query-client';
+
 Cypress.Commands.add(
   'setUpApi',
   ({ currentMember = CURRENT_MEMBER, database = {}, appContext } = {}) => {
