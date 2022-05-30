@@ -1,4 +1,4 @@
-import React, { createContext } from 'react';
+import React, { createContext, FC } from 'react';
 import qs from 'qs';
 import { LocalContext } from '../types';
 import { UseQueryResult } from 'react-query';
@@ -14,7 +14,7 @@ interface Props {
 }
 
 const withContext =
-  <P extends object>(Component: React.ComponentType<P>, props: Props) =>
+  <P extends object>(Component: React.ComponentType<P>, props: Props): FC =>
   () => {
     const { LoadingComponent, defaultValue, useGetLocalContext, onError } = props;
     const { itemId } = qs.parse(window.location.search, {
@@ -23,7 +23,7 @@ const withContext =
     const { data: context, isLoading, isError, error } = useGetLocalContext(itemId);
 
     if (isLoading) {
-      return LoadingComponent ?? 'loading...';
+      return LoadingComponent ?? <div>'loading...'</div>;
     }
 
     if (isError) {
