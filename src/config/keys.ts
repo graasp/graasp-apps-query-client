@@ -40,5 +40,5 @@ export const QUERY_KEYS = {
   buildAppDataKey,
   buildAppContextKey,
   buildAppActionsKey,
-  buildAppSettingsKey
+  buildAppSettingsKey,
 };
