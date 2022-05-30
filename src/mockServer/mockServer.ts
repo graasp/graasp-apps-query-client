@@ -37,7 +37,7 @@ export const buildDatabase = ({
   members,
 });
 
-const setupApi = ({
+export const mockServer = ({
   database = buildDatabase(),
   appContext = buildMockLocalContext(),
   errors = {},
@@ -265,4 +265,18 @@ const setupApi = ({
   });
 };
 
-export default setupApi;
+const mockApi = ({
+  appContext: c,
+  database,
+}: { appContext?: LocalContext; database?: Database } = {}) => {
+  const appContext = buildMockLocalContext(c);
+  // automatically append item id as a query string
+  const searchParams = new URLSearchParams(window.location.search);
+  if (!searchParams.get('itemId')) {
+    searchParams.set('itemId', appContext.itemId);
+    window.location.search = searchParams.toString();
+  }
+  mockServer({ database: buildDatabase(database), appContext });
+};
+
+export default mockApi;
