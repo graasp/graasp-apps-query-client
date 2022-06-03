@@ -14,8 +14,8 @@ interface Props {
 }
 
 const withContext =
-  <P extends object>(Component: React.ComponentType<P>, props: Props): FC =>
-  () => {
+  <P extends object>(Component: React.ComponentType<P>, props: Props): FC<P> =>
+  (childProps: P) => {
     const { LoadingComponent, defaultValue, useGetLocalContext, onError } = props;
     const { itemId } = qs.parse(window.location.search, {
       ignoreQueryPrefix: true,
@@ -39,7 +39,7 @@ const withContext =
 
     return (
       <Context.Provider value={value}>
-        <Component {...(props as P)} />
+        <Component {...(childProps as P)} />
       </Context.Provider>
     );
   };

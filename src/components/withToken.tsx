@@ -15,8 +15,8 @@ interface Props {
 }
 
 const withToken =
-  <P extends object>(Component: React.ComponentType<P>, props: Props): FC<Props> =>
-  () => {
+  <P extends object>(Component: React.ComponentType<P>, props: Props): FC<P> =>
+  (childProps: P) => {
     const { LoadingComponent, onError, useAuthToken } = props;
     const { itemId } = qs.parse(window.location.search, {
       ignoreQueryPrefix: true,
@@ -38,7 +38,7 @@ const withToken =
     const value = data ?? defaultToken;
     return (
       <TokenContext.Provider value={value}>
-        <Component {...(props as P)} />
+        <Component {...(childProps as P)} />
       </TokenContext.Provider>
     );
   };

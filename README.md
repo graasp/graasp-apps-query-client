@@ -31,7 +31,6 @@ import {
   buildMockLocalContext,
   buildMockParentWindow,
 } from '@graasp/apps-query-client';
-import { mockContext } from '../mock/db';
 
 const values = configureQueryClient({
   GRAASP_APP_ID: process.env.REACT_APP_GRAASP_APP_ID,
@@ -75,7 +74,7 @@ if (process.env.REACT_APP_MOCK_API === 'true') {
   });
 ```
 
-You can now start your app with the mock API installed. **Don't forget to disable it when you build your app.**
+You can now start your app with the mock API installed. **Don't forget to disable it when you build your app** (set `REACT_APP_MOCK_API` to `false`).
 
 ### Cypress
 
