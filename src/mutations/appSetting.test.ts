@@ -123,7 +123,10 @@ describe('App Settings Mutations', () => {
       it('Throw if itemId is undefined', async () => {
         // set necessary data
         queryClient.setQueryData(AUTH_TOKEN_KEY, MOCK_TOKEN);
-        queryClient.setQueryData(LOCAL_CONTEXT_KEY, Map(buildMockLocalContext({ itemId: null })));
+        queryClient.setQueryData(
+          LOCAL_CONTEXT_KEY,
+          Map({ ...buildMockLocalContext(), itemId: null }),
+        );
         queryClient.setQueryData(key, initData);
 
         const endpoints = [
@@ -159,7 +162,7 @@ describe('App Settings Mutations', () => {
         queryClient.setQueryData(AUTH_TOKEN_KEY, MOCK_TOKEN);
         queryClient.setQueryData(
           LOCAL_CONTEXT_KEY,
-          Map(buildMockLocalContext({ itemId, memberId: null })),
+          Map({ ...buildMockLocalContext({ itemId }), memberId: null }),
         );
         queryClient.setQueryData(key, initData);
 
@@ -246,11 +249,9 @@ describe('App Settings Mutations', () => {
       it('Patch app data', async () => {
         queryClient.setQueryData(key, initData);
 
-        const response = toPatch;
-
         const endpoints = [
           {
-            response,
+            response: toPatch,
             method: REQUEST_METHODS.PATCH,
             route,
           },
@@ -263,12 +264,15 @@ describe('App Settings Mutations', () => {
         });
 
         await act(async () => {
-          await mockedMutation.mutate({ data: toPatch.data, id: appDataId });
+          await mockedMutation.mutate({ ...toPatch, id: appDataId });
           await waitForMutation();
         });
 
         expect(queryClient.getQueryState(key)?.isInvalidated).toBeTruthy();
-        expect(queryClient.getQueryData<List<AppSetting>>(key)).toEqual(updatedData);
+        const result = queryClient.getQueryData<List<AppSetting>>(key);
+        // check data and length
+        expect(result?.first()?.data).toMatchObject(toPatch.data);
+        expect(result?.size).toBe(updatedData.size);
       });
     });
 
@@ -314,7 +318,10 @@ describe('App Settings Mutations', () => {
       it('Throw if itemId is undefined', async () => {
         // set necessary data
         queryClient.setQueryData(AUTH_TOKEN_KEY, MOCK_TOKEN);
-        queryClient.setQueryData(LOCAL_CONTEXT_KEY, Map(buildMockLocalContext({ itemId: null })));
+        queryClient.setQueryData(
+          LOCAL_CONTEXT_KEY,
+          Map({ ...buildMockLocalContext(), itemId: null }),
+        );
         queryClient.setQueryData(key, initData);
 
         const endpoints = [
@@ -350,7 +357,7 @@ describe('App Settings Mutations', () => {
         queryClient.setQueryData(AUTH_TOKEN_KEY, MOCK_TOKEN);
         queryClient.setQueryData(
           LOCAL_CONTEXT_KEY,
-          Map(buildMockLocalContext({ itemId, memberId: null })),
+          Map({ ...buildMockLocalContext({ itemId }), memberId: null }),
         );
         queryClient.setQueryData(key, initData);
 
@@ -499,7 +506,10 @@ describe('App Settings Mutations', () => {
       it('Throw if itemId is undefined', async () => {
         // set necessary data
         queryClient.setQueryData(AUTH_TOKEN_KEY, MOCK_TOKEN);
-        queryClient.setQueryData(LOCAL_CONTEXT_KEY, Map(buildMockLocalContext({ itemId: null })));
+        queryClient.setQueryData(
+          LOCAL_CONTEXT_KEY,
+          Map({ ...buildMockLocalContext(), itemId: null }),
+        );
 
         const initData = List([toDelete]);
         queryClient.setQueryData(key, initData);
@@ -532,7 +542,7 @@ describe('App Settings Mutations', () => {
         queryClient.setQueryData(AUTH_TOKEN_KEY, MOCK_TOKEN);
         queryClient.setQueryData(
           LOCAL_CONTEXT_KEY,
-          Map(buildMockLocalContext({ itemId, memberId: null })),
+          Map({ ...buildMockLocalContext({ itemId }), memberId: null }),
         );
 
         const initData = List([toDelete]);

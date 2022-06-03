@@ -165,7 +165,7 @@ describe('PostMessage Hooks', () => {
         postMessage: () => {
           /*do nothing*/
         },
-        onmessage: (_event: MessageEvent) => {
+        onmessage: (_event: unknown) => {
           /*do nothing*/
         },
       };

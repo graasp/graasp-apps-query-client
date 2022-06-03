@@ -6,38 +6,40 @@ import { Endpoint, mockHook, setUpTest } from '../../test/utils';
 import { buildDownloadAppSettingFileRoute, buildGetAppSettingsRoute } from '../api/routes';
 import { AppSetting } from '../types';
 import {
+  AUTH_TOKEN_KEY,
   buildAppSettingFileContentKey,
   buildAppSettingsKey,
   LOCAL_CONTEXT_KEY,
 } from '../config/keys';
 import {
   UNAUTHORIZED_RESPONSE,
-  FIXTURE_TOKEN,
   buildMockLocalContext,
   FIXTURE_APP_SETTINGS,
   S3_FILE_BLOB_RESPONSE,
 } from '../../test/constants';
 import { MissingApiHostError } from '../config/utils';
+import { MOCK_TOKEN } from '../config/constants';
 
 const { hooks, wrapper, queryClient } = setUpTest();
-const token = FIXTURE_TOKEN;
+const itemId = v4();
 
 describe('App Settings Hooks', () => {
+  beforeEach(() => {
+    queryClient.setQueryData(AUTH_TOKEN_KEY, MOCK_TOKEN);
+    queryClient.setQueryData(LOCAL_CONTEXT_KEY, Map(buildMockLocalContext({ itemId })));
+  });
+
   afterEach(() => {
     nock.cleanAll();
     queryClient.clear();
   });
 
   describe('useAppSettings', () => {
-    const itemId = v4();
     const key = buildAppSettingsKey(itemId);
     const route = `/${buildGetAppSettingsRoute(itemId)}`;
-    const hook = () => hooks.useAppSettings({ itemId, token });
+    const hook = () => hooks.useAppSettings();
 
     it('Receive app settings', async () => {
-      // preset context
-      queryClient.setQueryData(LOCAL_CONTEXT_KEY, Map(buildMockLocalContext()));
-
       const response = FIXTURE_APP_SETTINGS;
       const endpoints = [{ route, response }];
       const { data } = await mockHook({ endpoints, hook, wrapper });
@@ -50,16 +52,18 @@ describe('App Settings Hooks', () => {
     it('Cannot fetch app settings if context does not exist', async () => {
       const response = FIXTURE_APP_SETTINGS;
       const endpoints = [{ route, response }];
-      const { error } = await mockHook({ endpoints, hook, wrapper });
-
-      // verify cache keys
-      expect(queryClient.getQueryData(key)).toBeFalsy();
-      expect((error as Error).message).toEqual(new MissingApiHostError().message);
+      try {
+        await mockHook({ endpoints, hook, wrapper, enabled: false });
+      } catch (error) {
+        // verify cache keys
+        expect(queryClient.getQueryData(key)).toBeFalsy();
+        expect((error as Error).message).toEqual(new MissingApiHostError().message);
+      }
     });
     it('Does not fetch if itemId is missing', async () => {
       const response = FIXTURE_APP_SETTINGS;
       const endpoints = [{ route, response }];
-      const disabledHook = () => hooks.useAppContext({ token });
+      const disabledHook = () => hooks.useAppContext();
       const { isFetched } = await mockHook({
         endpoints,
         hook: disabledHook,
@@ -74,7 +78,7 @@ describe('App Settings Hooks', () => {
     it('Does not fetch if token is missing', async () => {
       const response = FIXTURE_APP_SETTINGS;
       const endpoints = [{ route, response }];
-      const disabledHook = () => hooks.useAppContext({ itemId });
+      const disabledHook = () => hooks.useAppContext();
       const { isFetched } = await mockHook({
         endpoints,
         hook: disabledHook,
@@ -88,7 +92,6 @@ describe('App Settings Hooks', () => {
     });
     it('Unauthorized', async () => {
       // preset context
-      queryClient.setQueryData(LOCAL_CONTEXT_KEY, Map(buildMockLocalContext()));
       const endpoints = [
         {
           route,
@@ -117,12 +120,10 @@ describe('App Settings Hooks', () => {
     const responseFile = `${server}${routeFile}`;
     const id = 'some-id';
     const route = `/${buildDownloadAppSettingFileRoute(id)}`;
-    const hook = () => hooks.useAppSettingFile({ token, appSettingId: id });
+    const hook = () => hooks.useAppSettingFile({ appSettingId: id });
     const key = buildAppSettingFileContentKey(id);
 
     it('Receive file content', async () => {
-      queryClient.setQueryData(LOCAL_CONTEXT_KEY, Map(buildMockLocalContext()));
-
       const endpoints = [
         { route, response: responseFile },
         { route: routeFile, response },
@@ -153,7 +154,7 @@ describe('App Settings Hooks', () => {
       // build endpoint for each item
       const endpoints: Endpoint[] = [];
       const { data, isFetched } = await mockHook({
-        hook: () => hooks.useFileContent({ token, fileId: id }, { enabled: false }),
+        hook: () => hooks.useFileContent({ fileId: id }, { enabled: false }),
         endpoints,
         wrapper,
         enabled: false,

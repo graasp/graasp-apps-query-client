@@ -1,9 +1,9 @@
 import { List } from 'immutable';
 import { QueryClient, useQuery } from 'react-query';
 import * as Api from '../api';
-import { MissingFileIdError, MissingItemIdError, MissingTokenError } from '../config/errors';
+import { MissingFileIdError } from '../config/errors';
 import { buildAppSettingFileContentKey, buildAppSettingsKey } from '../config/keys';
-import { getApiHost } from '../config/utils';
+import { getApiHost, getDataOrThrow } from '../config/utils';
 import { QueryClientConfig } from '../types';
 
 export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
@@ -14,47 +14,40 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
     staleTime,
   };
   return {
-    useAppSettings: (payload: { token?: string; itemId?: string }) =>
-      useQuery({
-        queryKey: buildAppSettingsKey(payload.itemId),
+    useAppSettings: () => {
+      const apiHost = getApiHost(queryClient);
+      const { token, itemId } = getDataOrThrow(queryClient);
+      return useQuery({
+        queryKey: buildAppSettingsKey(itemId),
         queryFn: () => {
-          const apiHost = getApiHost(queryClient);
-          const { token, itemId } = payload;
-          // the following check are verified in enabled
-          if (!token) {
-            throw new MissingTokenError();
-          }
-          if (!itemId) {
-            throw new MissingItemIdError();
-          }
           return Api.getAppSettings({ itemId, token, apiHost }).then((data) => List(data));
         },
         ...defaultOptions,
-        enabled: Boolean(payload.itemId) && Boolean(payload.token),
-      }),
+        enabled: Boolean(itemId) && Boolean(token),
+      });
+    },
 
     useAppSettingFile: (
-      payload?: { appSettingId: string; token: string },
+      payload?: { appSettingId: string },
       { enabled = true }: { enabled?: boolean } = {},
-    ) =>
-      useQuery({
+    ) => {
+      const apiHost = getApiHost(queryClient);
+      const { token } = getDataOrThrow(queryClient);
+      return useQuery({
         queryKey: buildAppSettingFileContentKey(payload?.appSettingId),
         queryFn: () => {
-          const apiHost = getApiHost(queryClient);
           // the following check are verified in enabled
-          if (!payload?.token) {
-            throw new MissingTokenError();
-          }
           if (!payload?.appSettingId) {
             throw new MissingFileIdError();
           }
-          const { token, appSettingId } = payload;
+          const { appSettingId } = payload;
           return Api.getAppSettingFileContent({ id: appSettingId, apiHost, token }).then(
             (data) => data,
           );
         },
         ...defaultOptions,
-        enabled: Boolean(payload?.appSettingId) && Boolean(payload?.token) && enabled,
-      }),
+        enabled: Boolean(payload?.appSettingId) && Boolean(token) && enabled,
+      });
+    },
   };
 };

@@ -46,7 +46,7 @@ const configurePostMessageHooks = (_queryClient: QueryClient, queryConfig: Query
   let port2: MessagePort;
 
   const postMessage: WindowPostMessage = (data) => {
-    const targetWindow = queryConfig?.targetWindow;
+    const targetWindow = queryConfig?.targetWindow ?? window.parent;
     if (targetWindow?.postMessage) {
       targetWindow.postMessage(JSON.stringify(data), '*');
     } else {
@@ -72,7 +72,7 @@ const configurePostMessageHooks = (_queryClient: QueryClient, queryConfig: Query
         reject,
       }: {
         resolve: (value: unknown) => void;
-        reject: (reason?: any) => void;
+        reject: (reason?: unknown) => void;
       },
       formatResolvedValue?: (data: { payload: any; event: MessageEvent }) => unknown,
     ) =>

@@ -67,7 +67,7 @@ describe('Apps Mutations', () => {
         });
 
         await act(async () => {
-          await mockedMutation.mutate({ data: toAdd.data, verb: toAdd.type });
+          await mockedMutation.mutate({ data: toAdd.data, type: toAdd.type });
           await waitForMutation();
         });
 
@@ -102,7 +102,7 @@ describe('Apps Mutations', () => {
         });
 
         await act(async () => {
-          await mockedMutation.mutate({ data: toAdd.data, verb: toAdd.type });
+          await mockedMutation.mutate({ data: toAdd.data, type: toAdd.type });
           await waitForMutation();
         });
 
@@ -118,7 +118,10 @@ describe('Apps Mutations', () => {
       it('Throw if itemId is undefined', async () => {
         // set necessary data
         queryClient.setQueryData(AUTH_TOKEN_KEY, MOCK_TOKEN);
-        queryClient.setQueryData(LOCAL_CONTEXT_KEY, Map(buildMockLocalContext({ itemId: null })));
+        queryClient.setQueryData(
+          LOCAL_CONTEXT_KEY,
+          Map({ ...buildMockLocalContext(), itemId: null }),
+        );
         queryClient.setQueryData(key, initData);
 
         const endpoints = [
@@ -136,7 +139,7 @@ describe('Apps Mutations', () => {
         });
 
         await act(async () => {
-          await mockedMutation.mutate({ data: toAdd.data, verb: toAdd.type });
+          await mockedMutation.mutate({ data: toAdd.data, type: toAdd.type });
           await waitForMutation();
         });
 
@@ -154,7 +157,7 @@ describe('Apps Mutations', () => {
         queryClient.setQueryData(AUTH_TOKEN_KEY, MOCK_TOKEN);
         queryClient.setQueryData(
           LOCAL_CONTEXT_KEY,
-          Map(buildMockLocalContext({ itemId, memberId: null })),
+          Map({ ...buildMockLocalContext({ itemId }), memberId: null }),
         );
         queryClient.setQueryData(key, initData);
 
@@ -263,7 +266,10 @@ describe('Apps Mutations', () => {
         });
 
         expect(queryClient.getQueryState(key)?.isInvalidated).toBeTruthy();
-        expect(queryClient.getQueryData<List<AppData>>(key)).toEqual(updatedData);
+        // check data and length
+        const result = queryClient.getQueryData<List<AppData>>(key);
+        expect(result?.first()?.data).toMatchObject(toPatch.data);
+        expect(result?.size).toBe(updatedData.size);
       });
     });
 
@@ -309,7 +315,10 @@ describe('Apps Mutations', () => {
       it('Throw if itemId is undefined', async () => {
         // set necessary data
         queryClient.setQueryData(AUTH_TOKEN_KEY, MOCK_TOKEN);
-        queryClient.setQueryData(LOCAL_CONTEXT_KEY, Map(buildMockLocalContext({ itemId: null })));
+        queryClient.setQueryData(
+          LOCAL_CONTEXT_KEY,
+          Map({ ...buildMockLocalContext(), itemId: null }),
+        );
         queryClient.setQueryData(key, initData);
 
         const endpoints = [
@@ -345,7 +354,7 @@ describe('Apps Mutations', () => {
         queryClient.setQueryData(AUTH_TOKEN_KEY, MOCK_TOKEN);
         queryClient.setQueryData(
           LOCAL_CONTEXT_KEY,
-          Map(buildMockLocalContext({ itemId, memberId: null })),
+          Map({ ...buildMockLocalContext({ itemId }), memberId: null }),
         );
         queryClient.setQueryData(key, initData);
 
@@ -492,7 +501,10 @@ describe('Apps Mutations', () => {
       it('Throw if itemId is undefined', async () => {
         // set necessary data
         queryClient.setQueryData(AUTH_TOKEN_KEY, MOCK_TOKEN);
-        queryClient.setQueryData(LOCAL_CONTEXT_KEY, Map(buildMockLocalContext({ itemId: null })));
+        queryClient.setQueryData(
+          LOCAL_CONTEXT_KEY,
+          Map({ ...buildMockLocalContext(), itemId: null }),
+        );
 
         const initData = List([toDelete]);
         queryClient.setQueryData(key, initData);
@@ -525,7 +537,7 @@ describe('Apps Mutations', () => {
         queryClient.setQueryData(AUTH_TOKEN_KEY, MOCK_TOKEN);
         queryClient.setQueryData(
           LOCAL_CONTEXT_KEY,
-          Map(buildMockLocalContext({ itemId, memberId: null })),
+          Map({ ...buildMockLocalContext({ itemId }), memberId: null }),
         );
 
         const initData = List([toDelete]);

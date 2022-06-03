@@ -6,6 +6,7 @@ import { Endpoint, mockHook, setUpTest } from '../../test/utils';
 import { buildDownloadFilesRoute, buildGetAppDataRoute, buildGetContextRoute } from '../api/routes';
 import { AppData, LocalContext } from '../types';
 import {
+  AUTH_TOKEN_KEY,
   buildAppContextKey,
   buildAppDataKey,
   buildFileContentKey,
@@ -14,32 +15,33 @@ import {
 import {
   FIXTURE_APP_DATA,
   UNAUTHORIZED_RESPONSE,
-  FIXTURE_TOKEN,
   FIXTURE_CONTEXT,
   buildMockLocalContext,
   S3_FILE_BLOB_RESPONSE,
 } from '../../test/constants';
 import { MissingApiHostError } from '../config/utils';
+import { MOCK_TOKEN } from '../config/constants';
 
 const { hooks, wrapper, queryClient } = setUpTest();
-const token = FIXTURE_TOKEN;
+const itemId = v4();
 
 describe('App Hooks', () => {
+  beforeEach(() => {
+    queryClient.setQueryData(AUTH_TOKEN_KEY, MOCK_TOKEN);
+    queryClient.setQueryData(LOCAL_CONTEXT_KEY, Map(buildMockLocalContext({ itemId })));
+  });
+
   afterEach(() => {
     nock.cleanAll();
     queryClient.clear();
   });
 
   describe('useAppData', () => {
-    const itemId = v4();
     const key = buildAppDataKey(itemId);
     const route = `/${buildGetAppDataRoute(itemId)}`;
-    const hook = () => hooks.useAppData({ itemId, token });
+    const hook = () => hooks.useAppData();
 
     it('Receive app data', async () => {
-      // preset context
-      queryClient.setQueryData(LOCAL_CONTEXT_KEY, Map(buildMockLocalContext()));
-
       const response = FIXTURE_APP_DATA;
       const endpoints = [{ route, response }];
       const { data } = await mockHook({ endpoints, hook, wrapper });
@@ -50,18 +52,25 @@ describe('App Hooks', () => {
       expect(queryClient.getQueryData(key)).toEqual(List(response));
     });
     it('Cannot fetch app data if context does not exist', async () => {
+      queryClient.setQueryData(
+        LOCAL_CONTEXT_KEY,
+        Map({ ...buildMockLocalContext({ itemId }), apiHost: null }),
+      );
+
       const response = FIXTURE_APP_DATA;
       const endpoints = [{ route, response }];
-      const { error } = await mockHook({ endpoints, hook, wrapper });
-
-      // verify cache keys
-      expect(queryClient.getQueryData(key)).toBeFalsy();
-      expect((error as Error).message).toEqual(new MissingApiHostError().message);
+      try {
+        await mockHook({ endpoints, hook, wrapper, enabled: false });
+      } catch (error) {
+        // verify cache keys
+        expect(queryClient.getQueryData(key)).toBeFalsy();
+        expect((error as Error).message).toEqual(new MissingApiHostError().message);
+      }
     });
     it('Does not fetch if itemId is missing', async () => {
       const response = FIXTURE_APP_DATA;
       const endpoints = [{ route, response }];
-      const disabledHook = () => hooks.useAppContext({ token });
+      const disabledHook = () => hooks.useAppContext();
       const { isFetched } = await mockHook({
         endpoints,
         hook: disabledHook,
@@ -76,7 +85,7 @@ describe('App Hooks', () => {
     it('Does not fetch if token is missing', async () => {
       const response = FIXTURE_APP_DATA;
       const endpoints = [{ route, response }];
-      const disabledHook = () => hooks.useAppContext({ itemId });
+      const disabledHook = () => hooks.useAppContext();
       const { isFetched } = await mockHook({
         endpoints,
         hook: disabledHook,
@@ -90,7 +99,6 @@ describe('App Hooks', () => {
     });
     it('Unauthorized', async () => {
       // preset context
-      queryClient.setQueryData(LOCAL_CONTEXT_KEY, Map(buildMockLocalContext()));
       const endpoints = [
         {
           route,
@@ -111,15 +119,12 @@ describe('App Hooks', () => {
   });
 
   describe('useAppContext', () => {
-    const itemId = v4();
     const key = buildAppContextKey(itemId);
     const route = `/${buildGetContextRoute(itemId)}`;
-    const hook = () => hooks.useAppContext({ itemId, token });
+    const hook = () => hooks.useAppContext();
 
     it('Receive app context', async () => {
       // preset context
-      queryClient.setQueryData(LOCAL_CONTEXT_KEY, Map(buildMockLocalContext()));
-
       const response = FIXTURE_CONTEXT;
       const endpoints = [{ route, response }];
       const { data } = await mockHook({ endpoints, hook, wrapper });
@@ -132,16 +137,18 @@ describe('App Hooks', () => {
     it('Cannot fetch context if local context does not exist', async () => {
       const response = FIXTURE_CONTEXT;
       const endpoints = [{ route, response }];
-      const { error } = await mockHook({ endpoints, hook, wrapper });
-
-      // verify cache keys
-      expect(queryClient.getQueryData(key)).toBeFalsy();
-      expect((error as Error).message).toEqual(new MissingApiHostError().message);
+      try {
+        await mockHook({ endpoints, hook, wrapper, enabled: false });
+      } catch (error) {
+        // verify cache keys
+        expect(queryClient.getQueryData(key)).toBeFalsy();
+        expect((error as Error).message).toEqual(new MissingApiHostError().message);
+      }
     });
     it('Does not fetch if itemId is missing', async () => {
       const response = FIXTURE_CONTEXT;
       const endpoints = [{ route, response }];
-      const disabledHook = () => hooks.useAppContext({ token });
+      const disabledHook = () => hooks.useAppContext();
       const { isFetched } = await mockHook({
         endpoints,
         hook: disabledHook,
@@ -156,7 +163,7 @@ describe('App Hooks', () => {
     it('Does not fetch if token is missing', async () => {
       const response = FIXTURE_CONTEXT;
       const endpoints = [{ route, response }];
-      const disabledHook = () => hooks.useAppContext({ itemId });
+      const disabledHook = () => hooks.useAppContext();
       const { isFetched } = await mockHook({
         endpoints,
         hook: disabledHook,
@@ -170,7 +177,6 @@ describe('App Hooks', () => {
     });
     it('Unauthorized', async () => {
       // preset context
-      queryClient.setQueryData(LOCAL_CONTEXT_KEY, Map(buildMockLocalContext()));
       const endpoints = [
         {
           route,
@@ -200,12 +206,10 @@ describe('App Hooks', () => {
 
     const id = 'some-id';
     const route = `/${buildDownloadFilesRoute(id)}`;
-    const hook = () => hooks.useFileContent({ token, fileId: id });
+    const hook = () => hooks.useFileContent({ fileId: id });
     const key = buildFileContentKey(id);
 
     it('Receive file content', async () => {
-      queryClient.setQueryData(LOCAL_CONTEXT_KEY, Map(buildMockLocalContext()));
-
       const endpoints = [
         { route, response: responseFile },
         { route: routeFile, response },
@@ -236,7 +240,7 @@ describe('App Hooks', () => {
       // build endpoint for each item
       const endpoints: Endpoint[] = [];
       const { data, isFetched } = await mockHook({
-        hook: () => hooks.useFileContent({ token, fileId: id }, { enabled: false }),
+        hook: () => hooks.useFileContent({ fileId: id }, { enabled: false }),
         endpoints,
         wrapper,
         enabled: false,

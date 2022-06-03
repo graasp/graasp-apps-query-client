@@ -1,5 +1,12 @@
 export type Notifier = (e: unknown) => void;
 
+export type Data = { [key: string]: unknown };
+export type AppDataData = Data;
+export type AppActionData = Data;
+export type AppSettingData = Data;
+
+export type Token = string;
+
 export type QueryClientConfig = {
   API_HOST?: string; // set during usecontext
   SHOW_NOTIFICATIONS: boolean;
@@ -43,19 +50,31 @@ export type Member = {
 
 export type AppData = {
   id: UUID;
-  data: any;
+  data: AppDataData;
+  type: string;
+  creator: string;
+  createdAt: string;
+  updatedAt: string;
+  memberId: UUID;
+  itemId: UUID;
 };
 
 export type AppAction = {
   id: UUID;
   type: string;
-  data: unknown;
+  data: AppActionData;
+  memberId: UUID;
+  itemId: UUID;
+  createdAt: string;
 };
 
 export type AppSetting = {
+  itemId: UUID;
   id: UUID;
-  data: unknown;
+  data: AppSettingData;
   name: string;
+  createdAt: string;
+  updatedAt: string;
 };
 
 export class UndefinedArgument extends Error {
@@ -83,6 +102,7 @@ export enum Context {
   BUILDER = 'builder',
   ANALYZER = 'analyzer',
   EXPLORER = 'explorer',
+  STANDALONE = 'standalone',
 }
 export enum PermissionLevel {
   ADMIN = 'admin',
@@ -95,9 +115,22 @@ export type LocalContext = {
   itemId: string;
   memberId?: string;
   settings?: unknown;
-  dev?: string;
-  offline?: string;
+  dev?: boolean;
+  offline?: boolean;
   lang?: string;
   context?: Context;
   permission?: string;
 };
+
+export interface ApiData {
+  token: Token;
+  itemId: UUID;
+  apiHost: string;
+}
+
+export interface Database {
+  appData: AppData[];
+  appActions: AppAction[];
+  appSettings: AppSetting[];
+  members: Member[];
+}

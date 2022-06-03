@@ -2,7 +2,7 @@ import { QueryClient } from 'react-query';
 import { List, Map } from 'immutable';
 import * as Api from '../api';
 import { buildAppActionsKey, buildAppDataKey, MUTATION_KEYS } from '../config/keys';
-import { AppAction, AppData, QueryClientConfig } from '../types';
+import { AppAction, AppData, QueryClientConfig, UUID } from '../types';
 import { getApiHost, getData, getDataOrThrow } from '../config/utils';
 import {
   deleteAppDataRoutine,
@@ -15,7 +15,7 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
   const { notifier } = queryConfig;
 
   queryClient.setMutationDefaults(MUTATION_KEYS.POST_APP_DATA, {
-    mutationFn: (payload: { data: unknown; verb: string }) => {
+    mutationFn: (payload: Partial<AppData>) => {
       const apiHost = getApiHost(queryClient);
       const data = getDataOrThrow(queryClient);
       return Api.postAppData({ ...data, body: payload, apiHost });
@@ -36,14 +36,12 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
   });
 
   queryClient.setMutationDefaults(MUTATION_KEYS.PATCH_APP_DATA, {
-    mutationFn: (payload: { id: string; data: unknown }) => {
+    mutationFn: (payload: Partial<AppData> & { id: UUID }) => {
       const apiHost = getApiHost(queryClient);
       const data = getDataOrThrow(queryClient);
-      return Api.patchAppData({ ...data, id: payload.id, data: payload.data, apiHost }).then(
-        (data) => Map(data),
-      );
+      return Api.patchAppData({ ...data, ...payload, apiHost }).then((data) => Map(data));
     },
-    onMutate: async (payload: { id: string; data: any }) => {
+    onMutate: async (payload) => {
       let context = null;
       const { itemId } = getData(queryClient);
       const prevData = queryClient.getQueryData<List<AppData>>(buildAppDataKey(itemId));
@@ -112,7 +110,7 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
   });
 
   queryClient.setMutationDefaults(MUTATION_KEYS.POST_APP_ACTION, {
-    mutationFn: (payload: { data: unknown; type: string }) => {
+    mutationFn: (payload: Partial<AppAction>) => {
       const apiHost = getApiHost(queryClient);
       const data = getDataOrThrow(queryClient);
       return Api.postAppAction({ ...data, body: payload, apiHost });

@@ -1,4 +1,5 @@
 import { StatusCodes } from 'http-status-codes';
+import { Context } from '../types';
 // React Query Configs
 
 // time during which cache entry is never refetched
@@ -27,13 +28,7 @@ export const PERMISSION_LEVELS = {
   ADMIN: 'admin',
 };
 export const DEFAULT_PERMISSION = PERMISSION_LEVELS.READ;
-export const CONTEXTS = {
-  BUILDER: 'builder',
-  PLAYER: 'player',
-  ANALYZER: 'analyzer',
-  STANDALONE: 'standalone',
-};
 
-export const DEFAULT_CONTEXT = CONTEXTS.STANDALONE;
+export const DEFAULT_CONTEXT = Context.STANDALONE;
 export const DEFAULT_LANG = 'en';
 export const MOCK_TOKEN = 'mock-token';

@@ -1,8 +1,9 @@
 import { buildPostMessageKeys } from '../config/keys';
+import { LocalContext } from '../types';
 
 const channel = new MessageChannel();
 
-export const buildMockParentWindow = (context) => {
+export const buildMockParentWindow = (context: LocalContext) => {
   const POST_MESSAGE_KEYS = buildPostMessageKeys(context?.itemId);
 
   channel.port1.onmessage = async (e) => {
@@ -27,7 +28,7 @@ export const buildMockParentWindow = (context) => {
   };
 
   return {
-    postMessage: (message) => {
+    postMessage: (message: string) => {
       const { type } = JSON.parse(message);
       if (type === POST_MESSAGE_KEYS.GET_CONTEXT) {
         window.postMessage(

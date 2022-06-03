@@ -1829,6 +1829,7 @@ __metadata:
     "@testing-library/react-hooks": 7.0.2
     "@types/jest": 27.0.1
     "@types/node": 17.0.10
+    "@types/qs": 6.9.7
     "@types/react": 17.0.38
     "@types/react-query": 1.2.9
     "@types/uuid": 8.3.4
@@ -1845,7 +1846,7 @@ __metadata:
     miragejs: 0.1.43
     nock: 13.2.1
     prettier: 2.5.1
-    qs: 6.10.1
+    qs: 6.10.3
     react-query: 3.31.0
     react-test-renderer: 17.0.2
     standard-version: 9.5.0
@@ -3148,6 +3149,13 @@ __metadata:
   version: 1.5.5
   resolution: "@types/q@npm:1.5.5"
   checksum: 3bd386fb97a0e5f1ce1ed7a14e39b60e469b5ca9d920a7f69e0cdb58d22c0f5bdd16637d8c3a5bfeda76663c023564dd47a65389ee9aaabd65aee54803d5ba45
+  languageName: node
+  linkType: hard
+
+"@types/qs@npm:6.9.7":
+  version: 6.9.7
+  resolution: "@types/qs@npm:6.9.7"
+  checksum: 7fd6f9c25053e9b5bb6bc9f9f76c1d89e6c04f7707a7ba0e44cc01f17ef5284adb82f230f542c2d5557d69407c9a40f0f3515e8319afd14e1e16b5543ac6cdba
   languageName: node
   linkType: hard
 
@@ -15004,12 +15012,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"qs@npm:6.10.1":
-  version: 6.10.1
-  resolution: "qs@npm:6.10.1"
+"qs@npm:6.10.3":
+  version: 6.10.3
+  resolution: "qs@npm:6.10.3"
   dependencies:
     side-channel: ^1.0.4
-  checksum: 00e390dbf98eff4d8ff121b61ab2fe32106852290de99ecd0e40fc76651c4101f43fc6cc8313cb69423563876fc532951b11dda55d2917def05f292258263480
+  checksum: 0fac5e6c7191d0295a96d0e83c851aeb015df7e990e4d3b093897d3ac6c94e555dbd0a599739c84d7fa46d7fee282d94ba76943983935cf33bba6769539b8019
   languageName: node
   linkType: hard
 
