@@ -1,6 +1,6 @@
 {
   "name": "@graasp/apps-query-client",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Query client repository for Graasp apps",
   "main": "dist/index.js",
   "module": "dist/index.modern.js",
@@ -19,6 +19,7 @@
     "miragejs": "0.1.43",
     "qs": "6.10.1",
     "react-query": "3.31.0",
+    "standard-version": "9.5.0",
     "tsc": "2.0.3",
     "uuid": "8.3.2"
   },
@@ -59,7 +60,8 @@
     "prettier:check": "prettier --check \"{src,test}/**/*.ts\"",
     "prettier:write": "prettier --write \"{src,test}/**/*.ts\"",
     "post-commit": "git status",
-    "release": "standard-version",
+    "release": "git fetch --tags && git add CHANGELOG.md && standard-version -a",
+    "release:first": "git fetch --tags && git add CHANGELOG.md && standard-version -a --first-release",
     "start": "microbundle-crl watch --no-compress --format modern,cjs",
     "start:example": "yarn workspace graasp-query-client-example start",
     "test": "jest --forceExit --coverage --verbose",
