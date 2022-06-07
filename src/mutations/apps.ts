@@ -39,6 +39,7 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
     mutationFn: (payload: Partial<AppData> & { id: UUID }) => {
       const apiHost = getApiHost(queryClient);
       const data = getDataOrThrow(queryClient);
+      // do we need to transform data into a map here ?
       return Api.patchAppData({ ...data, ...payload, apiHost }).then((data) => Map(data));
     },
     onMutate: async (payload) => {

@@ -9,11 +9,11 @@ import {
   buildPostAppActionRoute,
 } from './routes';
 import configureAxios from './axios';
-import { ApiData, AppData, UUID } from '../types';
+import { ApiData, AppAction, AppData, LocalContext, UUID } from '../types';
 
 const axios = configureAxios();
 
-export const getContext = async (args: ApiData) => {
+export const getContext = async (args: ApiData): Promise<LocalContext> => {
   const { token, itemId, apiHost } = args;
   return axios
     .get(`${apiHost}/${buildGetContextRoute(itemId)}`, {
@@ -25,7 +25,7 @@ export const getContext = async (args: ApiData) => {
 };
 
 // APP DATA
-export const getAppData = async (args: ApiData) => {
+export const getAppData = async (args: ApiData): Promise<AppData[]> => {
   const { token, itemId, apiHost } = args;
   return axios
     .get(`${apiHost}/${buildGetAppDataRoute(itemId)}`, {
@@ -40,7 +40,7 @@ export const postAppData = (
   args: ApiData & {
     body: unknown;
   },
-) => {
+): Promise<AppData> => {
   const { token, itemId, apiHost, body } = args;
   return axios
     .post(`${apiHost}/${buildPostAppDataRoute({ itemId })}`, body, {
@@ -51,7 +51,7 @@ export const postAppData = (
     .then(({ data }) => data);
 };
 
-export const patchAppData = (args: ApiData & Partial<AppData> & { id: UUID }) => {
+export const patchAppData = (args: ApiData & Partial<AppData> & { id: UUID }): Promise<AppData> => {
   const { token, itemId, id, apiHost, data } = args;
   return axios
     .patch(
@@ -70,7 +70,7 @@ export const deleteAppData = (
   args: ApiData & {
     id: string;
   },
-) => {
+): Promise<AppData> => {
   const { token, itemId, id, apiHost } = args;
   return axios
     .delete(`${apiHost}/${buildDeleteAppDataRoute({ itemId, id })}`, {
@@ -81,7 +81,7 @@ export const deleteAppData = (
     .then(({ data }) => data);
 };
 
-export const getAppActions = async (args: ApiData) => {
+export const getAppActions = async (args: ApiData): Promise<AppAction[]> => {
   const { token, itemId, apiHost } = args;
   return axios
     .get(`${apiHost}/${buildGetAppActionsRoute(itemId)}`, {
@@ -96,7 +96,7 @@ export const postAppAction = (
   args: ApiData & {
     body: unknown;
   },
-) => {
+): Promise<AppAction> => {
   const { token, itemId, apiHost, body } = args;
   return axios
     .post(`${apiHost}/${buildPostAppActionRoute({ itemId })}`, body, {
@@ -106,6 +106,7 @@ export const postAppAction = (
     })
     .then(({ data }) => data);
 };
+// todo: add return type of file
 // todo: add public route
 // because of the bearer token, it triggers an error on s3 on redirect because the request has two auth methods
 // https://github.com/axios/axios/issues/2855

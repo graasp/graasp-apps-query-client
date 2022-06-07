@@ -6,11 +6,11 @@ import {
   buildPostAppSettingRoute,
 } from './routes';
 import configureAxios from './axios';
-import { ApiData } from '../types';
+import { ApiData, AppSetting } from '../types';
 
 const axios = configureAxios();
 
-export const getAppSettings = async (args: ApiData) => {
+export const getAppSettings = async (args: ApiData): Promise<AppSetting[]> => {
   const { token, itemId, apiHost } = args;
   return axios
     .get(`${apiHost}/${buildGetAppSettingsRoute(itemId)}`, {
@@ -71,6 +71,7 @@ export const deleteAppSetting = (
     .then(({ data }) => data);
 };
 
+// todo: add return type for file
 // todo: add public route
 // because of the bearer token, it triggers an error on s3 on redirect because the request has two auth methods
 // https://github.com/axios/axios/issues/2855
