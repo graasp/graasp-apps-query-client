@@ -40,10 +40,12 @@ export const buildDatabase = ({
 export const mockServer = ({
   database = buildDatabase(),
   appContext = buildMockLocalContext(),
+  externalUrls = [],
   errors = {},
 }: {
   database?: Database;
   appContext?: LocalContext;
+  externalUrls?: string[];
   errors?: {
     deleteAppDataShouldThrow?: boolean;
   };
@@ -261,6 +263,12 @@ export const mockServer = ({
         // }
         return schema.create('appDataResource');
       });
+
+      // passthrough external urls
+      externalUrls.forEach(url => {
+        this.passthrough(url);
+      });
+
     },
   });
 };
@@ -268,7 +276,8 @@ export const mockServer = ({
 const mockApi = ({
   appContext: c,
   database,
-}: { appContext?: LocalContext; database?: Database } = {}) => {
+  externalUrls
+}: { appContext?: LocalContext; database?: Database, externalUrls?: string[] } = {}) => {
   const appContext = buildMockLocalContext(c);
   // automatically append item id as a query string
   const searchParams = new URLSearchParams(window.location.search);
@@ -276,7 +285,7 @@ const mockApi = ({
     searchParams.set('itemId', appContext.itemId);
     window.location.search = searchParams.toString();
   }
-  mockServer({ database: buildDatabase(database), appContext });
+  mockServer({ database: buildDatabase(database), appContext, externalUrls });
 };
 
 export default mockApi;
