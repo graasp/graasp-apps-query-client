@@ -40,9 +40,7 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
     mutationFn: (payload: Partial<AppSetting> & { id: string }) => {
       const apiHost = getApiHost(queryClient);
       const data = getDataOrThrow(queryClient);
-      return Api.patchAppSetting({ ...data, id: payload.id, data: payload.data, apiHost }).then(
-        (data) => Map(data),
-      );
+      return Api.patchAppSetting({ ...data, id: payload.id, data: payload.data, apiHost });
     },
     onMutate: async (payload) => {
       let context = null;

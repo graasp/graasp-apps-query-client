@@ -41,7 +41,7 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
       const apiHost = getApiHost(queryClient);
       const data = getDataOrThrow(queryClient);
       // do we need to transform data into a map here ?
-      return Api.patchAppData({ ...data, ...payload, apiHost }).then((data) => Map(data));
+      return Api.patchAppData({ ...data, ...payload, apiHost });
     },
     onMutate: async (payload) => {
       let context = null;
