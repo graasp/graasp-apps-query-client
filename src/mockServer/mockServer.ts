@@ -265,10 +265,9 @@ export const mockServer = ({
       });
 
       // passthrough external urls
-      externalUrls.forEach(url => {
+      externalUrls.forEach((url) => {
         this.passthrough(url);
       });
-
     },
   });
 };
@@ -276,8 +275,8 @@ export const mockServer = ({
 const mockApi = ({
   appContext: c,
   database,
-  externalUrls
-}: { appContext?: LocalContext; database?: Database, externalUrls?: string[] } = {}) => {
+  externalUrls,
+}: { appContext?: LocalContext; database?: Database; externalUrls?: string[] } = {}) => {
   const appContext = buildMockLocalContext(c);
   // automatically append item id as a query string
   const searchParams = new URLSearchParams(window.location.search);

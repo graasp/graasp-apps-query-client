@@ -25,6 +25,7 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
       const key = buildAppSettingsKey(itemId);
       const prevData = queryClient.getQueryData<List<AppSetting>>(key);
       queryClient.setQueryData(key, prevData?.push(newData));
+      queryConfig?.notifier?.({ type: postAppSettingRoutine.SUCCESS, payload: newData });
     },
     onError: (error) => {
       queryConfig?.notifier?.({ type: postAppSettingRoutine.FAILURE, payload: { error } });
@@ -57,6 +58,9 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
         context = prevData;
       }
       return context;
+    },
+    onSuccess: (newData) => {
+      queryConfig?.notifier?.({ type: postAppSettingRoutine.SUCCESS, payload: newData });
     },
     onError: (error, _payload, prevData) => {
       queryConfig?.notifier?.({ type: patchAppSettingRoutine.FAILURE, payload: { error } });
@@ -91,6 +95,9 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
         );
       }
       return prevData;
+    },
+    onSuccess: (prevData) => {
+      queryConfig?.notifier?.({ type: deleteAppSettingRoutine.SUCCESS, payload: prevData });
     },
     onError: (error, _payload, prevData) => {
       queryConfig?.notifier?.({ type: deleteAppSettingRoutine.FAILURE, payload: { error } });
