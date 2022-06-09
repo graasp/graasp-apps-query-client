@@ -1,5 +1,5 @@
 import { QueryClient } from 'react-query';
-import { List, Map } from 'immutable';
+import { List } from 'immutable';
 import * as Api from '../api';
 import { buildAppDataKey, MUTATION_KEYS } from '../config/keys';
 import { AppData, QueryClientConfig, UUID } from '../types';
