@@ -119,8 +119,14 @@ export type LocalContext = {
   offline?: boolean;
   lang?: string;
   context?: Context;
+  standalone?: boolean;
   permission?: string;
 };
+
+export const LocalContextRecord: Record.Factory<LocalContext> = Record<LocalContext>({
+  apiHost: '',
+  itemId: '',
+});
 
 export interface ApiData {
   token: Token;

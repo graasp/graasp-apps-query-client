@@ -3,11 +3,12 @@ import qs from 'qs';
 import { LocalContext } from '../types';
 import { UseQueryResult } from 'react-query';
 import { buildMockLocalContext } from '../mockServer/fixtures';
+import { RecordOf } from 'immutable';
 
 const Context = createContext({});
 
 interface Props {
-  useGetLocalContext: (args: unknown) => UseQueryResult<LocalContext, unknown>;
+  useGetLocalContext: (args: unknown) => UseQueryResult<RecordOf<LocalContext>, unknown>;
   LoadingComponent?: React.ReactElement;
   defaultValue?: LocalContext;
   onError?: (error: unknown) => void;

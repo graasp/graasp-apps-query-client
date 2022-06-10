@@ -4,16 +4,16 @@
  */
 
 import { QueryClient, useQuery } from 'react-query';
-import { Map } from 'immutable';
+import { RecordOf } from 'immutable';
 import { DEFAULT_CONTEXT, DEFAULT_LANG, DEFAULT_PERMISSION } from '../config/constants';
 import { AUTH_TOKEN_KEY, LOCAL_CONTEXT_KEY, buildPostMessageKeys } from '../config/keys';
-import { LocalContext, QueryClientConfig, WindowPostMessage } from '../types';
+import { LocalContext, LocalContextRecord, QueryClientConfig, WindowPostMessage } from '../types';
 import { MissingMessageChannelPortError } from '../config/errors';
 import { buildAppIdAndOriginPayload } from '../config/utils';
 import { getAuthTokenRoutine, getLocalContextRoutine } from '../routines';
 
 // build context from given data and default values
-export const buildContext = (payload: LocalContext) => {
+export const buildContext = (payload: LocalContext): LocalContext => {
   const {
     apiHost,
     memberId,
@@ -64,22 +64,22 @@ const configurePostMessageHooks = (_queryClient: QueryClient, queryConfig: Query
    * @returns event function handler
    */
   const receiveContextMessage =
-    (
+    <A>(
       successType: string,
       errorType: string,
       {
         resolve,
         reject,
       }: {
-        resolve: (value: unknown) => void;
+        resolve: (value: A) => void;
         reject: (reason?: unknown) => void;
       },
-      formatResolvedValue?: (data: { payload: any; event: MessageEvent }) => unknown,
+      formatResolvedValue?: (data: { payload: any; event: MessageEvent }) => A,
     ) =>
     (event: MessageEvent) => {
       try {
         const { type, payload } = JSON.parse(event.data) || {};
-        const format = formatResolvedValue ?? ((data: { payload: unknown }) => data.payload);
+        const format = formatResolvedValue ?? ((data: { payload: any }) => data.payload);
         // get init message getting the Message Channel port
         if (type === successType) {
           resolve(format({ payload, event }));
@@ -101,7 +101,10 @@ const configurePostMessageHooks = (_queryClient: QueryClient, queryConfig: Query
         const POST_MESSAGE_KEYS = buildPostMessageKeys(itemId);
         const postMessagePayload = buildAppIdAndOriginPayload(queryConfig);
 
-        const formatResolvedValue = (result: { event: MessageEvent; payload: LocalContext }) => {
+        const formatResolvedValue = (result: {
+          event: MessageEvent;
+          payload: LocalContext;
+        }): RecordOf<LocalContext> => {
           const { event, payload } = result;
           // get init message getting the Message Channel port
           const context = buildContext(payload);
@@ -110,10 +113,10 @@ const configurePostMessageHooks = (_queryClient: QueryClient, queryConfig: Query
           // set as a global variable
           [port2] = event.ports;
 
-          return Map(context);
+          return LocalContextRecord(context);
         };
 
-        return new Promise((resolve, reject) => {
+        return new Promise<RecordOf<LocalContext>>((resolve, reject) => {
           getLocalContextFunction = receiveContextMessage(
             POST_MESSAGE_KEYS.GET_CONTEXT_SUCCESS,
             POST_MESSAGE_KEYS.GET_CONTEXT_FAILURE,
@@ -159,7 +162,7 @@ const configurePostMessageHooks = (_queryClient: QueryClient, queryConfig: Query
         }
         const postMessagePayload = buildAppIdAndOriginPayload(queryConfig);
 
-        return new Promise((resolve, reject) => {
+        return new Promise<string>((resolve, reject) => {
           getAuthTokenFunction = receiveContextMessage(
             POST_MESSAGE_KEYS.GET_AUTH_TOKEN_SUCCESS,
             POST_MESSAGE_KEYS.GET_AUTH_TOKEN_FAILURE,
@@ -167,7 +170,7 @@ const configurePostMessageHooks = (_queryClient: QueryClient, queryConfig: Query
               resolve,
               reject,
             },
-            (data: { payload: { token: string } }) => {
+            (data: { payload: { token: string } }): string => {
               return data.payload.token;
             },
           );
