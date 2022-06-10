@@ -1,3 +1,4 @@
+import { Record } from 'immutable';
 export type Notifier = (e: unknown) => void;
 
 export type Data = { [key: string]: unknown };
@@ -123,7 +124,7 @@ export type LocalContext = {
   permission?: string;
 };
 
-export const LocalContextRecord: Record.Factory<LocalContext> = Record<LocalContext>({
+export const LocalContextRecord = Record<LocalContext>({
   apiHost: '',
   itemId: '',
 });
