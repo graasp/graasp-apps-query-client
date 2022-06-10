@@ -8,7 +8,7 @@ import { RecordOf } from 'immutable';
 const Context = createContext({});
 
 interface Props {
-  useGetLocalContext: (args: unknown) => UseQueryResult<RecordOf<LocalContext>, unknown>;
+  useGetLocalContext: (itemId: string) => UseQueryResult<RecordOf<LocalContext>, unknown>;
   LoadingComponent?: React.ReactElement;
   defaultValue?: LocalContext;
   onError?: (error: unknown) => void;
@@ -21,7 +21,7 @@ const withContext =
     const { itemId } = qs.parse(window.location.search, {
       ignoreQueryPrefix: true,
     });
-    const { data: context, isLoading, isError, error } = useGetLocalContext(itemId);
+    const { data: context, isLoading, isError, error } = useGetLocalContext(itemId as string);
 
     if (isLoading) {
       return LoadingComponent ?? <div>loading...</div>;
