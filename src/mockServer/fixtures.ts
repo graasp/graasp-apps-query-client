@@ -12,6 +12,7 @@ export const MOCK_SERVER_MEMBER: Member = {
 export const MOCK_SERVER_ITEM = { id: 'mock-item-id', name: 'mock-item-name' };
 
 export const buildMockLocalContext = (appContext = {}) => {
+  console.log('before buildMockLocalContext', appContext);
   const context: LocalContext = {
     itemId: MOCK_SERVER_ITEM.id,
     memberId: MOCK_SERVER_MEMBER.id,
@@ -22,6 +23,7 @@ export const buildMockLocalContext = (appContext = {}) => {
     dev: true,
     ...appContext,
   };
+  console.log('after buildMockLocalContext', appContext);
 
   return buildContext(context);
 };

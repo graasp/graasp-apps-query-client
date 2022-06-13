@@ -27,8 +27,7 @@ export const buildContext = (payload: LocalContext): LocalContext => {
   } = payload;
 
   const standalone = context === null;
-
-  return {
+  const newContext = {
     apiHost,
     context,
     permission,
@@ -40,6 +39,8 @@ export const buildContext = (payload: LocalContext): LocalContext => {
     standalone,
     settings,
   };
+  console.log('new context', newContext);
+  return newContext;
 };
 
 const configurePostMessageHooks = (_queryClient: QueryClient, queryConfig: QueryClientConfig) => {
