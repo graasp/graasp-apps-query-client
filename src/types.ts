@@ -124,9 +124,18 @@ export type LocalContext = {
   permission?: string;
 };
 
+// todo: maybe adapt these default values to sane defaults
 export const LocalContextRecord = Record<LocalContext>({
   apiHost: '',
   itemId: '',
+  memberId: '',
+  settings: {},
+  dev: false,
+  offline: false,
+  lang: 'en',
+  context: Context.BUILDER,
+  standalone: false,
+  permission: undefined,
 });
 
 export interface ApiData {
