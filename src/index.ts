@@ -6,5 +6,5 @@ export * as ROUTINES from './routines';
 export { default as mockApi, mockServer, buildDatabase } from './mockServer/mockServer';
 export { buildMockLocalContext } from './mockServer/fixtures';
 export { buildMockParentWindow } from './mockServer/mockParentWindow';
-export * from './components';
-export * as types from './types';
+export * as HOC from './components';
+export * from './types';
