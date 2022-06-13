@@ -1,16 +1,16 @@
 import React, { createContext, FC } from 'react';
 import qs from 'qs';
-import { LocalContext } from '../types';
+import { LocalContext, LocalContextRecord } from '../types';
 import { UseQueryResult } from 'react-query';
 import { buildMockLocalContext } from '../mockServer/fixtures';
 import { RecordOf } from 'immutable';
 
-const Context = createContext({});
+const Context = createContext<RecordOf<LocalContext>>(LocalContextRecord());
 
 interface Props {
   useGetLocalContext: (itemId: string) => UseQueryResult<RecordOf<LocalContext>, unknown>;
   LoadingComponent?: React.ReactElement;
-  defaultValue?: LocalContext;
+  defaultValue?: RecordOf<LocalContext>;
   onError?: (error: unknown) => void;
 }
 
@@ -36,7 +36,7 @@ const withContext =
     }
 
     // todo: define a context to default to
-    const value = context ?? defaultValue ?? buildMockLocalContext();
+    const value = context ?? defaultValue ?? LocalContextRecord(buildMockLocalContext());
 
     return (
       <Context.Provider value={value}>
