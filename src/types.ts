@@ -119,7 +119,7 @@ export type LocalContext = {
   dev?: boolean;
   offline?: boolean;
   lang?: string;
-  context?: Context;
+  context?: 'player' | 'builder' | 'analyzer' | 'explorer' | 'standalone';
   standalone?: boolean;
   permission?: string;
 };

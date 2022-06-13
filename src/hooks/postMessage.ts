@@ -6,7 +6,7 @@
 import { QueryClient, useQuery } from 'react-query';
 import { RecordOf } from 'immutable';
 import { DEFAULT_CONTEXT, DEFAULT_LANG, DEFAULT_PERMISSION } from '../config/constants';
-import { AUTH_TOKEN_KEY, LOCAL_CONTEXT_KEY, buildPostMessageKeys } from '../config/keys';
+import { AUTH_TOKEN_KEY, buildPostMessageKeys, LOCAL_CONTEXT_KEY } from '../config/keys';
 import { LocalContext, LocalContextRecord, QueryClientConfig, WindowPostMessage } from '../types';
 import { MissingMessageChannelPortError } from '../config/errors';
 import { buildAppIdAndOriginPayload } from '../config/utils';
@@ -27,7 +27,7 @@ export const buildContext = (payload: LocalContext): LocalContext => {
   } = payload;
 
   const standalone = context === null;
-  const newContext = {
+  return {
     apiHost,
     context,
     permission,
@@ -39,8 +39,6 @@ export const buildContext = (payload: LocalContext): LocalContext => {
     standalone,
     settings,
   };
-  console.log('new context', newContext);
-  return newContext;
 };
 
 const configurePostMessageHooks = (_queryClient: QueryClient, queryConfig: QueryClientConfig) => {
