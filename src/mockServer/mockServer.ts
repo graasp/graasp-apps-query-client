@@ -73,8 +73,8 @@ export const mockServer = ({
     factories: {
       appDataResource: Factory.extend<AppData>({
         id: () => v4(),
-        createdAt: () => Date.now().toString(),
-        updatedAt: () => Date.now().toString(),
+        createdAt: () => new Date().toISOString(),
+        updatedAt: () => new Date().toISOString(),
         data: () => ({}),
         type: (idx) => `app-data-type-${idx}`,
         itemId: currentItemId,
@@ -85,15 +85,15 @@ export const mockServer = ({
         id: () => v4(),
         itemId: currentItemId,
         memberId: currentMemberId,
-        createdAt: Date.now().toString(),
+        createdAt: new Date().toISOString(),
         data: () => ({}),
         type: 'app-action-type',
       }),
       appSetting: Factory.extend<AppSetting>({
         id: () => v4(),
         data: () => ({}),
-        createdAt: Date.now().toString(),
-        updatedAt: Date.now().toString(),
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
         name: (idx) => `app-setting-${idx}`,
         itemId: currentItemId,
       }),
@@ -154,7 +154,7 @@ export const mockServer = ({
           }
           a.update({
             ...a.attrs,
-            updatedAt: Date.now(),
+            updatedAt: new Date().toISOString(),
             ...data,
           });
           return a.attrs;
@@ -199,8 +199,8 @@ export const mockServer = ({
         const { requestBody } = request;
         const data = JSON.parse(requestBody);
         return schema.create('appSetting', {
-          createdAt: Date.now(),
-          updatedAt: Date.now(),
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
           itemId: currentItemId,
           memberId: currentMemberId,
           ...data,
@@ -218,7 +218,7 @@ export const mockServer = ({
           }
           a.update({
             ...a.attrs,
-            updatedAt: Date.now(),
+            updatedAt: new Date().toISOString(),
             ...data,
           });
           return a.attrs;
