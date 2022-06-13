@@ -138,8 +138,8 @@ export const mockServer = ({
           itemId: currentItemId,
           memberId: currentMemberId,
           creator: currentMemberId,
-          createdAt: Date.now(),
-          updatedAt: Date.now(),
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
           ...data,
         });
       });
