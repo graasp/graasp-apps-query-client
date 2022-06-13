@@ -50,6 +50,7 @@ export const mockServer = ({
     deleteAppDataShouldThrow?: boolean;
   };
 } = {}) => {
+  console.log('Mock server created, with appContext:', appContext);
   const { appData, appActions, appSettings, members } = database;
   const {
     itemId: currentItemId = MOCK_SERVER_ITEM.id,
