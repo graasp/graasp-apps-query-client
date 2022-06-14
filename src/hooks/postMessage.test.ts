@@ -1,7 +1,7 @@
 import { v4 } from 'uuid';
 import { Record } from 'immutable';
 import { mockHook, mockWindowForPostMessage, setUpTest } from '../../test/utils';
-import { Context, LocalContext } from '../types';
+import { CONTEXTS, LocalContext } from '../types';
 import { AUTH_TOKEN_KEY, LOCAL_CONTEXT_KEY, buildPostMessageKeys } from '../config/keys';
 import { API_HOST, buildMockLocalContext } from '../../test/constants';
 import { DEFAULT_CONTEXT, DEFAULT_LANG, DEFAULT_PERMISSION, MOCK_TOKEN } from '../config/constants';
@@ -66,7 +66,7 @@ describe('PostMessage Hooks', () => {
           settings: { some: 'value' },
           offline: true,
           dev: true,
-          context: Context.PLAYER,
+          context: CONTEXTS.PLAYER,
         };
         const event = {
           ports: ['mock-port'],

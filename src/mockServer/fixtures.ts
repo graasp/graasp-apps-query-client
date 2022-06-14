@@ -1,6 +1,6 @@
 import { PERMISSION_LEVELS } from '../config/constants';
 import { buildContext } from '../hooks/postMessage';
-import { Context, LocalContext, Member } from '../types';
+import { CONTEXTS, LocalContext, Member } from '../types';
 
 export const MOCK_SERVER_MEMBER: Member = {
   id: 'mock-member-id',
@@ -18,7 +18,7 @@ export const buildMockLocalContext = (appContext = {}) => {
     offline: false,
     apiHost: 'http://localhost:3000',
     permission: PERMISSION_LEVELS.READ,
-    context: Context.PLAYER,
+    context: CONTEXTS.PLAYER,
     dev: true,
     ...appContext,
   };

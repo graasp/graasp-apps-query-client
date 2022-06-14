@@ -98,7 +98,7 @@ export type GraaspError = {
 export type WindowPostMessage = (message: unknown) => void;
 
 // todo: factor out in graasp-constants
-export enum Context {
+export enum CONTEXTS {
   PLAYER = 'player',
   BUILDER = 'builder',
   ANALYZER = 'analyzer',
@@ -119,7 +119,7 @@ export type LocalContext = {
   dev?: boolean;
   offline?: boolean;
   lang?: string;
-  context?: 'player' | 'builder' | 'analyzer' | 'explorer' | 'standalone' | Context;
+  context?: 'player' | 'builder' | 'analyzer' | 'explorer' | 'standalone' | CONTEXTS;
   standalone?: boolean;
   permission?: string;
 };
@@ -133,7 +133,7 @@ export const LocalContextRecord = Record<LocalContext>({
   dev: false,
   offline: false,
   lang: 'en',
-  context: Context.BUILDER,
+  context: CONTEXTS.BUILDER,
   standalone: false,
   permission: undefined,
 });
