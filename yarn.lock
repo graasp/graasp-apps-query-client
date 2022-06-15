@@ -1826,6 +1826,7 @@ __metadata:
   dependencies:
     "@commitlint/cli": 13.1.0
     "@commitlint/config-conventional": 13.1.0
+    "@graasp/utils": "github:graasp/graasp-utils"
     "@testing-library/react-hooks": 7.0.2
     "@types/jest": 27.0.1
     "@types/node": 17.0.10
@@ -1859,6 +1860,13 @@ __metadata:
     react: ^17.0.0
   languageName: unknown
   linkType: soft
+
+"@graasp/utils@github:graasp/graasp-utils":
+  version: 0.1.0
+  resolution: "@graasp/utils@https://github.com/graasp/graasp-utils.git#commit=82be1fd0ba2cc7a3c59465012b55e10736e17f96"
+  checksum: 8d7a8cac8f9ce6726babed4efd127163520100f6ad9edf40e26789b66982ce6a9c2359267db1583e6050f45b56598eb59660fa46593e1df69ee4dc165cf6ec61
+  languageName: node
+  linkType: hard
 
 "@hapi/address@npm:2.x.x":
   version: 2.1.4

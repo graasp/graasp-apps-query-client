@@ -24,7 +24,7 @@ const withToken =
     if (!itemId) {
       const error = 'ItemId not found in querystring parameters';
       if (onError) {
-        onError?.(error);
+        onError(error);
       } else {
         console.error(error);
       }
@@ -38,7 +38,7 @@ const withToken =
 
     if (isError) {
       if (onError) {
-        onError?.(error);
+        onError(error);
       } else {
         console.error(error);
       }

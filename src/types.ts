@@ -1,4 +1,9 @@
 import { Record } from 'immutable';
+import { Context, PermissionLevel } from '@graasp/utils';
+
+// generic type
+type EnumToUnionType<T> = T extends `${infer R}` ? R : never;
+
 export type Notifier = (e: unknown) => void;
 
 export type Data = { [key: string]: unknown };
@@ -97,20 +102,6 @@ export type GraaspError = {
 
 export type WindowPostMessage = (message: unknown) => void;
 
-// todo: factor out in graasp-constants
-export enum CONTEXTS {
-  PLAYER = 'player',
-  BUILDER = 'builder',
-  ANALYZER = 'analyzer',
-  EXPLORER = 'explorer',
-  STANDALONE = 'standalone',
-}
-export enum PermissionLevel {
-  ADMIN = 'admin',
-  READ = 'read',
-  WRITE = 'write',
-}
-
 export type LocalContext = {
   apiHost: string;
   itemId: string;
@@ -119,7 +110,7 @@ export type LocalContext = {
   dev?: boolean;
   offline?: boolean;
   lang?: string;
-  context?: 'player' | 'builder' | 'analyzer' | 'explorer' | 'standalone' | CONTEXTS;
+  context?: EnumToUnionType<Context> | 'standalone' | Context;
   standalone?: boolean;
   permission?: string;
 };
@@ -133,9 +124,9 @@ export const LocalContextRecord = Record<LocalContext>({
   dev: false,
   offline: false,
   lang: 'en',
-  context: CONTEXTS.BUILDER,
+  context: Context.BUILDER,
   standalone: false,
-  permission: undefined,
+  permission: PermissionLevel.Read,
 });
 
 export interface ApiData {

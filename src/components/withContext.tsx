@@ -29,7 +29,7 @@ const withContext =
 
     if (isError) {
       if (onError) {
-        onError?.(error);
+        onError(error);
       } else {
         console.error(error);
       }
