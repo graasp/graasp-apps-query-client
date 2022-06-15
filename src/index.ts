@@ -7,4 +7,4 @@ export { default as mockApi, mockServer, buildDatabase } from './mockServer/mock
 export { buildMockLocalContext } from './mockServer/fixtures';
 export { buildMockParentWindow } from './mockServer/mockParentWindow';
 export * from './components';
-export * from './types';
+export { LocalContextRecord } from './types';

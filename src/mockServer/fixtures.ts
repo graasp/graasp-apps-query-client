@@ -1,6 +1,7 @@
 import { PERMISSION_LEVELS } from '../config/constants';
 import { buildContext } from '../hooks/postMessage';
-import { CONTEXTS, LocalContext, Member } from '../types';
+import { LocalContext, Member } from '../types';
+import { Context } from '@graasp/utils';
 
 export const MOCK_SERVER_MEMBER: Member = {
   id: 'mock-member-id',
@@ -18,7 +19,7 @@ export const buildMockLocalContext = (appContext = {}) => {
     offline: false,
     apiHost: 'http://localhost:3000',
     permission: PERMISSION_LEVELS.READ,
-    context: CONTEXTS.PLAYER,
+    context: Context.PLAYER,
     dev: true,
     ...appContext,
   };
