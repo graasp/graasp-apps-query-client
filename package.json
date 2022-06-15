@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "module": "dist/index.modern.js",
   "source": "src/index.ts",
-  "types": "dist/src/index.d.ts",
+  "types": "dist/index.d.ts",
   "repository": "git@github.com:graasp/graasp-apps-query-client.git",
   "author": "Graasp Association",
   "workspaces": [
