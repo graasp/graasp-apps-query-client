@@ -2,12 +2,7 @@ import { List, Map } from 'immutable';
 import { QueryClient, useQuery } from 'react-query';
 import * as Api from '../api';
 import { MissingFileIdError } from '../config/errors';
-import {
-  buildAppActionsKey,
-  buildAppContextKey,
-  buildAppDataKey,
-  buildFileContentKey,
-} from '../config/keys';
+import { buildAppContextKey, buildAppDataKey, buildFileContentKey } from '../config/keys';
 import { getApiHost, getDataOrThrow } from '../config/utils';
 import { QueryClientConfig } from '../types';
 
@@ -30,20 +25,6 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
         ...defaultOptions,
         enabled: Boolean(itemId) && Boolean(token),
         refetchInterval,
-      });
-    },
-
-    useAppActions: () => {
-      const apiHost = getApiHost(queryClient);
-      const { token, itemId } = getDataOrThrow(queryClient);
-
-      return useQuery({
-        queryKey: buildAppActionsKey(itemId),
-        queryFn: () => {
-          return Api.getAppActions({ itemId, token, apiHost }).then((data) => List(data));
-        },
-        ...defaultOptions,
-        enabled: Boolean(itemId) && Boolean(token),
       });
     },
 

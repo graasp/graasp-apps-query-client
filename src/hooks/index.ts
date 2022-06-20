@@ -1,7 +1,8 @@
 import { QueryClient } from 'react-query';
 import { QueryClientConfig } from '../types';
-import configureAppsHooks from './apps';
+import configureAppsHooks from './appData';
 import configureAppSettingHooks from './appSetting';
+import configureAppActionHooks from './appAction';
 import configurePostMessageHooks from './postMessage';
 
 export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
@@ -9,5 +10,6 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
     ...configureAppsHooks(queryClient, queryConfig),
     ...configurePostMessageHooks(queryClient, queryConfig),
     ...configureAppSettingHooks(queryClient, queryConfig),
+    ...configureAppActionHooks(queryClient, queryConfig),
   };
 };

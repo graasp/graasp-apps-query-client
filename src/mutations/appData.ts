@@ -1,8 +1,8 @@
 import { QueryClient } from 'react-query';
-import { List, Map } from 'immutable';
+import { List } from 'immutable';
 import * as Api from '../api';
-import { buildAppActionsKey, buildAppDataKey, MUTATION_KEYS } from '../config/keys';
-import { AppAction, AppData, QueryClientConfig, UUID } from '../types';
+import { buildAppDataKey, MUTATION_KEYS } from '../config/keys';
+import { AppData, QueryClientConfig, UUID } from '../types';
 import { getApiHost, getData, getDataOrThrow } from '../config/utils';
 import {
   deleteAppDataRoutine,
@@ -25,6 +25,7 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
       const key = buildAppDataKey(itemId);
       const prevData = queryClient.getQueryData<List<AppData>>(key);
       queryClient.setQueryData(key, prevData?.push(newAppData));
+      queryConfig?.notifier?.({ type: postAppDataRoutine.SUCCESS, payload: newAppData });
     },
     onError: (error) => {
       queryConfig?.notifier?.({ type: postAppDataRoutine.FAILURE, payload: { error } });
@@ -39,8 +40,7 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
     mutationFn: (payload: Partial<AppData> & { id: UUID }) => {
       const apiHost = getApiHost(queryClient);
       const data = getDataOrThrow(queryClient);
-      // do we need to transform data into a map here ?
-      return Api.patchAppData({ ...data, ...payload, apiHost }).then((data) => Map(data));
+      return Api.patchAppData({ ...data, ...payload, apiHost });
     },
     onMutate: async (payload) => {
       let context = null;
@@ -56,6 +56,9 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
         context = prevData;
       }
       return context;
+    },
+    onSuccess: (newAppData) => {
+      queryConfig?.notifier?.({ type: patchAppDataRoutine.SUCCESS, payload: newAppData });
     },
     onError: (error, _payload, prevData) => {
       queryConfig?.notifier?.({ type: patchAppDataRoutine.FAILURE, payload: { error } });
@@ -91,6 +94,9 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
       }
       return prevData;
     },
+    onSuccess: (prevData) => {
+      queryConfig?.notifier?.({ type: deleteAppDataRoutine.SUCCESS, payload: prevData });
+    },
     onError: (error, _payload, prevData) => {
       queryConfig?.notifier?.({ type: deleteAppDataRoutine.FAILURE, payload: { error } });
 
@@ -110,26 +116,6 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
     },
   });
 
-  queryClient.setMutationDefaults(MUTATION_KEYS.POST_APP_ACTION, {
-    mutationFn: (payload: Partial<AppAction>) => {
-      const apiHost = getApiHost(queryClient);
-      const data = getDataOrThrow(queryClient);
-      return Api.postAppAction({ ...data, body: payload, apiHost });
-    },
-    onSuccess: (newAppAction: AppAction) => {
-      const { itemId } = getData(queryClient);
-      const key = buildAppActionsKey(itemId);
-      const prevData = queryClient.getQueryData<List<AppAction>>(key);
-      queryClient.setQueryData(key, prevData?.push(newAppAction));
-    },
-    onError: (error) => {
-      queryConfig?.notifier?.({ type: postAppDataRoutine.FAILURE, payload: { error } });
-    },
-    onSettled: () => {
-      const { itemId } = getData(queryClient);
-      queryClient.invalidateQueries(buildAppActionsKey(itemId));
-    },
-  });
   // this mutation is used for its callback and invalidate the keys
   /**
    * @param {UUID} id parent item id wher the file is uploaded in

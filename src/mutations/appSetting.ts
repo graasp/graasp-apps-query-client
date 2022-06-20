@@ -1,5 +1,5 @@
 import { QueryClient } from 'react-query';
-import { List, Map } from 'immutable';
+import { List } from 'immutable';
 import * as Api from '../api';
 import { buildAppSettingsKey, MUTATION_KEYS } from '../config/keys';
 import { AppData, AppSetting, QueryClientConfig } from '../types';
@@ -25,6 +25,7 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
       const key = buildAppSettingsKey(itemId);
       const prevData = queryClient.getQueryData<List<AppSetting>>(key);
       queryClient.setQueryData(key, prevData?.push(newData));
+      queryConfig?.notifier?.({ type: postAppSettingRoutine.SUCCESS, payload: newData });
     },
     onError: (error) => {
       queryConfig?.notifier?.({ type: postAppSettingRoutine.FAILURE, payload: { error } });
@@ -39,9 +40,7 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
     mutationFn: (payload: Partial<AppSetting> & { id: string }) => {
       const apiHost = getApiHost(queryClient);
       const data = getDataOrThrow(queryClient);
-      return Api.patchAppSetting({ ...data, id: payload.id, data: payload.data, apiHost }).then(
-        (data) => Map(data),
-      );
+      return Api.patchAppSetting({ ...data, id: payload.id, data: payload.data, apiHost });
     },
     onMutate: async (payload) => {
       let context = null;
@@ -57,6 +56,9 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
         context = prevData;
       }
       return context;
+    },
+    onSuccess: (newData) => {
+      queryConfig?.notifier?.({ type: postAppSettingRoutine.SUCCESS, payload: newData });
     },
     onError: (error, _payload, prevData) => {
       queryConfig?.notifier?.({ type: patchAppSettingRoutine.FAILURE, payload: { error } });
@@ -91,6 +93,9 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
         );
       }
       return prevData;
+    },
+    onSuccess: (prevData) => {
+      queryConfig?.notifier?.({ type: deleteAppSettingRoutine.SUCCESS, payload: prevData });
     },
     onError: (error, _payload, prevData) => {
       queryConfig?.notifier?.({ type: deleteAppSettingRoutine.FAILURE, payload: { error } });
