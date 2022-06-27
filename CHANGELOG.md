@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.2.0](https://github.com/graasp/graasp-apps-query-client/compare/v0.1.1...v0.2.0) (2022-06-27)
+
+
+### Features
+
+* specify types in axios responses ([f44cfc1](https://github.com/graasp/graasp-apps-query-client/commit/f44cfc163095ebf2b1b93a6629f2ba9a450ff25b))
+
 ### 0.1.1 (2022-06-03)
 
 
