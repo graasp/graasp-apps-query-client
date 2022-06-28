@@ -8,6 +8,10 @@
   "types": "dist/index.d.ts",
   "repository": "git@github.com:graasp/graasp-apps-query-client.git",
   "author": "Graasp Association",
+  "contributors": [
+    "Kim Lan Phan Hoang",
+    "Basile Spaenlehauer"
+  ],
   "workspaces": [
     "example"
   ],
