@@ -1,6 +1,7 @@
 import { PERMISSION_LEVELS } from '../config/constants';
 import { buildContext } from '../hooks/postMessage';
-import { Context, LocalContext, Member } from '../types';
+import { LocalContext, Member } from '../types';
+import { Context } from '@graasp/utils';
 
 export const MOCK_SERVER_MEMBER: Member = {
   id: 'mock-member-id',

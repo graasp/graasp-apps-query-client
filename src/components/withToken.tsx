@@ -9,7 +9,7 @@ const defaultToken = 'mock-token';
 const TokenContext = createContext<string>(defaultToken);
 
 interface Props {
-  useAuthToken: (args: unknown) => UseQueryResult<Token, unknown>;
+  useAuthToken: (itemId: string) => UseQueryResult<Token, unknown>;
   LoadingComponent?: React.ReactElement;
   onError?: (error: unknown) => void;
 }
@@ -21,7 +21,16 @@ const withToken =
     const { itemId } = qs.parse(window.location.search, {
       ignoreQueryPrefix: true,
     });
-    const { data, isLoading, isError, error } = useAuthToken(itemId);
+    if (!itemId) {
+      const error = 'ItemId not found in querystring parameters';
+      if (onError) {
+        onError(error);
+      } else {
+        console.error(error);
+      }
+    }
+
+    const { data, isLoading, isError, error } = useAuthToken(itemId as string);
 
     if (isLoading) {
       return LoadingComponent ?? <div>loading...</div>;
@@ -29,7 +38,7 @@ const withToken =
 
     if (isError) {
       if (onError) {
-        onError?.(error);
+        onError(error);
       } else {
         console.error(error);
       }

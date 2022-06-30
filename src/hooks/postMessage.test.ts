@@ -1,7 +1,7 @@
 import { v4 } from 'uuid';
 import { Record } from 'immutable';
 import { mockHook, mockWindowForPostMessage, setUpTest } from '../../test/utils';
-import { Context, LocalContext } from '../types';
+import { LocalContext } from '../types';
 import { AUTH_TOKEN_KEY, LOCAL_CONTEXT_KEY, buildPostMessageKeys } from '../config/keys';
 import { API_HOST, buildMockLocalContext } from '../../test/constants';
 import { DEFAULT_CONTEXT, DEFAULT_LANG, DEFAULT_PERMISSION, MOCK_TOKEN } from '../config/constants';
@@ -10,6 +10,7 @@ import {
   MissingAppOriginError,
   MissingMessageChannelPortError,
 } from '../config/errors';
+import { Context } from '@graasp/utils';
 
 const mockItemId = 'mock-item-id';
 const POST_MESSAGE_KEYS = buildPostMessageKeys(mockItemId);

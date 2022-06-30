@@ -12,8 +12,8 @@ import { MUTATION_KEYS, QUERY_KEYS, buildPostMessageKeys } from './config/keys';
 import { CACHE_TIME_MILLISECONDS, STALE_TIME_MILLISECONDS } from './config/constants';
 import configureHooks from './hooks';
 import configureMutations from './mutations';
-import type { QueryClientConfig } from './types';
 import { API_ROUTES } from './api/routes';
+import { QueryClientConfig } from './types';
 
 // Query client retry function decides when and how many times a request should be retried
 const defaultRetryFunction = (failureCount: number, error: Error) => {

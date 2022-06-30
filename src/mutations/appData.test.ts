@@ -32,7 +32,7 @@ describe('Apps Mutations', () => {
     nock.cleanAll();
   });
 
-  describe(MUTATION_KEYS.POST_APP_DATA, () => {
+  describe(MUTATION_KEYS.POST_APP_DATA[0], () => {
     const itemId = v4();
     const key = buildAppDataKey(itemId);
     const toAdd = buildAppData();
@@ -224,7 +224,7 @@ describe('Apps Mutations', () => {
     });
   });
 
-  describe(MUTATION_KEYS.PATCH_APP_DATA, () => {
+  describe(MUTATION_KEYS.PATCH_APP_DATA[0], () => {
     const initData = List(FIXTURE_APP_DATA);
     const itemId = v4();
     const appDataId = initData.first()?.id ?? v4();
@@ -421,7 +421,7 @@ describe('Apps Mutations', () => {
     });
   });
 
-  describe(MUTATION_KEYS.DELETE_APP_DATA, () => {
+  describe(MUTATION_KEYS.DELETE_APP_DATA[0], () => {
     const itemId = v4();
     const key = buildAppDataKey(itemId);
     const toDelete = FIXTURE_APP_DATA[0];
