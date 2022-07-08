@@ -79,6 +79,7 @@ export type AppSetting = {
   id: UUID;
   data: AppSettingData;
   name: string;
+  creator: string;
   createdAt: string;
   updatedAt: string;
 };
