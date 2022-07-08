@@ -130,6 +130,22 @@ export const LocalContextRecord = Record<LocalContext>({
   permission: PermissionLevel.Read,
 });
 
+export type AppContext = Item & {
+  children: Item[];
+  members: Member[];
+};
+
+export const AppContextRecord = Record<AppContext>({
+  id: '',
+  name: '',
+  path: '',
+  description: '',
+  type: '',
+  extra: {},
+  children: [],
+  members: [],
+});
+
 export interface ApiData {
   token: Token;
   itemId: UUID;
