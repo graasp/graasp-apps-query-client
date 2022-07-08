@@ -1,4 +1,4 @@
-import { Record } from 'immutable';
+import { List, Record } from 'immutable';
 import { Context, PermissionLevel } from '@graasp/utils';
 
 // generic type
@@ -131,8 +131,8 @@ export const LocalContextRecord = Record<LocalContext>({
 });
 
 export type AppContext = Item & {
-  children: Item[];
-  members: Member[];
+  children: List<Item>;
+  members: List<Member>;
 };
 
 export const AppContextRecord = Record<AppContext>({
@@ -142,8 +142,8 @@ export const AppContextRecord = Record<AppContext>({
   description: '',
   type: '',
   extra: {},
-  children: [],
-  members: [],
+  children: List<Item>(),
+  members: List<Member>(),
 });
 
 export interface ApiData {
