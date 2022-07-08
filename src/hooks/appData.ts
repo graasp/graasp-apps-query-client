@@ -1,10 +1,10 @@
-import { List, Map } from 'immutable';
+import { List, RecordOf } from 'immutable';
 import { QueryClient, useQuery } from 'react-query';
 import * as Api from '../api';
 import { MissingFileIdError } from '../config/errors';
 import { buildAppContextKey, buildAppDataKey, buildFileContentKey } from '../config/keys';
 import { getApiHost, getDataOrThrow } from '../config/utils';
-import { QueryClientConfig } from '../types';
+import { AppContext, AppContextRecord, QueryClientConfig } from '../types';
 
 export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
   const { retry, cacheTime, staleTime } = queryConfig;
@@ -33,8 +33,12 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
       const { token, itemId } = getDataOrThrow(queryClient);
       return useQuery({
         queryKey: buildAppContextKey(itemId),
-        queryFn: () => {
-          return Api.getContext({ itemId, token, apiHost }).then((data) => Map(data));
+        queryFn: (): Promise<RecordOf<AppContext>> => {
+          return Api.getContext({
+            itemId,
+            token,
+            apiHost,
+          }).then((data) => AppContextRecord(data));
         },
         ...defaultOptions,
         enabled: Boolean(itemId) && Boolean(token),

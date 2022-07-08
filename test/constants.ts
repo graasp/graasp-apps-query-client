@@ -77,6 +77,7 @@ export const buildAppSetting = ({
   createdAt: Date.now().toString(),
   updatedAt: Date.now().toString(),
   itemId: 'itemId',
+  creator: v4(),
 });
 
 export const FIXTURE_APP_SETTINGS: AppSetting[] = [

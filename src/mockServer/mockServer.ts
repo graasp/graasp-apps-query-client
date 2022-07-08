@@ -96,6 +96,7 @@ export const mockServer = ({
         updatedAt: new Date().toISOString(),
         name: (idx) => `app-setting-${idx}`,
         itemId: currentItemId,
+        creator: currentMemberId,
       }),
       member: Factory.extend<Member>({
         id: () => v4(),

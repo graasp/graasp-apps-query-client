@@ -9,11 +9,11 @@ import {
   buildPostAppActionRoute,
 } from './routes';
 import configureAxios from './axios';
-import { ApiData, AppAction, AppData, LocalContext, UUID } from '../types';
+import { ApiData, AppAction, AppContext, AppData, UUID } from '../types';
 
 const axios = configureAxios();
 
-export const getContext = async (args: ApiData): Promise<LocalContext> => {
+export const getContext = async (args: ApiData): Promise<AppContext> => {
   const { token, itemId, apiHost } = args;
   return axios
     .get(`${apiHost}/${buildGetContextRoute(itemId)}`, {

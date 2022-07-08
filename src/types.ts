@@ -1,4 +1,4 @@
-import { Record } from 'immutable';
+import { List, Record } from 'immutable';
 import { Context, PermissionLevel } from '@graasp/utils';
 
 // generic type
@@ -79,6 +79,7 @@ export type AppSetting = {
   id: UUID;
   data: AppSettingData;
   name: string;
+  creator: string;
   createdAt: string;
   updatedAt: string;
 };
@@ -127,6 +128,22 @@ export const LocalContextRecord = Record<LocalContext>({
   context: Context.BUILDER,
   standalone: false,
   permission: PermissionLevel.Read,
+});
+
+export type AppContext = Item & {
+  children: List<Item>;
+  members: List<Member>;
+};
+
+export const AppContextRecord = Record<AppContext>({
+  id: '',
+  name: '',
+  path: '',
+  description: '',
+  type: '',
+  extra: {},
+  children: List<Item>(),
+  members: List<Member>(),
 });
 
 export interface ApiData {
