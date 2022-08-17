@@ -8175,9 +8175,9 @@ __metadata:
   linkType: hard
 
 "fast-redact@npm:^3.0.0":
-  version: 3.1.2
-  resolution: "fast-redact@npm:3.1.2"
-  checksum: a30eb6b6830333ab213e0def55f46453ca777544dbd3a883016cb590a0eeb95e6fdf546553c1a13d509896bfba889b789991160a6d0996ceb19fce0a02e8b753
+  version: 3.1.1
+  resolution: "fast-redact@npm:3.1.1"
+  checksum: e486cc9990b5c9724f39bf4e392c1b250c8fd5e8c0145be80c73de3461fc390babe7b48f35746b50bf3cbcd917e093b5685ae66295162c7d9b686a761d48e989
   languageName: node
   linkType: hard
 
@@ -8189,9 +8189,9 @@ __metadata:
   linkType: hard
 
 "fastify-plugin@npm:^4.0.0":
-  version: 4.5.0
-  resolution: "fastify-plugin@npm:4.5.0"
-  checksum: 3cc36a43ec72ee9974d3cd1989027e77b277b0994e4fc02ed4e6492aabd83a0be66f14fdec56e60d9a41911ea1ff1ea70c9d957a87e46bcdb8fedd859f4988fe
+  version: 4.2.0
+  resolution: "fastify-plugin@npm:4.2.0"
+  checksum: 30d7fd3c8f5e9bd87ca43b15e59fff8ca28772920c979bd18420f8874e81cd24592410101f1e0d3de443f19e599464b245a171692883acff934763152e3dc3eb
   languageName: node
   linkType: hard
 
@@ -12679,20 +12679,20 @@ __metadata:
   linkType: hard
 
 "pg-copy-streams@npm:^6.0.2":
-  version: 6.0.5
-  resolution: "pg-copy-streams@npm:6.0.5"
+  version: 6.0.2
+  resolution: "pg-copy-streams@npm:6.0.2"
   dependencies:
     obuf: ^1.1.2
-  checksum: 45074d8b366a0f572af628cbf5831b834653856f7945b1e11541bc1b81609b464d636d344b6f60b2c6b836328e9b2faa48e1add5f9adc3c6ca4591ebbea96e5d
+  checksum: 552f562ff9854b6601fcf8fa3c5e831d0f4d195216e6dba23cbd10bcd4a647322a339f42a7c4149e5947c8fd95df2d0c47726b8cd2d014b746bcf5f43f7d88f8
   languageName: node
   linkType: hard
 
 "pg-cursor@npm:^2.7.3":
-  version: 2.9.0
-  resolution: "pg-cursor@npm:2.9.0"
+  version: 2.7.3
+  resolution: "pg-cursor@npm:2.7.3"
   peerDependencies:
     pg: ^8
-  checksum: 8f83c6b35ecee707c220288577cc864484c4c4fb08e9d0bb6901d2dc376ab8966d4c4e5e58b9b4c551dcf0470182d0f9a0e37761f9eca3beeadea4c064835958
+  checksum: a6b7615f382c8dd0b76cc4f34aa761fc490fbca1660ee59b6b1ea50012b17c8b5f6269f3abb3881eda25584af2645b5f07323b1758cd5ae8f2f496253da8b235
   languageName: node
   linkType: hard
 
@@ -12703,16 +12703,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pg-pool@npm:^3.6.0":
-  version: 3.6.0
-  resolution: "pg-pool@npm:3.6.0"
+"pg-pool@npm:^3.5.1":
+  version: 3.5.1
+  resolution: "pg-pool@npm:3.5.1"
   peerDependencies:
     pg: ">=8.0"
-  checksum: f3fe050fbfe27406369340c4c26efcbe21a388ace085a876453de0ea496a315c38b2dc739ac97d4767a359e911da2ec4810467f72601eeec8ad540e58b27987c
+  checksum: 42833c25f18fee41a1b2d955978f1403e93164762a7e57d3a870429103d302f1899b393ab021bb8144272037eb3f13bdb9f16a4c4afaa3efd3d2c3689738038f
   languageName: node
   linkType: hard
 
-"pg-protocol@npm:^1.5.0, pg-protocol@npm:^1.6.0":
+"pg-protocol@npm:^1.5.0":
   version: 1.6.0
   resolution: "pg-protocol@npm:1.6.0"
   checksum: e12662d2de2011e0c3a03f6a09f435beb1025acdc860f181f18a600a5495dc38a69d753bbde1ace279c8c442536af9c1a7c11e1d0fe3fad3aa1348b28d9d2683
@@ -12733,22 +12733,22 @@ __metadata:
   linkType: hard
 
 "pg@npm:^8.7.3":
-  version: 8.10.0
-  resolution: "pg@npm:8.10.0"
+  version: 8.7.3
+  resolution: "pg@npm:8.7.3"
   dependencies:
     buffer-writer: 2.0.0
     packet-reader: 1.0.0
     pg-connection-string: ^2.5.0
-    pg-pool: ^3.6.0
-    pg-protocol: ^1.6.0
+    pg-pool: ^3.5.1
+    pg-protocol: ^1.5.0
     pg-types: ^2.1.0
     pgpass: 1.x
   peerDependencies:
-    pg-native: ">=3.0.1"
+    pg-native: ">=2.0.0"
   peerDependenciesMeta:
     pg-native:
       optional: true
-  checksum: c6be78f2e823f2ae3c618c8e54a6622592dd71b556fb665d7eaedcbcc2fa5d210a8bcf519401e72526a65b9d797f19b772f48f29b9d9f31e98dd526fd27d61e0
+  checksum: d0e7040967779b9ccea16897f099510bcaf6bc86f77a6d8fa7e293c24d8bd2fd2ec46d99d6d1adc9be4cc8f254aa909361346b693088c1ba4501414f7afb2fe3
   languageName: node
   linkType: hard
 
@@ -14639,8 +14639,8 @@ __metadata:
   linkType: hard
 
 "roarr@npm:^7.11.0":
-  version: 7.15.0
-  resolution: "roarr@npm:7.15.0"
+  version: 7.12.0
+  resolution: "roarr@npm:7.12.0"
   dependencies:
     boolean: ^3.1.4
     fast-json-stringify: ^2.7.10
@@ -14648,7 +14648,7 @@ __metadata:
     globalthis: ^1.0.2
     safe-stable-stringify: ^2.4.1
     semver-compare: ^1.0.0
-  checksum: fdb2480672b95aabf96bff92fe34301c119f9188643ca8833d04901255e8733d6ad87bed5b73575d674e3f545caaa171c72a9d9a2a2c4199883df669a6752b03
+  checksum: c2313af14e994620f3292fdfb09d161fc2976ac4a6eeea63c12388ee30603d9807ed331bf224f9b9ea58587654ccc1bc67ade9a717cfe69d3fe9ba83375d7e67
   languageName: node
   linkType: hard
 

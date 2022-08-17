@@ -3,7 +3,7 @@ import { Record } from 'immutable';
 import { LocalContext, QueryClientConfig } from '../types';
 import { AUTH_TOKEN_KEY, LOCAL_CONTEXT_KEY } from './keys';
 import { StatusCodes } from 'http-status-codes';
-import { MissingAppIdError, MissingAppOriginError, MissingNecessaryDataError } from './errors';
+import { MissingAppKeyError, MissingAppOriginError, MissingNecessaryDataError } from './errors';
 
 export class MissingApiHostError extends Error {
   statusCode: number;
@@ -38,14 +38,14 @@ export const getDataOrThrow = (queryClient: QueryClient) => {
   return { itemId, memberId, token };
 };
 
-export const buildAppIdAndOriginPayload = (queryConfig: QueryClientConfig) => {
+export const buildAppKeyAndOriginPayload = (queryConfig: QueryClientConfig) => {
   const payload = {
-    app: queryConfig.GRAASP_APP_ID,
+    app: queryConfig.GRAASP_APP_KEY,
     origin: window?.location?.origin,
   };
 
   if (!payload.app) {
-    throw new MissingAppIdError();
+    throw new MissingAppKeyError();
   }
   if (!payload.origin) {
     throw new MissingAppOriginError();

@@ -28,9 +28,14 @@ export type QueryClientConfig = {
   retry?: number | boolean | ((failureCount: number, error: Error) => boolean);
   refetchOnWindowFocus?: boolean;
   keepPreviousData?: boolean;
-  GRAASP_APP_ID?: string | null;
+  GRAASP_APP_KEY?: string | null;
   shouldRetry?: boolean;
   targetWindow?: Window;
+
+  /**
+   * @deprecated Use GRAASP_APP_KEY instead
+   */
+  GRAASP_APP_ID?: string | null;
 };
 
 // Graasp Core Types

@@ -9,7 +9,7 @@ import { QueryClient, useQuery } from '@tanstack/react-query';
 import { DEFAULT_CONTEXT, DEFAULT_LANG, DEFAULT_PERMISSION } from '../config/constants';
 import { MissingMessageChannelPortError } from '../config/errors';
 import { AUTH_TOKEN_KEY, buildPostMessageKeys, LOCAL_CONTEXT_KEY } from '../config/keys';
-import { buildAppIdAndOriginPayload } from '../config/utils';
+import { buildAppKeyAndOriginPayload } from '../config/utils';
 import { getAuthTokenRoutine, getLocalContextRoutine } from '../routines';
 import { LocalContext, LocalContextRecord, QueryClientConfig, WindowPostMessage } from '../types';
 
@@ -77,23 +77,23 @@ const configurePostMessageHooks = (_queryClient: QueryClient, queryConfig: Query
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       formatResolvedValue?: (data: { payload: any; event: MessageEvent }) => A,
     ) =>
-    (event: MessageEvent) => {
-      try {
-        const { type, payload } = JSON.parse(event.data) || {};
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const format = formatResolvedValue ?? ((data: { payload: any }) => data.payload);
-        // get init message getting the Message Channel port
-        if (type === successType) {
-          resolve(format({ payload, event }));
-        } else if (type === errorType) {
-          reject({ payload, event });
-        } else {
-          reject('the type is not recognized');
+      (event: MessageEvent) => {
+        try {
+          const { type, payload } = JSON.parse(event.data) || {};
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const format = formatResolvedValue ?? ((data: { payload: any }) => data.payload);
+          // get init message getting the Message Channel port
+          if (type === successType) {
+            resolve(format({ payload, event }));
+          } else if (type === errorType) {
+            reject({ payload, event });
+          } else {
+            reject('the type is not recognized');
+          }
+        } catch (e) {
+          reject('an error occurred');
         }
-      } catch (e) {
-        reject('an error occurred');
-      }
-    };
+      };
 
   let getLocalContextFunction: ((event: MessageEvent) => void) | null = null;
   const useGetLocalContext = (itemId: string) =>
@@ -101,7 +101,7 @@ const configurePostMessageHooks = (_queryClient: QueryClient, queryConfig: Query
       queryKey: LOCAL_CONTEXT_KEY,
       queryFn: async () => {
         const POST_MESSAGE_KEYS = buildPostMessageKeys(itemId);
-        const postMessagePayload = buildAppIdAndOriginPayload(queryConfig);
+        const postMessagePayload = buildAppKeyAndOriginPayload(queryConfig);
 
         const formatResolvedValue = (result: {
           event: MessageEvent;
@@ -151,7 +151,7 @@ const configurePostMessageHooks = (_queryClient: QueryClient, queryConfig: Query
       },
     });
 
-  let getAuthTokenFunction = null;
+  let getAuthTokenFunction;
   const useAuthToken = (itemId: string) =>
     useQuery({
       queryKey: AUTH_TOKEN_KEY,
@@ -162,7 +162,7 @@ const configurePostMessageHooks = (_queryClient: QueryClient, queryConfig: Query
           console.error(error);
           throw error;
         }
-        const postMessagePayload = buildAppIdAndOriginPayload(queryConfig);
+        const postMessagePayload = buildAppKeyAndOriginPayload(queryConfig);
 
         return new Promise<string>((resolve, reject) => {
           getAuthTokenFunction = receiveContextMessage(
