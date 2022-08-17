@@ -9,14 +9,14 @@ import { Notifier, QueryClientConfig } from '../src/types';
 import { API_HOST, MOCK_APP_ORIGIN, REQUEST_METHODS } from './constants';
 import configureQueryClient from '../src/queryClient';
 
-type Args = { enableWebsocket?: boolean; notifier?: Notifier; GRAASP_APP_ID?: string | null };
+type Args = { enableWebsocket?: boolean; notifier?: Notifier; GRAASP_APP_KEY?: string | null };
 
 export const setUpTest = (args?: Args) => {
   const {
     notifier = () => {
       // do nothing
     },
-    GRAASP_APP_ID = v4(),
+    GRAASP_APP_KEY = v4(),
   } = args ?? {};
   const queryConfig: QueryClientConfig = {
     API_HOST,
@@ -28,7 +28,7 @@ export const setUpTest = (args?: Args) => {
     staleTime: 0,
     SHOW_NOTIFICATIONS: false,
     notifier,
-    GRAASP_APP_ID,
+    GRAASP_APP_KEY,
   };
 
   const { queryClient, QueryClientProvider, useMutation } = configureQueryClient(queryConfig);

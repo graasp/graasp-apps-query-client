@@ -19,7 +19,7 @@ The following steps are designed to take into account `Cypress`, our test framew
 2. Create `.env.development` which will contain the variables below. The app id you will choose doesn't have to be valid, but needs to exist.
 
 ```
-REACT_APP_GRAASP_APP_ID=<your app id>
+REACT_APP_GRAASP_APP_KEY=<your app id>
 REACT_APP_MOCK_API=true
 ```
 
@@ -33,7 +33,7 @@ import {
 } from '@graasp/apps-query-client';
 
 const values = configureQueryClient({
-  GRAASP_APP_ID: process.env.REACT_APP_GRAASP_APP_ID,
+  GRAASP_APP_KEY: process.env.REACT_APP_GRAASP_APP_KEY,
   // build mock parent window given cypress (app) context or mock data
   targetWindow: process.env.REACT_APP_MOCK_API === 'true'
     ? buildMockParentWindow(

@@ -18,15 +18,15 @@ export class MissingFileIdError extends Error {
   }
 }
 
-export class MissingAppIdError extends Error {
+export class MissingAppKeyError extends Error {
   constructor() {
-    super('App data id is missing!');
+    super('App key is missing!');
   }
 }
 
 export class MissingAppDataIdError extends Error {
   constructor() {
-    super('App id is missing!');
+    super('App data id is missing!');
   }
 }
 

@@ -9,7 +9,7 @@ import { DEFAULT_CONTEXT, DEFAULT_LANG, DEFAULT_PERMISSION } from '../config/con
 import { AUTH_TOKEN_KEY, buildPostMessageKeys, LOCAL_CONTEXT_KEY } from '../config/keys';
 import { LocalContext, LocalContextRecord, QueryClientConfig, WindowPostMessage } from '../types';
 import { MissingMessageChannelPortError } from '../config/errors';
-import { buildAppIdAndOriginPayload } from '../config/utils';
+import { buildAppKeyAndOriginPayload } from '../config/utils';
 import { getAuthTokenRoutine, getLocalContextRoutine } from '../routines';
 
 // build context from given data and default values
@@ -98,7 +98,7 @@ const configurePostMessageHooks = (_queryClient: QueryClient, queryConfig: Query
       queryKey: LOCAL_CONTEXT_KEY,
       queryFn: async () => {
         const POST_MESSAGE_KEYS = buildPostMessageKeys(itemId);
-        const postMessagePayload = buildAppIdAndOriginPayload(queryConfig);
+        const postMessagePayload = buildAppKeyAndOriginPayload(queryConfig);
 
         const formatResolvedValue = (result: {
           event: MessageEvent;
@@ -159,7 +159,7 @@ const configurePostMessageHooks = (_queryClient: QueryClient, queryConfig: Query
           console.error(error);
           throw error;
         }
-        const postMessagePayload = buildAppIdAndOriginPayload(queryConfig);
+        const postMessagePayload = buildAppKeyAndOriginPayload(queryConfig);
 
         return new Promise<string>((resolve, reject) => {
           getAuthTokenFunction = receiveContextMessage(

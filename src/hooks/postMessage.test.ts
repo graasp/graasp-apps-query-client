@@ -6,11 +6,11 @@ import { AUTH_TOKEN_KEY, LOCAL_CONTEXT_KEY, buildPostMessageKeys } from '../conf
 import { API_HOST, buildMockLocalContext } from '../../test/constants';
 import { DEFAULT_CONTEXT, DEFAULT_LANG, DEFAULT_PERMISSION, MOCK_TOKEN } from '../config/constants';
 import {
-  MissingAppIdError,
+  MissingAppKeyError,
   MissingAppOriginError,
   MissingMessageChannelPortError,
 } from '../config/errors';
-import { Context } from '@graasp/utils';
+import { Context } from '@graasp/sdk';
 
 const mockItemId = 'mock-item-id';
 const POST_MESSAGE_KEYS = buildPostMessageKeys(mockItemId);
@@ -92,7 +92,7 @@ describe('PostMessage Hooks', () => {
 
     describe('Failed requests', () => {
       it('Gracefully fails on response error', async () => {
-        const { hooks, wrapper, queryClient } = setUpTest({ GRAASP_APP_ID: v4() });
+        const { hooks, wrapper, queryClient } = setUpTest({ GRAASP_APP_KEY: v4() });
         const hook = () => hooks.useGetLocalContext(mockItemId);
         const event = {
           data: JSON.stringify({
@@ -113,7 +113,7 @@ describe('PostMessage Hooks', () => {
       });
 
       it('Fails if app origin is undefined', async () => {
-        const { hooks, wrapper, queryClient } = setUpTest({ GRAASP_APP_ID: v4() });
+        const { hooks, wrapper, queryClient } = setUpTest({ GRAASP_APP_KEY: v4() });
         const hook = () => hooks.useGetLocalContext(mockItemId);
         const event = {
           data: JSON.stringify({
@@ -134,7 +134,7 @@ describe('PostMessage Hooks', () => {
       });
 
       it('Fails if app id is undefined', async () => {
-        const { hooks, wrapper, queryClient } = setUpTest({ GRAASP_APP_ID: null });
+        const { hooks, wrapper, queryClient } = setUpTest({ GRAASP_APP_KEY: null });
         const hook = () => hooks.useGetLocalContext(mockItemId);
         const event = {
           data: JSON.stringify({}),
@@ -147,7 +147,7 @@ describe('PostMessage Hooks', () => {
 
         // verify cache keys
         expect(queryClient.getQueryData(key)).toBeFalsy();
-        expect(error as MissingAppIdError).toEqual(new MissingAppIdError());
+        expect(error as MissingAppKeyError).toEqual(new MissingAppKeyError());
 
         queryClient.clear();
       });
@@ -203,7 +203,7 @@ describe('PostMessage Hooks', () => {
 
     describe('Failed requests', () => {
       it('Fails if port2 is undefined', async () => {
-        const { hooks, wrapper, queryClient } = setUpTest({ GRAASP_APP_ID: v4() });
+        const { hooks, wrapper, queryClient } = setUpTest({ GRAASP_APP_KEY: v4() });
         const hook = () => hooks.useAuthToken(mockItemId);
 
         const event = {
