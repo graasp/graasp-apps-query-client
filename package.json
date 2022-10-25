@@ -74,7 +74,7 @@
     "test:ci": "yarn && cd example && yarn && cd .. && yarn test"
   },
   "peerDependencies": {
-    "react": "^17.0.0"
+    "react": "^17.0.0 || ^18.0.0"
   },
   "localDependencies": {
     "react": "./example/node_modules/react",
@@ -83,5 +83,5 @@
   "files": [
     "dist"
   ],
-  "packageManager": "yarn@3.2.1"
+  "packageManager": "yarn@3.2.4"
 }
