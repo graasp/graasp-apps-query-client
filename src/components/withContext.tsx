@@ -1,4 +1,4 @@
-import React, { createContext, FC } from 'react';
+import React, { createContext, FC, useContext } from 'react';
 import qs from 'qs';
 import { LocalContext, LocalContextRecord } from '../types';
 import { UseQueryResult } from 'react-query';
@@ -45,4 +45,14 @@ const withContext =
     );
   };
 
-export { Context, withContext };
+const useLocalContext = () => useContext(Context);
+
+export {
+  useLocalContext,
+  /**
+   * @deprecated Using `React.useContext(Context)` is deprecated.
+   * Please use exported `useLocalContext()` hook instead
+   */
+  Context,
+  withContext,
+};
