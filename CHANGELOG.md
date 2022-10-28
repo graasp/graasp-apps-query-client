@@ -2,6 +2,36 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.3.0](https://github.com/graasp/graasp-apps-query-client/compare/v0.2.0...v0.3.0) (2022-10-28)
+
+
+### Features
+
+* add AppContext type ([d1c372a](https://github.com/graasp/graasp-apps-query-client/commit/d1c372a03d5ac1eb25a0552e3400dbae298ddfa7))
+* expose new `useLocalContext` hook to consume LocalContext ([bfa2d94](https://github.com/graasp/graasp-apps-query-client/commit/bfa2d94b174af7f1be8b7a7b55f197a698ac3081)), closes [#52](https://github.com/graasp/graasp-apps-query-client/issues/52)
+* rebase changes ([970ddee](https://github.com/graasp/graasp-apps-query-client/commit/970ddeed243d0559dcbcb25752ee958638f56281))
+
+
+### Bug Fixes
+
+* add creator prop in AppSetting type and mockServer ([b412a0c](https://github.com/graasp/graasp-apps-query-client/commit/b412a0c24e93cb30ca667f5266f0de50e4483a47))
+* add default values for record ([0c4dd0d](https://github.com/graasp/graasp-apps-query-client/commit/0c4dd0dd021aa1580256d8f5a6dfc1b44262823e))
+* add hoc types ([a1ff872](https://github.com/graasp/graasp-apps-query-client/commit/a1ff87204314ab7f6c9881a85b30ef61e1b838b2))
+* add return type of useAppContext ([a56bf9c](https://github.com/graasp/graasp-apps-query-client/commit/a56bf9cbac1bcabff7e4ccaae9db42c25fd6e79f))
+* allow react-18 as peer dependency ([183ef9d](https://github.com/graasp/graasp-apps-query-client/commit/183ef9dc99f9833e7b353ae069a55e5b56bca617))
+* argument type for withContext HOC ([1bdd97d](https://github.com/graasp/graasp-apps-query-client/commit/1bdd97d2dc6dfa2c0fd0fcabc645eaee38083ce5))
+* change context type to union type in LocalContext ([9d9ddc9](https://github.com/graasp/graasp-apps-query-client/commit/9d9ddc9c60d79bb45439ab12178aca07eb532e75))
+* create appAction routine argument ([02985a1](https://github.com/graasp/graasp-apps-query-client/commit/02985a1ee74b437bcdcff9dc999e89597438d616))
+* create union type from enum and apply PR changes ([c2c3d4f](https://github.com/graasp/graasp-apps-query-client/commit/c2c3d4fdbdced96e512cf3f6f1774ec72f9a5155))
+* date format ([0bf3668](https://github.com/graasp/graasp-apps-query-client/commit/0bf366800567fe2f09bdde47f29e5393b73fc239))
+* include types in index ([935462a](https://github.com/graasp/graasp-apps-query-client/commit/935462a62d9f020c0e1904580129e76a4e43e4ba))
+* rename Context enum to CONTEXTS ([0887d9f](https://github.com/graasp/graasp-apps-query-client/commit/0887d9f9a8e5df367855efc0acde4d2c5cce2c06))
+* rename types in index ([e80403a](https://github.com/graasp/graasp-apps-query-client/commit/e80403af547ae891216e2cc3d01b4c46bef0454a))
+* test with updated dependencies ([3ca4ecb](https://github.com/graasp/graasp-apps-query-client/commit/3ca4ecb1138dd5c5666d06046fd8ab899ab46fec))
+* type of record ([b1d92c2](https://github.com/graasp/graasp-apps-query-client/commit/b1d92c2712f3d9d48200fc87541e6208f1a21109))
+* update types of localContext record HOC ([e3ec641](https://github.com/graasp/graasp-apps-query-client/commit/e3ec641ba504aee61c57f3a5c9f752de992aabd6))
+* use List instead of array in AppContextRecord ([8857368](https://github.com/graasp/graasp-apps-query-client/commit/8857368fb735332e6169ccd1891dc06057b2b8ce))
+
 ## [0.2.0](https://github.com/graasp/graasp-apps-query-client/compare/v0.1.1...v0.2.0) (2022-06-27)
 
 
