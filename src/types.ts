@@ -1,5 +1,5 @@
 import { List, Record } from 'immutable';
-import { Context, PermissionLevel } from '@graasp/utils';
+import { Context, PermissionLevel } from '@graasp/sdk';
 
 // generic type
 type EnumToUnionType<T> = T extends `${infer R}` ? R : never;

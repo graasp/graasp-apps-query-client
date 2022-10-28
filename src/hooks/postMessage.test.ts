@@ -10,7 +10,7 @@ import {
   MissingAppOriginError,
   MissingMessageChannelPortError,
 } from '../config/errors';
-import { Context } from '@graasp/utils';
+import { Context } from '@graasp/sdk';
 
 const mockItemId = 'mock-item-id';
 const POST_MESSAGE_KEYS = buildPostMessageKeys(mockItemId);
