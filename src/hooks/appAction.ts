@@ -13,7 +13,7 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
     staleTime,
   };
   return {
-    useAppActions: () => {
+    useAppActions: ({ enabled = true }: { enabled: boolean }) => {
       const apiHost = getApiHost(queryClient);
       const { token, itemId } = getDataOrThrow(queryClient);
 
@@ -23,7 +23,7 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
           return Api.getAppActions({ itemId, token, apiHost }).then((data) => List(data));
         },
         ...defaultOptions,
-        enabled: Boolean(itemId) && Boolean(token),
+        enabled: Boolean(itemId) && Boolean(token) && enabled,
       });
     },
   };
