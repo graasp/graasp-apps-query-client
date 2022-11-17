@@ -3,14 +3,15 @@
  * These are used before the app requests a token
  */
 
-import { QueryClient, useQuery } from 'react-query';
 import { RecordOf } from 'immutable';
+import { useEffect } from 'react';
+import { QueryClient, useQuery } from 'react-query';
 import { DEFAULT_CONTEXT, DEFAULT_LANG, DEFAULT_PERMISSION } from '../config/constants';
-import { AUTH_TOKEN_KEY, buildPostMessageKeys, LOCAL_CONTEXT_KEY } from '../config/keys';
-import { LocalContext, LocalContextRecord, QueryClientConfig, WindowPostMessage } from '../types';
 import { MissingMessageChannelPortError } from '../config/errors';
+import { AUTH_TOKEN_KEY, buildPostMessageKeys, LOCAL_CONTEXT_KEY } from '../config/keys';
 import { buildAppIdAndOriginPayload } from '../config/utils';
 import { getAuthTokenRoutine, getLocalContextRoutine } from '../routines';
+import { LocalContext, LocalContextRecord, QueryClientConfig, WindowPostMessage } from '../types';
 
 // build context from given data and default values
 export const buildContext = (payload: LocalContext): LocalContext => {
@@ -191,9 +192,33 @@ const configurePostMessageHooks = (_queryClient: QueryClient, queryConfig: Query
       },
     });
 
+  const useAutoResize = (itemId: string) => {
+    const POST_MESSAGE_KEYS = buildPostMessageKeys(itemId);
+
+    useEffect(() => {
+      if (!port2) {
+        const error = new MissingMessageChannelPortError();
+        console.error(error);
+      }
+
+      const resizeObserver = new ResizeObserver((entries) => {
+        entries.forEach((entry) => {
+          const height = entry.contentRect.height;
+          port2.postMessage(
+            JSON.stringify({ type: POST_MESSAGE_KEYS.POST_AUTO_RESIZE, payload: height }),
+          );
+        });
+      });
+      resizeObserver.observe(document.body);
+
+      return () => resizeObserver.disconnect();
+    }, [itemId]);
+  };
+
   return {
     useGetLocalContext,
     useAuthToken,
+    useAutoResize,
   };
 };
 

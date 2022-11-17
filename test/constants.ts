@@ -88,7 +88,14 @@ export const FIXTURE_APP_SETTINGS: AppSetting[] = [
 
 export const FIXTURE_TOKEN = 'some-token';
 export const FIXTURE_CONTEXT = {
+  children: [],
+  description: '',
+  extra: {},
+  id: '',
   members: MEMBERS_RESPONSE,
+  name: '',
+  path: '',
+  type: '',
 };
 
 export enum REQUEST_METHODS {

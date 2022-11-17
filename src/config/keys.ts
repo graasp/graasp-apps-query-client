@@ -21,6 +21,7 @@ export const buildPostMessageKeys = (itemId: UUID) => ({
   GET_AUTH_TOKEN: `GET_AUTH_TOKEN_${itemId}`,
   GET_AUTH_TOKEN_SUCCESS: `GET_AUTH_TOKEN_SUCCESS_${itemId}`,
   GET_AUTH_TOKEN_FAILURE: `GET_AUTH_TOKEN_FAILURE_${itemId}`,
+  POST_AUTO_RESIZE: `POST_AUTO_RESIZE_${itemId}`,
 });
 
 export const MUTATION_KEYS = {

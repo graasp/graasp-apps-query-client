@@ -1,9 +1,10 @@
-import React, { createContext, FC, useContext } from 'react';
+import { RecordOf } from 'immutable';
 import qs from 'qs';
-import { LocalContext, LocalContextRecord } from '../types';
+import React, { createContext, FC, useContext } from 'react';
 import { UseQueryResult } from 'react-query';
 import { buildMockLocalContext } from '../mockServer/fixtures';
-import { RecordOf } from 'immutable';
+import { LocalContext, LocalContextRecord } from '../types';
+import { AutoResizer } from './AutoResizer';
 
 const Context = createContext<RecordOf<LocalContext>>(LocalContextRecord());
 
@@ -12,16 +13,17 @@ interface Props {
   LoadingComponent?: React.ReactElement;
   defaultValue?: RecordOf<LocalContext>;
   onError?: (error: unknown) => void;
+  useAutoResize?: (itemId: string) => void;
 }
 
 const withContext =
   <P extends object>(Component: React.ComponentType<P>, props: Props): FC<P> =>
   (childProps: P) => {
-    const { LoadingComponent, defaultValue, useGetLocalContext, onError } = props;
+    const { LoadingComponent, defaultValue, useGetLocalContext, onError, useAutoResize } = props;
     const { itemId } = qs.parse(window.location.search, {
       ignoreQueryPrefix: true,
-    });
-    const { data: context, isLoading, isError, error } = useGetLocalContext(itemId as string);
+    }) as { itemId: string };
+    const { data: context, isLoading, isError, error } = useGetLocalContext(itemId);
 
     if (isLoading) {
       return LoadingComponent ?? <div>loading...</div>;
@@ -38,9 +40,15 @@ const withContext =
     // todo: define a context to default to
     const value = context ?? defaultValue ?? LocalContextRecord(buildMockLocalContext());
 
+    const children = <Component {...(childProps as P)} />;
+
     return (
       <Context.Provider value={value}>
-        <Component {...(childProps as P)} />
+        {useAutoResize ? (
+          <AutoResizer useAutoResize={() => useAutoResize(itemId)}>{children}</AutoResizer>
+        ) : (
+          children
+        )}
       </Context.Provider>
     );
   };

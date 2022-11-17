@@ -1,10 +1,17 @@
+import { StatusCodes } from 'http-status-codes';
+import { List, Map, Record } from 'immutable';
 import nock from 'nock';
 import { v4 } from 'uuid';
-import { StatusCodes } from 'http-status-codes';
-import { List, Record, Map } from 'immutable';
+import {
+  buildMockLocalContext,
+  FIXTURE_APP_DATA,
+  FIXTURE_CONTEXT,
+  S3_FILE_BLOB_RESPONSE,
+  UNAUTHORIZED_RESPONSE,
+} from '../../test/constants';
 import { Endpoint, mockHook, setUpTest } from '../../test/utils';
 import { buildDownloadFilesRoute, buildGetAppDataRoute, buildGetContextRoute } from '../api/routes';
-import { AppData, LocalContext } from '../types';
+import { MOCK_TOKEN } from '../config/constants';
 import {
   AUTH_TOKEN_KEY,
   buildAppContextKey,
@@ -12,15 +19,8 @@ import {
   buildFileContentKey,
   LOCAL_CONTEXT_KEY,
 } from '../config/keys';
-import {
-  FIXTURE_APP_DATA,
-  UNAUTHORIZED_RESPONSE,
-  FIXTURE_CONTEXT,
-  buildMockLocalContext,
-  S3_FILE_BLOB_RESPONSE,
-} from '../../test/constants';
 import { MissingApiHostError } from '../config/utils';
-import { MOCK_TOKEN } from '../config/constants';
+import { AppData, LocalContext } from '../types';
 
 const { hooks, wrapper, queryClient } = setUpTest();
 const itemId = v4();
@@ -132,7 +132,7 @@ describe('App Hooks', () => {
       expect((data as Record<LocalContext>).toJS()).toEqual(response);
 
       // verify cache keys
-      expect(queryClient.getQueryData(key)).toEqual(Map(response));
+      expect((queryClient.getQueryData(key) as Record<LocalContext>).toJS()).toEqual(response);
     });
     it('Cannot fetch context if local context does not exist', async () => {
       const response = FIXTURE_CONTEXT;

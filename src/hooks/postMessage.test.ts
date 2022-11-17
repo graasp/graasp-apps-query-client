@@ -1,16 +1,17 @@
-import { v4 } from 'uuid';
+import { Context } from '@graasp/sdk';
+import { renderHook } from '@testing-library/react-hooks';
 import { Record } from 'immutable';
-import { mockHook, mockWindowForPostMessage, setUpTest } from '../../test/utils';
-import { LocalContext } from '../types';
-import { AUTH_TOKEN_KEY, LOCAL_CONTEXT_KEY, buildPostMessageKeys } from '../config/keys';
+import { v4 } from 'uuid';
 import { API_HOST, buildMockLocalContext } from '../../test/constants';
+import { mockHook, mockWindowForPostMessage, setUpTest } from '../../test/utils';
 import { DEFAULT_CONTEXT, DEFAULT_LANG, DEFAULT_PERMISSION, MOCK_TOKEN } from '../config/constants';
 import {
   MissingAppIdError,
   MissingAppOriginError,
   MissingMessageChannelPortError,
 } from '../config/errors';
-import { Context } from '@graasp/sdk';
+import { AUTH_TOKEN_KEY, buildPostMessageKeys, LOCAL_CONTEXT_KEY } from '../config/keys';
+import { LocalContext } from '../types';
 
 const mockItemId = 'mock-item-id';
 const POST_MESSAGE_KEYS = buildPostMessageKeys(mockItemId);
@@ -41,9 +42,9 @@ describe('PostMessage Hooks', () => {
         const { data } = await mockHook({ hook, wrapper });
         const context = (data as Record<LocalContext>).toJS();
         expect(context).toEqual({
-          apiHost: undefined,
-          memberId: undefined,
-          itemId: undefined,
+          apiHost: '', // @see LocalContextRecord
+          memberId: '', // @see LocalContextRecord
+          itemId: '', // @see LocalContextRecord
           context: DEFAULT_CONTEXT,
           lang: DEFAULT_LANG,
           permission: DEFAULT_PERMISSION,
@@ -224,6 +225,57 @@ describe('PostMessage Hooks', () => {
 
         queryClient.clear();
       });
+    });
+  });
+
+  describe('useAutoResize', () => {
+    class MockResizeObserver implements ResizeObserver {
+      disconnect(): void {
+        throw new Error('Method not implemented.');
+      }
+      observe(): void {
+        throw new Error('Method not implemented.');
+      }
+      unobserve(): void {
+        throw new Error('Method not implemented.');
+      }
+    }
+
+    global.ResizeObserver = jest.fn();
+    const resizeObserverSpy = jest.spyOn(global, 'ResizeObserver');
+    const { hooks, wrapper } = setUpTest();
+
+    /// mock port
+    const port = {
+      postMessage: jest.fn(),
+      onmessage: jest.fn(),
+    };
+
+    it('Sends height', async () => {
+      // run context first to set port
+      const event = {
+        ports: [port],
+        data: JSON.stringify({
+          type: POST_MESSAGE_KEYS.GET_CONTEXT_SUCCESS,
+          payload: buildMockLocalContext(),
+        }),
+      } as unknown as MessageEvent;
+      mockWindowForPostMessage(event);
+      await mockHook({ hook: () => hooks.useGetLocalContext(mockItemId), wrapper });
+
+      renderHook(() => hooks.useAutoResize(mockItemId));
+
+      // simulate resize
+      const handlerFn = resizeObserverSpy.mock.lastCall[0];
+      handlerFn(
+        [{ contentRect: { height: 42 } }] as Array<ResizeObserverEntry>,
+        new MockResizeObserver(),
+      );
+
+      const portSpy = jest.spyOn(port, 'postMessage');
+      expect(portSpy).toHaveBeenCalledWith(
+        JSON.stringify({ type: POST_MESSAGE_KEYS.POST_AUTO_RESIZE, payload: 42 }),
+      );
     });
   });
 });

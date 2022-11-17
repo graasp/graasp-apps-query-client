@@ -69,7 +69,7 @@
     "release:first": "git fetch --tags && git add CHANGELOG.md && standard-version -a --first-release",
     "start": "microbundle-crl watch --no-compress --format modern,cjs",
     "start:example": "yarn workspace graasp-query-client-example start",
-    "test": "jest src/hooks/appSetting.test.ts --forceExit --coverage --verbose",
+    "test": "jest --forceExit --coverage --verbose --silent",
     "test:watch": "yarn test --watchAll",
     "test:ci": "yarn && cd example && yarn && cd .. && yarn test"
   },
