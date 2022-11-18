@@ -4,7 +4,7 @@ This repository implements the [react-query](https://react-query.tanstack.com/) 
 
 ## Mock API Installation
 
-This apps-query-client package provides a mock API to mock any call an app might use to consume the Graasp API. It is based on MirageJS, which simulates the network requests themselves, and can thus remember remote state in memory. So the database is preserved as long as the app is not refreshed. This mock API is also particularly useful for continuous integration tests. 
+This apps-query-client package provides a mock API to mock any call an app might use to consume the Graasp API. It is based on MirageJS, which simulates the network requests themselves, and can thus remember remote state in memory. So the database is preserved as long as the app is not refreshed. This mock API is also particularly useful for continuous integration tests.
 
 The following steps are designed to take into account `Cypress`, our test framework. So the mock database can also receive data from the tests and apply them.
 
@@ -54,24 +54,25 @@ if (process.env.REACT_APP_MOCK_API === 'true') {
 }
 ```
 
-5. Use the [`withContext`](./src/components/withContext.tsx) and the [`withToken`]((./src/components/withToken.tsx)) files in your app. It will handle the authentication and fetching the local context automatically for you. For example:
+5. Use the [`withContext`](./src/components/withContext.tsx) and the [`withToken`](./src/components/withToken.tsx) files in your app. It will handle the authentication and fetching the local context automatically for you. For example:
 
 ```js
-  const AppWithContext = withToken(App, {
-    LoadingComponent: <Loader />,
-    useAuthToken: hooks.useAuthToken,
-    onError: () => {
-      showErrorToast('An error occured while requesting the token.');
-    },
-  });
+const AppWithContext = withToken(App, {
+  LoadingComponent: <Loader />,
+  useAuthToken: hooks.useAuthToken,
+  onError: () => {
+    showErrorToast('An error occured while requesting the token.');
+  },
+});
 
-  const AppWithContextAndToken = withContext(AppWithContext, {
-    LoadingComponent: <Loader />,
-    useGetLocalContext: hooks.useGetLocalContext,
-    onError: () => {
-      showErrorToast('An error occured while fetching the context.');
-    },
-  });
+const AppWithContextAndToken = withContext(AppWithContext, {
+  LoadingComponent: <Loader />,
+  useGetLocalContext: hooks.useGetLocalContext,
+  useAutoResize: hooks.useAutoResize,
+  onError: () => {
+    showErrorToast('An error occured while fetching the context.');
+  },
+});
 ```
 
 You can now start your app with the mock API installed. **Don't forget to disable it when you build your app** (set `REACT_APP_MOCK_API` to `false`).
@@ -107,7 +108,7 @@ Cypress.Commands.add(
       });
       win.appContext = appContext;
     });
-  }
+  },
 );
 ```
 
@@ -118,11 +119,11 @@ Cypress.Commands.add(
 cy.setUpApi();
 
 // start with one app data pre-saved in builder for an admin
-cy.setUpApi({ 
-  database: { appData: [MOCK_APP_DATA] }, 
+cy.setUpApi({
+  database: { appData: [MOCK_APP_DATA] },
   appContext: {
     permission: 'admin',
     context: 'builder',
-  }, 
+  },
 });
 ```
