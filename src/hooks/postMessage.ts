@@ -195,18 +195,27 @@ const configurePostMessageHooks = (_queryClient: QueryClient, queryConfig: Query
   const useAutoResize = (itemId: string) => {
     const POST_MESSAGE_KEYS = buildPostMessageKeys(itemId);
 
+    const sendHeight = (height: number) => {
+      port2.postMessage(
+        JSON.stringify({ type: POST_MESSAGE_KEYS.POST_AUTO_RESIZE, payload: height }),
+      );
+    };
+
     useEffect(() => {
       if (!port2) {
         const error = new MissingMessageChannelPortError();
         console.error(error);
       }
 
+      // send the current height first: since useEffect runs after the first render
+      // the host is never informed of the initial app size otherwise
+      sendHeight(document.body.scrollHeight);
+
+      // subsequent updates are handled by the resize observer
       const resizeObserver = new ResizeObserver((entries) => {
         entries.forEach((entry) => {
           const height = entry.contentRect.height;
-          port2.postMessage(
-            JSON.stringify({ type: POST_MESSAGE_KEYS.POST_AUTO_RESIZE, payload: height }),
-          );
+          sendHeight(height);
         });
       });
       resizeObserver.observe(document.body);

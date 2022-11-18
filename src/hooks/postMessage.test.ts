@@ -263,6 +263,11 @@ describe('PostMessage Hooks', () => {
       mockWindowForPostMessage(event);
       await mockHook({ hook: () => hooks.useGetLocalContext(mockItemId), wrapper });
 
+      // mock window height
+      global.document = {
+        body: { scrollHeight: 420 },
+      } as any;
+
       renderHook(() => hooks.useAutoResize(mockItemId));
 
       // simulate resize
@@ -273,6 +278,11 @@ describe('PostMessage Hooks', () => {
       );
 
       const portSpy = jest.spyOn(port, 'postMessage');
+      // expect initial height
+      expect(portSpy).toHaveBeenCalledWith(
+        JSON.stringify({ type: POST_MESSAGE_KEYS.POST_AUTO_RESIZE, payload: 420 }),
+      );
+      // expect subsequent resize
       expect(portSpy).toHaveBeenCalledWith(
         JSON.stringify({ type: POST_MESSAGE_KEYS.POST_AUTO_RESIZE, payload: 42 }),
       );
