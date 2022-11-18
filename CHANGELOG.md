@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.4.0](https://github.com/graasp/graasp-apps-query-client/compare/v0.3.0...v0.4.0) (2022-11-18)
+
+
+### Features
+
+* add enabled option in app action hook ([470acac](https://github.com/graasp/graasp-apps-query-client/commit/470acac29da754dbf33e90bdff9b7def3d516c82))
+* auto-resize detection and signaling ([#62](https://github.com/graasp/graasp-apps-query-client/issues/62)) ([c3c7dc7](https://github.com/graasp/graasp-apps-query-client/commit/c3c7dc7a22e21d9b2fe4060100fa7905025a8021))
+
 ## [0.3.0](https://github.com/graasp/graasp-apps-query-client/compare/v0.2.0...v0.3.0) (2022-10-28)
 
 
