@@ -1,12 +1,12 @@
 # Graasp Apps Query Client
 
-[![npm (scoped)](https://img.shields.io/npm/v/@graasp/apps-query-client?logo=npm)](https://www.npmjs.com/package/@graasp/apps-query-client)
-[![GitHub package.json version](https://img.shields.io/github/package-json/v/graasp/graasp-apps-query-client?color=deepskyblue&logo=github)](https://github.com/graasp/graasp-apps-query-client/releases/latest)
-![npm](https://img.shields.io/npm/dm/@graasp/apps-query-client?color=green)
+[![Latest version published on NPM](https://img.shields.io/npm/v/@graasp/apps-query-client?logo=npm)](https://www.npmjs.com/package/@graasp/apps-query-client)
+[![Latest version released on Github](https://img.shields.io/github/package-json/v/graasp/graasp-apps-query-client?color=deepskyblue&logo=github)](https://github.com/graasp/graasp-apps-query-client/releases/latest)
+![NPM package downloads per month](https://img.shields.io/npm/dm/@graasp/apps-query-client?color=green)
 
-![GitHub package.json dependency version (dev dep on branch)](https://img.shields.io/github/package-json/dependency-version/graasp/graasp-apps-query-client/dev/typescript)
-![npm peer dependency version (scoped)](https://img.shields.io/npm/dependency-version/@graasp/apps-query-client/peer/react?logo=react)
-![GitHub package.json dependency version (prod)](https://img.shields.io/github/package-json/dependency-version/graasp/graasp-apps-query-client/react-query?logo=react-query)
+![typescript version](https://img.shields.io/github/package-json/dependency-version/graasp/graasp-apps-query-client/dev/typescript)
+![supported react versions](https://img.shields.io/npm/dependency-version/@graasp/apps-query-client/peer/react?logo=react)
+![react-query version](https://img.shields.io/github/package-json/dependency-version/graasp/graasp-apps-query-client/react-query?logo=react-query)
 
 This repository implements the [react-query](https://react-query.tanstack.com/) hooks and mutations for apps to consume the Graasp Apps API. It also provides a mock API server based on [MirageJS](https://miragejs.com/) for local development.
 
