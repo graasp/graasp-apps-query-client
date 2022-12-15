@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.4.1](https://github.com/graasp/graasp-apps-query-client/compare/v0.4.0...v0.4.1) (2022-12-15)
+
+
+### Bug Fixes
+
+* update dependencies and license ([1e97c68](https://github.com/graasp/graasp-apps-query-client/commit/1e97c68c635ce281cd957c4097864c882cc9d8af))
+
+
+### Documentation
+
+* add badges to readme ([#66](https://github.com/graasp/graasp-apps-query-client/issues/66)) ([26eb3ec](https://github.com/graasp/graasp-apps-query-client/commit/26eb3ece47127aa17d8ef09f2e14163fe189a99a))
+
 ## [0.4.0](https://github.com/graasp/graasp-apps-query-client/compare/v0.3.0...v0.4.0) (2022-11-18)
 
 
