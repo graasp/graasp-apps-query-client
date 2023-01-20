@@ -1,4 +1,5 @@
 import { StatusCodes } from 'http-status-codes';
+import { PermissionLevel } from '@graasp/sdk';
 // React Query Configs
 
 // time during which cache entry is never refetched
@@ -21,12 +22,13 @@ export const THUMBNAIL_SIZES = {
 };
 export const DEFAULT_THUMBNAIL_SIZES = THUMBNAIL_SIZES.SMALL;
 
-export const PERMISSION_LEVELS = {
-  WRITE: 'write',
-  READ: 'read',
-  ADMIN: 'admin',
-};
-export const DEFAULT_PERMISSION = PERMISSION_LEVELS.READ;
+export const DEFAULT_PERMISSION = PermissionLevel.Read;
+
+// Has to match with https://github.com/graasp/graasp-apps/blob/main/src/interfaces/app-details.ts
+export enum AppDataVisibility {
+  ITEM = 'item',
+  MEMBER = 'member',
+}
 
 export const DEFAULT_CONTEXT = 'standalone';
 export const DEFAULT_LANG = 'en';
