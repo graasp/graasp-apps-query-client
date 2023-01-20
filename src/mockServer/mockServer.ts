@@ -277,7 +277,15 @@ const mockApi = ({
   appContext: c,
   database,
   externalUrls,
-}: { appContext?: LocalContext; database?: Database; externalUrls?: string[] } = {}) => {
+  errors,
+}: {
+  appContext?: LocalContext;
+  database?: Database;
+  externalUrls?: string[];
+  errors?: {
+    deleteAppDataShouldThrow?: boolean;
+  };
+} = {}) => {
   const appContext = buildMockLocalContext(c);
   // automatically append item id as a query string
   const searchParams = new URLSearchParams(window.location.search);
@@ -285,7 +293,7 @@ const mockApi = ({
     searchParams.set('itemId', appContext.itemId);
     window.location.search = searchParams.toString();
   }
-  mockServer({ database: buildDatabase(database), appContext, externalUrls });
+  mockServer({ database: buildDatabase(database), appContext, externalUrls, errors });
 };
 
 export default mockApi;
