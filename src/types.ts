@@ -1,5 +1,6 @@
 import { List, Record } from 'immutable';
 import { Context, PermissionLevel } from '@graasp/sdk';
+import { AppDataVisibility } from './config/constants';
 
 // generic type
 type EnumToUnionType<T> = T extends `${infer R}` ? R : never;
@@ -63,6 +64,7 @@ export type AppData = {
   updatedAt: string;
   memberId: UUID;
   itemId: UUID;
+  visibility: AppDataVisibility;
 };
 
 export type AppAction = {
