@@ -1,4 +1,5 @@
 import { v4 } from 'uuid';
+import { AppDataVisibility } from '../src/config/constants';
 import { AppData, AppSetting, LocalContext, Member } from '../src/types';
 
 export const API_HOST = 'http://localhost:3000';
@@ -63,6 +64,7 @@ export const buildAppData = ({ id = v4(), data = {} }: Partial<AppData> = {}): A
   updatedAt: Date.now().toString(),
   memberId: 'memberId',
   itemId: 'itemId',
+  visibility: AppDataVisibility.MEMBER,
 });
 
 export const FIXTURE_APP_DATA: AppData[] = [buildAppData(), buildAppData(), buildAppData()];
