@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.4.2](https://github.com/graasp/graasp-apps-query-client/compare/v0.4.1...v0.4.2) (2023-01-23)
+
+
+### Bug Fixes
+
+* add errors parameter to mockApi ([ad92178](https://github.com/graasp/graasp-apps-query-client/commit/ad92178c885b4ead7ea75f42922ede82d7212578)), closes [#70](https://github.com/graasp/graasp-apps-query-client/issues/70)
+* add visibility attribute to AppData type ([e8930f0](https://github.com/graasp/graasp-apps-query-client/commit/e8930f0dce485e4183796572c0151367de400013))
+
 ## [0.4.1](https://github.com/graasp/graasp-apps-query-client/compare/v0.4.0...v0.4.1) (2022-12-15)
 
 
