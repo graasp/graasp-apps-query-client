@@ -86,10 +86,10 @@ const configurePostMessageHooks = (_queryClient: QueryClient, queryConfig: Query
         } else if (type === errorType) {
           reject({ payload, event });
         } else {
-          reject('the type is not recognised');
+          reject('the type is not recognized');
         }
       } catch (e) {
-        reject('an error occured');
+        reject('an error occurred');
       }
     };
 

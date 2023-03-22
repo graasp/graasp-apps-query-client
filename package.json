@@ -2,10 +2,10 @@
   "name": "@graasp/apps-query-client",
   "version": "0.4.2",
   "description": "Query client repository for Graasp apps",
-  "main": "dist/index.js",
-  "module": "dist/index.modern.js",
+  "main": "./dist/index.js",
+  "module": "./dist/index.modern.mjs",
   "source": "src/index.ts",
-  "types": "dist/index.d.ts",
+  "types": "./dist/index.d.ts",
   "repository": "git@github.com:graasp/graasp-apps-query-client.git",
   "author": "Graasp",
   "contributors": [
