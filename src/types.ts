@@ -64,7 +64,7 @@ export type AppData = {
   updatedAt: string;
   memberId: UUID;
   itemId: UUID;
-  visibility: AppDataVisibility;
+  visibility: `${AppDataVisibility}` | AppDataVisibility;
 };
 
 export type AppAction = {
