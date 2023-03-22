@@ -5,7 +5,7 @@
 
 import { RecordOf } from 'immutable';
 import { useEffect } from 'react';
-import { QueryClient, useQuery } from 'react-query';
+import { QueryClient, useQuery } from '@tanstack/react-query';
 import { DEFAULT_CONTEXT, DEFAULT_LANG, DEFAULT_PERMISSION } from '../config/constants';
 import { MissingMessageChannelPortError } from '../config/errors';
 import { AUTH_TOKEN_KEY, buildPostMessageKeys, LOCAL_CONTEXT_KEY } from '../config/keys';

@@ -1,15 +1,16 @@
 import React from 'react';
 import { v4 } from 'uuid';
 import { renderHook, RenderResult, WaitFor } from '@testing-library/react-hooks';
-import nock from 'nock';
+import nock, { ReplyHeaders } from 'nock';
 import { StatusCodes } from 'http-status-codes';
-import { QueryObserverBaseResult, MutationObserverResult } from 'react-query';
+import { QueryObserverBaseResult, MutationObserverResult } from '@tanstack/react-query';
 import configureHooks from '../src/hooks';
 import { Notifier, QueryClientConfig } from '../src/types';
 import { API_HOST, MOCK_APP_ORIGIN, REQUEST_METHODS } from './constants';
 import configureQueryClient from '../src/queryClient';
 
 type Args = { enableWebsocket?: boolean; notifier?: Notifier; GRAASP_APP_ID?: string | null };
+type NockRequestMethods = Lowercase<`${REQUEST_METHODS}`>;
 
 export const setUpTest = (args?: Args) => {
   const {
@@ -47,9 +48,9 @@ export type Endpoint = {
   route: string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   response: any;
-  method?: REQUEST_METHODS;
+  method?: `${REQUEST_METHODS}`;
   statusCode?: number;
-  headers?: unknown;
+  headers?: ReplyHeaders;
 };
 
 interface MockArguments {
@@ -72,7 +73,7 @@ export const mockEndpoints = (endpoints: Endpoint[]) => {
   // we open to all hosts specially for redirection to aws (get file endpoints)
   const server = nock(/.*/);
   endpoints.forEach(({ route, method, statusCode, response, headers }) => {
-    server[(method || REQUEST_METHODS.GET).toLowerCase()](route).reply(
+    server[(method || REQUEST_METHODS.GET).toLowerCase() as NockRequestMethods](route).reply(
       statusCode || StatusCodes.OK,
       response,
       headers,

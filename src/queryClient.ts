@@ -6,8 +6,8 @@ import {
   Hydrate,
   dehydrate,
   useQuery,
-} from 'react-query';
-import { ReactQueryDevtools } from 'react-query/devtools';
+} from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { MUTATION_KEYS, QUERY_KEYS, buildPostMessageKeys } from './config/keys';
 import { CACHE_TIME_MILLISECONDS, STALE_TIME_MILLISECONDS } from './config/constants';
 import configureHooks from './hooks';

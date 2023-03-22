@@ -1,4 +1,4 @@
-import { QueryClient } from 'react-query';
+import { QueryClient } from '@tanstack/react-query';
 import { Record } from 'immutable';
 import { LocalContext, QueryClientConfig } from '../types';
 import { AUTH_TOKEN_KEY, LOCAL_CONTEXT_KEY } from './keys';
