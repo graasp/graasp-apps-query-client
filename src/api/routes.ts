@@ -27,10 +27,12 @@ export const buildPostAppActionRoute = (payload: { itemId: string }) =>
   `${APP_ITEMS_ROUTE}/${payload.itemId}/${APP_ACTIONS_ENDPOINT}`;
 
 // todo: rename
-export const buildDownloadFilesRoute = (id: string) => `${APP_ITEMS_ROUTE}/${id}/download`;
+export const buildDownloadFilesRoute = (id: string) =>
+  `${APP_ITEMS_ROUTE}/${APP_DATA_ENDPOINT}/${id}/download`;
 
 // todo: rename to buildUploadAppDataFilesRoute
-export const buildUploadFilesRoute = (itemId: string) => `${APP_ITEMS_ROUTE}/upload?id=${itemId}`;
+export const buildUploadFilesRoute = (itemId: string) =>
+  `${APP_ITEMS_ROUTE}/${APP_DATA_ENDPOINT}/upload?id=${itemId}`;
 
 export const buildUploadAppSettingFilesRoute = (itemId: string) =>
   `${APP_ITEMS_ROUTE}/${APP_SETTINGS_ROUTE}/upload?id=${itemId}`;

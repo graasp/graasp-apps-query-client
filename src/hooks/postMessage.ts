@@ -93,6 +93,7 @@ const configurePostMessageHooks = (_queryClient: QueryClient, queryConfig: Query
         } catch (e) {
           reject('an error occurred');
         }
+
       };
 
   let getLocalContextFunction: ((event: MessageEvent) => void) | null = null;
