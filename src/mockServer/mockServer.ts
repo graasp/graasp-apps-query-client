@@ -1,5 +1,5 @@
 import { v4 } from 'uuid';
-import { createServer, Model, Factory, RestSerializer, Response } from 'miragejs';
+import { createServer, Model, Factory, RestSerializer, Response, Server, Request } from 'miragejs';
 import { API_ROUTES } from '../api/routes';
 import {
   AppAction,
@@ -33,6 +33,8 @@ const ApplicationSerializer = RestSerializer.extend({
   embed: true,
 });
 
+type ExternalUrls = ((req: Request) => any | string)[];
+
 export const buildDatabase = ({
   appData = [],
   appActions = [],
@@ -53,7 +55,7 @@ export const mockServer = ({
 }: {
   database?: Database;
   appContext?: LocalContext;
-  externalUrls?: string[];
+  externalUrls?: ExternalUrls;
   errors?: {
     deleteAppDataShouldThrow?: boolean;
   };
@@ -290,7 +292,7 @@ const mockApi = ({
 }: {
   appContext?: LocalContext;
   database?: Database;
-  externalUrls?: string[];
+  externalUrls?: ExternalUrls;
   errors?: {
     deleteAppDataShouldThrow?: boolean;
   };
