@@ -1,5 +1,5 @@
 import { v4 } from 'uuid';
-import { createServer, Model, Factory, RestSerializer, Response, Server, Request } from 'miragejs';
+import { createServer, Model, Factory, RestSerializer, Response, Request } from 'miragejs';
 import { API_ROUTES } from '../api/routes';
 import {
   AppAction,
@@ -33,7 +33,7 @@ const ApplicationSerializer = RestSerializer.extend({
   embed: true,
 });
 
-type ExternalUrls = ((req: Request) => any | string)[];
+type ExternalUrls = ((req: Request) => unknown | string)[];
 
 export const buildDatabase = ({
   appData = [],

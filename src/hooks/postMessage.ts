@@ -74,11 +74,13 @@ const configurePostMessageHooks = (_queryClient: QueryClient, queryConfig: Query
         resolve: (value: A) => void;
         reject: (reason?: unknown) => void;
       },
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       formatResolvedValue?: (data: { payload: any; event: MessageEvent }) => A,
     ) =>
     (event: MessageEvent) => {
       try {
         const { type, payload } = JSON.parse(event.data) || {};
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const format = formatResolvedValue ?? ((data: { payload: any }) => data.payload);
         // get init message getting the Message Channel port
         if (type === successType) {

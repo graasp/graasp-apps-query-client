@@ -167,6 +167,7 @@ describe('PostMessage Hooks', () => {
         postMessage: () => {
           /*do nothing*/
         },
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         onmessage: (_event: unknown) => {
           /*do nothing*/
         },
@@ -266,6 +267,7 @@ describe('PostMessage Hooks', () => {
       // mock window height
       global.document = {
         body: { scrollHeight: 420 },
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } as any;
 
       renderHook(() => hooks.useAutoResize(mockItemId));
