@@ -2,9 +2,9 @@
   "name": "@graasp/apps-query-client",
   "version": "0.4.2",
   "description": "Query client repository for Graasp apps",
-  "main": "./dist/index.umd.js",
+  "main": "./dist/index.cjs.js",
   "module": "./dist/index.es.js",
-  "source": "src/index.ts",
+  "source": "./src/index.ts",
   "types": "./dist/index.d.ts",
   "repository": "git@github.com:graasp/graasp-apps-query-client.git",
   "author": "Graasp",
@@ -39,7 +39,7 @@
     "test:ci": "yarn && cd example && yarn && cd .. && yarn test"
   },
   "dependencies": {
-    "@graasp/sdk": "0.9.3",
+    "@graasp/sdk": "0.11.0",
     "axios": "0.27.2",
     "http-status-codes": "2.2.0",
     "immutable": "4.3.0",
@@ -69,6 +69,7 @@
     "nock": "13.2.9",
     "prettier": "2.8.1",
     "react": "18.2.0",
+    "react-dom": "18.2.0",
     "react-test-renderer": "18.2.0",
     "ts-jest": "28.0.5",
     "ts-node": "10.8.1",
@@ -86,5 +87,5 @@
   "files": [
     "dist"
   ],
-  "packageManager": "yarn@3.3.0"
+  "packageManager": "yarn@3.5.0"
 }
