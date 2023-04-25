@@ -1,9 +1,14 @@
 import { List, Record } from 'immutable';
 import { Context, PermissionLevel } from '@graasp/sdk';
-import { AppDataVisibility } from './config/constants';
 
 // generic type
 type EnumToUnionType<T> = T extends `${infer R}` ? R : never;
+
+// Has to match with https://github.com/graasp/graasp-apps/blob/main/src/interfaces/app-details.ts
+export enum AppDataVisibility {
+  ITEM = 'item',
+  MEMBER = 'member',
+}
 
 export type Notifier = (e: unknown) => void;
 
@@ -64,7 +69,7 @@ export type AppData = {
   updatedAt: string;
   memberId: UUID;
   itemId: UUID;
-  visibility: AppDataVisibility;
+  visibility: `${AppDataVisibility}` | AppDataVisibility;
 };
 
 export type AppAction = {

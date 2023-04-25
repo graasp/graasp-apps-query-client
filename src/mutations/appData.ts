@@ -1,4 +1,4 @@
-import { QueryClient } from 'react-query';
+import { QueryClient } from '@tanstack/react-query';
 import { List } from 'immutable';
 import * as Api from '../api';
 import { buildAppDataKey, MUTATION_KEYS } from '../config/keys';

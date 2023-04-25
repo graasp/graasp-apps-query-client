@@ -5,7 +5,7 @@
 
 import { RecordOf } from 'immutable';
 import { useEffect } from 'react';
-import { QueryClient, useQuery } from 'react-query';
+import { QueryClient, useQuery } from '@tanstack/react-query';
 import { DEFAULT_CONTEXT, DEFAULT_LANG, DEFAULT_PERMISSION } from '../config/constants';
 import { MissingMessageChannelPortError } from '../config/errors';
 import { AUTH_TOKEN_KEY, buildPostMessageKeys, LOCAL_CONTEXT_KEY } from '../config/keys';
@@ -74,11 +74,13 @@ const configurePostMessageHooks = (_queryClient: QueryClient, queryConfig: Query
         resolve: (value: A) => void;
         reject: (reason?: unknown) => void;
       },
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       formatResolvedValue?: (data: { payload: any; event: MessageEvent }) => A,
     ) =>
     (event: MessageEvent) => {
       try {
         const { type, payload } = JSON.parse(event.data) || {};
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const format = formatResolvedValue ?? ((data: { payload: any }) => data.payload);
         // get init message getting the Message Channel port
         if (type === successType) {
@@ -86,10 +88,10 @@ const configurePostMessageHooks = (_queryClient: QueryClient, queryConfig: Query
         } else if (type === errorType) {
           reject({ payload, event });
         } else {
-          reject('the type is not recognised');
+          reject('the type is not recognized');
         }
       } catch (e) {
-        reject('an error occured');
+        reject('an error occurred');
       }
     };
 

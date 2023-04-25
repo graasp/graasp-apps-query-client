@@ -1,9 +1,16 @@
 import { v4 } from 'uuid';
-import { createServer, Model, Factory, RestSerializer, Response } from 'miragejs';
+import { createServer, Model, Factory, RestSerializer, Response, Request } from 'miragejs';
 import { API_ROUTES } from '../api/routes';
-import { AppAction, AppData, AppSetting, Database, LocalContext, Member } from '../types';
+import {
+  AppAction,
+  AppData,
+  AppDataVisibility,
+  AppSetting,
+  Database,
+  LocalContext,
+  Member,
+} from '../types';
 import { buildMockLocalContext, MOCK_SERVER_ITEM, MOCK_SERVER_MEMBER } from './fixtures';
-import { AppDataVisibility } from '../config/constants';
 
 const {
   buildGetAppDataRoute,
@@ -26,6 +33,8 @@ const ApplicationSerializer = RestSerializer.extend({
   embed: true,
 });
 
+type ExternalUrls = ((req: Request) => unknown | string)[];
+
 export const buildDatabase = ({
   appData = [],
   appActions = [],
@@ -46,7 +55,7 @@ export const mockServer = ({
 }: {
   database?: Database;
   appContext?: LocalContext;
-  externalUrls?: string[];
+  externalUrls?: ExternalUrls;
   errors?: {
     deleteAppDataShouldThrow?: boolean;
   };
@@ -283,7 +292,7 @@ const mockApi = ({
 }: {
   appContext?: LocalContext;
   database?: Database;
-  externalUrls?: string[];
+  externalUrls?: ExternalUrls;
   errors?: {
     deleteAppDataShouldThrow?: boolean;
   };

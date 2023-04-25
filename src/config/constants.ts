@@ -24,12 +24,6 @@ export const DEFAULT_THUMBNAIL_SIZES = THUMBNAIL_SIZES.SMALL;
 
 export const DEFAULT_PERMISSION = PermissionLevel.Read;
 
-// Has to match with https://github.com/graasp/graasp-apps/blob/main/src/interfaces/app-details.ts
-export enum AppDataVisibility {
-  ITEM = 'item',
-  MEMBER = 'member',
-}
-
 export const DEFAULT_CONTEXT = 'standalone';
 export const DEFAULT_LANG = 'en';
 export const MOCK_TOKEN = 'mock-token';

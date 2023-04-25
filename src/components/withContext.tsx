@@ -1,7 +1,7 @@
 import { RecordOf } from 'immutable';
 import qs from 'qs';
 import React, { createContext, FC, useContext } from 'react';
-import { UseQueryResult } from 'react-query';
+import { UseQueryResult } from '@tanstack/react-query';
 import { buildMockLocalContext } from '../mockServer/fixtures';
 import { LocalContext, LocalContextRecord } from '../types';
 import { AutoResizer } from './AutoResizer';

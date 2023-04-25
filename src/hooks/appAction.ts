@@ -1,5 +1,5 @@
 import { List } from 'immutable';
-import { QueryClient, useQuery } from 'react-query';
+import { QueryClient, useQuery } from '@tanstack/react-query';
 import * as Api from '../api';
 import { buildAppActionsKey } from '../config/keys';
 import { getApiHost, getDataOrThrow } from '../config/utils';

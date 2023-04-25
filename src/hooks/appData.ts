@@ -1,5 +1,5 @@
 import { List, RecordOf } from 'immutable';
-import { QueryClient, useQuery } from 'react-query';
+import { QueryClient, useQuery } from '@tanstack/react-query';
 import * as Api from '../api';
 import { MissingFileIdError } from '../config/errors';
 import { buildAppContextKey, buildAppDataKey, buildFileContentKey } from '../config/keys';

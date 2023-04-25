@@ -1,6 +1,5 @@
 import { v4 } from 'uuid';
-import { AppDataVisibility } from '../src/config/constants';
-import { AppData, AppSetting, LocalContext, Member } from '../src/types';
+import { AppData, AppDataVisibility, AppSetting, LocalContext, Member } from '../src/types';
 
 export const API_HOST = 'http://localhost:3000';
 export const UNAUTHORIZED_RESPONSE = { some: 'error' };

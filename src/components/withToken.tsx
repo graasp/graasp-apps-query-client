@@ -1,6 +1,6 @@
 import React, { createContext, FC } from 'react';
 import qs from 'qs';
-import { UseQueryResult } from 'react-query';
+import { UseQueryResult } from '@tanstack/react-query';
 import { Token } from '../types';
 
 // mock token, necessary for first renders
