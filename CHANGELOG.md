@@ -2,6 +2,33 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.0.0](https://github.com/graasp/graasp-apps-query-client/compare/v0.4.2...v1.0.0) (2023-04-25)
+
+
+### ⚠ BREAKING CHANGES
+
+* use vitejs and move to @tanstack/react-query
+
+### Features
+
+* move to vite for bundling ([#81](https://github.com/graasp/graasp-apps-query-client/issues/81)) ([7a275d0](https://github.com/graasp/graasp-apps-query-client/commit/7a275d0ee2a43efd80cc03082240dbfdf76cf121))
+
+
+### Bug Fixes
+
+* add auto-tag workflows ([7a275d0](https://github.com/graasp/graasp-apps-query-client/commit/7a275d0ee2a43efd80cc03082240dbfdf76cf121))
+* allow functions as passthrough ([7a275d0](https://github.com/graasp/graasp-apps-query-client/commit/7a275d0ee2a43efd80cc03082240dbfdf76cf121))
+* move AppDataVisibility to types ([7a275d0](https://github.com/graasp/graasp-apps-query-client/commit/7a275d0ee2a43efd80cc03082240dbfdf76cf121))
+* path to JS entrypoint ([7a275d0](https://github.com/graasp/graasp-apps-query-client/commit/7a275d0ee2a43efd80cc03082240dbfdf76cf121))
+* update node-ci workflow ([7a275d0](https://github.com/graasp/graasp-apps-query-client/commit/7a275d0ee2a43efd80cc03082240dbfdf76cf121))
+* update packages ([7a275d0](https://github.com/graasp/graasp-apps-query-client/commit/7a275d0ee2a43efd80cc03082240dbfdf76cf121))
+* use string litterals as alternatives for visibility ([7a275d0](https://github.com/graasp/graasp-apps-query-client/commit/7a275d0ee2a43efd80cc03082240dbfdf76cf121))
+
+
+### build
+
+* use vitejs and move to @tanstack/react-query ([7a275d0](https://github.com/graasp/graasp-apps-query-client/commit/7a275d0ee2a43efd80cc03082240dbfdf76cf121))
+
 ## [0.4.2](https://github.com/graasp/graasp-apps-query-client/compare/v0.4.1...v0.4.2) (2023-01-23)
 
 
