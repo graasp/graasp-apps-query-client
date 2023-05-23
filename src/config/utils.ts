@@ -40,11 +40,11 @@ export const getDataOrThrow = (queryClient: QueryClient) => {
 
 export const buildAppKeyAndOriginPayload = (queryConfig: QueryClientConfig) => {
   const payload = {
-    app: queryConfig.GRAASP_APP_KEY,
+    key: queryConfig.GRAASP_APP_KEY,
     origin: window?.location?.origin,
   };
 
-  if (!payload.app) {
+  if (!payload.key) {
     throw new MissingAppKeyError();
   }
   if (!payload.origin) {
