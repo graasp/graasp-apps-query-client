@@ -31,11 +31,11 @@ export const getData = (queryClient: QueryClient) => {
 };
 
 export const getDataOrThrow = (queryClient: QueryClient) => {
-  const { itemId, memberId, token } = getData(queryClient);
-  if (!itemId || !memberId || !token) {
-    throw new MissingNecessaryDataError({ itemId, memberId, token });
+  const { itemId, token } = getData(queryClient);
+  if (!itemId || !token) {
+    throw new MissingNecessaryDataError({ itemId, token });
   }
-  return { itemId, memberId, token };
+  return { itemId, token };
 };
 
 export const buildAppKeyAndOriginPayload = (queryConfig: QueryClientConfig) => {
