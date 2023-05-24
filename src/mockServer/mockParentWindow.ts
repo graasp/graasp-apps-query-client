@@ -13,6 +13,7 @@ export const buildMockParentWindow = (context: LocalContext) => {
 
     switch (type) {
       case POST_MESSAGE_KEYS.GET_AUTH_TOKEN:
+        console.log(channel, channel.port1, channel.port2);
         channel?.port1.postMessage(
           JSON.stringify({
             type: POST_MESSAGE_KEYS.GET_AUTH_TOKEN_SUCCESS,
@@ -21,6 +22,7 @@ export const buildMockParentWindow = (context: LocalContext) => {
             },
           }),
         );
+        console.log('debug')
         break;
       default:
         console.log(`type '${type}' is not recognized`);
