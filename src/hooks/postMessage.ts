@@ -80,17 +80,17 @@ const configurePostMessageHooks = (_queryClient: QueryClient, queryConfig: Query
       (event: MessageEvent) => {
         try {
           const { type, payload } = JSON.parse(event.data) || {};
-          console.log(type, payload)
+          console.log(type, payload);
 
-          console.log(successType)
+          console.log(successType);
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           const format = formatResolvedValue ?? ((data: { payload: any }) => data.payload);
           // get init message getting the Message Channel port
           if (type === successType) {
-            console.log(format({ payload, event }))
+            console.log(format({ payload, event }));
             resolve(format({ payload, event }));
           } else if (type === errorType) {
-            console.log('wefoijlkm')
+            console.log('wefoijlkm');
             reject({ payload, event });
           } else {
             reject(`the type '${type}' for payload '${JSON.stringify(payload)}' is not recognized`);
@@ -113,14 +113,19 @@ const configurePostMessageHooks = (_queryClient: QueryClient, queryConfig: Query
           payload: LocalContext;
         }): RecordOf<LocalContext> => {
           const { event, payload } = result;
+          console.log('wefwef');
           // get init message getting the Message Channel port
           const context = buildContext(payload);
 
+          console.log('before port');
           // will use port for further communication
           // set as a global variable
           [port2] = event.ports;
 
-          return LocalContextRecord(context);
+          console.log('befored');
+          const d = LocalContextRecord(context);
+          console.log(d);
+          return d;
         };
 
         return new Promise<RecordOf<LocalContext>>((resolve, reject) => {
@@ -143,6 +148,7 @@ const configurePostMessageHooks = (_queryClient: QueryClient, queryConfig: Query
         });
       },
       onError: (error) => {
+        console.log('--------', error);
         queryConfig?.notifier?.({
           type: getLocalContextRoutine.FAILURE,
           payload: { error },
