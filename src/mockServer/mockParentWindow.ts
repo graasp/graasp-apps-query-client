@@ -22,7 +22,7 @@ export const buildMockParentWindow = (context: LocalContext) => {
             },
           }),
         );
-        console.log('debug')
+        console.log('debug');
         break;
       default:
         console.log(`type '${type}' is not recognized`);
