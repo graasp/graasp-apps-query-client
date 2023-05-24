@@ -32,6 +32,6 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
 
   return {
     usePostAppAction: () =>
-      useMutation<AppAction, unknown, Partial<AppAction>>(MUTATION_KEYS.POST_APP_ACTION),
+      useMutation<AppActionRecord, unknown, Partial<AppAction>>(MUTATION_KEYS.POST_APP_ACTION),
   };
 };
