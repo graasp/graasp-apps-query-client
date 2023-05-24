@@ -25,6 +25,8 @@ const withContext =
     }) as { itemId: string };
     const { data: context, isLoading, isError, error } = useGetLocalContext(itemId);
 
+    console.log(context, isLoading, isError, error);
+
     if (isLoading) {
       return LoadingComponent ?? <div>loading...</div>;
     }
