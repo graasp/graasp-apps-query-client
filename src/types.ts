@@ -95,4 +95,5 @@ export interface Database {
   appActions: AppAction[];
   appSettings: AppSetting[];
   members: Member[];
+  items: Item[];
 }

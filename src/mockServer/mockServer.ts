@@ -2,14 +2,13 @@ import { v4 } from 'uuid';
 import { createServer, Model, Factory, RestSerializer, Response, Request } from 'miragejs';
 import { API_ROUTES } from '../api/routes';
 
-import { buildMockLocalContext, MOCK_SERVER_ITEM, MOCK_SERVER_MEMBER } from './fixtures';
+import { buildMockLocalContext, MOCK_SERVER_MEMBER } from './fixtures';
 import { Database, LocalContext } from 'src/types';
 import {
   AppAction,
   AppData,
   AppDataVisibility,
   AppSetting,
-  Item,
   Member,
   MemberType,
 } from '@graasp/sdk';
@@ -42,29 +41,31 @@ export const buildDatabase = ({
   appActions = [],
   appSettings = [],
   members = [MOCK_SERVER_MEMBER],
+  items = []
 }: Partial<Database> = {}) => ({
   appData,
   appActions,
   appSettings,
   members,
+  items
 });
 
 export const mockServer = ({
   database = buildDatabase(),
-  appContext = buildMockLocalContext(),
+  appContext,
   externalUrls = [],
   errors = {},
 }: {
   database?: Database;
-  appContext?: LocalContext;
+  appContext: Partial<LocalContext> & Pick<LocalContext, 'itemId'>;
   externalUrls?: ExternalUrls;
   errors?: {
     deleteAppDataShouldThrow?: boolean;
   };
-} = {}) => {
-  const { appData, appActions, appSettings, members } = database;
+}) => {
+  const { appData, appActions, appSettings, members, items } = database;
   const {
-    itemId: currentItemId = MOCK_SERVER_ITEM.id,
+    itemId: currentItemId,
     memberId: currentMemberId = MOCK_SERVER_MEMBER.id,
     apiHost,
   } = appContext;
@@ -77,27 +78,18 @@ export const mockServer = ({
     currentMemberId === MOCK_SERVER_MEMBER.id
       ? MOCK_SERVER_MEMBER
       : {
-          id: currentMemberId,
-          name: 'current-member-name',
-          email: 'memberId@email.com',
-          extra: {},
-          createdAt: new Date(),
-          updatedAt: new Date(),
-          type: MemberType.Individual,
-        };
-  const currentItem: Item =
-    currentItemId === MOCK_SERVER_ITEM.id
-      ? MOCK_SERVER_ITEM
-      : {
-          id: currentItemId,
-          name: 'current-item-name',
-          description: '',
-          path: 'item_path',
-          settings: {},
-          creator: currentMember,
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        };
+        id: currentMemberId,
+        name: 'current-member-name',
+        email: 'memberId@email.com',
+        extra: {},
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        type: MemberType.Individual,
+      };
+  const currentItem = items.find(({ id }) => id === currentItemId);
+  if (!currentItem) {
+    throw new Error('context.itemId does not have a corresponding item in mocked database');
+  }
 
   // we cannot use *Data
   // https://github.com/miragejs/miragejs/issues/782
@@ -348,13 +340,13 @@ const mockApi = ({
   externalUrls,
   errors,
 }: {
-  appContext?: LocalContext;
+  appContext: Partial<LocalContext> & Pick<LocalContext, 'itemId'>;
   database?: Database;
   externalUrls?: ExternalUrls;
   errors?: {
     deleteAppDataShouldThrow?: boolean;
   };
-} = {}) => {
+}) => {
   const appContext = buildMockLocalContext(c);
   // automatically append item id as a query string
   const searchParams = new URLSearchParams(window.location.search);
