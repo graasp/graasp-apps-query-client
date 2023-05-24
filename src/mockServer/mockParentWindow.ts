@@ -33,6 +33,7 @@ export const buildMockParentWindow = (context: LocalContext) => {
     postMessage: (message: string) => {
       const { type } = JSON.parse(message);
       if (type === POST_MESSAGE_KEYS.GET_CONTEXT) {
+        console.log(channel, channel.port1, channel.port2);
         window.postMessage(
           JSON.stringify({
             type: POST_MESSAGE_KEYS.GET_CONTEXT_SUCCESS,
@@ -41,6 +42,7 @@ export const buildMockParentWindow = (context: LocalContext) => {
           '*',
           [channel.port2],
         );
+        console.log('debug')
       } else {
         console.log(`${type} is not recognised`);
       }
