@@ -128,7 +128,7 @@ const configurePostMessageHooks = (_queryClient: QueryClient, queryConfig: Query
           return d;
         };
 
-        return new Promise<RecordOf<LocalContext>>((resolve, reject) => {
+        const dd = await new Promise<RecordOf<LocalContext>>((resolve, reject) => {
           getLocalContextFunction = receiveContextMessage(
             POST_MESSAGE_KEYS.GET_CONTEXT_SUCCESS,
             POST_MESSAGE_KEYS.GET_CONTEXT_FAILURE,
@@ -146,6 +146,9 @@ const configurePostMessageHooks = (_queryClient: QueryClient, queryConfig: Query
             payload: postMessagePayload,
           });
         });
+        console.log('return promise', dd)
+
+        return dd;
       },
       onError: (error) => {
         console.log('--------', error);

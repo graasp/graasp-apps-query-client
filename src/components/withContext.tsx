@@ -41,7 +41,7 @@ const withContext =
 
     // todo: define a context to default to
     const value = context ?? defaultValue ?? LocalContextRecord(buildMockLocalContext({ itemId }));
-
+    console.log('contenxt', value);
     const children = <Component {...(childProps as P)} />;
 
     return (
