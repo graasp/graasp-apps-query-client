@@ -6,7 +6,8 @@ import {
   buildPostAppSettingRoute,
 } from './routes';
 import configureAxios from './axios';
-import { ApiData, AppSetting } from '../types';
+import { ApiData } from '../types';
+import { AppSetting } from '@graasp/sdk';
 
 const axios = configureAxios();
 

@@ -1,4 +1,4 @@
-import { UUID } from '../types';
+import { UUID } from '@graasp/sdk';
 
 export class MissingTokenError extends Error {
   constructor() {

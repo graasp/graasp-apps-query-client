@@ -1,14 +1,17 @@
 import { List, Record } from 'immutable';
-import { Context, PermissionLevel } from '@graasp/sdk';
+import {
+  AppAction,
+  AppData,
+  AppSetting,
+  Context,
+  Item,
+  Member,
+  PermissionLevel,
+  UUID,
+} from '@graasp/sdk';
 
 // generic type
 type EnumToUnionType<T> = T extends `${infer R}` ? R : never;
-
-// Has to match with https://github.com/graasp/graasp-apps/blob/main/src/interfaces/app-details.ts
-export enum AppDataVisibility {
-  ITEM = 'item',
-  MEMBER = 'member',
-}
 
 export type Notifier = (e: unknown) => void;
 
@@ -38,64 +41,6 @@ export type QueryClientConfig = {
   GRAASP_APP_ID?: string | null;
 };
 
-// Graasp Core Types
-// todo: use graasp-types
-
-export type UUID = string;
-
-export type Item = {
-  id: UUID;
-  name: string;
-  path: string;
-  type: string;
-  description: string;
-  extra: unknown;
-};
-
-type MemberExtra = {
-  recycleBin?: {
-    itemId: string;
-  };
-};
-
-export type Member = {
-  id: UUID;
-  name: string;
-  email: string;
-  extra: MemberExtra;
-};
-
-export type AppData = {
-  id: UUID;
-  data: AppDataData;
-  type: string;
-  creator: string;
-  createdAt: string;
-  updatedAt: string;
-  memberId: UUID;
-  itemId: UUID;
-  visibility: `${AppDataVisibility}` | AppDataVisibility;
-};
-
-export type AppAction = {
-  id: UUID;
-  type: string;
-  data: AppActionData;
-  memberId: UUID;
-  itemId: UUID;
-  createdAt: string;
-};
-
-export type AppSetting = {
-  itemId: UUID;
-  id: UUID;
-  data: AppSettingData;
-  name: string;
-  creator: string;
-  createdAt: string;
-  updatedAt: string;
-};
-
 export class UndefinedArgument extends Error {
   constructor() {
     super();
@@ -104,14 +49,6 @@ export class UndefinedArgument extends Error {
     this.stack = new Error().stack;
   }
 }
-// todo: get from graasp types
-export type GraaspError = {
-  name: string;
-  code: string;
-  statusCode?: number;
-  message: string;
-  data?: unknown;
-};
 
 export type WindowPostMessage = (message: unknown) => void;
 
@@ -137,7 +74,7 @@ export const LocalContextRecord = Record<LocalContext>({
   dev: false,
   offline: false,
   lang: 'en',
-  context: Context.BUILDER,
+  context: Context.Builder,
   standalone: false,
   permission: PermissionLevel.Read,
 });
@@ -146,17 +83,6 @@ export type AppContext = Item & {
   children: List<Item>;
   members: List<Member>;
 };
-
-export const AppContextRecord = Record<AppContext>({
-  id: '',
-  name: '',
-  path: '',
-  description: '',
-  type: '',
-  extra: {},
-  children: List<Item>(),
-  members: List<Member>(),
-});
 
 export interface ApiData {
   token: Token;

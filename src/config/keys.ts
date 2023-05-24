@@ -1,4 +1,4 @@
-import { UUID } from '../types';
+import { UUID } from '@graasp/sdk';
 
 export const buildAppDataKey = (id?: UUID) => [id, 'app-data'];
 export const buildAppActionsKey = (id?: UUID) => [id, 'app-action'];

@@ -9,7 +9,8 @@ import {
   buildPostAppActionRoute,
 } from './routes';
 import configureAxios from './axios';
-import { ApiData, AppAction, AppContext, AppData, UUID } from '../types';
+import { ApiData, AppContext } from '../types';
+import { AppAction, AppData, UUID } from '@graasp/sdk';
 
 const axios = configureAxios();
 

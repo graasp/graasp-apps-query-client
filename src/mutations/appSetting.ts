@@ -1,8 +1,8 @@
-import { QueryClient } from '@tanstack/react-query';
+import { QueryClient, useMutation } from '@tanstack/react-query';
 import { List } from 'immutable';
 import * as Api from '../api';
 import { buildAppSettingsKey, MUTATION_KEYS } from '../config/keys';
-import { AppData, AppSetting, QueryClientConfig } from '../types';
+import { QueryClientConfig } from '../types';
 import { getApiHost, getData, getDataOrThrow } from '../config/utils';
 import {
   patchAppSettingRoutine,
@@ -10,6 +10,8 @@ import {
   deleteAppSettingRoutine,
   uploadAppSettingFileRoutine,
 } from '../routines';
+import { AppSetting, convertJs } from '@graasp/sdk';
+import { AppSettingRecord } from '@graasp/sdk/frontend';
 
 export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
   const { notifier } = queryConfig;
@@ -23,8 +25,8 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
     onSuccess: (newData: AppSetting) => {
       const { itemId } = getData(queryClient);
       const key = buildAppSettingsKey(itemId);
-      const prevData = queryClient.getQueryData<List<AppSetting>>(key);
-      queryClient.setQueryData(key, prevData?.push(newData));
+      const prevData = queryClient.getQueryData<List<AppSettingRecord>>(key);
+      queryClient.setQueryData(key, prevData?.push(convertJs(newData)));
       queryConfig?.notifier?.({ type: postAppSettingRoutine.SUCCESS, payload: newData });
     },
     onError: (error) => {
@@ -35,6 +37,8 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
       queryClient.invalidateQueries(buildAppSettingsKey(itemId));
     },
   });
+  const usePostAppSetting = () =>
+    useMutation<AppSetting, unknown, Partial<AppSetting>>(MUTATION_KEYS.POST_APP_SETTING);
 
   queryClient.setMutationDefaults(MUTATION_KEYS.PATCH_APP_SETTING, {
     mutationFn: (payload: Partial<AppSetting> & { id: string }) => {
@@ -45,12 +49,12 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
     onMutate: async (payload) => {
       let context = null;
       const { itemId } = getData(queryClient);
-      const prevData = queryClient.getQueryData<List<AppData>>(buildAppSettingsKey(itemId));
+      const prevData = queryClient.getQueryData<List<AppSettingRecord>>(
+        buildAppSettingsKey(itemId),
+      );
       if (itemId && prevData) {
         const newData = prevData.map((appData) =>
-          appData.id === payload.id
-            ? { ...appData, data: { ...appData.data, ...payload.data } }
-            : appData,
+          appData.id === payload.id ? appData.merge(convertJs(payload)) : appData,
         );
         queryClient.setQueryData(buildAppSettingsKey(itemId), newData);
         context = prevData;
@@ -65,7 +69,7 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
 
       if (prevData) {
         const { itemId } = getData(queryClient);
-        const data = queryClient.getQueryData<List<AppSetting>>(buildAppSettingsKey(itemId));
+        const data = queryClient.getQueryData<List<AppSettingRecord>>(buildAppSettingsKey(itemId));
         if (itemId && data) {
           queryClient.setQueryData(buildAppSettingsKey(itemId), prevData);
         }
@@ -76,6 +80,10 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
       queryClient.invalidateQueries(buildAppSettingsKey(data?.itemId));
     },
   });
+  const usePatchAppSetting = () =>
+    useMutation<AppSetting, unknown, Partial<AppSetting> & { id: string }>(
+      MUTATION_KEYS.PATCH_APP_SETTING,
+    );
 
   queryClient.setMutationDefaults(MUTATION_KEYS.DELETE_APP_SETTING, {
     mutationFn: (payload: { id: string }) => {
@@ -85,7 +93,9 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
     },
     onMutate: async (payload) => {
       const { itemId } = getDataOrThrow(queryClient);
-      const prevData = queryClient.getQueryData<List<AppSetting>>(buildAppSettingsKey(itemId));
+      const prevData = queryClient.getQueryData<List<AppSettingRecord>>(
+        buildAppSettingsKey(itemId),
+      );
       if (prevData && itemId) {
         queryClient.setQueryData(
           buildAppSettingsKey(itemId),
@@ -102,7 +112,7 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
 
       if (prevData) {
         const { itemId } = getData(queryClient);
-        const data = queryClient.getQueryData<List<AppSetting>>(buildAppSettingsKey(itemId));
+        const data = queryClient.getQueryData<List<AppSettingRecord>>(buildAppSettingsKey(itemId));
         if (itemId && data) {
           queryClient.setQueryData(buildAppSettingsKey(itemId), prevData);
         }
@@ -115,6 +125,8 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
       }
     },
   });
+  const useDeleteAppSetting = () =>
+    useMutation<AppSetting, unknown, { id: string }>(MUTATION_KEYS.DELETE_APP_SETTING);
 
   // this mutation is used for its callback and invalidate the keys
   /**
@@ -129,7 +141,7 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
       const { itemId } = getData(queryClient);
       if (itemId) {
         const key = buildAppSettingsKey(itemId);
-        const prevData = queryClient.getQueryData<List<AppSetting>>(key);
+        const prevData = queryClient.getQueryData<List<AppSettingRecord>>(key);
         if (prevData && data) {
           queryClient.setQueryData(key, prevData.concat(data));
         }
@@ -146,4 +158,8 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
       }
     },
   });
+  const useUploadAppSettingFile = () =>
+    useMutation<unknown, unknown, { error: unknown }>(MUTATION_KEYS.APP_SETTING_FILE_UPLOAD);
+
+  return { usePostAppSetting, usePatchAppSetting, useDeleteAppSetting, useUploadAppSettingFile };
 };

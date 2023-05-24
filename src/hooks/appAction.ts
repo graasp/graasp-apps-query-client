@@ -4,6 +4,8 @@ import * as Api from '../api';
 import { buildAppActionsKey } from '../config/keys';
 import { getApiHost, getDataOrThrow } from '../config/utils';
 import { QueryClientConfig } from '../types';
+import { convertJs } from '@graasp/sdk';
+import { AppActionRecord } from '@graasp/sdk/frontend';
 
 export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
   const { retry, cacheTime, staleTime } = queryConfig;
@@ -19,8 +21,8 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
 
       return useQuery({
         queryKey: buildAppActionsKey(itemId),
-        queryFn: () => {
-          return Api.getAppActions({ itemId, token, apiHost }).then((data) => List(data));
+        queryFn: (): Promise<List<AppActionRecord>> => {
+          return Api.getAppActions({ itemId, token, apiHost }).then((data) => convertJs(data));
         },
         ...defaultOptions,
         enabled: Boolean(itemId) && Boolean(token) && enabled,

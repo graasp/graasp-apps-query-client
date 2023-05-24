@@ -53,7 +53,6 @@ export default (config: Partial<QueryClientConfig>) => {
     cacheTime: config?.cacheTime || CACHE_TIME_MILLISECONDS,
   };
 
-
   // create queryclient with given config
   const queryClient = new QueryClient({
     defaultOptions: {
@@ -66,24 +65,25 @@ export default (config: Partial<QueryClientConfig>) => {
 
   // set up mutations given config
   // mutations are attached to queryClient
-  configureMutations(queryClient, queryConfig);
+  const mutations = configureMutations(queryClient, queryConfig);
 
   // set up hooks given config
   const hooks = configureHooks(queryClient, queryConfig);
 
   // returns the queryClient and relative instances
   return {
+    API_ROUTES,
+    buildPostMessageKeys,
+    dehydrate,
+    hooks,
+    Hydrate,
+    MUTATION_KEYS,
+    mutations,
+    QUERY_KEYS,
     queryClient,
     QueryClientProvider,
-    hooks,
-    useMutation,
     ReactQueryDevtools,
-    dehydrate,
-    Hydrate,
+    useMutation,
     useQuery,
-    MUTATION_KEYS,
-    QUERY_KEYS,
-    buildPostMessageKeys,
-    API_ROUTES,
   };
 };

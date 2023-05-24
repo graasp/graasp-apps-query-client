@@ -30,12 +30,20 @@ export const getData = (queryClient: QueryClient) => {
   return { itemId, memberId, token };
 };
 
-export const getDataOrThrow = (queryClient: QueryClient) => {
-  const { itemId, token } = getData(queryClient);
+export const getDataOrThrow = (
+  queryClient: QueryClient,
+  options: { shouldMemberExist?: boolean } = {},
+) => {
+  const { itemId, token, memberId } = getData(queryClient);
   if (!itemId || !token) {
     throw new MissingNecessaryDataError({ itemId, token });
   }
-  return { itemId, token };
+  if (options.shouldMemberExist ?? true) {
+    if (!memberId) {
+      throw new MissingNecessaryDataError({ itemId, token, memberId });
+    }
+  }
+  return { itemId, token, memberId };
 };
 
 export const buildAppKeyAndOriginPayload = (queryConfig: QueryClientConfig) => {

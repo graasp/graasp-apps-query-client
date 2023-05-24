@@ -43,7 +43,7 @@ describe('PostMessage Hooks', () => {
         const context = (data as Record<LocalContext>).toJS();
         expect(context).toEqual({
           apiHost: '', // @see LocalContextRecord
-          memberId: '', // @see LocalContextRecord
+          memberId: undefined, // @see LocalContextRecord
           itemId: '', // @see LocalContextRecord
           context: DEFAULT_CONTEXT,
           lang: DEFAULT_LANG,
@@ -68,7 +68,7 @@ describe('PostMessage Hooks', () => {
           settings: { some: 'value' },
           offline: true,
           dev: true,
-          context: Context.PLAYER,
+          context: Context.Player,
         };
         const event = {
           ports: ['mock-port'],
@@ -273,7 +273,10 @@ describe('PostMessage Hooks', () => {
       renderHook(() => hooks.useAutoResize(mockItemId));
 
       // simulate resize
-      const handlerFn = resizeObserverSpy.mock.lastCall[0];
+      const handlerFn = resizeObserverSpy?.mock?.lastCall?.[0];
+      if (!handlerFn) {
+        throw new Error('handlerFn is not defined');
+      }
       handlerFn(
         [{ contentRect: { height: 42 } }] as Array<ResizeObserverEntry>,
         new MockResizeObserver(),

@@ -4,7 +4,9 @@ import * as Api from '../api';
 import { MissingFileIdError } from '../config/errors';
 import { buildAppContextKey, buildAppDataKey, buildFileContentKey } from '../config/keys';
 import { getApiHost, getDataOrThrow } from '../config/utils';
-import { AppContext, AppContextRecord, QueryClientConfig } from '../types';
+import { AppContext, QueryClientConfig } from '../types';
+import { AppDataRecord } from '@graasp/sdk/frontend';
+import { convertJs } from '@graasp/sdk';
 
 export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
   const { retry, cacheTime, staleTime } = queryConfig;
@@ -19,8 +21,8 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
       const { token, itemId } = getDataOrThrow(queryClient);
       return useQuery({
         queryKey: buildAppDataKey(itemId),
-        queryFn: () => {
-          return Api.getAppData({ itemId, token, apiHost }).then((data) => List(data));
+        queryFn: (): Promise<List<AppDataRecord>> => {
+          return Api.getAppData({ itemId, token, apiHost }).then((data) => convertJs(data));
         },
         ...defaultOptions,
         enabled: Boolean(itemId) && Boolean(token),
@@ -30,7 +32,7 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
 
     useAppContext: () => {
       const apiHost = getApiHost(queryClient);
-      const { token, itemId } = getDataOrThrow(queryClient);
+      const { token, itemId } = getDataOrThrow(queryClient, { shouldMemberExist: false });
       return useQuery({
         queryKey: buildAppContextKey(itemId),
         queryFn: (): Promise<RecordOf<AppContext>> => {
@@ -38,7 +40,7 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
             itemId,
             token,
             apiHost,
-          }).then((data) => AppContextRecord(data));
+          }).then((data) => convertJs(data));
         },
         ...defaultOptions,
         enabled: Boolean(itemId) && Boolean(token),
