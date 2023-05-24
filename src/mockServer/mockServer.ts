@@ -143,6 +143,11 @@ export const mockServer = ({
         return schema.all('appDataResource');
       });
       this.post(`/${buildPostAppDataRoute({ itemId: currentItemId })}`, (schema, request) => {
+
+        if (!currentMemberId) {
+          return new Response(401, {}, { errors: ['user not authenticated'] });
+        }
+
         const { requestBody } = request;
         const data = JSON.parse(requestBody);
         return schema.create('appDataResource', {
@@ -157,6 +162,11 @@ export const mockServer = ({
       this.patch(
         `/${buildPatchAppDataRoute({ itemId: currentItemId, id: ':id' })}`,
         (schema, request) => {
+
+          if (!currentMemberId) {
+            return new Response(401, {}, { errors: ['user not authenticated'] });
+          }
+
           const { id } = request.params;
           const { requestBody } = request;
           const data = JSON.parse(requestBody);
@@ -178,6 +188,11 @@ export const mockServer = ({
           if (deleteAppDataShouldThrow) {
             return new Response(400, {}, { errors: [deleteAppDataShouldThrow] });
           }
+
+          if (!currentMemberId) {
+            return new Response(401, {}, { errors: ['user not authenticated'] });
+          }
+
           const { id } = request.params;
           const appData = schema.findBy('appDataResource', { id });
           if (!appData) {
@@ -208,6 +223,11 @@ export const mockServer = ({
       });
 
       this.post(`/${buildPostAppSettingRoute({ itemId: currentItemId })}`, (schema, request) => {
+
+        if (!currentMemberId) {
+          return new Response(401, {}, { errors: ['user not authenticated'] });
+        }
+
         const { requestBody } = request;
         const data = JSON.parse(requestBody);
         return schema.create('appSetting', {
@@ -221,6 +241,11 @@ export const mockServer = ({
       this.patch(
         `/${buildPatchAppSettingRoute({ itemId: currentItemId, id: ':id' })}`,
         (schema, request) => {
+
+          if (!currentMemberId) {
+            return new Response(401, {}, { errors: ['user not authenticated'] });
+          }
+
           const { id } = request.params;
           const { requestBody } = request;
           const data = JSON.parse(requestBody);
@@ -239,6 +264,11 @@ export const mockServer = ({
       this.delete(
         `/${buildDeleteAppSettingRoute({ itemId: currentItemId, id: ':id' })}`,
         (schema, request) => {
+
+          if (!currentMemberId) {
+            return new Response(401, {}, { errors: ['user not authenticated'] });
+          }
+
           if (deleteAppDataShouldThrow) {
             return new Response(400, {}, { errors: [deleteAppDataShouldThrow] });
           }

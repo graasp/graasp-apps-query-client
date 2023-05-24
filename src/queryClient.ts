@@ -16,7 +16,7 @@ import { API_ROUTES } from './api/routes';
 import { QueryClientConfig } from './types';
 
 // Query client retry function decides when and how many times a request should be retried
-const defaultRetryFunction = (failureCount: number, error: Error) => {
+const defaultRetryFunction = (failureCount: number, error: unknown) => {
   // do not retry if the request was not authorized
   // the user is probably not signed in
   const codes = [
@@ -27,7 +27,7 @@ const defaultRetryFunction = (failureCount: number, error: Error) => {
   ];
   const reasons = codes.map((code) => getReasonPhrase(code));
 
-  if (reasons.includes(error.message) || reasons.includes(error.name)) {
+  if (error instanceof Error && (reasons.includes(error.message) || reasons.includes(error.name))) {
     return false;
   }
   return failureCount < 3;
@@ -53,12 +53,13 @@ export default (config: Partial<QueryClientConfig>) => {
     cacheTime: config?.cacheTime || CACHE_TIME_MILLISECONDS,
   };
 
+
   // create queryclient with given config
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {
         refetchOnWindowFocus: config?.refetchOnWindowFocus || false,
-        retry: config?.shouldRetry ?? true,
+        retry: config?.shouldRetry ?? queryConfig.retry,
       },
     },
   });

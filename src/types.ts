@@ -25,7 +25,7 @@ export type QueryClientConfig = {
   notifier?: Notifier;
   staleTime: number;
   cacheTime: number;
-  retry?: number | boolean | ((failureCount: number, error: Error) => boolean);
+  retry?: number | boolean | ((failureCount: number, error: unknown) => boolean);
   refetchOnWindowFocus?: boolean;
   keepPreviousData?: boolean;
   GRAASP_APP_KEY?: string | null;
@@ -132,7 +132,7 @@ export type LocalContext = {
 export const LocalContextRecord = Record<LocalContext>({
   apiHost: '',
   itemId: '',
-  memberId: '',
+  memberId: undefined,
   settings: {},
   dev: false,
   offline: false,
