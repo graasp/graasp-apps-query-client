@@ -77,23 +77,23 @@ const configurePostMessageHooks = (_queryClient: QueryClient, queryConfig: Query
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       formatResolvedValue?: (data: { payload: any; event: MessageEvent }) => A,
     ) =>
-    (event: MessageEvent) => {
-      try {
-        const { type, payload } = JSON.parse(event.data) || {};
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const format = formatResolvedValue ?? ((data: { payload: any }) => data.payload);
-        // get init message getting the Message Channel port
-        if (type === successType) {
-          resolve(format({ payload, event }));
-        } else if (type === errorType) {
-          reject({ payload, event });
-        } else {
-          reject('the type is not recognized');
+      (event: MessageEvent) => {
+        try {
+          const { type, payload } = JSON.parse(event.data) || {};
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const format = formatResolvedValue ?? ((data: { payload: any }) => data.payload);
+          // get init message getting the Message Channel port
+          if (type === successType) {
+            resolve(format({ payload, event }));
+          } else if (type === errorType) {
+            reject({ payload, event });
+          } else {
+            reject(`the type '${type}' for payload '${JSON.stringify(payload)}' is not recognized`);
+          }
+        } catch (e) {
+          reject('an error occurred');
         }
-      } catch (e) {
-        reject('an error occurred');
-      }
-    };
+      };
 
   let getLocalContextFunction: ((event: MessageEvent) => void) | null = null;
   const useGetLocalContext = (itemId: string) =>
