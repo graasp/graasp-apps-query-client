@@ -18,7 +18,7 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
   return {
     useAppData: (refetchInterval: number | false = false) => {
       const apiHost = getApiHost(queryClient);
-      const { token, itemId, memberId } = getData(queryClient);
+      const { itemId } = getData(queryClient);
 
       return useQuery({
         queryKey: buildAppDataKey(itemId),
@@ -27,14 +27,13 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
           return Api.getAppData({ itemId, token, apiHost }).then((data) => convertJs(data));
         },
         ...defaultOptions,
-        enabled: Boolean(itemId) && Boolean(token) && Boolean(memberId),
         refetchInterval,
       });
     },
 
     useAppContext: () => {
       const apiHost = getApiHost(queryClient);
-      const { token, itemId } = getData(queryClient, { shouldMemberExist: false });
+      const { itemId } = getData(queryClient, { shouldMemberExist: false });
 
       return useQuery({
         queryKey: buildAppContextKey(itemId),
@@ -48,7 +47,6 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
           }).then((data) => convertJs(data));
         },
         ...defaultOptions,
-        enabled: Boolean(itemId) && Boolean(token),
       });
     },
 
@@ -57,7 +55,6 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
       { enabled = true }: { enabled?: boolean } = {},
     ) => {
       const apiHost = getApiHost(queryClient);
-      const { token, memberId } = getData(queryClient);
 
       return useQuery({
         queryKey: buildFileContentKey(payload?.fileId),
@@ -71,7 +68,7 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
           return Api.getFileContent({ id: fileId, apiHost, token }).then((data) => data);
         },
         ...defaultOptions,
-        enabled: Boolean(payload?.fileId) && Boolean(token) && Boolean(memberId) && enabled,
+        enabled,
       });
     },
   };

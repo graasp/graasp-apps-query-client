@@ -17,7 +17,7 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
   return {
     useAppActions: ({ enabled = true }: { enabled: boolean }) => {
       const apiHost = getApiHost(queryClient);
-      const { token, itemId, memberId } = getData(queryClient);
+      const { itemId } = getData(queryClient);
 
       return useQuery({
         queryKey: buildAppActionsKey(itemId),
@@ -27,7 +27,7 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
           return Api.getAppActions({ itemId, token, apiHost }).then((data) => convertJs(data));
         },
         ...defaultOptions,
-        enabled: Boolean(itemId) && Boolean(token) && Boolean(memberId) && enabled,
+        enabled
       });
     },
   };
