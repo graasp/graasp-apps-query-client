@@ -42,7 +42,7 @@ export const buildMockParentWindow = (context: LocalContext) => {
           '*',
           [channel.port2],
         );
-        console.log('debug post message')
+        console.log('debug post message');
       } else {
         console.log(`${type} is not recognised`);
       }

@@ -79,8 +79,8 @@ const configurePostMessageHooks = (_queryClient: QueryClient, queryConfig: Query
     ) =>
       (event: MessageEvent) => {
         try {
-          console.log('receive context message', successType)
-          console.log(event.data)
+          console.log('receive context message', successType);
+          console.log(event.data);
           const { type, payload } = JSON.parse(event.data) || {};
           console.log(type, payload);
 
@@ -98,7 +98,8 @@ const configurePostMessageHooks = (_queryClient: QueryClient, queryConfig: Query
             reject(`the type '${type}' for payload '${JSON.stringify(payload)}' is not recognized`);
           }
         } catch (e) {
-          reject('an error occurred', e);
+          console.log('an error occurred', e)
+          reject('an error occurred');
         }
       };
 
@@ -147,13 +148,14 @@ const configurePostMessageHooks = (_queryClient: QueryClient, queryConfig: Query
             type: POST_MESSAGE_KEYS.GET_CONTEXT,
             payload: postMessagePayload,
           });
-        }).then((e) => {
-          console.log('then', e);
-          return e;
-        }).catch((e) => {
-          console.log('catch', e);
-
-        });
+        })
+          .then((e) => {
+            console.log('then', e);
+            return e;
+          })
+          .catch((e) => {
+            console.log('catch', e);
+          });
         console.log('return promise', dd);
 
         return dd;
