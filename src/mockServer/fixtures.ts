@@ -13,7 +13,6 @@ export const MOCK_SERVER_MEMBER: Member = {
   updatedAt: new Date(),
 };
 
-
 export const buildMockLocalContext = (appContext: Partial<LocalContext> & { itemId: UUID }) => {
   const context: LocalContext = {
     memberId: MOCK_SERVER_MEMBER.id,

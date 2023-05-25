@@ -22,11 +22,27 @@ export const getApiHost = (queryClient: QueryClient) => {
   return apiHost;
 };
 
-export const getData = (queryClient: QueryClient) => {
+export const getData = (
+  queryClient: QueryClient,
+  options: { shouldMemberExist?: boolean } = {},
+) => {
   const data = queryClient.getQueryData<Record<LocalContext>>(LOCAL_CONTEXT_KEY);
   const token = queryClient.getQueryData<string>(AUTH_TOKEN_KEY);
   const itemId = data?.get('itemId');
   const memberId = data?.get('memberId');
+
+  if (options.shouldMemberExist ?? true) {
+    if (!memberId) {
+      console.debug('member id is not defined');
+    }
+  }
+  if (!itemId) {
+    console.error('item id is not defined');
+  }
+  if (!token) {
+    console.error('token is not defined');
+  }
+
   return { itemId, memberId, token };
 };
 

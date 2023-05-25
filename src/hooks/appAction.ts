@@ -2,7 +2,7 @@ import { List } from 'immutable';
 import { QueryClient, useQuery } from '@tanstack/react-query';
 import * as Api from '../api';
 import { buildAppActionsKey } from '../config/keys';
-import { getApiHost, getDataOrThrow } from '../config/utils';
+import { getApiHost, getData, getDataOrThrow } from '../config/utils';
 import { QueryClientConfig } from '../types';
 import { convertJs } from '@graasp/sdk';
 import { AppActionRecord } from '@graasp/sdk/frontend';
@@ -17,15 +17,17 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
   return {
     useAppActions: ({ enabled = true }: { enabled: boolean }) => {
       const apiHost = getApiHost(queryClient);
-      const { token, itemId } = getDataOrThrow(queryClient);
+      const { token, itemId, memberId } = getData(queryClient);
 
       return useQuery({
         queryKey: buildAppActionsKey(itemId),
         queryFn: (): Promise<List<AppActionRecord>> => {
+          const { token, itemId } = getDataOrThrow(queryClient);
+
           return Api.getAppActions({ itemId, token, apiHost }).then((data) => convertJs(data));
         },
         ...defaultOptions,
-        enabled: Boolean(itemId) && Boolean(token) && enabled,
+        enabled: Boolean(itemId) && Boolean(token) && Boolean(memberId) && enabled,
       });
     },
   };
