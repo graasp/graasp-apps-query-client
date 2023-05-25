@@ -22,7 +22,7 @@ export const buildMockParentWindow = (context: LocalContext) => {
             },
           }),
         );
-        console.log('debug');
+        console.log('debug get auth token');
         break;
       default:
         console.log(`type '${type}' is not recognized`);
@@ -42,7 +42,7 @@ export const buildMockParentWindow = (context: LocalContext) => {
           '*',
           [channel.port2],
         );
-        console.log('debug')
+        console.log('debug post message')
       } else {
         console.log(`${type} is not recognised`);
       }
