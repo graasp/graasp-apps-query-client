@@ -79,7 +79,7 @@ const configurePostMessageHooks = (_queryClient: QueryClient, queryConfig: Query
     ) =>
       (event: MessageEvent) => {
         try {
-
+          console.log(event, event.data)
           // ignore messages not from our implementation
           if (!event.data) {
             return;
