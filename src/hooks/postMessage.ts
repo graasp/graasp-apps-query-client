@@ -82,7 +82,7 @@ const configurePostMessageHooks = (_queryClient: QueryClient, queryConfig: Query
         try {
 
           // ignore noise messages
-          if (event.data !== 'string') {
+          if (typeof event.data !== 'string') {
             return;
           }
 
