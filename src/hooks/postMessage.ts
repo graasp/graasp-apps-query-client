@@ -12,6 +12,7 @@ import { AUTH_TOKEN_KEY, buildPostMessageKeys, LOCAL_CONTEXT_KEY } from '../conf
 import { buildAppKeyAndOriginPayload } from '../config/utils';
 import { getAuthTokenRoutine, getLocalContextRoutine } from '../routines';
 import { LocalContext, LocalContextRecord, QueryClientConfig, WindowPostMessage } from '../types';
+import { convertJs } from '@graasp/sdk';
 
 // build context from given data and default values
 export const buildContext = (payload: LocalContext): LocalContext => {
@@ -112,7 +113,7 @@ const configurePostMessageHooks = (_queryClient: QueryClient, queryConfig: Query
         const formatResolvedValue = (result: {
           event: MessageEvent;
           payload: LocalContext;
-        }): RecordOf<LocalContext> => {
+        }): LocalContextRecord => {
           const { event, payload } = result;
           // get init message getting the Message Channel port
           const context = buildContext(payload);
@@ -121,7 +122,7 @@ const configurePostMessageHooks = (_queryClient: QueryClient, queryConfig: Query
           // set as a global variable
           [port2] = event.ports;
 
-          return LocalContextRecord(context);
+          return convertJs(context);
         };
 
         return new Promise<RecordOf<LocalContext>>((resolve, reject) => {

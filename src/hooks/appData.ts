@@ -1,10 +1,10 @@
-import { List, RecordOf } from 'immutable';
+import { List } from 'immutable';
 import { QueryClient, useQuery } from '@tanstack/react-query';
 import * as Api from '../api';
 import { MissingFileIdError } from '../config/errors';
 import { buildAppContextKey, buildAppDataKey, buildFileContentKey } from '../config/keys';
 import { getApiHost, getDataOrThrow } from '../config/utils';
-import { AppContext, QueryClientConfig } from '../types';
+import { AppContextRecord, QueryClientConfig } from '../types';
 import { AppDataRecord } from '@graasp/sdk/frontend';
 import { convertJs } from '@graasp/sdk';
 
@@ -35,7 +35,7 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
       const { token, itemId } = getDataOrThrow(queryClient, { shouldMemberExist: false });
       return useQuery({
         queryKey: buildAppContextKey(itemId),
-        queryFn: (): Promise<RecordOf<AppContext>> => {
+        queryFn: (): Promise<AppContextRecord> => {
           return Api.getContext({
             itemId,
             token,

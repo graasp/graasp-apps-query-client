@@ -1,4 +1,4 @@
-import { List, Record } from 'immutable';
+import { Record } from 'immutable';
 import {
   AppAction,
   AppData,
@@ -9,6 +9,9 @@ import {
   PermissionLevel,
   UUID,
 } from '@graasp/sdk';
+import {
+  ImmutableCast
+} from '@graasp/sdk/frontend'
 
 // generic type
 type EnumToUnionType<T> = T extends `${infer R}` ? R : never;
@@ -65,24 +68,14 @@ export type LocalContext = {
   permission?: string;
 };
 
-// todo: maybe adapt these default values to sane defaults
-export const LocalContextRecord = Record<LocalContext>({
-  apiHost: '',
-  itemId: '',
-  memberId: undefined,
-  settings: {},
-  dev: false,
-  offline: false,
-  lang: 'en',
-  context: Context.Builder,
-  standalone: false,
-  permission: PermissionLevel.Read,
-});
+export type LocalContextRecord = ImmutableCast<LocalContext>
 
 export type AppContext = Item & {
-  children: List<Item>;
-  members: List<Member>;
+  children: Item[];
+  members: Member[];
 };
+
+export type AppContextRecord = ImmutableCast<AppContext>
 
 export interface ApiData {
   token: Token;

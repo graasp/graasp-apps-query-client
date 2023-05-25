@@ -1,17 +1,30 @@
-import { RecordOf } from 'immutable';
 import qs from 'qs';
 import React, { createContext, FC, useContext } from 'react';
 import { UseQueryResult } from '@tanstack/react-query';
 import { buildMockLocalContext } from '../mockServer/fixtures';
 import { LocalContext, LocalContextRecord } from '../types';
 import { AutoResizer } from './AutoResizer';
+import { Context as ContextType, convertJs, PermissionLevel } from '@graasp/sdk';
 
-const Context = createContext<RecordOf<LocalContext>>(LocalContextRecord());
+const defaultValue: LocalContext = {
+  apiHost: '',
+  itemId: '',
+  memberId: undefined,
+  settings: {},
+  dev: false,
+  offline: false,
+  lang: 'en',
+  context: ContextType.Builder,
+  standalone: false,
+  permission: PermissionLevel.Read,
+};
+
+const Context = createContext<LocalContextRecord>(convertJs(defaultValue));
 
 interface Props {
-  useGetLocalContext: (itemId: string) => UseQueryResult<RecordOf<LocalContext>, unknown>;
+  useGetLocalContext: (itemId: string) => UseQueryResult<LocalContextRecord, unknown>;
   LoadingComponent?: React.ReactElement;
-  defaultValue?: RecordOf<LocalContext>;
+  defaultValue?: LocalContextRecord;
   onError?: (error: unknown) => void;
   useAutoResize?: (itemId: string) => void;
 }
@@ -38,7 +51,7 @@ const withContext =
     }
 
     // todo: define a context to default to
-    const value = context ?? defaultValue ?? LocalContextRecord(buildMockLocalContext({ itemId }));
+    const value = context ?? defaultValue ?? convertJs(buildMockLocalContext({ itemId }));
 
     const children = <Component {...(childProps as P)} />;
 
