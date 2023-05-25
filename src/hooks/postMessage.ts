@@ -79,8 +79,12 @@ const configurePostMessageHooks = (_queryClient: QueryClient, queryConfig: Query
     ) =>
       (event: MessageEvent) => {
         try {
-          console.log('receive context message', successType);
-          console.log(event.data);
+
+          // ignore messages not from our implementation
+          if (!event.data) {
+            return;
+          }
+
           const { type, payload } = JSON.parse(event.data) || {};
           console.log(type, payload);
 
