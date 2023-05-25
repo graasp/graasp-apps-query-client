@@ -79,6 +79,12 @@ const configurePostMessageHooks = (_queryClient: QueryClient, queryConfig: Query
     ) =>
       (event: MessageEvent) => {
         try {
+
+          // ignore noise messages
+          if (event.data !== 'string') {
+            return;
+          }
+
           const { type, payload } = JSON.parse(event.data) || {};
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           const format = formatResolvedValue ?? ((data: { payload: any }) => data.payload);
