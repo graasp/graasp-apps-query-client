@@ -145,8 +145,13 @@ const configurePostMessageHooks = (_queryClient: QueryClient, queryConfig: Query
             type: POST_MESSAGE_KEYS.GET_CONTEXT,
             payload: postMessagePayload,
           });
+        }).then((e) => {
+          console.log('then', e);
+        }).catch((e) => {
+          console.log('catch', e);
+
         });
-        console.log('return promise', dd)
+        console.log('return promise', dd);
 
         return dd;
       },
