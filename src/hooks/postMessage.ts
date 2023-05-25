@@ -147,6 +147,7 @@ const configurePostMessageHooks = (_queryClient: QueryClient, queryConfig: Query
           });
         }).then((e) => {
           console.log('then', e);
+          return e;
         }).catch((e) => {
           console.log('catch', e);
 
