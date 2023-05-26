@@ -17,26 +17,15 @@ import { QueryClientConfig } from './types';
 
 // Query client retry function decides when and how many times a request should be retried
 const defaultRetryFunction = (failureCount: number, error: unknown) => {
-  // do not retry if the request was not authorized
-  // the user is probably not signed in
-  const codes = [
-    StatusCodes.UNAUTHORIZED,
-    StatusCodes.NOT_FOUND,
-    StatusCodes.BAD_REQUEST,
-    StatusCodes.FORBIDDEN,
-  ];
+  // retry if the request timed out
+  const codes = [StatusCodes.GATEWAY_TIMEOUT, StatusCodes.REQUEST_TIMEOUT];
   const reasons = codes.map((code) => getReasonPhrase(code));
 
   if (error instanceof Error && (reasons.includes(error.message) || reasons.includes(error.name))) {
-    return false;
-  }
-  console.log(error, JSON.stringify(error), (error as { code: string }).code, (error as { statusCode: string }).statusCode)
-
-  if (!(error instanceof Error)) {
-    return false;
+    return failureCount < 3;
   }
 
-  return failureCount < 3;
+  return false;
 };
 
 export default (config: Partial<QueryClientConfig>) => {

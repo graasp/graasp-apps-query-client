@@ -153,7 +153,7 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
     },
   });
   const useUploadAppDataFile = () =>
-    useMutation<unknown, unknown, { error: unknown }>(MUTATION_KEYS.FILE_UPLOAD);
+    useMutation<unknown, unknown, { error?: unknown; data?: AppData }>(MUTATION_KEYS.FILE_UPLOAD);
 
   return { usePostAppData, usePatchAppData, useDeleteAppData, useUploadAppDataFile };
 };

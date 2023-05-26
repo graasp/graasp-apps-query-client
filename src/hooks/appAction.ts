@@ -27,7 +27,7 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
           return Api.getAppActions({ itemId, token, apiHost }).then((data) => convertJs(data));
         },
         ...defaultOptions,
-        enabled
+        enabled,
       });
     },
   };
