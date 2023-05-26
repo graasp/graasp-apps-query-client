@@ -1,4 +1,4 @@
-import { Member, MemberType, PermissionLevel, UUID } from '@graasp/sdk';
+import { AppItemType, ItemType, Member, MemberType, PermissionLevel } from '@graasp/sdk';
 import { buildContext } from '../hooks/postMessage';
 import { LocalContext } from '../types';
 import { Context } from '@graasp/sdk';
@@ -13,9 +13,27 @@ export const MOCK_SERVER_MEMBER: Member = {
   updatedAt: new Date(),
 };
 
-export const buildMockLocalContext = (appContext: Partial<LocalContext> & { itemId: UUID }) => {
+export const MOCK_SERVER_ITEM: AppItemType = {
+  id: 'mock-item-id',
+  path: 'mock_item_id',
+  name: 'item-name',
+  description: '',
+  extra: {
+    [ItemType.APP]: {
+      url: 'myappurl'
+    }
+  },
+  type: ItemType.APP,
+  createdAt: new Date(),
+  updatedAt: new Date(),
+  creator: MOCK_SERVER_MEMBER,
+  settings: {}
+};
+
+export const buildMockLocalContext = (appContext?: Partial<LocalContext>) => {
   const context: LocalContext = {
     memberId: MOCK_SERVER_MEMBER.id,
+    itemId: MOCK_SERVER_ITEM.id,
     offline: false,
     apiHost: 'http://localhost:3000',
     permission: PermissionLevel.Read,

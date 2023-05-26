@@ -2,7 +2,7 @@ import { v4 } from 'uuid';
 import { createServer, Model, Factory, RestSerializer, Response, Request } from 'miragejs';
 import { API_ROUTES } from '../api/routes';
 
-import { buildMockLocalContext, MOCK_SERVER_MEMBER } from './fixtures';
+import { buildMockLocalContext, MOCK_SERVER_ITEM, MOCK_SERVER_MEMBER } from './fixtures';
 import { Database, LocalContext } from 'src/types';
 import { AppAction, AppData, AppDataVisibility, AppSetting, Member, MemberType } from '@graasp/sdk';
 
@@ -34,7 +34,7 @@ export const buildDatabase = ({
   appActions = [],
   appSettings = [],
   members = [MOCK_SERVER_MEMBER],
-  items = [],
+  items = [MOCK_SERVER_ITEM],
 }: Partial<Database> = {}) => ({
   appData,
   appActions,
@@ -45,7 +45,7 @@ export const buildDatabase = ({
 
 export const mockServer = ({
   database = buildDatabase(),
-  appContext,
+  appContext = buildMockLocalContext(),
   externalUrls = [],
   errors = {},
 }: {
@@ -71,14 +71,14 @@ export const mockServer = ({
     currentMemberId === MOCK_SERVER_MEMBER.id
       ? MOCK_SERVER_MEMBER
       : {
-          id: currentMemberId,
-          name: 'current-member-name',
-          email: 'memberId@email.com',
-          extra: {},
-          createdAt: new Date(),
-          updatedAt: new Date(),
-          type: MemberType.Individual,
-        };
+        id: currentMemberId,
+        name: 'current-member-name',
+        email: 'memberId@email.com',
+        extra: {},
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        type: MemberType.Individual,
+      };
   const currentItem = items.find(({ id }) => id === currentItemId);
   if (!currentItem) {
     throw new Error('context.itemId does not have a corresponding item in mocked database');
