@@ -18,11 +18,7 @@ export const MEMBER_RESPONSE: Member = {
   name: 'username',
   type: MemberType.Individual,
   email: 'username@graasp.org',
-  extra: {
-    recycleBin: {
-      itemId: 'recycleBinId',
-    },
-  },
+  extra: {},
   createdAt: new Date(),
   updatedAt: new Date(),
 };
