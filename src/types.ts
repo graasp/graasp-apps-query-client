@@ -55,15 +55,15 @@ export type WindowPostMessage = (message: unknown) => void;
 
 export type LocalContext = {
   apiHost: string;
-  itemId: string;
-  memberId?: string;
+  itemId: UUID;
+  memberId?: UUID;
   settings?: unknown;
   dev?: boolean;
   offline?: boolean;
   lang?: string;
   context?: EnumToUnionType<Context> | 'standalone' | Context;
   standalone?: boolean;
-  permission?: string;
+  permission?: PermissionLevel;
 };
 
 export type LocalContextRecord = ImmutableCast<LocalContext>;
