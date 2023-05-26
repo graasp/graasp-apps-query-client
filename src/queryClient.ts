@@ -30,7 +30,7 @@ const defaultRetryFunction = (failureCount: number, error: unknown) => {
   if (error instanceof Error && (reasons.includes(error.message) || reasons.includes(error.name))) {
     return false;
   }
-  console.log(error, typeof error, error instanceof Error)
+  console.log(error, JSON.stringify(error), (error as { code: string }).code, (error as { statusCode: string }).statusCode)
 
   if (!(error instanceof Error)) {
     return false;
