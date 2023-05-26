@@ -2,9 +2,9 @@ import { List } from 'immutable';
 import { QueryClient, useQuery } from '@tanstack/react-query';
 import * as Api from '../api';
 import { MissingFileIdError } from '../config/errors';
-import { buildAppContextKey, buildAppDataKey, buildFileContentKey } from '../config/keys';
+import { buildAppDataKey, buildFileContentKey } from '../config/keys';
 import { getApiHost, getData, getDataOrThrow } from '../config/utils';
-import { AppContextRecord, QueryClientConfig } from '../types';
+import { QueryClientConfig } from '../types';
 import { AppDataRecord } from '@graasp/sdk/frontend';
 import { convertJs } from '@graasp/sdk';
 
@@ -28,25 +28,6 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
         },
         ...defaultOptions,
         refetchInterval,
-      });
-    },
-
-    useAppContext: () => {
-      const apiHost = getApiHost(queryClient);
-      const { itemId } = getData(queryClient, { shouldMemberExist: false });
-
-      return useQuery({
-        queryKey: buildAppContextKey(itemId),
-        queryFn: (): Promise<AppContextRecord> => {
-          const { token, itemId } = getDataOrThrow(queryClient, { shouldMemberExist: false });
-
-          return Api.getContext({
-            itemId,
-            token,
-            apiHost,
-          }).then((data) => convertJs(data));
-        },
-        ...defaultOptions,
       });
     },
 

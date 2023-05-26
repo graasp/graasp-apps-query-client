@@ -131,16 +131,8 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
     mutationFn: async ({ error }) => {
       if (error) throw new Error(JSON.stringify(error));
     },
-    onSuccess: (_result, { data }: { data: AppData }) => {
-      const { itemId } = getData(queryClient);
-      if (itemId) {
-        const key = buildAppDataKey(itemId);
-        const prevData = queryClient.getQueryData<List<AppDataRecord>>(key);
-        if (prevData && data) {
-          queryClient.setQueryData(key, prevData.concat(convertJs(data)));
-        }
-      }
-      notifier?.({ type: uploadFileRoutine.SUCCESS });
+    onSuccess: (_result, { data }: { data: unknown }) => {
+      notifier?.({ type: uploadFileRoutine.SUCCESS, payload: data });
     },
     onError: (_error, { error }) => {
       notifier?.({ type: uploadFileRoutine.FAILURE, payload: { error } });
@@ -153,7 +145,7 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
     },
   });
   const useUploadAppDataFile = () =>
-    useMutation<unknown, unknown, { error?: unknown; data?: AppData }>(MUTATION_KEYS.FILE_UPLOAD);
+    useMutation<unknown, unknown, { error?: unknown; data?: unknown }>(MUTATION_KEYS.FILE_UPLOAD);
 
   return { usePostAppData, usePatchAppData, useDeleteAppData, useUploadAppDataFile };
 };

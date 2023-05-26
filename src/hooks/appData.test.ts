@@ -1,26 +1,23 @@
 import { StatusCodes } from 'http-status-codes';
-import { List, Map, Record } from 'immutable';
+import { List } from 'immutable';
 import nock from 'nock';
 import { v4 } from 'uuid';
 import {
   buildMockLocalContext,
   FIXTURE_APP_DATA,
-  FIXTURE_CONTEXT,
   S3_FILE_BLOB_RESPONSE,
   UNAUTHORIZED_RESPONSE,
 } from '../../test/constants';
 import { Endpoint, mockHook, setUpTest } from '../../test/utils';
-import { buildDownloadFilesRoute, buildGetAppDataRoute, buildGetContextRoute } from '../api/routes';
+import { buildDownloadFilesRoute, buildGetAppDataRoute } from '../api/routes';
 import { MOCK_TOKEN } from '../config/constants';
 import {
   AUTH_TOKEN_KEY,
-  buildAppContextKey,
   buildAppDataKey,
   buildFileContentKey,
   LOCAL_CONTEXT_KEY,
 } from '../config/keys';
 import { MissingApiHostError } from '../config/utils';
-import { LocalContext } from '../types';
 import { AppDataRecord } from '@graasp/sdk/frontend';
 import { convertJs } from '@graasp/sdk';
 
@@ -120,84 +117,6 @@ describe('App Data Hooks', () => {
     });
   });
 
-  describe('useAppContext', () => {
-    const key = buildAppContextKey(itemId);
-    const route = `/${buildGetContextRoute(itemId)}`;
-    const hook = () => hooks.useAppContext();
-
-    it('Receive app context', async () => {
-      // preset context
-      const response = FIXTURE_CONTEXT;
-      const endpoints = [{ route, response }];
-      const { data } = await mockHook({ endpoints, hook, wrapper });
-
-      expect((data as Record<LocalContext>).toJS()).toEqual(response);
-
-      // verify cache keys
-      expect((queryClient.getQueryData(key) as Record<LocalContext>).toJS()).toEqual(response);
-    });
-    it('Cannot fetch context if local context does not exist', async () => {
-      const response = FIXTURE_CONTEXT;
-      const endpoints = [{ route, response }];
-      try {
-        await mockHook({ endpoints, hook, wrapper, enabled: false });
-      } catch (error) {
-        // verify cache keys
-        expect(queryClient.getQueryData(key)).toBeFalsy();
-        expect((error as Error).message).toEqual(new MissingApiHostError().message);
-      }
-    });
-    it('Does not fetch if itemId is missing', async () => {
-      const response = FIXTURE_CONTEXT;
-      const endpoints = [{ route, response }];
-      const disabledHook = () => hooks.useAppContext();
-      const { isFetched } = await mockHook({
-        endpoints,
-        hook: disabledHook,
-        wrapper,
-        enabled: false,
-      });
-
-      // verify cache keys
-      expect(queryClient.getQueryData(key)).toBeFalsy();
-      expect(isFetched).toBeFalsy();
-    });
-    it('Does not fetch if token is missing', async () => {
-      const response = FIXTURE_CONTEXT;
-      const endpoints = [{ route, response }];
-      const disabledHook = () => hooks.useAppContext();
-      const { isFetched } = await mockHook({
-        endpoints,
-        hook: disabledHook,
-        wrapper,
-        enabled: false,
-      });
-
-      // verify cache keys
-      expect(queryClient.getQueryData(key)).toBeFalsy();
-      expect(isFetched).toBeFalsy();
-    });
-    it('Unauthorized', async () => {
-      // preset context
-      const endpoints = [
-        {
-          route,
-          response: UNAUTHORIZED_RESPONSE,
-          statusCode: StatusCodes.UNAUTHORIZED,
-        },
-      ];
-      const { data, isError } = await mockHook({
-        hook,
-        wrapper,
-        endpoints,
-      });
-
-      expect(data).toBeFalsy();
-      expect(isError).toBeTruthy();
-      // verify cache keys
-      expect(queryClient.getQueryData(key)).toBeFalsy();
-    });
-  });
 
   describe('useFileContent', () => {
     // create another nock for external storage

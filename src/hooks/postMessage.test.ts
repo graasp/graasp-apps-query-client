@@ -42,9 +42,9 @@ describe('PostMessage Hooks', () => {
         const { data } = await mockHook({ hook, wrapper });
         const context = (data as Record<LocalContext>).toJS();
         expect(context).toEqual({
-          apiHost: '', // @see LocalContextRecord
+          apiHost: undefined, // @see LocalContextRecord
           memberId: undefined, // @see LocalContextRecord
-          itemId: '', // @see LocalContextRecord
+          itemId: undefined, // @see LocalContextRecord
           context: DEFAULT_CONTEXT,
           lang: DEFAULT_LANG,
           permission: DEFAULT_PERMISSION,
