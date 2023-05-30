@@ -68,7 +68,6 @@ export const deleteAppData = (
 };
 
 // todo: add return type of file
-// todo: add public route
 // because of the bearer token, it triggers an error on s3 on redirect because the request has two auth methods
 // https://github.com/axios/axios/issues/2855
 // https://stackoverflow.com/questions/50861144/reactjs-remove-http-header-before-redirect/51252434#51252434

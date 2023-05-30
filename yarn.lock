@@ -2251,7 +2251,7 @@ __metadata:
   dependencies:
     "@commitlint/cli": 17.3.0
     "@commitlint/config-conventional": 17.3.0
-    "@graasp/sdk": "github:graasp/graasp-sdk.git#typeorm"
+    "@graasp/sdk": "github:graasp/graasp-sdk.git#v1.0.0-rc1"
     "@tanstack/react-query": 4.28.0
     "@tanstack/react-query-devtools": 4.28.0
     "@testing-library/react-hooks": 8.0.0
@@ -2307,9 +2307,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@graasp/sdk@github:graasp/graasp-sdk.git#typeorm":
-  version: 0.12.0
-  resolution: "@graasp/sdk@https://github.com/graasp/graasp-sdk.git#commit=9ac0388f92d3e7e43374ae2530b689c53de2c62f"
+"@graasp/sdk@github:graasp/graasp-sdk.git#v1.0.0-rc1":
+  version: 1.0.0-rc1
+  resolution: "@graasp/sdk@https://github.com/graasp/graasp-sdk.git#commit=147e42a4710ab6f6377ec14b2ebafc760f4ff46e"
   dependencies:
     "@fastify/secure-session": 5.3.0
     "@graasp/etherpad-api": 2.1.1
@@ -2322,7 +2322,7 @@ __metadata:
     typeorm: 0.3.15
     uuid: 9.0.0
     validator: 13.9.0
-  checksum: ab46efa68a90bd13784af2cfe9c6924bb17069e83a0b5755aa55ed50bfb439352c2a90b055d93d978957557d99adfe16fdc94343ce94a1eb8b6ba9ef10e222d7
+  checksum: 84fb685145decf6b83cedd7dc2cbd7a2bd44d488e12fe2e8d5c2a07208e6258ff19aa9026929e2e1456eeb5bde0d260905ac6a9b580214ae40826659e568d5bb
   languageName: node
   linkType: hard
 
