@@ -1,6 +1,6 @@
 import {
   buildDeleteAppDataRoute,
-  buildDownloadFilesRoute,
+  buildDownloadFileRoute,
   buildGetAppDataRoute,
   buildPatchAppDataRoute,
   buildPostAppDataRoute,
@@ -82,7 +82,7 @@ export const getFileContent = async ({
   token: string;
 }) => {
   const url = await axios
-    .get(`${apiHost}/${buildDownloadFilesRoute(id)}`, {
+    .get(`${apiHost}/${buildDownloadFileRoute(id)}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

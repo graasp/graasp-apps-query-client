@@ -9,7 +9,7 @@ import {
   UNAUTHORIZED_RESPONSE,
 } from '../../test/constants';
 import { Endpoint, mockHook, setUpTest } from '../../test/utils';
-import { buildDownloadFilesRoute, buildGetAppDataRoute } from '../api/routes';
+import { buildDownloadFileRoute, buildGetAppDataRoute } from '../api/routes';
 import { MOCK_TOKEN } from '../config/constants';
 import {
   AUTH_TOKEN_KEY,
@@ -117,7 +117,6 @@ describe('App Data Hooks', () => {
     });
   });
 
-
   describe('useFileContent', () => {
     // create another nock for external storage
     const server = 'http://aws';
@@ -126,7 +125,7 @@ describe('App Data Hooks', () => {
     const responseFile = `${server}${routeFile}`;
 
     const id = 'some-id';
-    const route = `/${buildDownloadFilesRoute(id)}`;
+    const route = `/${buildDownloadFileRoute(id)}`;
     const hook = () => hooks.useFileContent({ fileId: id });
     const key = buildFileContentKey(id);
 

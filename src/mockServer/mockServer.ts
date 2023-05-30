@@ -310,6 +310,7 @@ export const mockServer = ({
         // this call returns the app data itself for simplification
         return appData;
       });
+
       this.post(`/${buildUploadFilesRoute(currentItem.id)})`, (schema) => {
         // const appData: Partial<AppData> = {
         //   data: {},
