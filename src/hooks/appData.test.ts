@@ -9,7 +9,7 @@ import {
   UNAUTHORIZED_RESPONSE,
 } from '../../test/constants';
 import { Endpoint, mockHook, setUpTest } from '../../test/utils';
-import { buildDownloadFileRoute, buildGetAppDataRoute } from '../api/routes';
+import { buildDownloadAppDataFileRoute, buildGetAppDataRoute } from '../api/routes';
 import { MOCK_TOKEN } from '../config/constants';
 import {
   AUTH_TOKEN_KEY,
@@ -117,7 +117,7 @@ describe('App Data Hooks', () => {
     });
   });
 
-  describe('useFileContent', () => {
+  describe('useAppDataFile', () => {
     // create another nock for external storage
     const server = 'http://aws';
     const routeFile = '/someurl';
@@ -125,8 +125,8 @@ describe('App Data Hooks', () => {
     const responseFile = `${server}${routeFile}`;
 
     const id = 'some-id';
-    const route = `/${buildDownloadFileRoute(id)}`;
-    const hook = () => hooks.useFileContent({ fileId: id });
+    const route = `/${buildDownloadAppDataFileRoute(id)}`;
+    const hook = () => hooks.useAppDataFile({ fileId: id });
     const key = buildFileContentKey(id);
 
     it('Receive file content', async () => {
@@ -145,7 +145,7 @@ describe('App Data Hooks', () => {
       const endpoints = [{ route, response }];
       const { data, isFetched } = await mockHook({
         endpoints,
-        hook: () => hooks.useFileContent(undefined),
+        hook: () => hooks.useAppDataFile(undefined),
         wrapper,
         enabled: false,
       });
@@ -160,7 +160,7 @@ describe('App Data Hooks', () => {
       // build endpoint for each item
       const endpoints: Endpoint[] = [];
       const { data, isFetched } = await mockHook({
-        hook: () => hooks.useFileContent({ fileId: id }, { enabled: false }),
+        hook: () => hooks.useAppDataFile({ fileId: id }, { enabled: false }),
         endpoints,
         wrapper,
         enabled: false,

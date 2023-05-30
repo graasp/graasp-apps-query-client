@@ -155,7 +155,7 @@ describe('App Settings Hooks', () => {
       // build endpoint for each item
       const endpoints: Endpoint[] = [];
       const { data, isFetched } = await mockHook({
-        hook: () => hooks.useFileContent({ fileId: id }, { enabled: false }),
+        hook: () => hooks.useAppSettingFile({ appSettingId: id }, { enabled: false }),
         endpoints,
         wrapper,
         enabled: false,

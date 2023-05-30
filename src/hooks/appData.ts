@@ -31,7 +31,7 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
       });
     },
 
-    useFileContent: (
+    useAppDataFile: (
       payload?: { fileId: string },
       { enabled = true }: { enabled?: boolean } = {},
     ) => {
@@ -46,7 +46,7 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
             throw new MissingFileIdError();
           }
           const { fileId } = payload;
-          return Api.getFileContent({ id: fileId, apiHost, token }).then((data) => data);
+          return Api.getAppDataFile({ id: fileId, apiHost, token }).then((data) => data);
         },
         ...defaultOptions,
         enabled,

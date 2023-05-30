@@ -1,6 +1,6 @@
 import {
   buildDeleteAppDataRoute,
-  buildDownloadFileRoute,
+  buildDownloadAppDataFileRoute,
   buildGetAppDataRoute,
   buildPatchAppDataRoute,
   buildPostAppDataRoute,
@@ -72,7 +72,7 @@ export const deleteAppData = (
 // https://github.com/axios/axios/issues/2855
 // https://stackoverflow.com/questions/50861144/reactjs-remove-http-header-before-redirect/51252434#51252434
 // so we removed automatic redirection for this endpoint
-export const getFileContent = async ({
+export const getAppDataFile = async ({
   id,
   apiHost,
   token,
@@ -82,7 +82,7 @@ export const getFileContent = async ({
   token: string;
 }) => {
   const url = await axios
-    .get(`${apiHost}/${buildDownloadFileRoute(id)}`, {
+    .get(`${apiHost}/${buildDownloadAppDataFileRoute(id)}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

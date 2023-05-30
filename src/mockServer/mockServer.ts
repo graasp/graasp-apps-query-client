@@ -1,6 +1,6 @@
 import { v4 } from 'uuid';
 import { createServer, Model, Factory, RestSerializer, Response, Request } from 'miragejs';
-import { API_ROUTES } from '../api/routes';
+import { API_ROUTES, buildUploadAppDataFilesRoute } from '../api/routes';
 
 import { buildMockLocalContext, MOCK_SERVER_ITEM, MOCK_SERVER_MEMBER } from './fixtures';
 import { Database, LocalContext } from 'src/types';
@@ -12,9 +12,8 @@ const {
   buildPostAppDataRoute,
   buildPatchAppDataRoute,
   buildDeleteAppDataRoute,
-  buildUploadFilesRoute,
   buildDeleteAppSettingRoute,
-  buildDownloadFileRoute,
+  buildDownloadAppDataFileRoute,
   buildGetAppActionsRoute,
   buildGetAppSettingsRoute,
   buildPatchAppSettingRoute,
@@ -304,14 +303,14 @@ export const mockServer = ({
       });
 
       // files
-      this.get(`/${buildDownloadFileRoute(':id')}`, (schema, request) => {
+      this.get(`/${buildDownloadAppDataFileRoute(':id')}`, (schema, request) => {
         const { id } = request.params;
         const appData = schema.findBy('appDataResource', { id });
         // this call returns the app data itself for simplification
         return appData;
       });
 
-      this.post(`/${buildUploadFilesRoute(currentItem.id)})`, (schema) => {
+      this.post(`/${buildUploadAppDataFilesRoute(currentItem.id)})`, (schema) => {
         // const appData: Partial<AppData> = {
         //   data: {},
         //   itemId: currentItemId,
