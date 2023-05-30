@@ -28,6 +28,8 @@ const ApplicationSerializer = RestSerializer.extend({
 
 type ExternalUrls = (((req: Request) => unknown) | string)[];
 
+const buildAppDataDownloadUrl = (id: string) => `/download-app-data-url/${id}`;
+
 export const buildDatabase = ({
   appData = [],
   appActions = [],
@@ -303,10 +305,17 @@ export const mockServer = ({
       });
 
       // files
+      // needs double mock redirection for download file
       this.get(`/${buildDownloadAppDataFileRoute(':id')}`, (schema, request) => {
+        const { id } = request.params;
+        // this call returns the app data itself for simplification
+        return buildAppDataDownloadUrl(id);
+      });
+      this.get(`/${buildAppDataDownloadUrl(':id')}`, (schema, request) => {
         const { id } = request.params;
         const appData = schema.findBy('appDataResource', { id });
         // this call returns the app data itself for simplification
+        // bug: this is supposed to be a blob
         return appData;
       });
 
