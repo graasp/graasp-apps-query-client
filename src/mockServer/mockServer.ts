@@ -27,7 +27,7 @@ const ApplicationSerializer = RestSerializer.extend({
   embed: true,
 });
 
-type ExternalUrls = ((req: Request) => unknown | string)[];
+type ExternalUrls = (((req: Request) => unknown) | string)[];
 
 export const buildDatabase = ({
   appData = [],
@@ -71,14 +71,14 @@ export const mockServer = ({
     currentMemberId === MOCK_SERVER_MEMBER.id
       ? MOCK_SERVER_MEMBER
       : {
-        id: currentMemberId,
-        name: 'current-member-name',
-        email: 'memberId@email.com',
-        extra: {},
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        type: MemberType.Individual,
-      };
+          id: currentMemberId,
+          name: 'current-member-name',
+          email: 'memberId@email.com',
+          extra: {},
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          type: MemberType.Individual,
+        };
   const currentItem = items.find(({ id }) => id === currentItemId);
   if (!currentItem) {
     throw new Error('context.itemId does not have a corresponding item in mocked database');
