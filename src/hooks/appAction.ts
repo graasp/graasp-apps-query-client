@@ -15,7 +15,7 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
     staleTime,
   };
   return {
-    useAppActions: ({ enabled = true }: { enabled: boolean }) => {
+    useAppActions: ({ enabled = true }: { enabled?: boolean } = {}) => {
       const apiHost = getApiHost(queryClient);
       const { itemId } = getData(queryClient);
 
