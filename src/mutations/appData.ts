@@ -39,7 +39,7 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
     },
   });
   const usePostAppData = () =>
-    useMutation<AppDataRecord, unknown, Partial<AppData>>(MUTATION_KEYS.POST_APP_DATA);
+    useMutation<AppData, unknown, Partial<AppData>>(MUTATION_KEYS.POST_APP_DATA);
 
   queryClient.setMutationDefaults(MUTATION_KEYS.PATCH_APP_DATA, {
     mutationFn: (payload: Partial<AppData> & { id: UUID }) => {
@@ -80,7 +80,7 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
     },
   });
   const usePatchAppData = () =>
-    useMutation<AppDataRecord, unknown, Partial<AppData>>(MUTATION_KEYS.PATCH_APP_DATA);
+    useMutation<AppData, unknown, Partial<AppData>>(MUTATION_KEYS.PATCH_APP_DATA);
 
   queryClient.setMutationDefaults(MUTATION_KEYS.DELETE_APP_DATA, {
     mutationFn: (payload: { id: string }) => {
@@ -120,7 +120,7 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
     },
   });
   const useDeleteAppData = () =>
-    useMutation<AppDataRecord, unknown, { id: string }>(MUTATION_KEYS.DELETE_APP_DATA);
+    useMutation<AppData, unknown, { id: string }>(MUTATION_KEYS.DELETE_APP_DATA);
 
   // this mutation is used for its callback and invalidate the keys
   /**

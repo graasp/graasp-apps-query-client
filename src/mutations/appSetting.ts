@@ -38,7 +38,7 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
     },
   });
   const usePostAppSetting = () =>
-    useMutation<AppSettingRecord, unknown, Partial<AppSetting>>(MUTATION_KEYS.POST_APP_SETTING);
+    useMutation<AppSetting, unknown, Partial<AppSetting>>(MUTATION_KEYS.POST_APP_SETTING);
 
   queryClient.setMutationDefaults(MUTATION_KEYS.PATCH_APP_SETTING, {
     mutationFn: (payload: Partial<AppSetting> & { id: string }) => {
@@ -81,7 +81,7 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
     },
   });
   const usePatchAppSetting = () =>
-    useMutation<AppSettingRecord, unknown, Partial<AppSetting> & { id: string }>(
+    useMutation<AppSetting, unknown, Partial<AppSetting> & { id: string }>(
       MUTATION_KEYS.PATCH_APP_SETTING,
     );
 
@@ -126,7 +126,7 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
     },
   });
   const useDeleteAppSetting = () =>
-    useMutation<AppSettingRecord, unknown, { id: string }>(MUTATION_KEYS.DELETE_APP_SETTING);
+    useMutation<AppSetting, unknown, { id: string }>(MUTATION_KEYS.DELETE_APP_SETTING);
 
   // this mutation is used for its callback and invalidate the keys
   /**
