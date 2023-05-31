@@ -159,7 +159,9 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
     },
   });
   const useUploadAppSettingFile = () =>
-    useMutation<unknown, unknown, { error: unknown }>(MUTATION_KEYS.APP_SETTING_FILE_UPLOAD);
+    useMutation<unknown, unknown, { data: AppSetting; error: unknown }>(
+      MUTATION_KEYS.APP_SETTING_FILE_UPLOAD,
+    );
 
   return { usePostAppSetting, usePatchAppSetting, useDeleteAppSetting, useUploadAppSettingFile };
 };
