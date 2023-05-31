@@ -137,16 +137,12 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
     mutationFn: async ({ error }) => {
       if (error) throw new Error(JSON.stringify(error));
     },
-    onSuccess: (_result, { data }: { data: AppSetting }) => {
-      const { itemId } = getData(queryClient);
-      if (itemId) {
-        const key = buildAppSettingsKey(itemId);
-        const prevData = queryClient.getQueryData<List<AppSettingRecord>>(key);
-        if (prevData && data) {
-          queryClient.setQueryData(key, prevData.concat(data));
-        }
+    onSuccess: (_result, { data, error }) => {
+      if (error) {
+        throw error;
+      } else {
+        notifier?.({ type: uploadAppSettingFileRoutine.SUCCESS, payload: { data } });
       }
-      notifier?.({ type: uploadAppSettingFileRoutine.SUCCESS });
     },
     onError: (_error, { error }) => {
       notifier?.({ type: uploadAppSettingFileRoutine.FAILURE, payload: { error } });
@@ -159,7 +155,7 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
     },
   });
   const useUploadAppSettingFile = () =>
-    useMutation<unknown, unknown, { data: AppSetting; error: unknown }>(
+    useMutation<unknown, unknown, { data?: unknown; error?: unknown }>(
       MUTATION_KEYS.APP_SETTING_FILE_UPLOAD,
     );
 

@@ -8,7 +8,7 @@ import {
   deleteAppDataRoutine,
   patchAppDataRoutine,
   postAppDataRoutine,
-  uploadFileRoutine,
+  uploadAppDataFileRoutine,
 } from '../routines';
 import { AppData, UUID, convertJs } from '@graasp/sdk';
 import { AppDataRecord } from '@graasp/sdk/frontend';
@@ -131,11 +131,15 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
     mutationFn: async ({ error }) => {
       if (error) throw new Error(JSON.stringify(error));
     },
-    onSuccess: (_result, { data }: { data: unknown }) => {
-      notifier?.({ type: uploadFileRoutine.SUCCESS, payload: data });
+    onSuccess: (_result, { data, error }) => {
+      if (error) {
+        throw error;
+      } else {
+        notifier?.({ type: uploadAppDataFileRoutine.SUCCESS, payload: { data } });
+      }
     },
     onError: (_error, { error }) => {
-      notifier?.({ type: uploadFileRoutine.FAILURE, payload: { error } });
+      notifier?.({ type: uploadAppDataFileRoutine.FAILURE, payload: { error } });
     },
     onSettled: () => {
       const { itemId } = getData(queryClient);
