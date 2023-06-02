@@ -31,6 +31,5 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
         ...defaultOptions,
       });
     },
-
   };
 };

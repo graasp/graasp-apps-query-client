@@ -1,6 +1,4 @@
-import {
-  buildGetContextRoute,
-} from './routes';
+import { buildGetContextRoute } from './routes';
 import configureAxios from './axios';
 import { ApiData, AppContext } from '../types';
 

@@ -10,11 +10,7 @@ import {
 import { mockHook, setUpTest } from '../../test/utils';
 import { buildGetContextRoute } from '../api/routes';
 import { MOCK_TOKEN } from '../config/constants';
-import {
-  AUTH_TOKEN_KEY,
-  buildAppContextKey,
-  LOCAL_CONTEXT_KEY,
-} from '../config/keys';
+import { AUTH_TOKEN_KEY, buildAppContextKey, LOCAL_CONTEXT_KEY } from '../config/keys';
 import { MissingApiHostError } from '../config/utils';
 import { LocalContext } from '../types';
 import { convertJs } from '@graasp/sdk';
@@ -111,5 +107,4 @@ describe('App Hooks', () => {
       expect(queryClient.getQueryData(key)).toBeFalsy();
     });
   });
-
 });

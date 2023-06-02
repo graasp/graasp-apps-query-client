@@ -20,14 +20,14 @@ export const MOCK_SERVER_ITEM: AppItemType = {
   description: '',
   extra: {
     [ItemType.APP]: {
-      url: 'myappurl'
-    }
+      url: 'myappurl',
+    },
   },
   type: ItemType.APP,
   createdAt: new Date(),
   updatedAt: new Date(),
   creator: MOCK_SERVER_MEMBER,
-  settings: {}
+  settings: {},
 };
 
 export const buildMockLocalContext = (appContext?: Partial<LocalContext>) => {
