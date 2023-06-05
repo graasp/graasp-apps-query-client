@@ -1,7 +1,7 @@
 import nock from 'nock';
 import { v4 } from 'uuid';
 import { StatusCodes } from 'http-status-codes';
-import { List, Map } from 'immutable';
+import { List } from 'immutable';
 import { Endpoint, mockHook, setUpTest } from '../../test/utils';
 import { buildDownloadAppSettingFileRoute, buildGetAppSettingsRoute } from '../api/routes';
 import {

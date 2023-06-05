@@ -1,12 +1,12 @@
 import React from 'react';
-import { hooks, useMutation } from './configureQueryClient';
+import { hooks, mutations } from './configureQueryClient';
 
 const token = 'token';
 const itemId = 'itemId';
 
 const App = () => {
-  const { mutate: deleteAppData }: any = useMutation('deleteAppData');
-  const { data: appData, isLoading }: any = hooks.useAppData({ token, itemId });
+  const { mutate: deleteAppData } = mutations.useDeleteAppData();
+  const { data: appData, isLoading } = hooks.useAppData({ token, itemId });
 
   const onClick = () => {
     // use the post item mutation
