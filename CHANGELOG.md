@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.0.0-rc.1](https://github.com/graasp/graasp-apps-query-client/compare/v1.0.0...v2.0.0-rc.1) (2023-06-07)
+
+
+### ⚠ BREAKING CHANGES
+
+* use app key, immutable cast
+
+### Features
+
+* use app key, immutable cast ([514a705](https://github.com/graasp/graasp-apps-query-client/commit/514a705cc681f030458e4310504cb23c3a91c37d))
+
+
+### chore
+
+* set rc release ([4d969cb](https://github.com/graasp/graasp-apps-query-client/commit/4d969cbbba390b4d73c2cb1e2908f57684064224))
+
 ## [1.0.0](https://github.com/graasp/graasp-apps-query-client/compare/v0.4.2...v1.0.0) (2023-04-25)
 
 
