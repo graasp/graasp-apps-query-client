@@ -28,7 +28,8 @@ The following steps are designed to take into account `Cypress`, our test framew
 
 ```
 REACT_APP_GRAASP_APP_ID=<your app id>
-REACT_APP_MOCK_API=true
+REACT_APP_GRAASP_APP_KEY=<your app key>
+REACT_APP_ENABLE_MOCK_API=true
 ```
 
 3. Configure your query client in `src/config/queryClient.js` with the following code.
@@ -41,9 +42,9 @@ import {
 } from '@graasp/apps-query-client';
 
 const values = configureQueryClient({
-  GRAASP_APP_ID: process.env.REACT_APP_GRAASP_APP_ID,
+  GRAASP_APP_KEY: process.env.REACT_APP_GRAASP_APP_KEY,
   // build mock parent window given cypress (app) context or mock data
-  targetWindow: process.env.REACT_APP_MOCK_API === 'true'
+  targetWindow: process.env.REACT_APP_ENABLE_MOCK_API === 'true'
     ? buildMockParentWindow(
         buildMockLocalContext(window.appContext),
       )
@@ -57,7 +58,7 @@ export values;
 ```js
 import { mockApi } from '@graasp/apps-query-client';
 
-if (process.env.REACT_APP_MOCK_API === 'true') {
+if (process.env.REACT_APP_ENABLE_MOCK_API === 'true') {
   mockApi();
 }
 ```
@@ -83,7 +84,7 @@ const AppWithContextAndToken = withContext(AppWithContext, {
 });
 ```
 
-You can now start your app with the mock API installed. **Don't forget to disable it when you build your app** (set `REACT_APP_MOCK_API` to `false`).
+You can now start your app with the mock API installed. **Don't forget to disable it when you build your app** (set `REACT_APP_ENABLE_MOCK_API` to `false`).
 
 ### Cypress
 
@@ -92,7 +93,7 @@ The next steps will help you set up Cypress to work with MirageJS. There is an [
 1. Update your content in `src/index.js` to include some config defined from Cypress in the mock server:
 
 ```js
-if (process.env.REACT_APP_MOCK_API === 'true') {
+if (process.env.REACT_APP_ENABLE_MOCK_API === 'true') {
   mockApi({
     appContext: window.Cypress ? window.appContext : undefined,
     database: window.Cypress ? window.database : undefined,

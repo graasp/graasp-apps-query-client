@@ -3,8 +3,10 @@ import { QueryClient, useQuery } from '@tanstack/react-query';
 import * as Api from '../api';
 import { MissingFileIdError } from '../config/errors';
 import { buildAppSettingFileContentKey, buildAppSettingsKey } from '../config/keys';
-import { getApiHost, getDataOrThrow } from '../config/utils';
+import { getApiHost, getData, getDataOrThrow } from '../config/utils';
 import { QueryClientConfig } from '../types';
+import { convertJs } from '@graasp/sdk';
+import { AppSettingRecord } from '@graasp/sdk/frontend';
 
 export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
   const { retry, cacheTime, staleTime } = queryConfig;
@@ -16,11 +18,14 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
   return {
     useAppSettings: () => {
       const apiHost = getApiHost(queryClient);
-      const { token, itemId } = getDataOrThrow(queryClient);
+      const { token, itemId } = getData(queryClient, { shouldMemberExist: false });
+
       return useQuery({
         queryKey: buildAppSettingsKey(itemId),
-        queryFn: () => {
-          return Api.getAppSettings({ itemId, token, apiHost }).then((data) => List(data));
+        queryFn: (): Promise<List<AppSettingRecord>> => {
+          const { token, itemId } = getDataOrThrow(queryClient, { shouldMemberExist: false });
+
+          return Api.getAppSettings({ itemId, token, apiHost }).then((data) => convertJs(data));
         },
         ...defaultOptions,
         enabled: Boolean(itemId) && Boolean(token),
@@ -32,10 +37,13 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
       { enabled = true }: { enabled?: boolean } = {},
     ) => {
       const apiHost = getApiHost(queryClient);
-      const { token } = getDataOrThrow(queryClient);
+      const { token } = getData(queryClient, { shouldMemberExist: false });
+
       return useQuery({
         queryKey: buildAppSettingFileContentKey(payload?.appSettingId),
-        queryFn: () => {
+        queryFn: (): Promise<Blob> => {
+          const { token } = getDataOrThrow(queryClient, { shouldMemberExist: false });
+
           // the following check are verified in enabled
           if (!payload?.appSettingId) {
             throw new MissingFileIdError();

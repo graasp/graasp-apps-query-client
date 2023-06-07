@@ -1,10 +1,9 @@
 import nock from 'nock';
 import { v4 } from 'uuid';
 import { StatusCodes } from 'http-status-codes';
-import { List, Map } from 'immutable';
+import { List } from 'immutable';
 import { Endpoint, mockHook, setUpTest } from '../../test/utils';
 import { buildDownloadAppSettingFileRoute, buildGetAppSettingsRoute } from '../api/routes';
-import { AppSetting } from '../types';
 import {
   AUTH_TOKEN_KEY,
   buildAppSettingFileContentKey,
@@ -19,6 +18,8 @@ import {
 } from '../../test/constants';
 import { MissingApiHostError } from '../config/utils';
 import { MOCK_TOKEN } from '../config/constants';
+import { AppSettingRecord } from '@graasp/sdk/frontend';
+import { convertJs } from '@graasp/sdk';
 
 const { hooks, wrapper, queryClient } = setUpTest();
 const itemId = v4();
@@ -26,7 +27,7 @@ const itemId = v4();
 describe('App Settings Hooks', () => {
   beforeEach(() => {
     queryClient.setQueryData(AUTH_TOKEN_KEY, MOCK_TOKEN);
-    queryClient.setQueryData(LOCAL_CONTEXT_KEY, Map(buildMockLocalContext({ itemId })));
+    queryClient.setQueryData(LOCAL_CONTEXT_KEY, convertJs(buildMockLocalContext({ itemId })));
   });
 
   afterEach(() => {
@@ -44,10 +45,10 @@ describe('App Settings Hooks', () => {
       const endpoints = [{ route, response }];
       const { data } = await mockHook({ endpoints, hook, wrapper });
 
-      expect((data as List<AppSetting>).toJS()).toEqual(response);
+      expect((data as List<AppSettingRecord>).toJS()).toEqual(response);
 
       // verify cache keys
-      expect(queryClient.getQueryData(key)).toEqual(List(response));
+      expect(queryClient.getQueryData(key)).toEqualImmutable(convertJs(response));
     });
     it('Cannot fetch app settings if context does not exist', async () => {
       const response = FIXTURE_APP_SETTINGS;
@@ -154,7 +155,7 @@ describe('App Settings Hooks', () => {
       // build endpoint for each item
       const endpoints: Endpoint[] = [];
       const { data, isFetched } = await mockHook({
-        hook: () => hooks.useFileContent({ fileId: id }, { enabled: false }),
+        hook: () => hooks.useAppSettingFile({ appSettingId: id }, { enabled: false }),
         endpoints,
         wrapper,
         enabled: false,

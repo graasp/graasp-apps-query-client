@@ -3,7 +3,7 @@ import { Record } from 'immutable';
 import { LocalContext, QueryClientConfig } from '../types';
 import { AUTH_TOKEN_KEY, LOCAL_CONTEXT_KEY } from './keys';
 import { StatusCodes } from 'http-status-codes';
-import { MissingAppIdError, MissingAppOriginError, MissingNecessaryDataError } from './errors';
+import { MissingAppKeyError, MissingAppOriginError, MissingNecessaryDataError } from './errors';
 
 export class MissingApiHostError extends Error {
   statusCode: number;
@@ -22,30 +22,54 @@ export const getApiHost = (queryClient: QueryClient) => {
   return apiHost;
 };
 
-export const getData = (queryClient: QueryClient) => {
+export const getData = (
+  queryClient: QueryClient,
+  options: { shouldMemberExist?: boolean } = {},
+) => {
   const data = queryClient.getQueryData<Record<LocalContext>>(LOCAL_CONTEXT_KEY);
   const token = queryClient.getQueryData<string>(AUTH_TOKEN_KEY);
   const itemId = data?.get('itemId');
   const memberId = data?.get('memberId');
-  return { itemId, memberId, token };
-};
 
-export const getDataOrThrow = (queryClient: QueryClient) => {
-  const { itemId, memberId, token } = getData(queryClient);
-  if (!itemId || !memberId || !token) {
-    throw new MissingNecessaryDataError({ itemId, memberId, token });
+  if (options.shouldMemberExist ?? true) {
+    if (!memberId) {
+      console.debug('member id is not defined');
+    }
   }
+  if (!itemId) {
+    console.error('item id is not defined');
+  }
+  if (!token) {
+    console.error('token is not defined');
+  }
+
   return { itemId, memberId, token };
 };
 
-export const buildAppIdAndOriginPayload = (queryConfig: QueryClientConfig) => {
+export const getDataOrThrow = (
+  queryClient: QueryClient,
+  options: { shouldMemberExist?: boolean } = {},
+) => {
+  const { itemId, token, memberId } = getData(queryClient);
+  if (!itemId || !token) {
+    throw new MissingNecessaryDataError({ itemId, token });
+  }
+  if (options.shouldMemberExist ?? true) {
+    if (!memberId) {
+      throw new MissingNecessaryDataError({ itemId, token, memberId });
+    }
+  }
+  return { itemId, token, memberId };
+};
+
+export const buildAppKeyAndOriginPayload = (queryConfig: QueryClientConfig) => {
   const payload = {
-    app: queryConfig.GRAASP_APP_ID,
+    key: queryConfig.GRAASP_APP_KEY,
     origin: window?.location?.origin,
   };
 
-  if (!payload.app) {
-    throw new MissingAppIdError();
+  if (!payload.key) {
+    throw new MissingAppKeyError();
   }
   if (!payload.origin) {
     throw new MissingAppOriginError();

@@ -5,5 +5,5 @@ export const postAppDataRoutine = createRoutine('POST_APP_DATA');
 export const patchAppDataRoutine = createRoutine('PATCH_APP_DATA');
 export const deleteAppDataRoutine = createRoutine('DELETE_APP_DATA');
 
-export const uploadFileRoutine = createRoutine('UPLOAD_FILE');
+export const uploadAppDataFileRoutine = createRoutine('UPLOAD_FILE');
 export const downloadFileRoutine = createRoutine('DOWNLOAD_FILE');

@@ -1,16 +1,10 @@
 import { v4 } from 'uuid';
 import { createServer, Model, Factory, RestSerializer, Response, Request } from 'miragejs';
-import { API_ROUTES } from '../api/routes';
-import {
-  AppAction,
-  AppData,
-  AppDataVisibility,
-  AppSetting,
-  Database,
-  LocalContext,
-  Member,
-} from '../types';
+import { API_ROUTES, buildUploadAppDataFilesRoute } from '../api/routes';
+
 import { buildMockLocalContext, MOCK_SERVER_ITEM, MOCK_SERVER_MEMBER } from './fixtures';
+import { Database, LocalContext } from 'src/types';
+import { AppAction, AppData, AppDataVisibility, AppSetting, Member, MemberType } from '@graasp/sdk';
 
 const {
   buildGetAppDataRoute,
@@ -18,9 +12,8 @@ const {
   buildPostAppDataRoute,
   buildPatchAppDataRoute,
   buildDeleteAppDataRoute,
-  buildUploadFilesRoute,
   buildDeleteAppSettingRoute,
-  buildDownloadFileRoute,
+  buildDownloadAppDataFileRoute,
   buildGetAppActionsRoute,
   buildGetAppSettingsRoute,
   buildPatchAppSettingRoute,
@@ -33,18 +26,22 @@ const ApplicationSerializer = RestSerializer.extend({
   embed: true,
 });
 
-type ExternalUrls = ((req: Request) => unknown | string)[];
+type ExternalUrls = (((req: Request) => unknown) | string)[];
+
+const buildAppDataDownloadUrl = (id: string) => `/download-app-data-url/${id}`;
 
 export const buildDatabase = ({
   appData = [],
   appActions = [],
   appSettings = [],
   members = [MOCK_SERVER_MEMBER],
+  items = [MOCK_SERVER_ITEM],
 }: Partial<Database> = {}) => ({
   appData,
   appActions,
   appSettings,
   members,
+  items,
 });
 
 export const mockServer = ({
@@ -54,20 +51,39 @@ export const mockServer = ({
   errors = {},
 }: {
   database?: Database;
-  appContext?: LocalContext;
+  appContext: Partial<LocalContext> & Pick<LocalContext, 'itemId'>;
   externalUrls?: ExternalUrls;
   errors?: {
     deleteAppDataShouldThrow?: boolean;
   };
-} = {}) => {
-  const { appData, appActions, appSettings, members } = database;
+}) => {
+  const { appData, appActions, appSettings, members, items } = database;
   const {
-    itemId: currentItemId = MOCK_SERVER_ITEM.id,
+    itemId: currentItemId,
     memberId: currentMemberId = MOCK_SERVER_MEMBER.id,
     apiHost,
   } = appContext;
   // mocked errors
   const { deleteAppDataShouldThrow } = errors;
+
+  // todo: improve?
+  // build random item and member or use mocks
+  const currentMember: Member =
+    currentMemberId === MOCK_SERVER_MEMBER.id
+      ? MOCK_SERVER_MEMBER
+      : {
+          id: currentMemberId,
+          name: 'current-member-name',
+          email: 'memberId@email.com',
+          extra: {},
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          type: MemberType.Individual,
+        };
+  const currentItem = items.find(({ id }) => id === currentItemId);
+  if (!currentItem) {
+    throw new Error('context.itemId does not have a corresponding item in mocked database');
+  }
 
   // we cannot use *Data
   // https://github.com/miragejs/miragejs/issues/782
@@ -83,37 +99,40 @@ export const mockServer = ({
     factories: {
       appDataResource: Factory.extend<AppData>({
         id: () => v4(),
-        createdAt: () => new Date().toISOString(),
-        updatedAt: () => new Date().toISOString(),
+        createdAt: () => new Date(),
+        updatedAt: () => new Date(),
         data: () => ({}),
         type: (idx) => `app-data-type-${idx}`,
-        itemId: currentItemId,
-        memberId: currentMemberId,
-        creator: currentMemberId,
-        visibility: () => AppDataVisibility.MEMBER, // TODO: Is it right?
+        item: currentItem,
+        member: currentMember,
+        creator: currentMember,
+        visibility: () => AppDataVisibility.Member, // TODO: Is it right?
       }),
       appActionResource: Factory.extend<AppAction>({
         id: () => v4(),
-        itemId: currentItemId,
-        memberId: currentMemberId,
-        createdAt: new Date().toISOString(),
+        item: currentItem,
+        member: currentMember,
+        createdAt: new Date(),
         data: () => ({}),
         type: 'app-action-type',
       }),
       appSetting: Factory.extend<AppSetting>({
         id: () => v4(),
         data: () => ({}),
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
+        createdAt: new Date(),
+        updatedAt: new Date(),
         name: (idx) => `app-setting-${idx}`,
-        itemId: currentItemId,
-        creator: currentMemberId,
+        item: currentItem,
+        creator: currentMember,
       }),
       member: Factory.extend<Member>({
         id: () => v4(),
         extra: () => ({}),
         email: (idx) => `app-setting-email-${idx}`,
         name: (idx) => `member-${idx}`,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        type: MemberType.Individual,
       }),
     },
 
@@ -139,24 +158,32 @@ export const mockServer = ({
     },
     routes() {
       // app data
-      this.get(`/${buildGetAppDataRoute(currentItemId)}`, (schema) => {
+      this.get(`/${buildGetAppDataRoute(currentItem.id)}`, (schema) => {
         return schema.all('appDataResource');
       });
-      this.post(`/${buildPostAppDataRoute({ itemId: currentItemId })}`, (schema, request) => {
+      this.post(`/${buildPostAppDataRoute({ itemId: currentItem.id })}`, (schema, request) => {
+        if (!currentMember) {
+          return new Response(401, {}, { errors: ['user not authenticated'] });
+        }
+
         const { requestBody } = request;
         const data = JSON.parse(requestBody);
         return schema.create('appDataResource', {
-          itemId: currentItemId,
-          memberId: currentMemberId,
-          creator: currentMemberId,
+          item: currentItem,
+          member: currentMember,
+          creator: currentMember,
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
           ...data,
         });
       });
       this.patch(
-        `/${buildPatchAppDataRoute({ itemId: currentItemId, id: ':id' })}`,
+        `/${buildPatchAppDataRoute({ itemId: currentItem.id, id: ':id' })}`,
         (schema, request) => {
+          if (!currentMember) {
+            return new Response(401, {}, { errors: ['user not authenticated'] });
+          }
+
           const { id } = request.params;
           const { requestBody } = request;
           const data = JSON.parse(requestBody);
@@ -173,11 +200,16 @@ export const mockServer = ({
         },
       );
       this.delete(
-        `/${buildDeleteAppDataRoute({ itemId: currentItemId, id: ':id' })}`,
+        `/${buildDeleteAppDataRoute({ itemId: currentItem.id, id: ':id' })}`,
         (schema, request) => {
           if (deleteAppDataShouldThrow) {
             return new Response(400, {}, { errors: [deleteAppDataShouldThrow] });
           }
+
+          if (!currentMember) {
+            return new Response(401, {}, { errors: ['user not authenticated'] });
+          }
+
           const { id } = request.params;
           const appData = schema.findBy('appDataResource', { id });
           if (!appData) {
@@ -189,38 +221,46 @@ export const mockServer = ({
       );
 
       // app actions
-      this.get(`/${buildGetAppActionsRoute(currentItemId)}`, (schema) => {
+      this.get(`/${buildGetAppActionsRoute(currentItem.id)}`, (schema) => {
         return schema.all('appActionResource');
       });
-      this.post(`/${buildPostAppActionRoute({ itemId: currentItemId })}`, (schema, request) => {
+      this.post(`/${buildPostAppActionRoute({ itemId: currentItem.id })}`, (schema, request) => {
         const { requestBody } = request;
         const data = JSON.parse(requestBody);
         return schema.create('appActionResource', {
           ...data,
-          itemId: currentItemId,
-          memberId: currentMemberId,
+          item: currentItem,
+          member: currentMember,
         });
       });
 
       // app settings
-      this.get(`/${buildGetAppSettingsRoute(currentItemId)}`, (schema) => {
+      this.get(`/${buildGetAppSettingsRoute(currentItem.id)}`, (schema) => {
         return schema.all('appSetting');
       });
 
-      this.post(`/${buildPostAppSettingRoute({ itemId: currentItemId })}`, (schema, request) => {
+      this.post(`/${buildPostAppSettingRoute({ itemId: currentItem.id })}`, (schema, request) => {
+        if (!currentMember) {
+          return new Response(401, {}, { errors: ['user not authenticated'] });
+        }
+
         const { requestBody } = request;
         const data = JSON.parse(requestBody);
         return schema.create('appSetting', {
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
-          itemId: currentItemId,
-          memberId: currentMemberId,
+          item: currentItem,
+          member: currentMember,
           ...data,
         });
       });
       this.patch(
-        `/${buildPatchAppSettingRoute({ itemId: currentItemId, id: ':id' })}`,
+        `/${buildPatchAppSettingRoute({ itemId: currentItem.id, id: ':id' })}`,
         (schema, request) => {
+          if (!currentMember) {
+            return new Response(401, {}, { errors: ['user not authenticated'] });
+          }
+
           const { id } = request.params;
           const { requestBody } = request;
           const data = JSON.parse(requestBody);
@@ -237,8 +277,12 @@ export const mockServer = ({
         },
       );
       this.delete(
-        `/${buildDeleteAppSettingRoute({ itemId: currentItemId, id: ':id' })}`,
+        `/${buildDeleteAppSettingRoute({ itemId: currentItem.id, id: ':id' })}`,
         (schema, request) => {
+          if (!currentMember) {
+            return new Response(401, {}, { errors: ['user not authenticated'] });
+          }
+
           if (deleteAppDataShouldThrow) {
             return new Response(400, {}, { errors: [deleteAppDataShouldThrow] });
           }
@@ -253,7 +297,7 @@ export const mockServer = ({
       );
 
       // context
-      this.get(`/${buildGetContextRoute(currentItemId)}`, (schema) => {
+      this.get(`/${buildGetContextRoute(currentItem.id)}`, (schema) => {
         // todo: complete returned data
         return {
           members: schema.all('member').models,
@@ -261,13 +305,21 @@ export const mockServer = ({
       });
 
       // files
-      this.get(`/${buildDownloadFileRoute(':id')}`, (schema, request) => {
+      // needs double mock redirection for download file
+      this.get(`/${buildDownloadAppDataFileRoute(':id')}`, (schema, request) => {
+        const { id } = request.params;
+        // this call returns the app data itself for simplification
+        return buildAppDataDownloadUrl(id);
+      });
+      this.get(`/${buildAppDataDownloadUrl(':id')}`, (schema, request) => {
         const { id } = request.params;
         const appData = schema.findBy('appDataResource', { id });
         // this call returns the app data itself for simplification
+        // bug: this is supposed to be a blob
         return appData;
       });
-      this.post(`/${buildUploadFilesRoute(currentItemId)})`, (schema) => {
+
+      this.post(`/${buildUploadAppDataFilesRoute(currentItem.id)})`, (schema) => {
         // const appData: Partial<AppData> = {
         //   data: {},
         //   itemId: currentItemId,
@@ -290,13 +342,13 @@ const mockApi = ({
   externalUrls,
   errors,
 }: {
-  appContext?: LocalContext;
+  appContext: Partial<LocalContext> & Pick<LocalContext, 'itemId'>;
   database?: Database;
   externalUrls?: ExternalUrls;
   errors?: {
     deleteAppDataShouldThrow?: boolean;
   };
-} = {}) => {
+}) => {
   const appContext = buildMockLocalContext(c);
   // automatically append item id as a query string
   const searchParams = new URLSearchParams(window.location.search);

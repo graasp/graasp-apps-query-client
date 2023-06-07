@@ -1,10 +1,12 @@
-import { QueryClient } from '@tanstack/react-query';
+import { QueryClient, useMutation } from '@tanstack/react-query';
 import { List } from 'immutable';
 import * as Api from '../api';
 import { buildAppActionsKey, MUTATION_KEYS } from '../config/keys';
-import { AppAction, QueryClientConfig } from '../types';
+import { QueryClientConfig } from '../types';
 import { getApiHost, getData, getDataOrThrow } from '../config/utils';
 import { postAppActionRoutine } from '../routines';
+import { AppAction, convertJs } from '@graasp/sdk';
+import { AppActionRecord } from '@graasp/sdk/frontend';
 
 export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
   queryClient.setMutationDefaults(MUTATION_KEYS.POST_APP_ACTION, {
@@ -16,8 +18,8 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
     onSuccess: (newAppAction: AppAction) => {
       const { itemId } = getData(queryClient);
       const key = buildAppActionsKey(itemId);
-      const prevData = queryClient.getQueryData<List<AppAction>>(key);
-      queryClient.setQueryData(key, prevData?.push(newAppAction));
+      const prevData = queryClient.getQueryData<List<AppActionRecord>>(key);
+      queryClient.setQueryData(key, prevData?.push(convertJs(newAppAction)));
     },
     onError: (error) => {
       queryConfig?.notifier?.({ type: postAppActionRoutine.FAILURE, payload: { error } });
@@ -27,4 +29,9 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
       queryClient.invalidateQueries(buildAppActionsKey(itemId));
     },
   });
+
+  return {
+    usePostAppAction: () =>
+      useMutation<AppAction, unknown, Partial<AppAction>>(MUTATION_KEYS.POST_APP_ACTION),
+  };
 };

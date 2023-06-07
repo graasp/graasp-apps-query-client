@@ -1,20 +1,20 @@
 import {
-  buildDeleteAppSettingRoute,
-  buildDownloadAppSettingFileRoute,
-  buildGetAppSettingsRoute,
-  buildPatchAppSettingRoute,
-  buildPostAppSettingRoute,
+  buildDeleteAppDataRoute,
+  buildDownloadAppDataFileRoute,
+  buildGetAppDataRoute,
+  buildPatchAppDataRoute,
+  buildPostAppDataRoute,
 } from './routes';
-import configureAxios from './axios';
 import { ApiData } from '../types';
-import { AppSetting } from '@graasp/sdk';
+import { AppData, UUID } from '@graasp/sdk';
+import configureAxios from './axios';
 
 const axios = configureAxios();
 
-export const getAppSettings = async (args: ApiData): Promise<AppSetting[]> => {
+export const getAppData = async (args: ApiData): Promise<AppData[]> => {
   const { token, itemId, apiHost } = args;
   return axios
-    .get(`${apiHost}/${buildGetAppSettingsRoute(itemId)}`, {
+    .get(`${apiHost}/${buildGetAppDataRoute(itemId)}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -22,14 +22,14 @@ export const getAppSettings = async (args: ApiData): Promise<AppSetting[]> => {
     .then(({ data }) => data);
 };
 
-export const postAppSetting = (
+export const postAppData = (
   args: ApiData & {
     body: unknown;
   },
-) => {
+): Promise<AppData> => {
   const { token, itemId, apiHost, body } = args;
   return axios
-    .post(`${apiHost}/${buildPostAppSettingRoute({ itemId })}`, body, {
+    .post(`${apiHost}/${buildPostAppDataRoute({ itemId })}`, body, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -37,16 +37,11 @@ export const postAppSetting = (
     .then(({ data }) => data);
 };
 
-export const patchAppSetting = (
-  args: ApiData & {
-    id: string;
-    data: unknown;
-  },
-) => {
+export const patchAppData = (args: ApiData & Partial<AppData> & { id: UUID }): Promise<AppData> => {
   const { token, itemId, id, apiHost, data } = args;
   return axios
     .patch(
-      `${apiHost}/${buildPatchAppSettingRoute({ itemId, id })}`,
+      `${apiHost}/${buildPatchAppDataRoute({ itemId, id })}`,
       { data },
       {
         headers: {
@@ -57,14 +52,14 @@ export const patchAppSetting = (
     .then(({ data }) => data);
 };
 
-export const deleteAppSetting = (
+export const deleteAppData = (
   args: ApiData & {
     id: string;
   },
-) => {
+): Promise<AppData> => {
   const { token, itemId, id, apiHost } = args;
   return axios
-    .delete(`${apiHost}/${buildDeleteAppSettingRoute({ itemId, id })}`, {
+    .delete(`${apiHost}/${buildDeleteAppDataRoute({ itemId, id })}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -72,13 +67,12 @@ export const deleteAppSetting = (
     .then(({ data }) => data);
 };
 
-// todo: add return type for file
-// todo: add public route
+// todo: add return type of file
 // because of the bearer token, it triggers an error on s3 on redirect because the request has two auth methods
 // https://github.com/axios/axios/issues/2855
 // https://stackoverflow.com/questions/50861144/reactjs-remove-http-header-before-redirect/51252434#51252434
 // so we removed automatic redirection for this endpoint
-export const getAppSettingFileContent = async ({
+export const getAppDataFile = async ({
   id,
   apiHost,
   token,
@@ -88,7 +82,7 @@ export const getAppSettingFileContent = async ({
   token: string;
 }) => {
   const url = await axios
-    .get(`${apiHost}/${buildDownloadAppSettingFileRoute(id)}`, {
+    .get(`${apiHost}/${buildDownloadAppDataFileRoute(id)}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

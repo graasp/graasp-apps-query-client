@@ -1,5 +1,14 @@
 import { v4 } from 'uuid';
-import { AppData, AppDataVisibility, AppSetting, LocalContext, Member } from '../src/types';
+import { LocalContext } from '../src/types';
+import {
+  AppData,
+  AppDataVisibility,
+  AppSetting,
+  FolderItemType,
+  ItemType,
+  Member,
+  MemberType,
+} from '@graasp/sdk';
 
 export const API_HOST = 'http://localhost:3000';
 export const UNAUTHORIZED_RESPONSE = { some: 'error' };
@@ -7,12 +16,11 @@ export const UNAUTHORIZED_RESPONSE = { some: 'error' };
 export const MEMBER_RESPONSE: Member = {
   id: '42',
   name: 'username',
+  type: MemberType.Individual,
   email: 'username@graasp.org',
-  extra: {
-    recycleBin: {
-      itemId: 'recycleBinId',
-    },
-  },
+  extra: {},
+  createdAt: new Date(),
+  updatedAt: new Date(),
 };
 
 export const MEMBERS_RESPONSE: Member[] = [
@@ -21,7 +29,10 @@ export const MEMBERS_RESPONSE: Member[] = [
     id: '421',
     name: 'username1',
     email: 'username1@graasp.org',
+    type: MemberType.Individual,
     extra: {},
+    createdAt: new Date(),
+    updatedAt: new Date(),
   },
 ];
 
@@ -54,16 +65,29 @@ export const APPS = [
   },
 ];
 
+export const MOCK_ITEM: FolderItemType = {
+  description: '',
+  type: ItemType.FOLDER,
+  extra: { [ItemType.FOLDER]: { childrenOrder: [] } },
+  id: '',
+  name: '',
+  path: '',
+  createdAt: new Date(),
+  updatedAt: new Date(),
+  creator: MEMBER_RESPONSE,
+  settings: {},
+};
+
 export const buildAppData = ({ id = v4(), data = {} }: Partial<AppData> = {}): AppData => ({
   id,
   data,
   type: 'type',
-  creator: v4(),
-  createdAt: Date.now().toString(),
-  updatedAt: Date.now().toString(),
-  memberId: 'memberId',
-  itemId: 'itemId',
-  visibility: AppDataVisibility.MEMBER,
+  creator: MEMBER_RESPONSE,
+  createdAt: new Date(),
+  updatedAt: new Date(),
+  member: MEMBER_RESPONSE,
+  item: MOCK_ITEM,
+  visibility: AppDataVisibility.Member,
 });
 
 export const FIXTURE_APP_DATA: AppData[] = [buildAppData(), buildAppData(), buildAppData()];
@@ -75,10 +99,10 @@ export const buildAppSetting = ({
   id,
   data,
   name: 'app-setting-name',
-  createdAt: Date.now().toString(),
-  updatedAt: Date.now().toString(),
-  itemId: 'itemId',
-  creator: v4(),
+  createdAt: new Date(),
+  updatedAt: new Date(),
+  item: MOCK_ITEM,
+  creator: MEMBER_RESPONSE,
 });
 
 export const FIXTURE_APP_SETTINGS: AppSetting[] = [
@@ -90,13 +114,8 @@ export const FIXTURE_APP_SETTINGS: AppSetting[] = [
 export const FIXTURE_TOKEN = 'some-token';
 export const FIXTURE_CONTEXT = {
   children: [],
-  description: '',
-  extra: {},
-  id: '',
   members: MEMBERS_RESPONSE,
-  name: '',
-  path: '',
-  type: '',
+  ...MOCK_ITEM,
 };
 
 export enum REQUEST_METHODS {

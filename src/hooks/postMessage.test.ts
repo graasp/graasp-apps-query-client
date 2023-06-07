@@ -6,7 +6,7 @@ import { API_HOST, buildMockLocalContext } from '../../test/constants';
 import { mockHook, mockWindowForPostMessage, setUpTest } from '../../test/utils';
 import { DEFAULT_CONTEXT, DEFAULT_LANG, DEFAULT_PERMISSION, MOCK_TOKEN } from '../config/constants';
 import {
-  MissingAppIdError,
+  MissingAppKeyError,
   MissingAppOriginError,
   MissingMessageChannelPortError,
 } from '../config/errors';
@@ -42,9 +42,9 @@ describe('PostMessage Hooks', () => {
         const { data } = await mockHook({ hook, wrapper });
         const context = (data as Record<LocalContext>).toJS();
         expect(context).toEqual({
-          apiHost: '', // @see LocalContextRecord
-          memberId: '', // @see LocalContextRecord
-          itemId: '', // @see LocalContextRecord
+          apiHost: undefined, // @see LocalContextRecord
+          memberId: undefined, // @see LocalContextRecord
+          itemId: undefined, // @see LocalContextRecord
           context: DEFAULT_CONTEXT,
           lang: DEFAULT_LANG,
           permission: DEFAULT_PERMISSION,
@@ -68,7 +68,7 @@ describe('PostMessage Hooks', () => {
           settings: { some: 'value' },
           offline: true,
           dev: true,
-          context: Context.PLAYER,
+          context: Context.Player,
         };
         const event = {
           ports: ['mock-port'],
@@ -93,7 +93,7 @@ describe('PostMessage Hooks', () => {
 
     describe('Failed requests', () => {
       it('Gracefully fails on response error', async () => {
-        const { hooks, wrapper, queryClient } = setUpTest({ GRAASP_APP_ID: v4() });
+        const { hooks, wrapper, queryClient } = setUpTest({ GRAASP_APP_KEY: v4() });
         const hook = () => hooks.useGetLocalContext(mockItemId);
         const event = {
           data: JSON.stringify({
@@ -114,7 +114,7 @@ describe('PostMessage Hooks', () => {
       });
 
       it('Fails if app origin is undefined', async () => {
-        const { hooks, wrapper, queryClient } = setUpTest({ GRAASP_APP_ID: v4() });
+        const { hooks, wrapper, queryClient } = setUpTest({ GRAASP_APP_KEY: v4() });
         const hook = () => hooks.useGetLocalContext(mockItemId);
         const event = {
           data: JSON.stringify({
@@ -135,7 +135,7 @@ describe('PostMessage Hooks', () => {
       });
 
       it('Fails if app id is undefined', async () => {
-        const { hooks, wrapper, queryClient } = setUpTest({ GRAASP_APP_ID: null });
+        const { hooks, wrapper, queryClient } = setUpTest({ GRAASP_APP_KEY: null });
         const hook = () => hooks.useGetLocalContext(mockItemId);
         const event = {
           data: JSON.stringify({}),
@@ -148,7 +148,7 @@ describe('PostMessage Hooks', () => {
 
         // verify cache keys
         expect(queryClient.getQueryData(key)).toBeFalsy();
-        expect(error as MissingAppIdError).toEqual(new MissingAppIdError());
+        expect(error as MissingAppKeyError).toEqual(new MissingAppKeyError());
 
         queryClient.clear();
       });
@@ -205,7 +205,7 @@ describe('PostMessage Hooks', () => {
 
     describe('Failed requests', () => {
       it('Fails if port2 is undefined', async () => {
-        const { hooks, wrapper, queryClient } = setUpTest({ GRAASP_APP_ID: v4() });
+        const { hooks, wrapper, queryClient } = setUpTest({ GRAASP_APP_KEY: v4() });
         const hook = () => hooks.useAuthToken(mockItemId);
 
         const event = {
@@ -273,7 +273,10 @@ describe('PostMessage Hooks', () => {
       renderHook(() => hooks.useAutoResize(mockItemId));
 
       // simulate resize
-      const handlerFn = resizeObserverSpy.mock.lastCall[0];
+      const handlerFn = resizeObserverSpy?.mock?.lastCall?.[0];
+      if (!handlerFn) {
+        throw new Error('handlerFn is not defined');
+      }
       handlerFn(
         [{ contentRect: { height: 42 } }] as Array<ResizeObserverEntry>,
         new MockResizeObserver(),

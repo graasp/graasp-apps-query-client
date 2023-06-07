@@ -9,9 +9,10 @@ import { QueryClient, useQuery } from '@tanstack/react-query';
 import { DEFAULT_CONTEXT, DEFAULT_LANG, DEFAULT_PERMISSION } from '../config/constants';
 import { MissingMessageChannelPortError } from '../config/errors';
 import { AUTH_TOKEN_KEY, buildPostMessageKeys, LOCAL_CONTEXT_KEY } from '../config/keys';
-import { buildAppIdAndOriginPayload } from '../config/utils';
+import { buildAppKeyAndOriginPayload } from '../config/utils';
 import { getAuthTokenRoutine, getLocalContextRoutine } from '../routines';
 import { LocalContext, LocalContextRecord, QueryClientConfig, WindowPostMessage } from '../types';
+import { convertJs } from '@graasp/sdk';
 
 // build context from given data and default values
 export const buildContext = (payload: LocalContext): LocalContext => {
@@ -79,6 +80,11 @@ const configurePostMessageHooks = (_queryClient: QueryClient, queryConfig: Query
     ) =>
     (event: MessageEvent) => {
       try {
+        // ignore noise messages
+        if (typeof event.data !== 'string') {
+          return;
+        }
+
         const { type, payload } = JSON.parse(event.data) || {};
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const format = formatResolvedValue ?? ((data: { payload: any }) => data.payload);
@@ -88,7 +94,7 @@ const configurePostMessageHooks = (_queryClient: QueryClient, queryConfig: Query
         } else if (type === errorType) {
           reject({ payload, event });
         } else {
-          reject('the type is not recognized');
+          reject(`the type '${type}' for payload '${JSON.stringify(payload)}' is not recognized`);
         }
       } catch (e) {
         reject('an error occurred');
@@ -101,12 +107,12 @@ const configurePostMessageHooks = (_queryClient: QueryClient, queryConfig: Query
       queryKey: LOCAL_CONTEXT_KEY,
       queryFn: async () => {
         const POST_MESSAGE_KEYS = buildPostMessageKeys(itemId);
-        const postMessagePayload = buildAppIdAndOriginPayload(queryConfig);
+        const postMessagePayload = buildAppKeyAndOriginPayload(queryConfig);
 
         const formatResolvedValue = (result: {
           event: MessageEvent;
           payload: LocalContext;
-        }): RecordOf<LocalContext> => {
+        }): LocalContextRecord => {
           const { event, payload } = result;
           // get init message getting the Message Channel port
           const context = buildContext(payload);
@@ -115,7 +121,7 @@ const configurePostMessageHooks = (_queryClient: QueryClient, queryConfig: Query
           // set as a global variable
           [port2] = event.ports;
 
-          return LocalContextRecord(context);
+          return convertJs(context);
         };
 
         return new Promise<RecordOf<LocalContext>>((resolve, reject) => {
@@ -151,7 +157,7 @@ const configurePostMessageHooks = (_queryClient: QueryClient, queryConfig: Query
       },
     });
 
-  let getAuthTokenFunction = null;
+  let getAuthTokenFunction;
   const useAuthToken = (itemId: string) =>
     useQuery({
       queryKey: AUTH_TOKEN_KEY,
@@ -162,7 +168,7 @@ const configurePostMessageHooks = (_queryClient: QueryClient, queryConfig: Query
           console.error(error);
           throw error;
         }
-        const postMessagePayload = buildAppIdAndOriginPayload(queryConfig);
+        const postMessagePayload = buildAppKeyAndOriginPayload(queryConfig);
 
         return new Promise<string>((resolve, reject) => {
           getAuthTokenFunction = receiveContextMessage(

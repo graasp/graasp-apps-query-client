@@ -16,21 +16,16 @@ import { API_ROUTES } from './api/routes';
 import { QueryClientConfig } from './types';
 
 // Query client retry function decides when and how many times a request should be retried
-const defaultRetryFunction = (failureCount: number, error: Error) => {
-  // do not retry if the request was not authorized
-  // the user is probably not signed in
-  const codes = [
-    StatusCodes.UNAUTHORIZED,
-    StatusCodes.NOT_FOUND,
-    StatusCodes.BAD_REQUEST,
-    StatusCodes.FORBIDDEN,
-  ];
+const defaultRetryFunction = (failureCount: number, error: unknown) => {
+  // retry if the request timed out
+  const codes = [StatusCodes.GATEWAY_TIMEOUT, StatusCodes.REQUEST_TIMEOUT];
   const reasons = codes.map((code) => getReasonPhrase(code));
 
-  if (reasons.includes(error.message) || reasons.includes(error.name)) {
-    return false;
+  if (error instanceof Error && (reasons.includes(error.message) || reasons.includes(error.name))) {
+    return failureCount < 3;
   }
-  return failureCount < 3;
+
+  return false;
 };
 
 export default (config: Partial<QueryClientConfig>) => {
@@ -45,7 +40,7 @@ export default (config: Partial<QueryClientConfig>) => {
   const queryConfig: QueryClientConfig = {
     ...baseConfig,
     targetWindow: config?.targetWindow,
-    GRAASP_APP_ID: config.GRAASP_APP_ID,
+    GRAASP_APP_KEY: config.GRAASP_APP_KEY ?? config.GRAASP_APP_ID,
     notifier: config?.notifier,
     // time until data in cache considered stale if cache not invalidated
     staleTime: config?.staleTime || STALE_TIME_MILLISECONDS,
@@ -58,31 +53,32 @@ export default (config: Partial<QueryClientConfig>) => {
     defaultOptions: {
       queries: {
         refetchOnWindowFocus: config?.refetchOnWindowFocus || false,
-        retry: config?.shouldRetry ?? true,
+        retry: config?.shouldRetry ?? queryConfig.retry,
       },
     },
   });
 
   // set up mutations given config
   // mutations are attached to queryClient
-  configureMutations(queryClient, queryConfig);
+  const mutations = configureMutations(queryClient, queryConfig);
 
   // set up hooks given config
   const hooks = configureHooks(queryClient, queryConfig);
 
   // returns the queryClient and relative instances
   return {
+    API_ROUTES,
+    buildPostMessageKeys,
+    dehydrate,
+    hooks,
+    Hydrate,
+    MUTATION_KEYS,
+    mutations,
+    QUERY_KEYS,
     queryClient,
     QueryClientProvider,
-    hooks,
-    useMutation,
     ReactQueryDevtools,
-    dehydrate,
-    Hydrate,
+    useMutation,
     useQuery,
-    MUTATION_KEYS,
-    QUERY_KEYS,
-    buildPostMessageKeys,
-    API_ROUTES,
   };
 };

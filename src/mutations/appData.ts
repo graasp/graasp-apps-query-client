@@ -1,15 +1,17 @@
-import { QueryClient } from '@tanstack/react-query';
+import { QueryClient, useMutation } from '@tanstack/react-query';
 import { List } from 'immutable';
 import * as Api from '../api';
 import { buildAppDataKey, MUTATION_KEYS } from '../config/keys';
-import { AppData, QueryClientConfig, UUID } from '../types';
+import { QueryClientConfig } from '../types';
 import { getApiHost, getData, getDataOrThrow } from '../config/utils';
 import {
   deleteAppDataRoutine,
   patchAppDataRoutine,
   postAppDataRoutine,
-  uploadFileRoutine,
+  uploadAppDataFileRoutine,
 } from '../routines';
+import { AppData, UUID, convertJs } from '@graasp/sdk';
+import { AppDataRecord } from '@graasp/sdk/frontend';
 
 export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
   const { notifier } = queryConfig;
@@ -23,9 +25,10 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
     onSuccess: (newAppData: AppData) => {
       const { itemId } = getData(queryClient);
       const key = buildAppDataKey(itemId);
-      const prevData = queryClient.getQueryData<List<AppData>>(key);
-      queryClient.setQueryData(key, prevData?.push(newAppData));
-      queryConfig?.notifier?.({ type: postAppDataRoutine.SUCCESS, payload: newAppData });
+      const prevData = queryClient.getQueryData<List<AppDataRecord>>(key);
+      const newData = convertJs(newAppData);
+      queryClient.setQueryData(key, prevData?.push(newData));
+      queryConfig?.notifier?.({ type: postAppDataRoutine.SUCCESS, payload: newData });
     },
     onError: (error) => {
       queryConfig?.notifier?.({ type: postAppDataRoutine.FAILURE, payload: { error } });
@@ -35,6 +38,8 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
       queryClient.invalidateQueries(buildAppDataKey(itemId));
     },
   });
+  const usePostAppData = () =>
+    useMutation<AppData, unknown, Partial<AppData>>(MUTATION_KEYS.POST_APP_DATA);
 
   queryClient.setMutationDefaults(MUTATION_KEYS.PATCH_APP_DATA, {
     mutationFn: (payload: Partial<AppData> & { id: UUID }) => {
@@ -45,12 +50,10 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
     onMutate: async (payload) => {
       let context = null;
       const { itemId } = getData(queryClient);
-      const prevData = queryClient.getQueryData<List<AppData>>(buildAppDataKey(itemId));
+      const prevData = queryClient.getQueryData<List<AppDataRecord>>(buildAppDataKey(itemId));
       if (itemId && prevData) {
         const newData = prevData.map((appData) =>
-          appData.id === payload.id
-            ? { ...appData, data: { ...appData.data, ...payload.data } }
-            : appData,
+          appData.id === payload.id ? appData.merge(convertJs(payload)) : appData,
         );
         queryClient.setQueryData(buildAppDataKey(itemId), newData);
         context = prevData;
@@ -65,7 +68,7 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
 
       if (prevData) {
         const { itemId } = getData(queryClient);
-        const data = queryClient.getQueryData<List<AppData>>(buildAppDataKey(itemId));
+        const data = queryClient.getQueryData<List<AppDataRecord>>(buildAppDataKey(itemId));
         if (itemId && data) {
           queryClient.setQueryData(buildAppDataKey(itemId), prevData);
         }
@@ -76,6 +79,8 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
       queryClient.invalidateQueries(buildAppDataKey(data?.itemId));
     },
   });
+  const usePatchAppData = () =>
+    useMutation<AppData, unknown, Partial<AppData>>(MUTATION_KEYS.PATCH_APP_DATA);
 
   queryClient.setMutationDefaults(MUTATION_KEYS.DELETE_APP_DATA, {
     mutationFn: (payload: { id: string }) => {
@@ -85,7 +90,7 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
     },
     onMutate: async (payload) => {
       const { itemId } = getDataOrThrow(queryClient);
-      const prevData = queryClient.getQueryData<List<AppData>>(buildAppDataKey(itemId));
+      const prevData = queryClient.getQueryData<List<AppDataRecord>>(buildAppDataKey(itemId));
       if (prevData && itemId) {
         queryClient.setQueryData(
           buildAppDataKey(itemId),
@@ -99,10 +104,9 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
     },
     onError: (error, _payload, prevData) => {
       queryConfig?.notifier?.({ type: deleteAppDataRoutine.FAILURE, payload: { error } });
-
       if (prevData) {
         const { itemId } = getData(queryClient);
-        const data = queryClient.getQueryData<List<AppData>>(buildAppDataKey(itemId));
+        const data = queryClient.getQueryData<List<AppDataRecord>>(buildAppDataKey(itemId));
         if (itemId && data) {
           queryClient.setQueryData(buildAppDataKey(itemId), prevData);
         }
@@ -115,6 +119,8 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
       }
     },
   });
+  const useDeleteAppData = () =>
+    useMutation<AppData, unknown, { id: string }>(MUTATION_KEYS.DELETE_APP_DATA);
 
   // this mutation is used for its callback and invalidate the keys
   /**
@@ -125,19 +131,15 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
     mutationFn: async ({ error }) => {
       if (error) throw new Error(JSON.stringify(error));
     },
-    onSuccess: (_result, { data }: { data: AppData }) => {
-      const { itemId } = getData(queryClient);
-      if (itemId) {
-        const key = buildAppDataKey(itemId);
-        const prevData = queryClient.getQueryData<List<AppData>>(key);
-        if (prevData && data) {
-          queryClient.setQueryData(key, prevData.concat(data));
-        }
+    onSuccess: (_result, { data, error }) => {
+      if (error) {
+        throw error;
+      } else {
+        notifier?.({ type: uploadAppDataFileRoutine.SUCCESS, payload: { data } });
       }
-      notifier?.({ type: uploadFileRoutine.SUCCESS });
     },
     onError: (_error, { error }) => {
-      notifier?.({ type: uploadFileRoutine.FAILURE, payload: { error } });
+      notifier?.({ type: uploadAppDataFileRoutine.FAILURE, payload: { error } });
     },
     onSettled: () => {
       const { itemId } = getData(queryClient);
@@ -146,4 +148,8 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
       }
     },
   });
+  const useUploadAppDataFile = () =>
+    useMutation<unknown, unknown, { error?: unknown; data?: unknown }>(MUTATION_KEYS.FILE_UPLOAD);
+
+  return { usePostAppData, usePatchAppData, useDeleteAppData, useUploadAppDataFile };
 };
