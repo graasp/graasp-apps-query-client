@@ -3821,6 +3821,25 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@tanstack/react-query@npm:4.29.13":
+  version: 4.29.13
+  resolution: "@tanstack/react-query@npm:4.29.13"
+  dependencies:
+    "@tanstack/query-core": 4.29.11
+    use-sync-external-store: ^1.2.0
+  peerDependencies:
+    react: ^16.8.0 || ^17.0.0 || ^18.0.0
+    react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
+    react-native: "*"
+  peerDependenciesMeta:
+    react-dom:
+      optional: true
+    react-native:
+      optional: true
+  checksum: 8cd4f945e59508dd5024390711e5ca374f4fb41f6c8ea06e8cda45a153274664ba2d0533df7101ee9014b1aafc46400811b671167ab9284f1f584e3a5d4f3645
+  languageName: node
+  linkType: hard
+
 "@testing-library/dom@npm:^9.0.0":
   version: 9.3.0
   resolution: "@testing-library/dom@npm:9.3.0"
@@ -9020,7 +9039,7 @@ __metadata:
     "@graasp/apps-query-client": "link:.."
     "@mui/icons-material": 5.11.16
     "@mui/material": 5.13.4
-    "@tanstack/react-query": 4.29.12
+    "@tanstack/react-query": 4.29.13
     "@testing-library/jest-dom": 5.16.5
     "@testing-library/react": 14.0.0
     "@testing-library/user-event": 14.4.3
