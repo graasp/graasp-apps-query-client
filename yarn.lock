@@ -3639,13 +3639,13 @@ __metadata:
     "@commitlint/cli": 17.6.5
     "@commitlint/config-conventional": 17.6.5
     "@graasp/sdk": 1.0.0
-    "@tanstack/react-query": 4.29.15
-    "@tanstack/react-query-devtools": 4.29.15
+    "@tanstack/react-query": 4.29.19
+    "@tanstack/react-query-devtools": 4.29.19
     "@testing-library/react-hooks": 8.0.1
     "@types/jest": 29.5.2
-    "@types/node": 20.2.5
+    "@types/node": 20.2.6
     "@types/qs": 6.9.7
-    "@types/react": 18.2.13
+    "@types/react": 18.2.14
     "@types/react-dom": 18.2.6
     "@types/uuid": 9.0.2
     "@typescript-eslint/eslint-plugin": 5.60.0
@@ -3668,7 +3668,7 @@ __metadata:
     react-test-renderer: 18.2.0
     ts-jest: 29.1.0
     ts-node: 10.9.1
-    typescript: 5.1.3
+    typescript: 5.1.5
     uuid: 9.0.0
     vite: 4.3.9
     vite-plugin-checker: 0.6.1
@@ -5016,13 +5016,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tanstack/query-core@npm:4.29.15":
-  version: 4.29.15
-  resolution: "@tanstack/query-core@npm:4.29.15"
-  checksum: dc99d59a14acf47abdea9c80b038a1ad18531d309b98a91e89f7717f395f5b2ff54f73f6b6dcb3ac66f70f8b410827be5b06eb6f2bceff261287753829e606af
-  languageName: node
-  linkType: hard
-
 "@tanstack/query-core@npm:4.29.19":
   version: 4.29.19
   resolution: "@tanstack/query-core@npm:4.29.19"
@@ -5030,37 +5023,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tanstack/react-query-devtools@npm:4.29.15":
-  version: 4.29.15
-  resolution: "@tanstack/react-query-devtools@npm:4.29.15"
+"@tanstack/react-query-devtools@npm:4.29.19":
+  version: 4.29.19
+  resolution: "@tanstack/react-query-devtools@npm:4.29.19"
   dependencies:
     "@tanstack/match-sorter-utils": ^8.7.0
     superjson: ^1.10.0
     use-sync-external-store: ^1.2.0
   peerDependencies:
-    "@tanstack/react-query": 4.29.15
+    "@tanstack/react-query": 4.29.19
     react: ^16.8.0 || ^17.0.0 || ^18.0.0
     react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
-  checksum: f9f1525311c6c4585f1fcd721269d3ba8979e60f4e3798519631d8939a4fa63f95d75fcb3945c2b49e991ac7ee57668cf680b699643000c970e6092b233a07bd
-  languageName: node
-  linkType: hard
-
-"@tanstack/react-query@npm:4.29.15":
-  version: 4.29.15
-  resolution: "@tanstack/react-query@npm:4.29.15"
-  dependencies:
-    "@tanstack/query-core": 4.29.15
-    use-sync-external-store: ^1.2.0
-  peerDependencies:
-    react: ^16.8.0 || ^17.0.0 || ^18.0.0
-    react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
-    react-native: "*"
-  peerDependenciesMeta:
-    react-dom:
-      optional: true
-    react-native:
-      optional: true
-  checksum: de703806af4efd124f89f03f25d917c7f74329c1df82d2f293ff6fbd6bb259f656f9634203fcef5d2da3920c09dc35046aa9f1e84de3ed2ba84b44bb822b4784
+  checksum: f077028c109da225b8e8e907a8fb4ad47d3049f6f5d16e5613adb135c531abf62c8975384edbb4d502bb064c98c3c513ee4f3df7c686198e644808311145e79c
   languageName: node
   linkType: hard
 
@@ -5484,6 +5458,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/node@npm:20.2.6":
+  version: 20.2.6
+  resolution: "@types/node@npm:20.2.6"
+  checksum: 5222bceb188ca36947ac20b1fdbb39eabb599bb57d46d010182299a959ad38e3a6abc5167d81e685538b1aed1702e62df9a61ac473cafacd6a0a5f73bd627abf
+  languageName: node
+  linkType: hard
+
 "@types/normalize-package-data@npm:^2.4.0":
   version: 2.4.1
   resolution: "@types/normalize-package-data@npm:2.4.1"
@@ -5588,6 +5569,17 @@ __metadata:
     "@types/scheduler": "*"
     csstype: ^3.0.2
   checksum: f7c15f19c164a29262993ea2aae2085fa38cddd9b8359fd8fefabfced91010b515a3abe2042b2b7f2f86e6b38a25b191415aa9313a9027175e3a000883c858cc
+  languageName: node
+  linkType: hard
+
+"@types/react@npm:18.2.14":
+  version: 18.2.14
+  resolution: "@types/react@npm:18.2.14"
+  dependencies:
+    "@types/prop-types": "*"
+    "@types/scheduler": "*"
+    csstype: ^3.0.2
+  checksum: a6a5e8cc78f486b9020d1ad009aa6c56943c68c7c6376e0f8399e9cbcd950b7b8f5d73f00200f5379f5e58d31d57d8aed24357f301d8e86108cd438ce6c8b3dd
   languageName: node
   linkType: hard
 
@@ -17682,6 +17674,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"typescript@npm:5.1.5":
+  version: 5.1.5
+  resolution: "typescript@npm:5.1.5"
+  bin:
+    tsc: bin/tsc
+    tsserver: bin/tsserver
+  checksum: 0eef8699e05ae767096924dbed633c340b4d36e953bb8ed87fb12e9dd9dcea5055ceac7182c614a556dbd346a8a82df799d330e1e286ae66e17c84e1710f6a6f
+  languageName: node
+  linkType: hard
+
 "typescript@npm:^4.6.4 || ^5.0.0, typescript@npm:~5.0.4":
   version: 5.0.4
   resolution: "typescript@npm:5.0.4"
@@ -17699,6 +17701,16 @@ __metadata:
     tsc: bin/tsc
     tsserver: bin/tsserver
   checksum: 6f0a9dca6bf4ce9dcaf4e282aade55ef4c56ecb5fb98d0a4a5c0113398815aea66d871b5611e83353e5953a19ed9ef103cf5a76ac0f276d550d1e7cd5344f61e
+  languageName: node
+  linkType: hard
+
+"typescript@patch:typescript@5.1.5#~builtin<compat/typescript>":
+  version: 5.1.5
+  resolution: "typescript@patch:typescript@npm%3A5.1.5#~builtin<compat/typescript>::version=5.1.5&hash=5da071"
+  bin:
+    tsc: bin/tsc
+    tsserver: bin/tsserver
+  checksum: 12ff5d14888805f24479e54bc8a3f83647107a6345f6c29dffcd429fb345be55f584a37e262cca58a0105203e41d4cb4e31b1b9096c9abeca0e2ace8eb00935e
   languageName: node
   linkType: hard
 
