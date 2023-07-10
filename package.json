@@ -48,8 +48,8 @@
     "uuid": "9.0.0"
   },
   "devDependencies": {
-    "@commitlint/cli": "17.6.5",
-    "@commitlint/config-conventional": "17.6.5",
+    "@commitlint/cli": "17.6.6",
+    "@commitlint/config-conventional": "17.6.6",
     "@tanstack/react-query": "4.29.19",
     "@tanstack/react-query-devtools": "4.29.19",
     "@testing-library/react-hooks": "8.0.1",
