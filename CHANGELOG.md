@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.0.1](https://github.com/graasp/graasp-apps-query-client/compare/v2.0.0...v2.0.1) (2023-07-17)
+
+
+### Bug Fixes
+
+* **deps:** update lockfile deps ([4a4b611](https://github.com/graasp/graasp-apps-query-client/commit/4a4b611adc340190225d9f43e4ba8ae2fac3c3ff))
+
 ## [2.0.0](https://github.com/graasp/graasp-apps-query-client/compare/v2.0.0-rc.1...v2.0.0) (2023-07-17)
 
 
