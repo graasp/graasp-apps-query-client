@@ -2,6 +2,34 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.0.0](https://github.com/graasp/graasp-apps-query-client/compare/v2.0.0-rc.1...v2.0.0) (2023-07-17)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @graasp/sdk to v1.0.0 ([20db141](https://github.com/graasp/graasp-apps-query-client/commit/20db14136309f21242af09193f165cc813481e47))
+* **deps:** update dependency @graasp/sdk to v1.1.1 ([#106](https://github.com/graasp/graasp-apps-query-client/issues/106)) ([beffbbf](https://github.com/graasp/graasp-apps-query-client/commit/beffbbfc66d64aeb95d23b111eb797a5ed22cc09))
+* **deps:** update dependency @graasp/sdk to v1.1.2 ([#128](https://github.com/graasp/graasp-apps-query-client/issues/128)) ([cd9eea6](https://github.com/graasp/graasp-apps-query-client/commit/cd9eea67c8441125b387f9cc248dffb39929faf3))
+* **deps:** update dependency @mui/icons-material to v5.13.7 ([#119](https://github.com/graasp/graasp-apps-query-client/issues/119)) ([d973368](https://github.com/graasp/graasp-apps-query-client/commit/d973368dafed5e1705c59ec357dea4c388127f7c))
+* **deps:** update dependency @mui/material to v5.13.4 ([#86](https://github.com/graasp/graasp-apps-query-client/issues/86)) ([d8f5637](https://github.com/graasp/graasp-apps-query-client/commit/d8f563752f763f01774d713452235c6d55cddc0e))
+* **deps:** update dependency @mui/material to v5.13.5 ([0aa9c59](https://github.com/graasp/graasp-apps-query-client/commit/0aa9c59aadb522bd1e93a5d77369ff8ab00ad571))
+* **deps:** update dependency @mui/material to v5.13.7 ([#105](https://github.com/graasp/graasp-apps-query-client/issues/105)) ([1f08964](https://github.com/graasp/graasp-apps-query-client/commit/1f08964f91becfd2bdfb92674c8977949bc6f1bf))
+* **deps:** update dependency @tanstack/react-query to v4.29.15 ([aeeee09](https://github.com/graasp/graasp-apps-query-client/commit/aeeee09305783a7906e72471c39946c88ece9230))
+* **deps:** update dependency @tanstack/react-query to v4.29.19 ([40f97e3](https://github.com/graasp/graasp-apps-query-client/commit/40f97e3b1d063cc6f2c5d55f7be815495ce96e5c))
+* **deps:** update dependency @types/jest to v29.5.3 ([#123](https://github.com/graasp/graasp-apps-query-client/issues/123)) ([60dcfaa](https://github.com/graasp/graasp-apps-query-client/commit/60dcfaa53633265b0a03a9d526b5e78e01995441))
+* **deps:** update dependency @types/node to v20.4.1 ([#113](https://github.com/graasp/graasp-apps-query-client/issues/113)) ([5b00ffe](https://github.com/graasp/graasp-apps-query-client/commit/5b00ffefa14235606ddd9186fab02237ce9a646a))
+* **deps:** update dependency @types/react to v18.2.11 ([#88](https://github.com/graasp/graasp-apps-query-client/issues/88)) ([6ffe907](https://github.com/graasp/graasp-apps-query-client/commit/6ffe907990a6762e87fdfc7214e21acf109d47c0))
+* **deps:** update dependency @types/react to v18.2.14 ([#108](https://github.com/graasp/graasp-apps-query-client/issues/108)) ([2fe132c](https://github.com/graasp/graasp-apps-query-client/commit/2fe132cd2244539df1373a0c654261f1839b5c01))
+* **deps:** update dependency typescript to v5.1.6 ([#115](https://github.com/graasp/graasp-apps-query-client/issues/115)) ([6be0371](https://github.com/graasp/graasp-apps-query-client/commit/6be0371e1c1449a2f35d37eed0af28c9342d0cbd))
+* **deps:** update mui (non-major) to v5.14.0 ([#126](https://github.com/graasp/graasp-apps-query-client/issues/126)) ([68aa664](https://github.com/graasp/graasp-apps-query-client/commit/68aa66477cc55ddd17d0bb226271e90cc7f5d165))
+* **deps:** update react monorepo ([aac8f6b](https://github.com/graasp/graasp-apps-query-client/commit/aac8f6bfb6773d7f53fb5d4965ec34fb2528133e))
+* **deps:** update react monorepo ([#129](https://github.com/graasp/graasp-apps-query-client/issues/129)) ([d04ac32](https://github.com/graasp/graasp-apps-query-client/commit/d04ac328ca70fb9df0fb5e56c8db861a27098973))
+
+
+### chore
+
+* **deps:** update eslint packages ([#118](https://github.com/graasp/graasp-apps-query-client/issues/118)) ([684a30e](https://github.com/graasp/graasp-apps-query-client/commit/684a30e44a5a226746abd520fda3ac17f170c241))
+
 ## [2.0.0-rc.1](https://github.com/graasp/graasp-apps-query-client/compare/v1.0.0...v2.0.0-rc.1) (2023-06-07)
 
 
