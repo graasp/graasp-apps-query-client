@@ -8,7 +8,11 @@ import { QueryClientConfig } from '../types';
 import { AppDataRecord } from '@graasp/sdk/frontend';
 import { convertJs } from '@graasp/sdk';
 
-export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
+export default (
+  queryClient: QueryClient,
+  queryConfig: QueryClientConfig,
+  useAppDataUpdates?: (itemId: string | null | undefined) => void,
+) => {
   const { retry, cacheTime, staleTime } = queryConfig;
   const defaultOptions = {
     retry,
@@ -16,9 +20,16 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
     staleTime,
   };
   return {
-    useAppData: (refetchInterval: number | false = false) => {
+    useAppData: (
+      refetchInterval: number | false = false,
+      getUpdates = queryConfig.enableWebsocket,
+    ) => {
       const apiHost = getApiHost(queryClient);
       const { itemId } = getData(queryClient);
+
+      if (typeof useAppDataUpdates !== 'undefined' && getUpdates) {
+        useAppDataUpdates(itemId);
+      }
 
       return useQuery({
         queryKey: buildAppDataKey(itemId),

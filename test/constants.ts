@@ -11,6 +11,8 @@ import {
 } from '@graasp/sdk';
 
 export const API_HOST = 'http://localhost:3000';
+export const WS_HOST = 'ws://localhost:3000';
+export const DOMAIN = 'domain';
 export const UNAUTHORIZED_RESPONSE = { some: 'error' };
 
 export const MEMBER_RESPONSE: Member = {
@@ -69,7 +71,7 @@ export const MOCK_ITEM: FolderItemType = {
   description: '',
   type: ItemType.FOLDER,
   extra: { [ItemType.FOLDER]: { childrenOrder: [] } },
-  id: '',
+  id: '123',
   name: '',
   path: '',
   createdAt: new Date(),

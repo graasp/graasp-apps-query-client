@@ -14,6 +14,8 @@ import configureHooks from './hooks';
 import configureMutations from './mutations';
 import { API_ROUTES } from './api/routes';
 import { QueryClientConfig } from './types';
+import { configureWebsocketClient } from './ws';
+import { WebsocketClient } from './ws/ws-client';
 
 // Query client retry function decides when and how many times a request should be retried
 const defaultRetryFunction = (failureCount: number, error: unknown) => {
@@ -26,6 +28,14 @@ const defaultRetryFunction = (failureCount: number, error: unknown) => {
   }
 
   return false;
+};
+
+const getWebsocketClient = (queryConfig: QueryClientConfig): WebsocketClient | undefined => {
+  if (queryConfig.enableWebsocket && typeof queryConfig.WS_HOST !== 'undefined') {
+    const wsHost = queryConfig.WS_HOST;
+    return configureWebsocketClient({ ...queryConfig, WS_HOST: wsHost });
+  }
+  return;
 };
 
 export default (config: Partial<QueryClientConfig>) => {
@@ -63,7 +73,13 @@ export default (config: Partial<QueryClientConfig>) => {
   const mutations = configureMutations(queryClient, queryConfig);
 
   // set up hooks given config
-  const hooks = configureHooks(queryClient, queryConfig);
+
+  const websocketClient = getWebsocketClient(queryConfig);
+
+  // set up hooks given config
+  const hooks = {
+    ...configureHooks(queryClient, queryConfig, websocketClient),
+  };
 
   // returns the queryClient and relative instances
   return {

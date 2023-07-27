@@ -34,7 +34,7 @@
     "prepack": "yarn build",
     "post-commit": "git status",
     "start:example": "yarn workspace graasp-query-client-example start",
-    "test": "jest --forceExit --coverage --verbose --silent",
+    "test": "jest --forceExit --coverage --verbose",
     "test:watch": "yarn test --watchAll",
     "test:ci": "yarn && cd example && yarn && cd .. && yarn test"
   },

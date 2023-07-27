@@ -1,0 +1,1 @@
+export { configureWsAppHooks } from './app';
