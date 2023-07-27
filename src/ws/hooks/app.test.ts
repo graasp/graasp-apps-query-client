@@ -42,7 +42,7 @@ describe('Websockets App Hooks', () => {
       queryClient.setQueryData(appDataKey, appDataList);
       await mockWsHook({ hook, wrapper });
 
-      const newAppData = buildAppData({data: { message: 'This data was posted.' }});
+      const newAppData = buildAppData({ data: { message: 'This data was posted.' } });
       const newAppDataRecord: AppDataRecord = convertJs(newAppData);
 
       const appDataEvent: AppDataEvent = {
@@ -66,8 +66,8 @@ describe('Websockets App Hooks', () => {
       await mockWsHook({ hook, wrapper });
 
       const newAppData = appDataArray[0];
-      newAppData.data = { text: 'This data was already in the cache and was patched.'};
-      
+      newAppData.data = { text: 'This data was already in the cache and was patched.' };
+
       const newAppDataRecord: AppDataRecord = convertJs(newAppData);
 
       const appDataEvent: AppDataEvent = {
@@ -90,7 +90,7 @@ describe('Websockets App Hooks', () => {
       await mockWsHook({ hook, wrapper });
 
       const newAppData = appDataArray[1]; // Doesn't work with same app data than other tests (index 0)
-      
+
       const newAppDataRecord: AppDataRecord = convertJs(newAppData);
 
       expect(

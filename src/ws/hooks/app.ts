@@ -15,7 +15,6 @@ import { AppDataEvent } from '../types';
 import { APP_DATA_TOPIC } from '../constants';
 
 export const configureWsAppHooks = (websocketClient: WebsocketClient) => ({
-  
   /**
    * React hook to subscribe to the updates of the given item ID
    * @param itemId The ID of the item of which to observe updates
@@ -43,8 +42,7 @@ export const configureWsAppHooks = (websocketClient: WebsocketClient) => ({
               break;
             }
             case 'patch': {
-              const appDataPatchedIndex =
-                appDataList?.findIndex((a) => a.id === newAppData.id);
+              const appDataPatchedIndex = appDataList?.findIndex((a) => a.id === newAppData.id);
               if (typeof appDataPatchedIndex !== 'undefined' && appDataPatchedIndex >= 0)
                 queryClient.setQueryData(
                   appDataKey,
