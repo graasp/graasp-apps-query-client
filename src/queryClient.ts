@@ -31,9 +31,9 @@ const defaultRetryFunction = (failureCount: number, error: unknown) => {
 };
 
 const getWebsocketClient = (queryConfig: QueryClientConfig): WebsocketClient | undefined => {
-  if (queryConfig.enableWebsocket && typeof queryConfig.WS_HOST !== 'undefined') {
-    const wsHost = queryConfig.WS_HOST;
-    return configureWebsocketClient({ ...queryConfig, WS_HOST: wsHost });
+  const { enableWebsocket, WS_HOST } = queryConfig;
+  if (enableWebsocket && typeof WS_HOST !== 'undefined') {
+    return configureWebsocketClient({ ...queryConfig, WS_HOST });
   }
   return;
 };
@@ -56,6 +56,14 @@ export default (config: Partial<QueryClientConfig>) => {
     staleTime: config?.staleTime || STALE_TIME_MILLISECONDS,
     // time before cache labeled as inactive to be garbage collected
     cacheTime: config?.cacheTime || CACHE_TIME_MILLISECONDS,
+    // derive WS_HOST from API_HOST if needed
+    // TODO: pass it with the context
+    WS_HOST:
+      config?.WS_HOST ||
+      process.env.VITE_WS_HOST ||
+      `${config?.API_HOST?.replace('http', 'ws')}/ws`,
+    // whether websocket support should be enabled
+    enableWebsocket: config?.enableWebsocket || false,
   };
 
   // create queryclient with given config
@@ -72,8 +80,7 @@ export default (config: Partial<QueryClientConfig>) => {
   // mutations are attached to queryClient
   const mutations = configureMutations(queryClient, queryConfig);
 
-  // set up hooks given config
-
+  // set up websocket client
   const websocketClient = getWebsocketClient(queryConfig);
 
   // set up hooks given config

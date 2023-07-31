@@ -90,6 +90,7 @@ export const configureWebsocketClient = (
   // native client WebSocket instance
 
   const ws = new WebSocket(config.WS_HOST);
+  console.debug('The websocket client was created: %O', ws);
 
   // TODO: heartbeat
 
@@ -198,8 +199,6 @@ export const configureWebsocketClient = (
   };
 
   ws.addEventListener('open', () => {
-    console.debug('Websocket connection opened');
-
     // send early subscriptions
     subscriptions.early.forEach((queue, channelKey) => {
       const channel = keyToChannel(channelKey);
@@ -230,7 +229,7 @@ export const configureWebsocketClient = (
             subscriptions.ack({ name: req?.channel, topic: req?.topic });
           }
         } else {
-          console.debug(`WS error response: ${update.error?.name} ${update.error?.message}`);
+          console.warn(`WS error response: ${update.error?.name} ${update.error?.message}`);
         }
         break;
       }
@@ -245,7 +244,7 @@ export const configureWebsocketClient = (
       }
 
       default:
-        console.debug('Unknown WS message');
+        console.info('Unknown WS message');
     }
   });
 

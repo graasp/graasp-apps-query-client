@@ -14,7 +14,7 @@ import { AppData, UUID, convertJs } from '@graasp/sdk';
 import { AppDataRecord } from '@graasp/sdk/frontend';
 
 export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
-  const { notifier } = queryConfig;
+  const { notifier, enableWebsocket } = queryConfig;
 
   queryClient.setMutationDefaults(MUTATION_KEYS.POST_APP_DATA, {
     mutationFn: (payload: Partial<AppData>) => {
@@ -27,15 +27,17 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
       const key = buildAppDataKey(itemId);
       const prevData = queryClient.getQueryData<List<AppDataRecord>>(key);
       const newData = convertJs(newAppData);
-      queryClient.setQueryData(key, prevData?.push(newData));
+      if (!enableWebsocket) queryClient.setQueryData(key, prevData?.push(newData));
       queryConfig?.notifier?.({ type: postAppDataRoutine.SUCCESS, payload: newData });
     },
     onError: (error) => {
       queryConfig?.notifier?.({ type: postAppDataRoutine.FAILURE, payload: { error } });
     },
     onSettled: () => {
-      const { itemId } = getData(queryClient);
-      queryClient.invalidateQueries(buildAppDataKey(itemId));
+      if (!enableWebsocket) {
+        const { itemId } = getData(queryClient);
+        queryClient.invalidateQueries(buildAppDataKey(itemId));
+      }
     },
   });
   const usePostAppData = () =>
@@ -62,6 +64,7 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
     },
     onSuccess: (newAppData) => {
       queryConfig?.notifier?.({ type: patchAppDataRoutine.SUCCESS, payload: newAppData });
+      // TODO: Implement local patching mecanism
     },
     onError: (error, _payload, prevData) => {
       queryConfig?.notifier?.({ type: patchAppDataRoutine.FAILURE, payload: { error } });
@@ -75,8 +78,10 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
       }
     },
     onSettled: () => {
-      const data = getData(queryClient);
-      queryClient.invalidateQueries(buildAppDataKey(data?.itemId));
+      if (!enableWebsocket) {
+        const data = getData(queryClient);
+        queryClient.invalidateQueries(buildAppDataKey(data?.itemId));
+      }
     },
   });
   const usePatchAppData = () =>
@@ -114,7 +119,7 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
     },
     onSettled: () => {
       const { itemId } = getData(queryClient);
-      if (itemId) {
+      if (itemId && !enableWebsocket) {
         queryClient.invalidateQueries(buildAppDataKey(itemId));
       }
     },

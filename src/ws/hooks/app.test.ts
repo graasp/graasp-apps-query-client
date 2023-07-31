@@ -43,12 +43,11 @@ describe('Websockets App Hooks', () => {
       await mockWsHook({ hook, wrapper });
 
       const newAppData = buildAppData({ data: { message: 'This data was posted.' } });
-      const newAppDataRecord: AppDataRecord = convertJs(newAppData);
 
       const appDataEvent: AppDataEvent = {
         kind: 'app-data',
         op: 'post',
-        appData: newAppDataRecord,
+        appData: newAppData,
       };
 
       const h = getHandlerByChannel(handlers, channel);
@@ -58,7 +57,7 @@ describe('Websockets App Hooks', () => {
         queryClient
           .getQueryData<List<AppDataRecord>>(appDataKey)
           ?.find((a) => a.id === newAppData.id),
-      ).toEqualImmutable(newAppDataRecord);
+      ).toEqualImmutable(convertJs(newAppData));
     });
 
     it('Receives patch app data', async () => {
@@ -68,12 +67,10 @@ describe('Websockets App Hooks', () => {
       const newAppData = appDataArray[0];
       newAppData.data = { text: 'This data was already in the cache and was patched.' };
 
-      const newAppDataRecord: AppDataRecord = convertJs(newAppData);
-
       const appDataEvent: AppDataEvent = {
         kind: 'app-data',
         op: 'patch',
-        appData: newAppDataRecord,
+        appData: newAppData,
       };
 
       getHandlerByChannel(handlers, channel)?.handler(appDataEvent);
@@ -82,7 +79,7 @@ describe('Websockets App Hooks', () => {
         queryClient
           .getQueryData<List<AppDataRecord>>(appDataKey)
           ?.find((a) => a.id === newAppData.id),
-      ).toEqualImmutable(newAppDataRecord);
+      ).toEqualImmutable(convertJs(newAppData));
     });
 
     it('Receives delete app data', async () => {
@@ -91,18 +88,16 @@ describe('Websockets App Hooks', () => {
 
       const newAppData = appDataArray[1]; // Doesn't work with same app data than other tests (index 0)
 
-      const newAppDataRecord: AppDataRecord = convertJs(newAppData);
-
       expect(
         queryClient
           .getQueryData<List<AppDataRecord>>(appDataKey)
           ?.find((a) => a.id === newAppData.id),
-      ).toEqualImmutable(newAppDataRecord);
+      ).toEqualImmutable(newAppData);
 
       const appDataEvent: AppDataEvent = {
         kind: 'app-data',
         op: 'delete',
-        appData: newAppDataRecord,
+        appData: newAppData,
       };
 
       getHandlerByChannel(handlers, channel)?.handler(appDataEvent);
