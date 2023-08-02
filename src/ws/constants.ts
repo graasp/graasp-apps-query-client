@@ -29,28 +29,4 @@ export const ERROR_SERVER_ERROR = 'SERVER_ERROR';
 // should probably go to sdk
 export const APP_DATA_TOPIC = 'app-data';
 export const APP_ACTIONS_TOPIC = 'app-actions';
-
-// To be moved to sdk
-// export const KINDS = {
-//   ITEM: 'item',
-//   SELF: 'self',
-//   CHILD: 'child',
-//   OWN: 'own',
-//   SHARED: 'shared',
-// };
-
-// export const OPS = {
-//   PUBLISH: 'publish',
-//   UPDATE: 'update',
-//   DELETE: 'delete',
-//   CLEAR: 'clear',
-//   CREATE: 'create',
-// };
-
-// export const TOPICS = {
-//   MENTIONS: 'mentions',
-//   CHAT_ITEM: 'chat/item',
-//   ITEM: 'item',
-//   ITEM_MEMBER: 'item/member',
-//   MEMBERSHIPS_ITEM: 'memberships/item',
-// };
+export const APP_SETTINGS_TOPIC = 'app-settings';

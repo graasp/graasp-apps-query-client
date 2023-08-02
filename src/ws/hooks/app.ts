@@ -6,13 +6,13 @@ import { List } from 'immutable';
 import { useEffect } from 'react';
 
 import { UUID, convertJs } from '@graasp/sdk';
-import { AppActionRecord, AppDataRecord } from '@graasp/sdk/frontend';
+import { AppActionRecord, AppDataRecord, AppSettingRecord } from '@graasp/sdk/frontend';
 
 import { Channel, WebsocketClient } from '../ws-client';
 import { useQueryClient } from '@tanstack/react-query';
-import { buildAppActionsKey, buildAppDataKey } from '../../config/keys';
-import { AppActionEvent, AppDataEvent } from '../types';
-import { APP_ACTIONS_TOPIC, APP_DATA_TOPIC } from '../constants';
+import { buildAppActionsKey, buildAppDataKey, buildAppSettingsKey } from '../../config/keys';
+import { AppActionEvent, AppDataEvent, AppSettingEvent } from '../types';
+import { APP_ACTIONS_TOPIC, APP_DATA_TOPIC, APP_SETTINGS_TOPIC } from '../constants';
 
 export const configureWsAppHooks = (websocketClient: WebsocketClient) => {
   return {
@@ -105,6 +105,69 @@ export const configureWsAppHooks = (websocketClient: WebsocketClient) => {
               }
               default:
                 console.warn('unhandled event for useAppActionsUpdates');
+                break;
+            }
+          }
+        };
+        websocketClient.subscribe(channel, handler);
+
+        return function cleanup() {
+          websocketClient.unsubscribe(channel, handler);
+        };
+      }, [itemId]);
+    },
+    /**
+     * React hook to subscribe to the updates of the app data for
+     * the given item ID.
+     * @param itemId The ID of the item of which to observe updates
+     */
+    useAppSettingsUpdates: (itemId?: UUID | null) => {
+      const queryClient = useQueryClient();
+      useEffect(() => {
+        if (!itemId || itemId?.length === 0) {
+          return () => {
+            // do nothing
+            console.warn('No correct itemId provided.');
+          };
+        }
+
+        const channel: Channel = { name: itemId, topic: APP_SETTINGS_TOPIC };
+        const appSettingsKey = buildAppSettingsKey(itemId);
+
+        const handler = (event: AppSettingEvent) => {
+          if (event.kind === 'app-settings') {
+            const appSettingList: List<AppSettingRecord> | undefined =
+              queryClient.getQueryData(appSettingsKey);
+            const newAppSetting: AppSettingRecord = convertJs(event.appSetting);
+            switch (event.op) {
+              case 'post': {
+                if (appSettingList?.findIndex(({ id }) => id === newAppSetting.id) === -1)
+                  queryClient.setQueryData(appSettingsKey, appSettingList?.push(newAppSetting));
+                break;
+              }
+              case 'patch': {
+                const appSettingPatchedIndex = appSettingList?.findIndex(
+                  (a) => a.id === newAppSetting.id,
+                );
+                if (typeof appSettingPatchedIndex !== 'undefined' && appSettingPatchedIndex >= 0)
+                  queryClient.setQueryData(
+                    appSettingsKey,
+                    appSettingList?.set(appSettingPatchedIndex, newAppSetting),
+                  );
+                break;
+              }
+              case 'delete': {
+                const appSettingDeletedIndex =
+                  appSettingList?.findIndex((a) => a.id === newAppSetting.id) || -1;
+                if (appSettingDeletedIndex >= 0)
+                  queryClient.setQueryData(
+                    appSettingsKey,
+                    appSettingList?.delete(appSettingDeletedIndex),
+                  );
+                break;
+              }
+              default:
+                console.warn('unhandled event for useAppSettingUpdates');
                 break;
             }
           }

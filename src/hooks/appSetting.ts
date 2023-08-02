@@ -8,7 +8,11 @@ import { QueryClientConfig } from '../types';
 import { convertJs } from '@graasp/sdk';
 import { AppSettingRecord } from '@graasp/sdk/frontend';
 
-export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
+export default (
+  queryClient: QueryClient,
+  queryConfig: QueryClientConfig,
+  useAppSettingsUpdates?: (itemId: string | null | undefined) => void,
+) => {
   const { retry, cacheTime, staleTime } = queryConfig;
   const defaultOptions = {
     retry,
@@ -16,9 +20,13 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
     staleTime,
   };
   return {
-    useAppSettings: () => {
+    useAppSettings: (getUpdates = queryConfig.enableWebsocket) => {
       const apiHost = getApiHost(queryClient);
       const { token, itemId } = getData(queryClient, { shouldMemberExist: false });
+
+      if (typeof useAppSettingsUpdates !== 'undefined' && getUpdates) {
+        useAppSettingsUpdates(itemId);
+      }
 
       return useQuery({
         queryKey: buildAppSettingsKey(itemId),
