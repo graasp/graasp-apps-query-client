@@ -84,6 +84,40 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
       }
     },
   });
+
+  /**
+   * @description
+   * By using the `merge` method in the `onMutate` callback, the payload should be a clean object, free of attributes from the `Record` type
+   * from Immutable.js. Therefore, when using this mutation, one must be careful not to use object spreading
+   * of the `data` attribute found in the `AppDataRecord`. I believe this may break some apps.
+   *
+   * @example Working example
+   * ```
+   * const { id, data } = appData; // type: AppDataRecord
+   * // data: { text: string, count: number }
+   * patchAppData({
+   *  id,
+   *  data: {
+   *    count: data.count,
+   *    text: newContent,
+   *  },
+   * });
+   * ```
+   *
+   * @example Failing example
+   * ```
+   * const { id, data } = appData; // type: AppDataRecord
+   * // data: { text: string, count: number }
+   * patchAppData({
+   *  id,
+   *  data: {
+   *    ...data,
+   *    text: newContent,
+   *  },
+   * });
+   * ```
+   *
+   */
   const usePatchAppData = () =>
     useMutation<AppData, unknown, Partial<AppData>>(MUTATION_KEYS.PATCH_APP_DATA);
 
