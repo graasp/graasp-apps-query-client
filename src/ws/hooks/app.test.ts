@@ -92,7 +92,7 @@ describe('Websockets App Hooks', () => {
         queryClient
           .getQueryData<List<AppDataRecord>>(appDataKey)
           ?.find((a) => a.id === newAppData.id),
-      ).toEqualImmutable(newAppData);
+      ).toEqualImmutable(convertJs(newAppData));
 
       const appDataEvent: AppDataEvent = {
         kind: 'app-data',

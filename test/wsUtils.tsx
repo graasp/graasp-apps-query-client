@@ -40,7 +40,7 @@ export const setUpWsTest = (args?: {
     staleTime: 0,
     SHOW_NOTIFICATIONS: false,
     notifier,
-    enableWebsocket: true,
+    enableWebsocket: false,
     WS_HOST,
   };
 
