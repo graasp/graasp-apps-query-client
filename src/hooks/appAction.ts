@@ -7,7 +7,11 @@ import { QueryClientConfig } from '../types';
 import { convertJs } from '@graasp/sdk';
 import { AppActionRecord } from '@graasp/sdk/frontend';
 
-export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
+export default (
+  queryClient: QueryClient,
+  queryConfig: QueryClientConfig,
+  useAppActionsUpdates?: (itemId: string | null | undefined) => void,
+) => {
   const { retry, cacheTime, staleTime } = queryConfig;
   const defaultOptions = {
     retry,
@@ -15,9 +19,16 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
     staleTime,
   };
   return {
-    useAppActions: ({ enabled = true }: { enabled?: boolean } = {}) => {
+    useAppActions: (
+      { enabled = true }: { enabled?: boolean } = {},
+      getUpdates = queryConfig.enableWebsocket,
+    ) => {
       const apiHost = getApiHost(queryClient);
       const { itemId } = getData(queryClient);
+
+      if (typeof useAppActionsUpdates !== 'undefined' && getUpdates) {
+        useAppActionsUpdates(itemId);
+      }
 
       return useQuery({
         queryKey: buildAppActionsKey(itemId),

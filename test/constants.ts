@@ -1,6 +1,7 @@
 import { v4 } from 'uuid';
 import { LocalContext } from '../src/types';
 import {
+  AppAction,
   AppData,
   AppDataVisibility,
   AppSetting,
@@ -93,6 +94,22 @@ export const buildAppData = ({ id = v4(), data = {} }: Partial<AppData> = {}): A
 });
 
 export const FIXTURE_APP_DATA: AppData[] = [buildAppData(), buildAppData(), buildAppData()];
+
+export const buildAppAction = ({ id = v4(), data = {} }: Partial<AppAction> = {}): AppAction => ({
+  id,
+  data,
+  type: 'action',
+  createdAt: new Date(),
+  member: MEMBER_RESPONSE,
+  item: MOCK_ITEM,
+});
+
+export const FIXTURE_APP_ACTIONS: AppAction[] = [
+  buildAppAction({ data: { text: 'action 1' } }),
+  buildAppAction({ data: { text: 'action 2' } }),
+  buildAppAction({ data: { text: 'action 3' } }),
+  buildAppAction({ data: { text: 'action 4' } }),
+];
 
 export const buildAppSetting = ({
   id = v4(),

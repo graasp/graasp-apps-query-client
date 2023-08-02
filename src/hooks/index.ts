@@ -20,6 +20,6 @@ export default (
     ...configureAppDataHooks(queryClient, queryConfig, wsHooks?.useAppDataUpdates),
     ...configurePostMessageHooks(queryClient, queryConfig),
     ...configureAppSettingHooks(queryClient, queryConfig),
-    ...configureAppActionHooks(queryClient, queryConfig),
+    ...configureAppActionHooks(queryClient, queryConfig, wsHooks?.useAppActionsUpdates),
   };
 };

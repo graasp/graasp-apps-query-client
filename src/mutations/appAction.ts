@@ -9,6 +9,7 @@ import { AppAction, convertJs } from '@graasp/sdk';
 import { AppActionRecord } from '@graasp/sdk/frontend';
 
 export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
+  const { enableWebsocket } = queryConfig;
   queryClient.setMutationDefaults(MUTATION_KEYS.POST_APP_ACTION, {
     mutationFn: (payload: Partial<AppAction>) => {
       const apiHost = getApiHost(queryClient);
@@ -19,14 +20,17 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
       const { itemId } = getData(queryClient);
       const key = buildAppActionsKey(itemId);
       const prevData = queryClient.getQueryData<List<AppActionRecord>>(key);
-      queryClient.setQueryData(key, prevData?.push(convertJs(newAppAction)));
+      // TODO: implement better mechanism for avoiding data duplication in frontend
+      if (!enableWebsocket) queryClient.setQueryData(key, prevData?.push(convertJs(newAppAction)));
     },
     onError: (error) => {
       queryConfig?.notifier?.({ type: postAppActionRoutine.FAILURE, payload: { error } });
     },
     onSettled: () => {
-      const { itemId } = getData(queryClient);
-      queryClient.invalidateQueries(buildAppActionsKey(itemId));
+      if (!enableWebsocket) {
+        const { itemId } = getData(queryClient);
+        queryClient.invalidateQueries(buildAppActionsKey(itemId));
+      }
     },
   });
 

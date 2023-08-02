@@ -1,14 +1,20 @@
 import { List } from 'immutable';
 
-import { AppDataRecord } from '@graasp/sdk/frontend';
+import { AppActionRecord, AppDataRecord } from '@graasp/sdk/frontend';
 import { convertJs } from '@graasp/sdk';
 
-import { FIXTURE_APP_DATA, FIXTURE_CONTEXT, buildAppData } from '../../../test/constants';
+import {
+  FIXTURE_APP_ACTIONS,
+  FIXTURE_APP_DATA,
+  FIXTURE_CONTEXT,
+  buildAppAction,
+  buildAppData,
+} from '../../../test/constants';
 import { getHandlerByChannel, mockWsHook, setUpWsTest } from '../../../test/wsUtils';
-import { buildAppDataKey } from '../../config/keys';
+import { buildAppActionsKey, buildAppDataKey } from '../../config/keys';
 import { configureWsAppHooks } from './app';
-import { APP_DATA_TOPIC } from '../constants';
-import { AppDataEvent } from '../types';
+import { APP_ACTIONS_TOPIC, APP_DATA_TOPIC } from '../constants';
+import { AppActionEvent, AppDataEvent } from '../types';
 
 const { hooks, wrapper, queryClient, handlers } = setUpWsTest({
   configureWsHooks: configureWsAppHooks,
@@ -107,6 +113,45 @@ describe('Websockets App Hooks', () => {
           .getQueryData<List<AppDataRecord>>(appDataKey)
           ?.find((a) => a.id === newAppData.id),
       ).toBeUndefined();
+    });
+  });
+  describe('useAppActionsUpdates', () => {
+    const appActionsArray = FIXTURE_APP_ACTIONS;
+    const appActionsList: List<AppActionRecord> = convertJs(appActionsArray);
+    const itemId = FIXTURE_CONTEXT.id;
+    const appActionsKey = buildAppActionsKey(itemId);
+    const channel = { name: itemId, topic: APP_ACTIONS_TOPIC };
+    const hook = () => hooks.useAppActionsUpdates(itemId);
+
+    it('check that the tests are initialized', async () => {
+      queryClient.setQueryData(appActionsKey, appActionsList);
+      expect(typeof hook).toBe('function');
+      mockWsHook({ hook, wrapper, enabled: true });
+      expect(handlers.length).toBeGreaterThan(0);
+      expect(queryClient).toBeDefined();
+      expect(queryClient.getQueryData(appActionsKey)).toEqualImmutable(appActionsList);
+    });
+
+    it('Receives post app action', async () => {
+      queryClient.setQueryData(appActionsKey, appActionsList);
+      await mockWsHook({ hook, wrapper });
+
+      const newAppAction = buildAppAction({ data: { text: 'new action' } });
+
+      const appActionEvent: AppActionEvent = {
+        kind: 'app-actions',
+        op: 'post',
+        appAction: newAppAction,
+      };
+
+      const h = getHandlerByChannel(handlers, channel);
+      h?.handler(appActionEvent);
+
+      expect(
+        queryClient
+          .getQueryData<List<AppActionRecord>>(appActionsKey)
+          ?.find((a) => a.id === newAppAction.id),
+      ).toEqualImmutable(convertJs(newAppAction));
     });
   });
 });

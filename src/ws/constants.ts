@@ -28,6 +28,7 @@ export const ERROR_SERVER_ERROR = 'SERVER_ERROR';
 
 // should probably go to sdk
 export const APP_DATA_TOPIC = 'app-data';
+export const APP_ACTIONS_TOPIC = 'app-actions';
 
 // To be moved to sdk
 // export const KINDS = {

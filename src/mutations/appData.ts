@@ -27,6 +27,7 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
       const key = buildAppDataKey(itemId);
       const prevData = queryClient.getQueryData<List<AppDataRecord>>(key);
       const newData = convertJs(newAppData);
+      // TODO: implement better mechanism for avoiding data duplication in frontend
       if (!enableWebsocket) queryClient.setQueryData(key, prevData?.push(newData));
       queryConfig?.notifier?.({ type: postAppDataRoutine.SUCCESS, payload: newData });
     },
@@ -181,9 +182,11 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
       notifier?.({ type: uploadAppDataFileRoutine.FAILURE, payload: { error } });
     },
     onSettled: () => {
-      const { itemId } = getData(queryClient);
-      if (itemId) {
-        queryClient.invalidateQueries(buildAppDataKey(itemId));
+      if (!enableWebsocket) {
+        const { itemId } = getData(queryClient);
+        if (itemId) {
+          queryClient.invalidateQueries(buildAppDataKey(itemId));
+        }
       }
     },
   });

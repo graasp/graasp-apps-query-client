@@ -1,4 +1,4 @@
-import { AppData } from '@graasp/sdk';
+import { AppAction, AppData } from '@graasp/sdk';
 
 // should probably go to sdk
 export type AppOperations = 'post' | 'patch' | 'delete';
@@ -22,4 +22,12 @@ export interface AppEvent {
 export interface AppDataEvent extends AppEvent {
   kind: 'app-data';
   appData: AppData;
+}
+
+/**
+ * Events that affect an app action
+ */
+export interface AppActionEvent extends AppEvent {
+  kind: 'app-actions';
+  appAction: AppAction;
 }
