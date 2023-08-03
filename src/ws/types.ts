@@ -1,14 +1,15 @@
+/**
+ * All the type definitions should be moved to @graasp/sdk
+ */
+
 import { AppAction, AppData, AppSetting } from '@graasp/sdk';
 
-// should probably go to sdk
 export type AppOperations = 'post' | 'patch' | 'delete';
 
-// should probably go to sdk
 export type AppEventKinds = 'app-data' | 'app-settings' | 'app-actions';
 
 /**
  * All websocket events for app will have this shape
- * should probably go to sdk
  */
 export interface AppEvent {
   kind: AppEventKinds;
@@ -17,7 +18,6 @@ export interface AppEvent {
 
 /**
  * Events that affect an app data
- * should probably go to sdk
  */
 export interface AppDataEvent extends AppEvent {
   kind: 'app-data';

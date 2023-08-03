@@ -22,8 +22,6 @@ const { hooks, wrapper, queryClient, handlers } = setUpWsTest({
   configureWsHooks: configureWsAppHooks,
 });
 
-// jest.spyOn(Cookies, 'get').mockReturnValue({ session: 'somesession' });
-
 describe('Websockets App Hooks', () => {
   afterEach(() => {
     queryClient.clear();
@@ -180,7 +178,6 @@ describe('Websockets App Hooks', () => {
       await mockWsHook({ hook, wrapper });
 
       const newAppSetting = buildAppSetting({ data: { togggle: true, parameter1: 'fixed' } });
-      // const newAppDataRecord: AppDataRecord = convertJs(newAppData);
 
       const appDataEvent: AppSettingEvent = {
         kind: 'app-settings',
@@ -204,8 +201,6 @@ describe('Websockets App Hooks', () => {
 
       const newAppSetting = appSettingsArray[0];
       newAppSetting.data = { togggle: true, parameter1: 'floating' };
-
-      // const newAppDataRecord: AppDataRecord = convertJs(newAppData);
 
       const appDataEvent: AppSettingEvent = {
         kind: 'app-settings',
