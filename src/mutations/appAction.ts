@@ -20,8 +20,16 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
       const { itemId } = getData(queryClient);
       const key = buildAppActionsKey(itemId);
       const prevData = queryClient.getQueryData<List<AppActionRecord>>(key);
-      // TODO: implement better mechanism for avoiding data duplication in frontend
-      if (!enableWebsocket) queryClient.setQueryData(key, prevData?.push(convertJs(newAppAction)));
+      const newData: AppActionRecord = convertJs(newAppAction);
+      if (enableWebsocket) {
+        // check that the websocket event has not already been received and therefore the data were added
+        if (prevData?.findIndex((a) => a.id === newData.id) === -1) {
+          queryClient.setQueryData(key, prevData?.push(newData));
+        }
+      } else {
+        // No websockets, then updates the data.
+        queryClient.setQueryData(key, prevData?.push(newData));
+      }
     },
     onError: (error) => {
       queryConfig?.notifier?.({ type: postAppActionRoutine.FAILURE, payload: { error } });
