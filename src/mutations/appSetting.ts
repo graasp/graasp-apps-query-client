@@ -22,11 +22,20 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
       const data = getDataOrThrow(queryClient);
       return Api.postAppSetting({ ...data, body: payload, apiHost });
     },
-    onSuccess: (newData: AppSetting) => {
+    onSuccess: (newAppSetting: AppSetting) => {
       const { itemId } = getData(queryClient);
       const key = buildAppSettingsKey(itemId);
       const prevData = queryClient.getQueryData<List<AppSettingRecord>>(key);
-      if (!enableWebsocket) queryClient.setQueryData(key, prevData?.push(convertJs(newData)));
+      const newData: AppSettingRecord = convertJs(newAppSetting);
+      if (enableWebsocket) {
+        // check that the websocket event has not already been received and therefore the data were added
+        if (prevData?.findIndex((a) => a.id === newData.id) === -1) {
+          queryClient.setQueryData(key, prevData?.push(newData));
+        }
+      } else {
+        // No websockets, then updates the data.
+        queryClient.setQueryData(key, prevData?.push(newData));
+      }
       queryConfig?.notifier?.({ type: postAppSettingRoutine.SUCCESS, payload: newData });
     },
     onError: (error) => {
