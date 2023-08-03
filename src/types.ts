@@ -13,7 +13,10 @@ import { ImmutableCast } from '@graasp/sdk/frontend';
 // generic type
 type EnumToUnionType<T> = T extends `${infer R}` ? R : never;
 
-export type Notifier = (e: unknown) => void;
+export type Notifier = (e: {
+  type: string;
+  payload?: { error?: Error; message?: string; [key: string]: unknown };
+}) => void;
 
 export type Data = { [key: string]: unknown };
 export type AppDataData = Data;
