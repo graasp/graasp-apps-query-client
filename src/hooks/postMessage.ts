@@ -143,7 +143,7 @@ const configurePostMessageHooks = (_queryClient: QueryClient, queryConfig: Query
           });
         });
       },
-      onError: (error) => {
+      onError: (error: Error) => {
         queryConfig?.notifier?.({
           type: getLocalContextRoutine.FAILURE,
           payload: { error },
@@ -192,7 +192,7 @@ const configurePostMessageHooks = (_queryClient: QueryClient, queryConfig: Query
           );
         });
       },
-      onError: (error) => {
+      onError: (error: Error) => {
         queryConfig?.notifier?.({
           type: getAuthTokenRoutine.FAILURE,
           payload: { error },
