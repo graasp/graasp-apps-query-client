@@ -3,7 +3,12 @@ import { Record } from 'immutable';
 import { LocalContext, QueryClientConfig } from '../types';
 import { AUTH_TOKEN_KEY, LOCAL_CONTEXT_KEY } from './keys';
 import { StatusCodes } from 'http-status-codes';
-import { MissingAppKeyError, MissingAppOriginError, MissingNecessaryDataError } from './errors';
+import {
+  MissingAppKeyError,
+  MissingAppOriginError,
+  MissingNecessaryDataError,
+  MissingPermissionError,
+} from './errors';
 
 export class MissingApiHostError extends Error {
   statusCode: number;
@@ -20,6 +25,15 @@ export const getApiHost = (queryClient: QueryClient) => {
     throw new MissingApiHostError();
   }
   return apiHost;
+};
+
+export const getPermissionLevel = (queryClient: QueryClient) => {
+  const context = queryClient.getQueryData<Record<LocalContext>>(LOCAL_CONTEXT_KEY);
+  const permission = context?.get('permission');
+  if (!permission) {
+    throw new MissingPermissionError();
+  }
+  return permission;
 };
 
 export const getData = (

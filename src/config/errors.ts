@@ -12,6 +12,12 @@ export class MissingItemIdError extends Error {
   }
 }
 
+export class MissingPermissionError extends Error {
+  constructor() {
+    super('Permission is missing!');
+  }
+}
+
 export class MissingFileIdError extends Error {
   constructor() {
     super('File id is missing!');
