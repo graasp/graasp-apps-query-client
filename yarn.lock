@@ -3670,8 +3670,8 @@ __metadata:
     "@commitlint/cli": 17.6.6
     "@commitlint/config-conventional": 17.6.6
     "@graasp/sdk": 1.1.2
-    "@tanstack/react-query": 4.29.25
-    "@tanstack/react-query-devtools": 4.29.25
+    "@tanstack/react-query": 4.32.5
+    "@tanstack/react-query-devtools": 4.32.5
     "@testing-library/react-hooks": 8.0.1
     "@types/jest": 29.5.3
     "@types/node": 20.4.5
@@ -3703,7 +3703,7 @@ __metadata:
     uuid: 9.0.0
     vite: 4.4.7
     vite-plugin-checker: 0.6.1
-    vite-plugin-dts: 3.3.1
+    vite-plugin-dts: 3.4.0
   peerDependencies:
     "@tanstack/react-query": ^4.28.0
     "@tanstack/react-query-devtools": ^4.28.0
@@ -4395,36 +4395,36 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@microsoft/api-extractor-model@npm:7.27.4":
-  version: 7.27.4
-  resolution: "@microsoft/api-extractor-model@npm:7.27.4"
+"@microsoft/api-extractor-model@npm:7.27.5":
+  version: 7.27.5
+  resolution: "@microsoft/api-extractor-model@npm:7.27.5"
   dependencies:
     "@microsoft/tsdoc": 0.14.2
     "@microsoft/tsdoc-config": ~0.16.1
-    "@rushstack/node-core-library": 3.59.5
-  checksum: fdb9d289a24c214fb3cd0b620d295394cc4f55a6720db490460132f0ca4ba23ced4fd44a084c7948d1d78cb32f2920a9f8f4ecd01d00d353304b947fdd9b3892
+    "@rushstack/node-core-library": 3.59.6
+  checksum: 20a84bf9bb4533b9af48649e4920ab341c94d4a931d08c3ff5608d6f56e72610c746def7f65a901906b39ee0a56e62a5967b8f7b23bdc4792d59ed3a8ac4d556
   languageName: node
   linkType: hard
 
-"@microsoft/api-extractor@npm:^7.36.0":
-  version: 7.36.1
-  resolution: "@microsoft/api-extractor@npm:7.36.1"
+"@microsoft/api-extractor@npm:^7.36.3":
+  version: 7.36.3
+  resolution: "@microsoft/api-extractor@npm:7.36.3"
   dependencies:
-    "@microsoft/api-extractor-model": 7.27.4
+    "@microsoft/api-extractor-model": 7.27.5
     "@microsoft/tsdoc": 0.14.2
     "@microsoft/tsdoc-config": ~0.16.1
-    "@rushstack/node-core-library": 3.59.5
+    "@rushstack/node-core-library": 3.59.6
     "@rushstack/rig-package": 0.4.0
     "@rushstack/ts-command-line": 4.15.1
     colors: ~1.2.1
     lodash: ~4.17.15
     resolve: ~1.22.1
-    semver: ~7.3.0
+    semver: ~7.5.4
     source-map: ~0.6.1
     typescript: ~5.0.4
   bin:
     api-extractor: bin/api-extractor
-  checksum: 61ac54a28aad64810acf0b9c49a3954ff7f2c22e585c341d30446ca6a10d177d76eb997085d1a431a768e1e078f74565803845f90a384da644dae44118ab7ae2
+  checksum: 61c9fe70db01e86a3f3ea6b61caf6681a988d4e7e3049bd10f58337ec5426a647ca21fa83b3902b8fcb7753b375f7351c5626902a27790ce4bc62f5aad6f3c7b
   languageName: node
   linkType: hard
 
@@ -4809,23 +4809,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@rushstack/node-core-library@npm:3.59.5":
-  version: 3.59.5
-  resolution: "@rushstack/node-core-library@npm:3.59.5"
+"@rushstack/node-core-library@npm:3.59.6":
+  version: 3.59.6
+  resolution: "@rushstack/node-core-library@npm:3.59.6"
   dependencies:
     colors: ~1.2.1
     fs-extra: ~7.0.1
     import-lazy: ~4.0.0
     jju: ~1.4.0
     resolve: ~1.22.1
-    semver: ~7.3.0
+    semver: ~7.5.4
     z-schema: ~5.0.2
   peerDependencies:
     "@types/node": "*"
   peerDependenciesMeta:
     "@types/node":
       optional: true
-  checksum: 4ec9efc127d033acd5fe2020c4ca64c118eb35995b8d14cc8d2321d36942d7f66431c8480d169d137522d44e959cfd89b4fe055848d79dee8129900caca1d184
+  checksum: ca5489d56b6959b5b5e35a518a669dc75a8c67d05fecaa8fade13bb5acf0d2f4095a36bd3534db7d292095ff00f800f00f3815e91d19c379d5a7a7d4264be491
   languageName: node
   linkType: hard
 
@@ -5093,25 +5093,25 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tanstack/query-core@npm:4.29.25":
-  version: 4.29.25
-  resolution: "@tanstack/query-core@npm:4.29.25"
-  checksum: 5287e278cf0ef781c5bd238842243adc4430a43ffc9bee1963131726c5bdf6a67d38e122f45c3375232d05c5a335b1309026ce4252647bb3e4710b70bcebdbf5
+"@tanstack/query-core@npm:4.32.5":
+  version: 4.32.5
+  resolution: "@tanstack/query-core@npm:4.32.5"
+  checksum: 91f0123e903acaa33bb34025d872832cb080ee61167e711c5ea37a34d2012340219e9e970fa2bf5aa344734ca8925c054863d5af809026ca44d8b0c4cfcc4165
   languageName: node
   linkType: hard
 
-"@tanstack/react-query-devtools@npm:4.29.25":
-  version: 4.29.25
-  resolution: "@tanstack/react-query-devtools@npm:4.29.25"
+"@tanstack/react-query-devtools@npm:4.32.5":
+  version: 4.32.5
+  resolution: "@tanstack/react-query-devtools@npm:4.32.5"
   dependencies:
     "@tanstack/match-sorter-utils": ^8.7.0
     superjson: ^1.10.0
     use-sync-external-store: ^1.2.0
   peerDependencies:
-    "@tanstack/react-query": 4.29.25
+    "@tanstack/react-query": ^4.32.5
     react: ^16.8.0 || ^17.0.0 || ^18.0.0
     react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
-  checksum: 2861f78de92a5c7595221383d9e60a70eafd0b1ed08313b624697fb221a1e6694200c14f4f5c3c2ef9ee0b1a525f7b7f04d3e0587b32b7a73cfb2d466d3e98af
+  checksum: c1b91cf6c93f782dd95ce6b1c6c7b158113a6002058895b5a8c159dd6868896097ba7cbcfcf404afd0b00a4f67915640d4789805462b4acffd6d9d34dbdb30b9
   languageName: node
   linkType: hard
 
@@ -5134,11 +5134,11 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tanstack/react-query@npm:4.29.25":
-  version: 4.29.25
-  resolution: "@tanstack/react-query@npm:4.29.25"
+"@tanstack/react-query@npm:4.32.5":
+  version: 4.32.5
+  resolution: "@tanstack/react-query@npm:4.32.5"
   dependencies:
-    "@tanstack/query-core": 4.29.25
+    "@tanstack/query-core": 4.32.5
     use-sync-external-store: ^1.2.0
   peerDependencies:
     react: ^16.8.0 || ^17.0.0 || ^18.0.0
@@ -5149,7 +5149,7 @@ __metadata:
       optional: true
     react-native:
       optional: true
-  checksum: e0ae4cbe1d8f691d488bc1c68df3df12d1ed093796eb879842ef8d4d388d07cebbdd7ab6174481d624dc133326895a53a5442864bb27ffcc0db5f4f40d7f827f
+  checksum: dd36cc8dbdb4bb10d79a18c9ddc842b52b4e85ba09a13aac169028bef04a864dc1a06cf5b5e70dc8308b93bd20b2d40d2a37f5efaeaa43ffaf261bc6ec01d140
   languageName: node
   linkType: hard
 
@@ -6081,30 +6081,30 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@volar/language-core@npm:1.8.0, @volar/language-core@npm:~1.8.0":
-  version: 1.8.0
-  resolution: "@volar/language-core@npm:1.8.0"
+"@volar/language-core@npm:1.10.0, @volar/language-core@npm:~1.10.0":
+  version: 1.10.0
+  resolution: "@volar/language-core@npm:1.10.0"
   dependencies:
-    "@volar/source-map": 1.8.0
-  checksum: f3d0d90a9457929631c2658c77089414fe79bdc68ff1abc750b191bce4a4cec999309b07f3dd75aaf241bb42872c4e12e4b52d667057ef2149bebf92b873595e
+    "@volar/source-map": 1.10.0
+  checksum: 5fd5ffe5f0edad9d78a3b524851fa6012836f1fb926ae6c64dc9f2aa4bfdf0470328ccea56b5509ebbc44d8781a3740640cbdea513c2467c9abea8eb0445aa42
   languageName: node
   linkType: hard
 
-"@volar/source-map@npm:1.8.0, @volar/source-map@npm:~1.8.0":
-  version: 1.8.0
-  resolution: "@volar/source-map@npm:1.8.0"
+"@volar/source-map@npm:1.10.0, @volar/source-map@npm:~1.10.0":
+  version: 1.10.0
+  resolution: "@volar/source-map@npm:1.10.0"
   dependencies:
     muggle-string: ^0.3.1
-  checksum: 379f85416f7bbe1ffb9ffe1d3b4b6424ee42b3542d10d1c55dcd28f0279f2f0a970bed75e48695f76aaab7ad5e61ead26d6c1aaa276d76180af14a1cbe502c6b
+  checksum: 3a473aa16fb3d7de6b5ee827908b92ff5ea8286fad23e1bf6ef515999b9dbc742a8d4b425446851e0f14ae074b2a268544a386b63bbe800f50914e32407f22d8
   languageName: node
   linkType: hard
 
-"@volar/typescript@npm:~1.8.0":
-  version: 1.8.0
-  resolution: "@volar/typescript@npm:1.8.0"
+"@volar/typescript@npm:~1.10.0":
+  version: 1.10.0
+  resolution: "@volar/typescript@npm:1.10.0"
   dependencies:
-    "@volar/language-core": 1.8.0
-  checksum: 184840c523972a7481685635f7e8dd207b8d2a870a430db76cea34708b779da94af78cc8b07f6b12cd0428a1009a7f981fed32a04a9e37b395cda844daab89c3
+    "@volar/language-core": 1.10.0
+  checksum: cd49932bca21d3d1186a9eedbfeba215372e9ca546774fa94225670f5b571e5d580b76b1dae59aba9012c006c5422c2648517206e95cd100cfb48c8a551dbe00
   languageName: node
   linkType: hard
 
@@ -6130,12 +6130,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@vue/language-core@npm:1.8.4, @vue/language-core@npm:^1.8.1":
-  version: 1.8.4
-  resolution: "@vue/language-core@npm:1.8.4"
+"@vue/language-core@npm:1.8.8, @vue/language-core@npm:^1.8.8":
+  version: 1.8.8
+  resolution: "@vue/language-core@npm:1.8.8"
   dependencies:
-    "@volar/language-core": ~1.8.0
-    "@volar/source-map": ~1.8.0
+    "@volar/language-core": ~1.10.0
+    "@volar/source-map": ~1.10.0
     "@vue/compiler-dom": ^3.3.0
     "@vue/reactivity": ^3.3.0
     "@vue/shared": ^3.3.0
@@ -6147,7 +6147,7 @@ __metadata:
   peerDependenciesMeta:
     typescript:
       optional: true
-  checksum: d235c253e858096bbdf9862966328b333734927e1c69f06321fc138e1ee9d2ca2d179ccbc2c6ae6f6b64d5936600c23d10d29e5ed50b991067ce88b1b53cf373
+  checksum: 6d5a240d53a839279c3f86467d0b7579ab9d0b90c2ee7efbb19026bcbc9d86829062b14ead72fe50ec88ae77df8810a1b59b3013ce4c59685e8c0b9b8307af92
   languageName: node
   linkType: hard
 
@@ -6167,13 +6167,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@vue/typescript@npm:1.8.4":
-  version: 1.8.4
-  resolution: "@vue/typescript@npm:1.8.4"
+"@vue/typescript@npm:1.8.8":
+  version: 1.8.8
+  resolution: "@vue/typescript@npm:1.8.8"
   dependencies:
-    "@volar/typescript": ~1.8.0
-    "@vue/language-core": 1.8.4
-  checksum: 1fbf30ca0981675ef750af92c2eedf802b698810bc97b98fdb22783d17b59b9045b80e70fb6dd4e65b6253689c6f2013c8f79694c914e5eca5ca98ebe0e1bc12
+    "@volar/typescript": ~1.10.0
+    "@vue/language-core": 1.8.8
+  checksum: 1895a62ccfa9cbe2772d944b90bbad328f48d617f6be8112521dac67f80bb130d9c17c221d8b8d723b8463524497d54e18d6902cfc8658e2dd6f297ed15bfc7c
   languageName: node
   linkType: hard
 
@@ -16602,7 +16602,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"semver@npm:^7.5.3, semver@npm:^7.5.4":
+"semver@npm:^7.5.3, semver@npm:^7.5.4, semver@npm:~7.5.4":
   version: 7.5.4
   resolution: "semver@npm:7.5.4"
   dependencies:
@@ -16610,17 +16610,6 @@ __metadata:
   bin:
     semver: bin/semver.js
   checksum: 12d8ad952fa353b0995bf180cdac205a4068b759a140e5d3c608317098b3575ac2f1e09182206bf2eb26120e1c0ed8fb92c48c592f6099680de56bb071423ca3
-  languageName: node
-  linkType: hard
-
-"semver@npm:~7.3.0":
-  version: 7.3.8
-  resolution: "semver@npm:7.3.8"
-  dependencies:
-    lru-cache: ^6.0.0
-  bin:
-    semver: bin/semver.js
-  checksum: ba9c7cbbf2b7884696523450a61fee1a09930d888b7a8d7579025ad93d459b2d1949ee5bbfeb188b2be5f4ac163544c5e98491ad6152df34154feebc2cc337c1
   languageName: node
   linkType: hard
 
@@ -18376,23 +18365,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vite-plugin-dts@npm:3.3.1":
-  version: 3.3.1
-  resolution: "vite-plugin-dts@npm:3.3.1"
+"vite-plugin-dts@npm:3.4.0":
+  version: 3.4.0
+  resolution: "vite-plugin-dts@npm:3.4.0"
   dependencies:
-    "@microsoft/api-extractor": ^7.36.0
+    "@microsoft/api-extractor": ^7.36.3
     "@rollup/pluginutils": ^5.0.2
-    "@vue/language-core": ^1.8.1
+    "@vue/language-core": ^1.8.8
     debug: ^4.3.4
     kolorist: ^1.8.0
-    vue-tsc: ^1.8.1
+    vue-tsc: ^1.8.8
   peerDependencies:
     typescript: "*"
     vite: "*"
   peerDependenciesMeta:
     vite:
       optional: true
-  checksum: 09fe0f5d246c875e3c21856844c5501b7f81cd9f5cdfa7456dc10888425f84a8faefc6fb2781701110ee55c7217616679dfa5df53175a0327616ec305e94803f
+  checksum: 47f0b2a1415b870978ba361d2e3cf31715270b7e4534da5046ff23dbb10730ba8e4b6a17d810a6264ce1362256cae67074bd6243ab8da0cd403bfe83a5554f91
   languageName: node
   linkType: hard
 
@@ -18506,18 +18495,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vue-tsc@npm:^1.8.1":
-  version: 1.8.4
-  resolution: "vue-tsc@npm:1.8.4"
+"vue-tsc@npm:^1.8.8":
+  version: 1.8.8
+  resolution: "vue-tsc@npm:1.8.8"
   dependencies:
-    "@vue/language-core": 1.8.4
-    "@vue/typescript": 1.8.4
+    "@vue/language-core": 1.8.8
+    "@vue/typescript": 1.8.8
     semver: ^7.3.8
   peerDependencies:
     typescript: "*"
   bin:
     vue-tsc: bin/vue-tsc.js
-  checksum: 97df9cefbd784901b01c1cf24a4262feb60d4f665e9f69a763408291199e2ab24a9b03d1183cabea200fb5afde7c9a0de19b82c3e0c0b85ee9685c57f8b240c4
+  checksum: e35e4ac139edd8a3c11519f4058e4fc3ec81b79ee6605b01d5d8b9787daf71e02b01ae003f520e2c910b0a81cebcd7611e99201f06ba0f7c141cd7a6188fdf8e
   languageName: node
   linkType: hard
 
