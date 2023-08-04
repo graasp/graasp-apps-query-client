@@ -5714,17 +5714,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react@npm:18.2.15":
-  version: 18.2.15
-  resolution: "@types/react@npm:18.2.15"
-  dependencies:
-    "@types/prop-types": "*"
-    "@types/scheduler": "*"
-    csstype: ^3.0.2
-  checksum: 36989f638201bfe2f4110b06c119180f6df9c0e13d7060481e82e7a745f81745a01ae543c478a25b61e0767cb52e82da2ad5b0dedacabf99339e523d06176705
-  languageName: node
-  linkType: hard
-
 "@types/react@npm:18.2.18":
   version: 18.2.18
   resolution: "@types/react@npm:18.2.18"
@@ -10590,7 +10579,7 @@ __metadata:
     "@testing-library/user-event": 14.4.3
     "@types/jest": 29.5.3
     "@types/node": 20.4.1
-    "@types/react": 18.2.15
+    "@types/react": 18.2.18
     "@types/react-dom": 18.2.7
     react: 18.2.0
     react-dom: 18.2.0
