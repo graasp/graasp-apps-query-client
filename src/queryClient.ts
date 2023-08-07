@@ -75,9 +75,7 @@ export default (config: Partial<QueryClientConfig>) => {
   const websocketClient = getWebsocketClient(queryConfig);
 
   // set up hooks given config
-  const hooks = {
-    ...configureHooks(queryClient, queryConfig, websocketClient),
-  };
+  const hooks = configureHooks(queryClient, queryConfig, websocketClient);
 
   // returns the queryClient and relative instances
   return {

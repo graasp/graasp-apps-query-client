@@ -4,7 +4,6 @@ import { QueryClient } from '@tanstack/react-query';
 
 import configureQueryClient from '../src/queryClient';
 import { Notifier, QueryClientConfig } from '../src/types';
-// import { isDataEqual } from '../src/utils/util';
 import { Channel } from '../src/ws/ws-client';
 import { API_HOST, WS_HOST } from './constants';
 

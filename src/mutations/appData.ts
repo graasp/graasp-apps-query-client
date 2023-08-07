@@ -74,7 +74,6 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
     },
     onSuccess: (newAppData) => {
       queryConfig?.notifier?.({ type: patchAppDataRoutine.SUCCESS, payload: newAppData });
-      // TODO: Implement local patching mecanism
     },
     onError: (error, _payload, prevData) => {
       queryConfig?.notifier?.({ type: patchAppDataRoutine.FAILURE, payload: { error } });
