@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.0.2](https://github.com/graasp/graasp-apps-query-client/compare/v2.0.1...v2.0.2) (2023-08-07)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @graasp/sdk to v1.2.0 ([#151](https://github.com/graasp/graasp-apps-query-client/issues/151)) ([5c5cef0](https://github.com/graasp/graasp-apps-query-client/commit/5c5cef03e6e2ec718b5adfcb11ea2aeae65c932f))
+* **deps:** update dependency @tanstack/react-query to v4.32.5 ([#140](https://github.com/graasp/graasp-apps-query-client/issues/140)) ([0b64530](https://github.com/graasp/graasp-apps-query-client/commit/0b645301276575a262af047b5e8d7ce668b4d7c9))
+* **deps:** update dependency @types/react to v18.2.18 ([#143](https://github.com/graasp/graasp-apps-query-client/issues/143)) ([87c5b09](https://github.com/graasp/graasp-apps-query-client/commit/87c5b09f9141c8aa641ba06f3ab2d435c0b80369))
+* improve notifier type ([#145](https://github.com/graasp/graasp-apps-query-client/issues/145)) ([2d57ebc](https://github.com/graasp/graasp-apps-query-client/commit/2d57ebce51775beb1c63826d8716486e0488259e))
+
 ## [2.0.1](https://github.com/graasp/graasp-apps-query-client/compare/v2.0.0...v2.0.1) (2023-07-17)
 
 
