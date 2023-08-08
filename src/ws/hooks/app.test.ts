@@ -114,6 +114,32 @@ describe('Websockets App Hooks', () => {
           ?.find((a) => a.id === newAppData.id),
       ).toBeUndefined();
     });
+
+    it('Receives delete app data, while having a single app data remaining', async () => {
+      const lastAppData = appDataArray[1];
+      const singleAppDataList: List<AppDataRecord> = convertJs([lastAppData]);
+      queryClient.setQueryData(appDataKey, singleAppDataList);
+      expect(singleAppDataList.size).toEqual(1);
+      await mockWsHook({ hook, wrapper });
+
+      expect(
+        queryClient
+          .getQueryData<List<AppDataRecord>>(appDataKey)
+          ?.find((a) => a.id === lastAppData.id),
+      ).toEqualImmutable(convertJs(lastAppData));
+
+      const appDataEvent: AppDataEvent = {
+        kind: 'app-data',
+        op: 'delete',
+        appData: lastAppData,
+      };
+
+      getHandlerByChannel(handlers, channel)?.handler(appDataEvent);
+
+      const queryData = queryClient.getQueryData<List<AppDataRecord>>(appDataKey);
+      expect(queryData?.size).toEqual(0);
+      expect(queryData?.find((a) => a.id === lastAppData.id)).toBeUndefined();
+    });
   });
 
   describe('useAppActionsUpdates', () => {

@@ -55,10 +55,10 @@ export const configureWsAppHooks = (websocketClient: WebsocketClient) => {
                 break;
               }
               case 'delete': {
-                const appDataDeletedIndex =
-                  appDataList?.findIndex((a) => a.id === newAppData.id) || -1;
-                if (appDataDeletedIndex >= 0)
-                  queryClient.setQueryData(appDataKey, appDataList?.delete(appDataDeletedIndex));
+                queryClient.setQueryData(
+                  appDataKey,
+                  appDataList?.filterNot(({ id }) => id === newAppData.id),
+                );
                 break;
               }
               default:
@@ -157,13 +157,10 @@ export const configureWsAppHooks = (websocketClient: WebsocketClient) => {
                 break;
               }
               case 'delete': {
-                const appSettingDeletedIndex =
-                  appSettingList?.findIndex((a) => a.id === newAppSetting.id) || -1;
-                if (appSettingDeletedIndex >= 0)
-                  queryClient.setQueryData(
-                    appSettingsKey,
-                    appSettingList?.delete(appSettingDeletedIndex),
-                  );
+                queryClient.setQueryData(
+                  appSettingsKey,
+                  appSettingList?.filterNot(({ id }) => id === newAppSetting.id),
+                );
                 break;
               }
               default:
