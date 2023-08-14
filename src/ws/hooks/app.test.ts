@@ -14,12 +14,18 @@ import {
 } from '../../../test/constants';
 import { getHandlerByChannel, mockWsHook, setUpWsTest } from '../../../test/wsUtils';
 import { buildAppActionsKey, buildAppDataKey, buildAppSettingsKey } from '../../config/keys';
-import { configureWsAppHooks } from './app';
+import {
+  configureWsAppActionsHooks,
+  configureWsAppDataHooks,
+  configureWsAppSettingHooks,
+} from './app';
 import { APP_ACTIONS_TOPIC, APP_DATA_TOPIC, APP_SETTINGS_TOPIC } from '../constants';
 import { AppActionEvent, AppDataEvent, AppSettingEvent } from '../types';
 
 const { hooks, wrapper, queryClient, handlers } = setUpWsTest({
-  configureWsHooks: configureWsAppHooks,
+  configureWsAppActionsHooks,
+  configureWsAppDataHooks,
+  configureWsAppSettingHooks,
 });
 
 describe('Websockets App Hooks', () => {

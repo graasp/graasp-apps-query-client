@@ -21,13 +21,25 @@ export const setUpWsTest = (args?: {
   enableWebsocket?: boolean;
   notifier?: Notifier;
   // eslint-disable-next-line @typescript-eslint/ban-types
-  configureWsHooks: Function;
+  configureWsAppActionsHooks: Function,
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  configureWsAppDataHooks: Function,
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  configureWsAppSettingHooks: Function,
 }) => {
   const {
     notifier = () => {
       // do nothing
     },
-    configureWsHooks = () => {
+    configureWsAppActionsHooks = () => {
+      // do nothing
+      console.warn('No websocket hook provided.');
+    },
+    configureWsAppDataHooks = () => {
+      // do nothing
+      console.warn('No websocket hook provided.');
+    },
+    configureWsAppSettingHooks = () => {
       // do nothing
       console.warn('No websocket hook provided.');
     },
@@ -50,7 +62,11 @@ export const setUpWsTest = (args?: {
   const websocketClient = MockedWebsocket(handlers);
 
   // configure hooks
-  const hooks = configureWsHooks(websocketClient);
+  const hooks = {
+    ...configureWsAppActionsHooks(websocketClient),
+    ...configureWsAppDataHooks(websocketClient),
+    ...configureWsAppSettingHooks(websocketClient),
+  };
 
   const queryClient = new QueryClient();
 

@@ -7,11 +7,13 @@ import { getApiHost, getData, getDataOrThrow } from '../config/utils';
 import { QueryClientConfig } from '../types';
 import { AppDataRecord } from '@graasp/sdk/frontend';
 import { convertJs } from '@graasp/sdk';
+import { WebsocketClient } from '../ws/ws-client';
+import { configureWsAppDataHooks } from '../ws/hooks/app';
 
 export default (
   queryClient: QueryClient,
   queryConfig: QueryClientConfig,
-  useAppDataUpdates?: (itemId: string | null | undefined) => void,
+  websocketClient?: WebsocketClient,
 ) => {
   const { retry, cacheTime, staleTime } = queryConfig;
   const defaultOptions = {
@@ -19,6 +21,7 @@ export default (
     cacheTime,
     staleTime,
   };
+  const { useAppDataUpdates } = configureWsAppDataHooks(websocketClient);
   return {
     useAppData: (
       refetchInterval: number | false = false,
@@ -27,9 +30,7 @@ export default (
       const apiHost = getApiHost(queryClient);
       const { itemId } = getData(queryClient);
 
-      if (typeof useAppDataUpdates !== 'undefined' && getUpdates) {
-        useAppDataUpdates(itemId);
-      }
+      useAppDataUpdates(getUpdates ? itemId : null);
 
       return useQuery({
         queryKey: buildAppDataKey(itemId),

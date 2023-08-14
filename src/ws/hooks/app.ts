@@ -14,7 +14,15 @@ import { buildAppActionsKey, buildAppDataKey, buildAppSettingsKey } from '../../
 import { AppActionEvent, AppDataEvent, AppSettingEvent } from '../types';
 import { APP_ACTIONS_TOPIC, APP_DATA_TOPIC, APP_SETTINGS_TOPIC } from '../constants';
 
-export const configureWsAppHooks = (websocketClient: WebsocketClient) => {
+export const configureWsAppDataHooks = (websocketClient?: WebsocketClient) => {
+  if (!websocketClient) {
+    return {
+      useAppDataUpdates: () => {
+        // do nothing
+        console.warn('No websocket client was provided.');
+      },
+    };
+  }
   return {
     /**
      * React hook to subscribe to the updates of the app data for
@@ -74,6 +82,19 @@ export const configureWsAppHooks = (websocketClient: WebsocketClient) => {
         };
       }, [itemId]);
     },
+  };
+};
+
+export const configureWsAppActionsHooks = (websocketClient?: WebsocketClient) => {
+  if (!websocketClient) {
+    return {
+      useAppActionsUpdates: () => {
+        // do nothing
+        console.warn('No websocket client was provided.');
+      },
+    };
+  }
+  return {
     /**
      * React hook to subscribe to the updates of the app data for
      * the given item ID.
@@ -116,6 +137,19 @@ export const configureWsAppHooks = (websocketClient: WebsocketClient) => {
         };
       }, [itemId]);
     },
+  };
+};
+
+export const configureWsAppSettingHooks = (websocketClient?: WebsocketClient) => {
+  if (!websocketClient) {
+    return {
+      useAppSettingsUpdates: () => {
+        // do nothing
+        console.warn('No websocket client was provided.');
+      },
+    };
+  }
+  return {
     /**
      * React hook to subscribe to the updates of the app data for
      * the given item ID.

@@ -6,11 +6,13 @@ import { getApiHost, getData, getDataOrThrow, getPermissionLevel } from '../conf
 import { QueryClientConfig } from '../types';
 import { PermissionLevel, convertJs } from '@graasp/sdk';
 import { AppActionRecord } from '@graasp/sdk/frontend';
+import { WebsocketClient } from '../ws/ws-client';
+import { configureWsAppActionsHooks } from '../ws/hooks/app';
 
 export default (
   queryClient: QueryClient,
   queryConfig: QueryClientConfig,
-  useAppActionsUpdates?: (itemId: string | null | undefined) => void,
+  websocketClient?: WebsocketClient,
 ) => {
   const { retry, cacheTime, staleTime } = queryConfig;
   const defaultOptions = {
@@ -18,22 +20,15 @@ export default (
     cacheTime,
     staleTime,
   };
+  const { useAppActionsUpdates } = configureWsAppActionsHooks(websocketClient);
   return {
-    useAppActions: (
-      { enabled = true }: { enabled?: boolean } = {},
-      getUpdates = queryConfig.enableWebsocket,
-    ) => {
+    useAppActions: (options?: { enabled?: boolean; getUpdates?: boolean }) => {
+      const getUpdates = options?.getUpdates ?? queryConfig.enableWebsocket;
       const apiHost = getApiHost(queryClient);
       const permissionLevel = getPermissionLevel(queryClient);
       const { itemId } = getData(queryClient);
 
-      if (
-        typeof useAppActionsUpdates !== 'undefined' &&
-        getUpdates &&
-        permissionLevel === PermissionLevel.Admin
-      ) {
-        useAppActionsUpdates(itemId);
-      }
+      useAppActionsUpdates(getUpdates && permissionLevel === PermissionLevel.Admin ? itemId : null);
 
       return useQuery({
         queryKey: buildAppActionsKey(itemId),
@@ -43,7 +38,7 @@ export default (
           return Api.getAppActions({ itemId, token, apiHost }).then((data) => convertJs(data));
         },
         ...defaultOptions,
-        enabled,
+        enabled: options?.enabled,
       });
     },
   };

@@ -1,1 +1,5 @@
-export { configureWsAppHooks } from './app';
+export {
+  configureWsAppActionsHooks,
+  configureWsAppDataHooks,
+  configureWsAppSettingHooks,
+} from './app';
