@@ -32,7 +32,7 @@ export const configureWsAppDataHooks = (websocketClient?: WebsocketClient) => {
     useAppDataUpdates: (itemId?: UUID | null) => {
       const queryClient = useQueryClient();
       useEffect(() => {
-        if (!itemId || itemId?.length === 0) {
+        if (!itemId) {
           return () => {
             // do nothing
             console.warn('No correct itemId provided.');
@@ -49,17 +49,21 @@ export const configureWsAppDataHooks = (websocketClient?: WebsocketClient) => {
             const newAppData: AppDataRecord = convertJs(event.appData);
             switch (event.op) {
               case 'post': {
-                if (appDataList?.findIndex(({ id }) => id === newAppData.id) === -1)
-                  queryClient.setQueryData(appDataKey, appDataList?.push(newAppData));
+                if (!appDataList?.some(({ id }) => id === newAppData.id))
+                  queryClient.setQueryData(
+                    appDataKey,
+                    appDataList ? appDataList.push(newAppData) : List.of(newAppData),
+                  );
                 break;
               }
               case 'patch': {
                 const appDataPatchedIndex = appDataList?.findIndex((a) => a.id === newAppData.id);
-                if (typeof appDataPatchedIndex !== 'undefined' && appDataPatchedIndex >= 0)
+                if (typeof appDataPatchedIndex !== 'undefined' && appDataPatchedIndex >= 0) {
                   queryClient.setQueryData(
                     appDataKey,
                     appDataList?.set(appDataPatchedIndex, newAppData),
                   );
+                }
                 break;
               }
               case 'delete': {
@@ -103,7 +107,7 @@ export const configureWsAppActionsHooks = (websocketClient?: WebsocketClient) =>
     useAppActionsUpdates: (itemId?: UUID | null) => {
       const queryClient = useQueryClient();
       useEffect(() => {
-        if (!itemId || itemId?.length === 0) {
+        if (!itemId) {
           return () => {
             // do nothing
             console.warn('No correct itemId provided.');
@@ -115,13 +119,17 @@ export const configureWsAppActionsHooks = (websocketClient?: WebsocketClient) =>
 
         const handler = (event: AppActionEvent) => {
           if (event.kind === 'app-actions') {
-            const appDataList: List<AppActionRecord> | undefined =
+            const appActionsList: List<AppActionRecord> | undefined =
               queryClient.getQueryData(appActionKey);
             const newAppAction: AppActionRecord = convertJs(event.appAction);
             switch (event.op) {
               case 'post': {
-                if (appDataList?.findIndex(({ id }) => id === newAppAction.id) === -1)
-                  queryClient.setQueryData(appActionKey, appDataList?.push(newAppAction));
+                if (!appActionsList?.some(({ id }) => id === newAppAction.id)) {
+                  queryClient.setQueryData(
+                    appActionKey,
+                    appActionsList ? appActionsList.push(newAppAction) : List.of(newAppAction),
+                  );
+                }
                 break;
               }
               default:
@@ -158,7 +166,7 @@ export const configureWsAppSettingHooks = (websocketClient?: WebsocketClient) =>
     useAppSettingsUpdates: (itemId?: UUID | null) => {
       const queryClient = useQueryClient();
       useEffect(() => {
-        if (!itemId || itemId?.length === 0) {
+        if (!itemId) {
           return () => {
             // do nothing
             console.warn('No correct itemId provided.');
@@ -175,19 +183,24 @@ export const configureWsAppSettingHooks = (websocketClient?: WebsocketClient) =>
             const newAppSetting: AppSettingRecord = convertJs(event.appSetting);
             switch (event.op) {
               case 'post': {
-                if (appSettingList?.findIndex(({ id }) => id === newAppSetting.id) === -1)
-                  queryClient.setQueryData(appSettingsKey, appSettingList?.push(newAppSetting));
+                if (!appSettingList?.some(({ id }) => id === newAppSetting.id)) {
+                  queryClient.setQueryData(
+                    appSettingsKey,
+                    appSettingList ? appSettingList.push(newAppSetting) : List.of(newAppSetting),
+                  );
+                }
                 break;
               }
               case 'patch': {
                 const appSettingPatchedIndex = appSettingList?.findIndex(
                   (a) => a.id === newAppSetting.id,
                 );
-                if (typeof appSettingPatchedIndex !== 'undefined' && appSettingPatchedIndex >= 0)
+                if (typeof appSettingPatchedIndex !== 'undefined' && appSettingPatchedIndex >= 0) {
                   queryClient.setQueryData(
                     appSettingsKey,
                     appSettingList?.set(appSettingPatchedIndex, newAppSetting),
                   );
+                }
                 break;
               }
               case 'delete': {
