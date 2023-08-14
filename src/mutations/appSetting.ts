@@ -27,13 +27,9 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
       const key = buildAppSettingsKey(itemId);
       const prevData = queryClient.getQueryData<List<AppSettingRecord>>(key);
       const newData: AppSettingRecord = convertJs(newAppSetting);
-      if (enableWebsocket) {
-        // check that the websocket event has not already been received and therefore the data were added
-        if (prevData?.findIndex((a) => a.id === newData.id) === -1) {
-          queryClient.setQueryData(key, prevData?.push(newData));
-        }
-      } else {
-        // No websockets, then updates the data.
+      if (!prevData) {
+        queryClient.setQueryData(key, List.of(newData));
+      } else if (!prevData.some((a) => a.id === newData.id)) {
         queryClient.setQueryData(key, prevData?.push(newData));
       }
       queryConfig?.notifier?.({ type: postAppSettingRoutine.SUCCESS, payload: newData });

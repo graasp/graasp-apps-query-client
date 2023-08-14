@@ -21,13 +21,10 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
       const key = buildAppActionsKey(itemId);
       const prevData = queryClient.getQueryData<List<AppActionRecord>>(key);
       const newData: AppActionRecord = convertJs(newAppAction);
-      if (enableWebsocket) {
-        // check that the websocket event has not already been received and therefore the data were added
-        if (prevData?.findIndex((a) => a.id === newData.id) === -1) {
-          queryClient.setQueryData(key, prevData?.push(newData));
-        }
-      } else {
-        // No websockets, then updates the data.
+      // check that the websocket event has not already been received and therefore the data were added
+      if (!prevData) {
+        queryClient.setQueryData(key, List.of(newData));
+      } else if (!prevData.some((a) => a.id === newData.id)) {
         queryClient.setQueryData(key, prevData?.push(newData));
       }
     },

@@ -10,7 +10,7 @@ import {
   postAppDataRoutine,
   uploadAppDataFileRoutine,
 } from '../routines';
-import { AppData, AppDataVisibility, UUID, convertJs } from '@graasp/sdk';
+import { AppData, UUID, convertJs } from '@graasp/sdk';
 import { AppDataRecord } from '@graasp/sdk/frontend';
 
 export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
@@ -27,15 +27,9 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
       const key = buildAppDataKey(itemId);
       const prevData = queryClient.getQueryData<List<AppDataRecord>>(key);
       const newData: AppDataRecord = convertJs(newAppData);
-      if (newData.visibility === AppDataVisibility.Member) {
-        queryClient.setQueryData(key, prevData?.push(newData)); // In that case, the websockets won't broadcast the `post` event.
-      } else if (enableWebsocket) {
-        // check that the websocket event has not already been received and therefore the data were added
-        if (prevData?.findIndex((a) => a.id === newData.id) === -1) {
-          queryClient.setQueryData(key, prevData?.push(newData));
-        }
-      } else {
-        // Not private data (visibility === member) and no websockets, then updates the data.
+      if (!prevData) {
+        queryClient.setQueryData(key, List.of(newData));
+      } else if (!prevData.some((a) => a.id === newData.id)) {
         queryClient.setQueryData(key, prevData?.push(newData));
       }
       queryConfig?.notifier?.({ type: postAppDataRoutine.SUCCESS, payload: newData });
