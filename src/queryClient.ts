@@ -16,6 +16,12 @@ import { API_ROUTES } from './api/routes';
 import { QueryClientConfig } from './types';
 import { getWebsocketClient } from './ws';
 
+const makeWsHostFromAPIHost = (apiHost?: string) => {
+  const url = new URL('/ws', apiHost);
+  url.protocol = 'ws:';
+  return url.toString();
+};
+
 // Query client retry function decides when and how many times a request should be retried
 const defaultRetryFunction = (failureCount: number, error: unknown) => {
   // retry if the request timed out
@@ -49,12 +55,9 @@ export default (config: Partial<QueryClientConfig>) => {
     cacheTime: config?.cacheTime || CACHE_TIME_MILLISECONDS,
     // derive WS_HOST from API_HOST if needed
     // TODO: pass it with the context
-    WS_HOST:
-      config?.WS_HOST ||
-      process.env.VITE_WS_HOST ||
-      `${config?.API_HOST?.replace('http', 'ws')}/ws`,
+    WS_HOST: config?.WS_HOST || process.env.VITE_WS_HOST || makeWsHostFromAPIHost(config?.API_HOST),
     // whether websocket support should be enabled
-    enableWebsocket: config?.enableWebsocket || false,
+    enableWebsocket: Boolean(config?.enableWebsocket),
   };
 
   // create queryclient with given config
