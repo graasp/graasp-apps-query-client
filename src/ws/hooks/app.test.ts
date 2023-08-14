@@ -20,7 +20,13 @@ import {
   configureWsAppSettingHooks,
 } from './app';
 import { APP_ACTIONS_TOPIC, APP_DATA_TOPIC, APP_SETTINGS_TOPIC } from '../constants';
-import { AppActionEvent, AppDataEvent, AppSettingEvent } from '../types';
+import {
+  AppActionEvent,
+  AppDataEvent,
+  AppEventKinds,
+  AppOperations,
+  AppSettingEvent,
+} from '../types';
 
 const { hooks, wrapper, queryClient, handlers } = setUpWsTest({
   configureWsAppActionsHooks,
@@ -57,8 +63,8 @@ describe('Websockets App Hooks', () => {
       const newAppData = buildAppData({ data: { message: 'This data was posted.' } });
 
       const appDataEvent: AppDataEvent = {
-        kind: 'app-data',
-        op: 'post',
+        kind: AppEventKinds.AppData,
+        op: AppOperations.POST,
         appData: newAppData,
       };
 
@@ -80,8 +86,8 @@ describe('Websockets App Hooks', () => {
       newAppData.data = { text: 'This data was already in the cache and was patched.' };
 
       const appDataEvent: AppDataEvent = {
-        kind: 'app-data',
-        op: 'patch',
+        kind: AppEventKinds.AppData,
+        op: AppOperations.PATCH,
         appData: newAppData,
       };
 
@@ -107,8 +113,8 @@ describe('Websockets App Hooks', () => {
       ).toEqualImmutable(convertJs(newAppData));
 
       const appDataEvent: AppDataEvent = {
-        kind: 'app-data',
-        op: 'delete',
+        kind: AppEventKinds.AppData,
+        op: AppOperations.DELETE,
         appData: newAppData,
       };
 
@@ -135,8 +141,8 @@ describe('Websockets App Hooks', () => {
       ).toEqualImmutable(convertJs(lastAppData));
 
       const appDataEvent: AppDataEvent = {
-        kind: 'app-data',
-        op: 'delete',
+        kind: AppEventKinds.AppData,
+        op: AppOperations.DELETE,
         appData: lastAppData,
       };
 
@@ -172,8 +178,8 @@ describe('Websockets App Hooks', () => {
       const newAppAction = buildAppAction({ data: { text: 'new action' } });
 
       const appActionEvent: AppActionEvent = {
-        kind: 'app-actions',
-        op: 'post',
+        kind: AppEventKinds.AppActions,
+        op: AppOperations.POST,
         appAction: newAppAction,
       };
 
@@ -212,8 +218,8 @@ describe('Websockets App Hooks', () => {
       const newAppSetting = buildAppSetting({ data: { togggle: true, parameter1: 'fixed' } });
 
       const appDataEvent: AppSettingEvent = {
-        kind: 'app-settings',
-        op: 'post',
+        kind: AppEventKinds.AppSettings,
+        op: AppOperations.POST,
         appSetting: newAppSetting,
       };
 
@@ -235,8 +241,8 @@ describe('Websockets App Hooks', () => {
       newAppSetting.data = { togggle: true, parameter1: 'floating' };
 
       const appDataEvent: AppSettingEvent = {
-        kind: 'app-settings',
-        op: 'patch',
+        kind: AppEventKinds.AppSettings,
+        op: AppOperations.PATCH,
         appSetting: newAppSetting,
       };
 
@@ -262,8 +268,8 @@ describe('Websockets App Hooks', () => {
       ).toEqualImmutable(convertJs(newAppSetting));
 
       const appDataEvent: AppSettingEvent = {
-        kind: 'app-settings',
-        op: 'delete',
+        kind: AppEventKinds.AppSettings,
+        op: AppOperations.DELETE,
         appSetting: newAppSetting,
       };
 

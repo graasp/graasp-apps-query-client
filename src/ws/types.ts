@@ -4,23 +4,35 @@
 
 import { AppAction, AppData, AppSetting } from '@graasp/sdk';
 
-export type AppOperations = 'post' | 'patch' | 'delete';
+export enum AppOperations {
+  POST = 'post',
+  PATCH = 'patch',
+  DELETE = 'delete',
+}
 
-export type AppEventKinds = 'app-data' | 'app-settings' | 'app-actions';
+export type AppOperation = AppOperations | `${AppOperations}`;
+
+export enum AppEventKinds {
+  AppData = 'app-data',
+  AppSettings = 'app-settings',
+  AppActions = 'app-actions',
+}
+
+export type AppEventKind = AppEventKinds | `${AppEventKinds}`;
 
 /**
  * All websocket events for app will have this shape
  */
 export interface AppEvent {
-  kind: AppEventKinds;
-  op: AppOperations;
+  kind: AppEventKind;
+  op: AppOperation;
 }
 
 /**
  * Events that affect an app data
  */
 export interface AppDataEvent extends AppEvent {
-  kind: 'app-data';
+  kind: AppEventKinds.AppData;
   appData: AppData;
 }
 
@@ -28,7 +40,7 @@ export interface AppDataEvent extends AppEvent {
  * Events that affect an app action
  */
 export interface AppActionEvent extends AppEvent {
-  kind: 'app-actions';
+  kind: AppEventKinds.AppActions;
   appAction: AppAction;
 }
 
@@ -36,6 +48,6 @@ export interface AppActionEvent extends AppEvent {
  * Events that affect an app setting
  */
 export interface AppSettingEvent extends AppEvent {
-  kind: 'app-settings';
+  kind: AppEventKinds.AppSettings;
   appSetting: AppSetting;
 }

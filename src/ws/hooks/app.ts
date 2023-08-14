@@ -11,7 +11,13 @@ import { AppActionRecord, AppDataRecord, AppSettingRecord } from '@graasp/sdk/fr
 import { Channel, WebsocketClient } from '../ws-client';
 import { useQueryClient } from '@tanstack/react-query';
 import { buildAppActionsKey, buildAppDataKey, buildAppSettingsKey } from '../../config/keys';
-import { AppActionEvent, AppDataEvent, AppSettingEvent } from '../types';
+import {
+  AppActionEvent,
+  AppDataEvent,
+  AppEventKinds,
+  AppOperations,
+  AppSettingEvent,
+} from '../types';
 import { APP_ACTIONS_TOPIC, APP_DATA_TOPIC, APP_SETTINGS_TOPIC } from '../constants';
 
 export const configureWsAppDataHooks = (websocketClient?: WebsocketClient) => {
@@ -43,12 +49,12 @@ export const configureWsAppDataHooks = (websocketClient?: WebsocketClient) => {
         const appDataKey = buildAppDataKey(itemId);
 
         const handler = (event: AppDataEvent) => {
-          if (event.kind === 'app-data') {
+          if (event.kind === AppEventKinds.AppData) {
             const appDataList: List<AppDataRecord> | undefined =
               queryClient.getQueryData(appDataKey);
             const newAppData: AppDataRecord = convertJs(event.appData);
             switch (event.op) {
-              case 'post': {
+              case AppOperations.POST: {
                 if (!appDataList?.some(({ id }) => id === newAppData.id))
                   queryClient.setQueryData(
                     appDataKey,
@@ -56,7 +62,7 @@ export const configureWsAppDataHooks = (websocketClient?: WebsocketClient) => {
                   );
                 break;
               }
-              case 'patch': {
+              case AppOperations.PATCH: {
                 const appDataPatchedIndex = appDataList?.findIndex((a) => a.id === newAppData.id);
                 if (typeof appDataPatchedIndex !== 'undefined' && appDataPatchedIndex >= 0) {
                   queryClient.setQueryData(
@@ -66,7 +72,7 @@ export const configureWsAppDataHooks = (websocketClient?: WebsocketClient) => {
                 }
                 break;
               }
-              case 'delete': {
+              case AppOperations.DELETE: {
                 queryClient.setQueryData(
                   appDataKey,
                   appDataList?.filterNot(({ id }) => id === newAppData.id),
@@ -118,12 +124,12 @@ export const configureWsAppActionsHooks = (websocketClient?: WebsocketClient) =>
         const appActionKey = buildAppActionsKey(itemId);
 
         const handler = (event: AppActionEvent) => {
-          if (event.kind === 'app-actions') {
+          if (event.kind === AppEventKinds.AppActions) {
             const appActionsList: List<AppActionRecord> | undefined =
               queryClient.getQueryData(appActionKey);
             const newAppAction: AppActionRecord = convertJs(event.appAction);
             switch (event.op) {
-              case 'post': {
+              case AppOperations.POST: {
                 if (!appActionsList?.some(({ id }) => id === newAppAction.id)) {
                   queryClient.setQueryData(
                     appActionKey,
@@ -177,12 +183,12 @@ export const configureWsAppSettingHooks = (websocketClient?: WebsocketClient) =>
         const appSettingsKey = buildAppSettingsKey(itemId);
 
         const handler = (event: AppSettingEvent) => {
-          if (event.kind === 'app-settings') {
+          if (event.kind === AppEventKinds.AppSettings) {
             const appSettingList: List<AppSettingRecord> | undefined =
               queryClient.getQueryData(appSettingsKey);
             const newAppSetting: AppSettingRecord = convertJs(event.appSetting);
             switch (event.op) {
-              case 'post': {
+              case AppOperations.POST: {
                 if (!appSettingList?.some(({ id }) => id === newAppSetting.id)) {
                   queryClient.setQueryData(
                     appSettingsKey,
@@ -191,7 +197,7 @@ export const configureWsAppSettingHooks = (websocketClient?: WebsocketClient) =>
                 }
                 break;
               }
-              case 'patch': {
+              case AppOperations.PATCH: {
                 const appSettingPatchedIndex = appSettingList?.findIndex(
                   (a) => a.id === newAppSetting.id,
                 );
@@ -203,7 +209,7 @@ export const configureWsAppSettingHooks = (websocketClient?: WebsocketClient) =>
                 }
                 break;
               }
-              case 'delete': {
+              case AppOperations.DELETE: {
                 queryClient.setQueryData(
                   appSettingsKey,
                   appSettingList?.filterNot(({ id }) => id === newAppSetting.id),
