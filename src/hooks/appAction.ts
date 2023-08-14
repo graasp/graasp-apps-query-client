@@ -22,13 +22,13 @@ export default (
   };
   const { useAppActionsUpdates } = configureWsAppActionsHooks(websocketClient);
   return {
-    useAppActions: (options?: { enabled?: boolean; getUpdates?: boolean }) => {
-      const getUpdates = options?.getUpdates ?? queryConfig.enableWebsocket;
+    useAppActions: (enabled?: boolean, getUpdates?: boolean) => {
+      const wsEnable = getUpdates ?? queryConfig.enableWebsocket;
       const apiHost = getApiHost(queryClient);
       const permissionLevel = getPermissionLevel(queryClient);
       const { itemId } = getData(queryClient);
 
-      useAppActionsUpdates(getUpdates && permissionLevel === PermissionLevel.Admin ? itemId : null);
+      useAppActionsUpdates(wsEnable && permissionLevel === PermissionLevel.Admin ? itemId : null);
 
       return useQuery({
         queryKey: buildAppActionsKey(itemId),
@@ -38,7 +38,7 @@ export default (
           return Api.getAppActions({ itemId, token, apiHost }).then((data) => convertJs(data));
         },
         ...defaultOptions,
-        enabled: options?.enabled,
+        enabled,
       });
     },
   };

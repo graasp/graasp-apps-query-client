@@ -23,11 +23,13 @@ export default (
   };
   const { useAppSettingsUpdates } = configureWsAppSettingHooks(websocketClient);
   return {
-    useAppSettings: (getUpdates = queryConfig.enableWebsocket) => {
+    useAppSettings: (getUpdates: boolean) => {
       const apiHost = getApiHost(queryClient);
       const { token, itemId } = getData(queryClient, { shouldMemberExist: false });
 
-      useAppSettingsUpdates(getUpdates ? itemId : null);
+      const wsEnable = getUpdates ?? queryConfig.enableWebsocket;
+
+      useAppSettingsUpdates(wsEnable ? itemId : null);
 
       return useQuery({
         queryKey: buildAppSettingsKey(itemId),
