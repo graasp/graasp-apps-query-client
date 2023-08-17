@@ -23,13 +23,14 @@ export default (
   };
   const { useAppDataUpdates } = configureWsAppDataHooks(websocketClient);
   return {
-    useAppData: (refetchInterval: number | false = false, getUpdates?: boolean) => {
+    useAppData: (options?: { refetchInterval: number | false; getUpdates?: boolean }) => {
+      const { refetchInterval, getUpdates } = options || { refetchInterval: false };
       const apiHost = getApiHost(queryClient);
       const { itemId } = getData(queryClient);
 
-      const wsEnable = getUpdates ?? queryConfig.enableWebsocket;
+      const enableWs = getUpdates ?? queryConfig.enableWebsocket;
 
-      useAppDataUpdates(wsEnable ? itemId : null);
+      useAppDataUpdates(enableWs ? itemId : null);
 
       return useQuery({
         queryKey: buildAppDataKey(itemId),
