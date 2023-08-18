@@ -1,29 +1,14 @@
-import { StatusCodes } from 'http-status-codes';
-import { PermissionLevel } from '@graasp/sdk';
-// React Query Configs
+import { PermissionLevel, ThumbnailSize } from '@graasp/sdk';
 
-// time during which cache entry is never refetched
-export const STALE_TIME_MILLISECONDS = 0; // default is 0 to always refetch, can increase to trade load against consistency
-// time during which cache entry is still served while refetches are pending
+// -- React Query Configs --
+// time during which cache entry is never refetch
+export const STALE_TIME_MILLISECONDS = 1000 * 30; // default is 0 to always refetch, can increase to trade load against consistency
+// time during which to keep a query cache entry which has no observers
 export const CACHE_TIME_MILLISECONDS = 1000 * 60 * 5; // default is 5 min
 
-export const SIGNED_OUT_USER = {};
-
-export const FALLBACK_TO_PUBLIC_FOR_STATUS_CODES = [
-  StatusCodes.UNAUTHORIZED,
-  StatusCodes.FORBIDDEN,
-];
-
-export const THUMBNAIL_SIZES = {
-  SMALL: 'small',
-  MEDIUM: 'medium',
-  LARGE: 'large',
-  ORIGINAL: 'original',
-};
-export const DEFAULT_THUMBNAIL_SIZES = THUMBNAIL_SIZES.SMALL;
-
+// defaults
+export const DEFAULT_THUMBNAIL_SIZES = ThumbnailSize.Small;
 export const DEFAULT_PERMISSION = PermissionLevel.Read;
-
 export const DEFAULT_CONTEXT = 'standalone';
 export const DEFAULT_LANG = 'en';
 export const MOCK_TOKEN = 'mock-token';
