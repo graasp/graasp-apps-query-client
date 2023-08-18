@@ -21,14 +21,6 @@ import {
 import { APP_ACTIONS_TOPIC, APP_DATA_TOPIC, APP_SETTINGS_TOPIC } from '../../config/constants';
 
 export const configureWsAppDataHooks = (websocketClient?: WebsocketClient) => {
-  if (!websocketClient) {
-    return {
-      useAppDataUpdates: () => {
-        // do nothing
-        console.warn('No websocket client was provided.');
-      },
-    };
-  }
   return {
     /**
      * React hook to subscribe to the updates of the app data for
@@ -38,11 +30,15 @@ export const configureWsAppDataHooks = (websocketClient?: WebsocketClient) => {
     useAppDataUpdates: (itemId?: UUID | null) => {
       const queryClient = useQueryClient();
       useEffect(() => {
+        if (!websocketClient) {
+          // do nothing
+          console.warn('No websocket client was provided.');
+          return;
+        }
         if (!itemId) {
-          return () => {
-            // do nothing
-            console.warn('No correct itemId provided.');
-          };
+          // do nothing
+          console.warn('No correct itemId provided.');
+          return;
         }
 
         const channel: Channel = { name: itemId, topic: APP_DATA_TOPIC };
@@ -96,14 +92,6 @@ export const configureWsAppDataHooks = (websocketClient?: WebsocketClient) => {
 };
 
 export const configureWsAppActionsHooks = (websocketClient?: WebsocketClient) => {
-  if (!websocketClient) {
-    return {
-      useAppActionsUpdates: () => {
-        // do nothing
-        console.warn('No websocket client was provided.');
-      },
-    };
-  }
   return {
     /**
      * React hook to subscribe to the updates of the app data for
@@ -113,11 +101,15 @@ export const configureWsAppActionsHooks = (websocketClient?: WebsocketClient) =>
     useAppActionsUpdates: (itemId?: UUID | null) => {
       const queryClient = useQueryClient();
       useEffect(() => {
+        if (!websocketClient) {
+          // do nothing
+          console.warn('No websocket client was provided.');
+          return;
+        }
         if (!itemId) {
-          return () => {
-            // do nothing
-            console.warn('No correct itemId provided.');
-          };
+          // do nothing
+          console.warn('No correct itemId provided.');
+          return;
         }
 
         const channel: Channel = { name: itemId, topic: APP_ACTIONS_TOPIC };
@@ -155,14 +147,6 @@ export const configureWsAppActionsHooks = (websocketClient?: WebsocketClient) =>
 };
 
 export const configureWsAppSettingHooks = (websocketClient?: WebsocketClient) => {
-  if (!websocketClient) {
-    return {
-      useAppSettingsUpdates: () => {
-        // do nothing
-        console.warn('No websocket client was provided.');
-      },
-    };
-  }
   return {
     /**
      * React hook to subscribe to the updates of the app data for
@@ -172,11 +156,15 @@ export const configureWsAppSettingHooks = (websocketClient?: WebsocketClient) =>
     useAppSettingsUpdates: (itemId?: UUID | null) => {
       const queryClient = useQueryClient();
       useEffect(() => {
+        if (!websocketClient) {
+          // do nothing
+          console.warn('No websocket client was provided.');
+          return;
+        }
         if (!itemId) {
-          return () => {
-            // do nothing
-            console.warn('No correct itemId provided.');
-          };
+          // do nothing
+          console.warn('No correct itemId provided.');
+          return;
         }
 
         const channel: Channel = { name: itemId, topic: APP_SETTINGS_TOPIC };
