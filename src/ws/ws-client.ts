@@ -4,16 +4,7 @@
  * Implements the client protocol from https://github.com/graasp/graasp-websockets
  */
 import { QueryClientConfig } from '../types';
-import {
-  CLIENT_ACTION_SUBSCRIBE,
-  CLIENT_ACTION_UNSUBSCRIBE,
-  REALM_NOTIF,
-  RESPONSE_STATUS_SUCCESS,
-  SERVER_TYPE_INFO,
-  SERVER_TYPE_RESPONSE,
-  SERVER_TYPE_UPDATE,
-} from './constants';
-import { ClientMessage, ServerMessage } from './protocol';
+import { Websocket } from '@graasp/sdk';
 
 export type Channel = {
   topic: string;
@@ -22,6 +13,13 @@ export type Channel = {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type UpdateHandlerFn = (data: any) => void;
+
+const ClientActions = Websocket.ClientActions;
+const ServerMessageTypes = Websocket.ServerMessageTypes;
+const ResponseStatuses = Websocket.ResponseStatuses;
+
+type ClientMessage = Websocket.ClientMessage;
+type ServerMessage = Websocket.ServerMessage;
 
 /**
  * Helper to remove the first element in an array that
@@ -108,8 +106,8 @@ export const configureWebsocketClient = (
 
   const sendSubscribeRequest = (channel: Channel) => {
     send({
-      realm: REALM_NOTIF,
-      action: CLIENT_ACTION_SUBSCRIBE,
+      realm: Websocket.Realms.Notif,
+      action: ClientActions.Subscribe,
       topic: channel.topic,
       channel: channel.name,
     });
@@ -117,8 +115,8 @@ export const configureWebsocketClient = (
 
   const sendUnsubscribeRequest = (channel: Channel) => {
     send({
-      realm: REALM_NOTIF,
-      action: CLIENT_ACTION_UNSUBSCRIBE,
+      realm: Websocket.Realms.Notif,
+      action: ClientActions.Unsubscribe,
       topic: channel.topic,
       channel: channel.name,
     });
@@ -216,15 +214,15 @@ export const configureWebsocketClient = (
     const update = serdes.parse(event.data);
 
     switch (update.type) {
-      case SERVER_TYPE_INFO: {
+      case ServerMessageTypes.Info: {
         subscriptions.info.forEach((fn) => fn({ message: update.message, extra: update.extra }));
         break;
       }
 
-      case SERVER_TYPE_RESPONSE: {
-        if (update.status === RESPONSE_STATUS_SUCCESS) {
+      case ServerMessageTypes.Response: {
+        if (update.status === ResponseStatuses.Success) {
           const req = update.request;
-          if (req?.action === CLIENT_ACTION_SUBSCRIBE) {
+          if (req?.action === ClientActions.Subscribe) {
             // when ack, move all from waiting acks to current
             subscriptions.ack({ name: req?.channel, topic: req?.topic });
           }
@@ -234,7 +232,7 @@ export const configureWebsocketClient = (
         break;
       }
 
-      case SERVER_TYPE_UPDATE: {
+      case ServerMessageTypes.Update: {
         // send update to all handlers of this channel
         const channel = { name: update.channel, topic: update.topic };
         const channelKey = buildChannelKey(channel);

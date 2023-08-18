@@ -19,7 +19,7 @@ import {
   configureWsAppDataHooks,
   configureWsAppSettingHooks,
 } from './app';
-import { APP_ACTIONS_TOPIC, APP_DATA_TOPIC, APP_SETTINGS_TOPIC } from '../constants';
+import { APP_ACTIONS_TOPIC, APP_DATA_TOPIC, APP_SETTINGS_TOPIC } from '../../config/constants';
 import {
   AppActionEvent,
   AppDataEvent,
