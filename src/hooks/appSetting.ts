@@ -24,7 +24,7 @@ export default (
   const { useAppSettingsUpdates } = configureWsAppSettingHooks(websocketClient);
   return {
     useAppSettings: (options?: { getUpdates: boolean }) => {
-      const { getUpdates } = options || { getUpdates: true };
+      const getUpdates = options?.getUpdates ?? true;
       const apiHost = getApiHost(queryClient);
       const { token, itemId } = getData(queryClient, { shouldMemberExist: false });
 

@@ -23,7 +23,8 @@ export default (
   const { useAppActionsUpdates } = configureWsAppActionsHooks(websocketClient);
   return {
     useAppActions: (options?: { enabled?: boolean; getUpdates?: boolean }) => {
-      const { enabled, getUpdates } = options || {};
+      const enabled = options?.enabled ?? true;
+      const getUpdates = options?.enabled ?? true;
       const enableWs = getUpdates ?? queryConfig.enableWebsocket;
       const apiHost = getApiHost(queryClient);
       const permissionLevel = getPermissionLevel(queryClient);
