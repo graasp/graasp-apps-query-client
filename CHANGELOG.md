@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.0.3](https://github.com/graasp/graasp-apps-query-client/compare/v2.0.2...v2.0.3) (2023-08-21)
+
+
+### Bug Fixes
+
+* **hooks:** default value useAppData hook ([0b37e31](https://github.com/graasp/graasp-apps-query-client/commit/0b37e31cd3c4d04e234090cf93f2bb387fa08d7e))
+* **hooks:** default values ([aa110de](https://github.com/graasp/graasp-apps-query-client/commit/aa110dedabd27c6169e246c7b5e1ba9feed4c095))
+
 ## [2.0.2](https://github.com/graasp/graasp-apps-query-client/compare/v2.0.1...v2.0.2) (2023-08-07)
 
 
