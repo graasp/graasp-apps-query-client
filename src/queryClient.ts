@@ -14,6 +14,13 @@ import configureHooks from './hooks';
 import configureMutations from './mutations';
 import { API_ROUTES } from './api/routes';
 import { QueryClientConfig } from './types';
+import { getWebsocketClient } from './ws';
+
+const makeWsHostFromAPIHost = (apiHost?: string) => {
+  const url = new URL('/ws', apiHost);
+  url.protocol = 'ws:';
+  return url.toString();
+};
 
 // Query client retry function decides when and how many times a request should be retried
 const defaultRetryFunction = (failureCount: number, error: unknown) => {
@@ -46,6 +53,11 @@ export default (config: Partial<QueryClientConfig>) => {
     staleTime: config?.staleTime || STALE_TIME_MILLISECONDS,
     // time before cache labeled as inactive to be garbage collected
     cacheTime: config?.cacheTime || CACHE_TIME_MILLISECONDS,
+    // derive WS_HOST from API_HOST if needed
+    // TODO: pass it with the context
+    WS_HOST: config?.WS_HOST || process.env.VITE_WS_HOST || makeWsHostFromAPIHost(config?.API_HOST),
+    // whether websocket support should be enabled
+    enableWebsocket: Boolean(config?.enableWebsocket),
   };
 
   // create queryclient with given config
@@ -62,8 +74,11 @@ export default (config: Partial<QueryClientConfig>) => {
   // mutations are attached to queryClient
   const mutations = configureMutations(queryClient, queryConfig);
 
+  // set up websocket client
+  const websocketClient = getWebsocketClient(queryConfig);
+
   // set up hooks given config
-  const hooks = configureHooks(queryClient, queryConfig);
+  const hooks = configureHooks(queryClient, queryConfig, websocketClient);
 
   // returns the queryClient and relative instances
   return {

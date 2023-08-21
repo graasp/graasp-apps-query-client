@@ -14,7 +14,7 @@ import { AppData, UUID, convertJs } from '@graasp/sdk';
 import { AppDataRecord } from '@graasp/sdk/frontend';
 
 export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
-  const { notifier } = queryConfig;
+  const { notifier, enableWebsocket } = queryConfig;
 
   queryClient.setMutationDefaults(MUTATION_KEYS.POST_APP_DATA, {
     mutationFn: (payload: Partial<AppData>) => {
@@ -26,16 +26,22 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
       const { itemId } = getData(queryClient);
       const key = buildAppDataKey(itemId);
       const prevData = queryClient.getQueryData<List<AppDataRecord>>(key);
-      const newData = convertJs(newAppData);
-      queryClient.setQueryData(key, prevData?.push(newData));
+      const newData: AppDataRecord = convertJs(newAppData);
+      if (!prevData) {
+        queryClient.setQueryData(key, List.of(newData));
+      } else if (!prevData.some((a) => a.id === newData.id)) {
+        queryClient.setQueryData(key, prevData?.push(newData));
+      }
       queryConfig?.notifier?.({ type: postAppDataRoutine.SUCCESS, payload: newData });
     },
     onError: (error) => {
       queryConfig?.notifier?.({ type: postAppDataRoutine.FAILURE, payload: { error } });
     },
     onSettled: () => {
-      const { itemId } = getData(queryClient);
-      queryClient.invalidateQueries(buildAppDataKey(itemId));
+      if (!enableWebsocket) {
+        const { itemId } = getData(queryClient);
+        queryClient.invalidateQueries(buildAppDataKey(itemId));
+      }
     },
   });
   const usePostAppData = () =>
@@ -75,10 +81,46 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
       }
     },
     onSettled: () => {
-      const data = getData(queryClient);
-      queryClient.invalidateQueries(buildAppDataKey(data?.itemId));
+      if (!enableWebsocket) {
+        const data = getData(queryClient);
+        queryClient.invalidateQueries(buildAppDataKey(data?.itemId));
+      }
     },
   });
+
+  /**
+   * @description
+   * By using the `merge` method in the `onMutate` callback, the payload should be a clean object, free of attributes from the `Record` type
+   * from Immutable.js. Therefore, when using this mutation, one must be careful not to use object spreading
+   * of the `data` attribute found in the `AppDataRecord`. I believe this may break some apps.
+   *
+   * @example Working example
+   * ```
+   * const { id, data } = appData; // type: AppDataRecord
+   * // data: { text: string, count: number }
+   * patchAppData({
+   *  id,
+   *  data: {
+   *    count: data.count,
+   *    text: newContent,
+   *  },
+   * });
+   * ```
+   *
+   * @example Failing example
+   * ```
+   * const { id, data } = appData; // type: AppDataRecord
+   * // data: { text: string, count: number }
+   * patchAppData({
+   *  id,
+   *  data: {
+   *    ...data,
+   *    text: newContent,
+   *  },
+   * });
+   * ```
+   *
+   */
   const usePatchAppData = () =>
     useMutation<AppData, unknown, Partial<AppData>>(MUTATION_KEYS.PATCH_APP_DATA);
 
@@ -114,7 +156,7 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
     },
     onSettled: () => {
       const { itemId } = getData(queryClient);
-      if (itemId) {
+      if (itemId && !enableWebsocket) {
         queryClient.invalidateQueries(buildAppDataKey(itemId));
       }
     },

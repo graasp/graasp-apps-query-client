@@ -7,18 +7,34 @@ import { getApiHost, getData, getDataOrThrow } from '../config/utils';
 import { QueryClientConfig } from '../types';
 import { AppDataRecord } from '@graasp/sdk/frontend';
 import { convertJs } from '@graasp/sdk';
+import { WebsocketClient } from '../ws/ws-client';
+import { configureWsAppDataHooks } from '../ws/hooks/app';
 
-export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
+export default (
+  queryClient: QueryClient,
+  queryConfig: QueryClientConfig,
+  websocketClient?: WebsocketClient,
+) => {
   const { retry, cacheTime, staleTime } = queryConfig;
   const defaultOptions = {
     retry,
     cacheTime,
     staleTime,
   };
+  const { useAppDataUpdates } = configureWsAppDataHooks(websocketClient);
   return {
-    useAppData: (refetchInterval: number | false = false) => {
+    useAppData: (
+      options: { refetchInterval: number | false; getUpdates?: boolean } = {
+        refetchInterval: false,
+      },
+    ) => {
+      const { refetchInterval, getUpdates } = options;
       const apiHost = getApiHost(queryClient);
       const { itemId } = getData(queryClient);
+
+      const enableWs = getUpdates ?? queryConfig.enableWebsocket;
+
+      useAppDataUpdates(enableWs ? itemId : null);
 
       return useQuery({
         queryKey: buildAppDataKey(itemId),

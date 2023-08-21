@@ -27,3 +27,8 @@ export const DEFAULT_PERMISSION = PermissionLevel.Read;
 export const DEFAULT_CONTEXT = 'standalone';
 export const DEFAULT_LANG = 'en';
 export const MOCK_TOKEN = 'mock-token';
+
+// TODO: Move these constants to graasp/sdk
+export const APP_ACTIONS_TOPIC = 'app-actions';
+export const APP_DATA_TOPIC = 'app-data';
+export const APP_SETTINGS_TOPIC = 'app-settings';

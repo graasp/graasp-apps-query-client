@@ -9,6 +9,7 @@ import { AppAction, convertJs } from '@graasp/sdk';
 import { AppActionRecord } from '@graasp/sdk/frontend';
 
 export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
+  const { enableWebsocket } = queryConfig;
   queryClient.setMutationDefaults(MUTATION_KEYS.POST_APP_ACTION, {
     mutationFn: (payload: Partial<AppAction>) => {
       const apiHost = getApiHost(queryClient);
@@ -19,14 +20,22 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
       const { itemId } = getData(queryClient);
       const key = buildAppActionsKey(itemId);
       const prevData = queryClient.getQueryData<List<AppActionRecord>>(key);
-      queryClient.setQueryData(key, prevData?.push(convertJs(newAppAction)));
+      const newData: AppActionRecord = convertJs(newAppAction);
+      // check that the websocket event has not already been received and therefore the data were added
+      if (!prevData) {
+        queryClient.setQueryData(key, List.of(newData));
+      } else if (!prevData.some((a) => a.id === newData.id)) {
+        queryClient.setQueryData(key, prevData?.push(newData));
+      }
     },
     onError: (error) => {
       queryConfig?.notifier?.({ type: postAppActionRoutine.FAILURE, payload: { error } });
     },
     onSettled: () => {
-      const { itemId } = getData(queryClient);
-      queryClient.invalidateQueries(buildAppActionsKey(itemId));
+      if (!enableWebsocket) {
+        const { itemId } = getData(queryClient);
+        queryClient.invalidateQueries(buildAppActionsKey(itemId));
+      }
     },
   });
 

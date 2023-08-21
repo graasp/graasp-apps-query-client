@@ -37,6 +37,8 @@ export type QueryClientConfig = {
   GRAASP_APP_KEY?: string | null;
   shouldRetry?: boolean;
   targetWindow?: Window;
+  WS_HOST?: string;
+  enableWebsocket?: boolean;
 
   /**
    * @deprecated Use GRAASP_APP_KEY instead

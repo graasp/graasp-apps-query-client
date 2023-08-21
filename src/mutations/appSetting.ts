@@ -14,7 +14,7 @@ import { AppSetting, convertJs } from '@graasp/sdk';
 import { AppSettingRecord } from '@graasp/sdk/frontend';
 
 export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
-  const { notifier } = queryConfig;
+  const { notifier, enableWebsocket } = queryConfig;
 
   queryClient.setMutationDefaults(MUTATION_KEYS.POST_APP_SETTING, {
     mutationFn: (payload: Partial<AppSetting>) => {
@@ -22,19 +22,26 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
       const data = getDataOrThrow(queryClient);
       return Api.postAppSetting({ ...data, body: payload, apiHost });
     },
-    onSuccess: (newData: AppSetting) => {
+    onSuccess: (newAppSetting: AppSetting) => {
       const { itemId } = getData(queryClient);
       const key = buildAppSettingsKey(itemId);
       const prevData = queryClient.getQueryData<List<AppSettingRecord>>(key);
-      queryClient.setQueryData(key, prevData?.push(convertJs(newData)));
+      const newData: AppSettingRecord = convertJs(newAppSetting);
+      if (!prevData) {
+        queryClient.setQueryData(key, List.of(newData));
+      } else if (!prevData.some((a) => a.id === newData.id)) {
+        queryClient.setQueryData(key, prevData?.push(newData));
+      }
       queryConfig?.notifier?.({ type: postAppSettingRoutine.SUCCESS, payload: newData });
     },
     onError: (error) => {
       queryConfig?.notifier?.({ type: postAppSettingRoutine.FAILURE, payload: { error } });
     },
     onSettled: () => {
-      const { itemId } = getData(queryClient);
-      queryClient.invalidateQueries(buildAppSettingsKey(itemId));
+      if (!enableWebsocket) {
+        const { itemId } = getData(queryClient);
+        queryClient.invalidateQueries(buildAppSettingsKey(itemId));
+      }
     },
   });
   const usePostAppSetting = () =>
@@ -76,8 +83,10 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
       }
     },
     onSettled: () => {
-      const data = getData(queryClient);
-      queryClient.invalidateQueries(buildAppSettingsKey(data?.itemId));
+      if (!enableWebsocket) {
+        const data = getData(queryClient);
+        queryClient.invalidateQueries(buildAppSettingsKey(data?.itemId));
+      }
     },
   });
   const usePatchAppSetting = () =>
@@ -119,9 +128,11 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
       }
     },
     onSettled: () => {
-      const { itemId } = getData(queryClient);
-      if (itemId) {
-        queryClient.invalidateQueries(buildAppSettingsKey(itemId));
+      if (!enableWebsocket) {
+        const { itemId } = getData(queryClient);
+        if (itemId) {
+          queryClient.invalidateQueries(buildAppSettingsKey(itemId));
+        }
       }
     },
   });

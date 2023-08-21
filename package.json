@@ -10,7 +10,8 @@
   "author": "Graasp",
   "contributors": [
     "Kim Lan Phan Hoang",
-    "Basile Spaenlehauer"
+    "Basile Spaenlehauer",
+    "Jérémy La Scala"
   ],
   "workspaces": [
     "example"
