@@ -356,7 +356,23 @@ const mockApi = ({
     searchParams.set('itemId', appContext.itemId);
     window.location.search = searchParams.toString();
   }
-  mockServer({ database: buildDatabase(database), appContext, externalUrls, errors });
+  const server = mockServer({ database: buildDatabase(database), appContext, externalUrls, errors });
+
+  const mirageRequestHandler = server.pretender.handledRequest;
+  server.pretender.handledRequest = (verb, path, request) => {
+    if (!['get', 'head'].includes(verb.toLowerCase())) {
+      sessionStorage.setItem('db', JSON.stringify(server.db.dump()));
+    }
+    mirageRequestHandler(verb, path, request);
+  };
+
+  const dbData = sessionStorage.getItem('db');
+
+  if (dbData) {
+    // https://miragejs.com/api/classes/db/#load-data
+    server.db.emptyData();
+    server.db.loadData(JSON.parse(dbData));
+  }
 };
 
 export default mockApi;
