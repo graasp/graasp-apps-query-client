@@ -37,7 +37,6 @@ export const configureWsAppDataHooks = (websocketClient?: WebsocketClient) => {
         }
         if (!itemId) {
           // do nothing
-          console.warn('No correct itemId provided.');
           return;
         }
 
@@ -108,7 +107,6 @@ export const configureWsAppActionsHooks = (websocketClient?: WebsocketClient) =>
         }
         if (!itemId) {
           // do nothing
-          console.warn('No correct itemId provided.');
           return;
         }
 
@@ -163,7 +161,6 @@ export const configureWsAppSettingHooks = (websocketClient?: WebsocketClient) =>
         }
         if (!itemId) {
           // do nothing
-          console.warn('No correct itemId provided.');
           return;
         }
 

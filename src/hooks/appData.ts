@@ -23,8 +23,12 @@ export default (
   };
   const { useAppDataUpdates } = configureWsAppDataHooks(websocketClient);
   return {
-    useAppData: (options?: { refetchInterval: number | false; getUpdates?: boolean }) => {
-      const { refetchInterval, getUpdates } = options || { refetchInterval: false };
+    useAppData: (
+      options: { refetchInterval: number | false; getUpdates?: boolean } = {
+        refetchInterval: false,
+      },
+    ) => {
+      const { refetchInterval, getUpdates } = options;
       const apiHost = getApiHost(queryClient);
       const { itemId } = getData(queryClient);
 
