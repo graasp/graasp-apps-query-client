@@ -40,10 +40,10 @@
     "test:ci": "yarn && cd example && yarn && cd .. && yarn test"
   },
   "dependencies": {
-    "@graasp/sdk": "1.2.0",
+    "@graasp/sdk": "1.2.1",
     "axios": "1.4.0",
     "http-status-codes": "2.2.0",
-    "immutable": "4.3.1",
+    "immutable": "4.3.2",
     "miragejs": "0.1.47",
     "qs": "6.11.2",
     "uuid": "9.0.0"
