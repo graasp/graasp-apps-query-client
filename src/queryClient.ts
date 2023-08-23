@@ -37,8 +37,7 @@ const defaultRetryFunction = (failureCount: number, error: unknown) => {
 
 export default (config: Partial<QueryClientConfig>) => {
   const baseConfig = {
-    SHOW_NOTIFICATIONS:
-      config?.SHOW_NOTIFICATIONS || process.env.REACT_APP_SHOW_NOTIFICATIONS === 'true' || false,
+    SHOW_NOTIFICATIONS: config?.SHOW_NOTIFICATIONS || false,
     keepPreviousData: config?.keepPreviousData || false,
     retry: config?.retry ?? defaultRetryFunction,
   };
@@ -55,7 +54,7 @@ export default (config: Partial<QueryClientConfig>) => {
     cacheTime: config?.cacheTime || CACHE_TIME_MILLISECONDS,
     // derive WS_HOST from API_HOST if needed
     // TODO: pass it with the context
-    WS_HOST: config?.WS_HOST || process.env.VITE_WS_HOST || makeWsHostFromAPIHost(config?.API_HOST),
+    WS_HOST: config?.WS_HOST || makeWsHostFromAPIHost(config?.API_HOST),
     // whether websocket support should be enabled
     enableWebsocket: Boolean(config?.enableWebsocket),
   };
