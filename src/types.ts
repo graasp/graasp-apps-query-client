@@ -3,7 +3,8 @@ import {
   AppData,
   AppSetting,
   Context,
-  Item,
+  CurrentMember,
+  DiscriminatedItem,
   Member,
   PermissionLevel,
   UUID,
@@ -72,8 +73,8 @@ export type LocalContext = {
 
 export type LocalContextRecord = ImmutableCast<LocalContext>;
 
-export type AppContext = Item & {
-  children: Item[];
+export type AppContext = DiscriminatedItem & {
+  children: DiscriminatedItem[];
   members: Member[];
 };
 
@@ -89,8 +90,9 @@ export interface Database {
   appData: AppData[];
   appActions: AppAction[];
   appSettings: AppSetting[];
-  members: Member[];
-  items: Item[];
+  // we pass the members as `CurrentMember` to be able to access all their properties, but they will be exposed as `Member`
+  members: CurrentMember[];
+  items: DiscriminatedItem[];
 }
 
 export type UserDataType = { [key: string]: unknown };

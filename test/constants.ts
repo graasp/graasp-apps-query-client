@@ -5,9 +5,9 @@ import {
   AppData,
   AppDataVisibility,
   AppSetting,
+  CurrentMember,
   FolderItemType,
   ItemType,
-  Member,
   MemberType,
 } from '@graasp/sdk';
 
@@ -16,7 +16,7 @@ export const WS_HOST = 'ws://localhost:3000';
 export const DOMAIN = 'domain';
 export const UNAUTHORIZED_RESPONSE = { some: 'error' };
 
-export const MEMBER_RESPONSE: Member = {
+export const MEMBER_RESPONSE: CurrentMember = {
   id: '42',
   name: 'username',
   type: MemberType.Individual,
@@ -26,7 +26,7 @@ export const MEMBER_RESPONSE: Member = {
   updatedAt: new Date(),
 };
 
-export const MEMBERS_RESPONSE: Member[] = [
+export const MEMBERS_RESPONSE: CurrentMember[] = [
   MEMBER_RESPONSE,
   {
     id: '421',

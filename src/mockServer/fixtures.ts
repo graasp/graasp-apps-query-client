@@ -1,9 +1,9 @@
-import { AppItemType, ItemType, Member, MemberType, PermissionLevel } from '@graasp/sdk';
+import { AppItemType, CurrentMember, ItemType, MemberType, PermissionLevel } from '@graasp/sdk';
 import { buildContext } from '../hooks/postMessage';
 import { LocalContext } from '../types';
 import { Context } from '@graasp/sdk';
 
-export const MOCK_SERVER_MEMBER: Member = {
+export const MOCK_SERVER_MEMBER: CurrentMember = {
   id: 'mock-member-id',
   name: 'mock-member-name',
   email: 'email@email.com',

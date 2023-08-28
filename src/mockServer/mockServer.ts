@@ -4,7 +4,15 @@ import { API_ROUTES } from '../api/routes';
 
 import { buildMockLocalContext, MOCK_SERVER_ITEM, MOCK_SERVER_MEMBER } from './fixtures';
 import { Database, LocalContext } from 'src/types';
-import { AppAction, AppData, AppDataVisibility, AppSetting, Member, MemberType } from '@graasp/sdk';
+import {
+  AppAction,
+  AppData,
+  AppDataVisibility,
+  AppSetting,
+  CurrentMember,
+  Member,
+  MemberType,
+} from '@graasp/sdk';
 
 const {
   buildGetAppDataRoute,
@@ -127,7 +135,7 @@ export const mockServer = ({
         item: currentItem,
         creator: currentMember,
       }),
-      member: Factory.extend<Member>({
+      member: Factory.extend<CurrentMember>({
         id: () => v4(),
         extra: () => ({}),
         email: (idx) => `app-setting-email-${idx}`,
