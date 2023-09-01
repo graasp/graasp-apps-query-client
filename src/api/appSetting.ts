@@ -1,3 +1,7 @@
+import { AppSetting } from '@graasp/sdk';
+
+import { ApiData } from '../types';
+import configureAxios from './axios';
 import {
   buildDeleteAppSettingRoute,
   buildDownloadAppSettingFileRoute,
@@ -5,9 +9,6 @@ import {
   buildPatchAppSettingRoute,
   buildPostAppSettingRoute,
 } from './routes';
-import configureAxios from './axios';
-import { ApiData } from '../types';
-import { AppSetting } from '@graasp/sdk';
 
 const axios = configureAxios();
 
@@ -26,7 +27,7 @@ export const postAppSetting = (
   args: ApiData & {
     body: unknown;
   },
-) => {
+): Promise<AppSetting> => {
   const { token, itemId, apiHost, body } = args;
   return axios
     .post(`${apiHost}/${buildPostAppSettingRoute({ itemId })}`, body, {
@@ -42,7 +43,7 @@ export const patchAppSetting = (
     id: string;
     data: unknown;
   },
-) => {
+): Promise<AppSetting> => {
   const { token, itemId, id, apiHost, data } = args;
   return axios
     .patch(
@@ -54,14 +55,14 @@ export const patchAppSetting = (
         },
       },
     )
-    .then(({ data }) => data);
+    .then(({ data: newData }) => newData);
 };
 
 export const deleteAppSetting = (
   args: ApiData & {
     id: string;
   },
-) => {
+): Promise<AppSetting> => {
   const { token, itemId, id, apiHost } = args;
   return axios
     .delete(`${apiHost}/${buildDeleteAppSettingRoute({ itemId, id })}`, {
@@ -86,7 +87,7 @@ export const getAppSettingFileContent = async ({
   id: string;
   apiHost: string;
   token: string;
-}) => {
+}): Promise<Blob> => {
   const url = await axios
     .get(`${apiHost}/${buildDownloadAppSettingFileRoute(id)}`, {
       headers: {

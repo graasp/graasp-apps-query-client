@@ -1,7 +1,14 @@
-import { AppItemType, CurrentMember, ItemType, MemberType, PermissionLevel } from '@graasp/sdk';
+import {
+  AppItemType,
+  Context,
+  CurrentMember,
+  ItemType,
+  MemberType,
+  PermissionLevel,
+} from '@graasp/sdk';
+
 import { buildContext } from '../hooks/postMessage';
 import { LocalContext } from '../types';
-import { Context } from '@graasp/sdk';
 
 export const MOCK_SERVER_MEMBER: CurrentMember = {
   id: 'mock-member-id',
@@ -30,7 +37,7 @@ export const MOCK_SERVER_ITEM: AppItemType = {
   settings: {},
 };
 
-export const buildMockLocalContext = (appContext?: Partial<LocalContext>) => {
+export const buildMockLocalContext = (appContext?: Partial<LocalContext>): LocalContext => {
   const context: LocalContext = {
     memberId: MOCK_SERVER_MEMBER.id,
     itemId: MOCK_SERVER_ITEM.id,

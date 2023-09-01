@@ -1,19 +1,21 @@
+import { convertJs } from '@graasp/sdk';
+
 import { StatusCodes } from 'http-status-codes';
 import { Record } from 'immutable';
 import nock from 'nock';
 import { v4 } from 'uuid';
+
 import {
-  buildMockLocalContext,
   FIXTURE_CONTEXT,
   UNAUTHORIZED_RESPONSE,
+  buildMockLocalContext,
 } from '../../test/constants';
 import { mockHook, setUpTest } from '../../test/utils';
 import { buildGetContextRoute } from '../api/routes';
 import { MOCK_TOKEN } from '../config/constants';
-import { AUTH_TOKEN_KEY, buildAppContextKey, LOCAL_CONTEXT_KEY } from '../config/keys';
+import { AUTH_TOKEN_KEY, LOCAL_CONTEXT_KEY, buildAppContextKey } from '../config/keys';
 import { MissingApiHostError } from '../config/utils';
 import { LocalContext } from '../types';
-import { convertJs } from '@graasp/sdk';
 
 const { hooks, wrapper, queryClient } = setUpTest();
 const itemId = v4();

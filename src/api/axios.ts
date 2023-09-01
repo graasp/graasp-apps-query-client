@@ -1,7 +1,8 @@
 import { parseStringToDate } from '@graasp/sdk';
+
 import axios from 'axios';
 
-const configureAxios = () => {
+const configureAxios = (): typeof axios => {
   axios.defaults.withCredentials = true;
 
   axios.defaults.transformResponse = [

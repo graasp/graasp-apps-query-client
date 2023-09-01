@@ -1,9 +1,9 @@
-import { Database } from './types';
+import { Database, LocalContext } from './types';
 
 // extend the Window interface with the new properties
 declare global {
   interface Window {
-    appContext: object;
+    appContext: LocalContext;
     Cypress: boolean;
     // this needs to be defined in accordance to the other usages
     database: Database;

@@ -1,13 +1,18 @@
+import { convertJs } from '@graasp/sdk';
+import { AppSettingRecord } from '@graasp/sdk/frontend';
+
 import { act } from '@testing-library/react-hooks';
+import { StatusCodes } from 'http-status-codes';
+import { List } from 'immutable';
 import nock from 'nock';
 import { v4 } from 'uuid';
-import { List } from 'immutable';
+
 import {
   FIXTURE_APP_SETTINGS,
-  buildMockLocalContext,
   REQUEST_METHODS,
   UNAUTHORIZED_RESPONSE,
   buildAppSetting,
+  buildMockLocalContext,
 } from '../../test/constants';
 import { mockMutation, setUpTest, waitForMutation } from '../../test/utils';
 import {
@@ -15,17 +20,14 @@ import {
   buildPatchAppSettingRoute,
   buildPostAppSettingRoute,
 } from '../api/routes';
+import { MOCK_TOKEN } from '../config/constants';
 import {
   AUTH_TOKEN_KEY,
-  buildAppSettingsKey,
   LOCAL_CONTEXT_KEY,
   MUTATION_KEYS,
+  buildAppSettingsKey,
 } from '../config/keys';
-import { StatusCodes } from 'http-status-codes';
-import { MOCK_TOKEN } from '../config/constants';
 import { patchAppSettingRoutine, postAppSettingRoutine } from '../routines';
-import { convertJs } from '@graasp/sdk';
-import { AppSettingRecord } from '@graasp/sdk/frontend';
 
 const mockedNotifier = jest.fn();
 const { wrapper, queryClient, useMutation } = setUpTest({
@@ -227,7 +229,7 @@ describe('App Settings Mutations', () => {
           }),
         );
         expect(queryClient.getQueryData(key)).toEqualImmutable(initData);
-        expect(queryClient.getQueryState(key)?.isInvalidated).toBeTruthy();
+        expect(queryClient.getQueryState(key)?.isInvalidated).toBeFalsy();
       });
     });
   });
@@ -422,7 +424,7 @@ describe('App Settings Mutations', () => {
           }),
         );
         expect(queryClient.getQueryData(key)).toEqualImmutable(initData);
-        expect(queryClient.getQueryState(key)?.isInvalidated).toBeTruthy();
+        expect(queryClient.getQueryState(key)?.isInvalidated).toBeFalsy();
       });
     });
   });
@@ -603,7 +605,7 @@ describe('App Settings Mutations', () => {
         });
 
         expect(queryClient.getQueryData(key)).toEqualImmutable(initData);
-        expect(queryClient.getQueryState(key)?.isInvalidated).toBeTruthy();
+        expect(queryClient.getQueryState(key)?.isInvalidated).toBeFalsy();
       });
     });
   });

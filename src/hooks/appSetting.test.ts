@@ -1,25 +1,27 @@
-import nock from 'nock';
-import { v4 } from 'uuid';
+import { convertJs } from '@graasp/sdk';
+import { AppSettingRecord } from '@graasp/sdk/frontend';
+
 import { StatusCodes } from 'http-status-codes';
 import { List } from 'immutable';
-import { Endpoint, mockHook, setUpTest } from '../../test/utils';
-import { buildDownloadAppSettingFileRoute, buildGetAppSettingsRoute } from '../api/routes';
+import nock from 'nock';
+import { v4 } from 'uuid';
+
 import {
-  AUTH_TOKEN_KEY,
-  buildAppSettingFileContentKey,
-  buildAppSettingsKey,
-  LOCAL_CONTEXT_KEY,
-} from '../config/keys';
-import {
-  UNAUTHORIZED_RESPONSE,
-  buildMockLocalContext,
   FIXTURE_APP_SETTINGS,
   S3_FILE_BLOB_RESPONSE,
+  UNAUTHORIZED_RESPONSE,
+  buildMockLocalContext,
 } from '../../test/constants';
-import { MissingApiHostError } from '../config/utils';
+import { Endpoint, mockHook, setUpTest } from '../../test/utils';
+import { buildDownloadAppSettingFileRoute, buildGetAppSettingsRoute } from '../api/routes';
 import { MOCK_TOKEN } from '../config/constants';
-import { AppSettingRecord } from '@graasp/sdk/frontend';
-import { convertJs } from '@graasp/sdk';
+import {
+  AUTH_TOKEN_KEY,
+  LOCAL_CONTEXT_KEY,
+  buildAppSettingFileContentKey,
+  buildAppSettingsKey,
+} from '../config/keys';
+import { MissingApiHostError } from '../config/utils';
 
 const { hooks, wrapper, queryClient } = setUpTest();
 const itemId = v4();

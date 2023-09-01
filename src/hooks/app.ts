@@ -1,11 +1,14 @@
-import { QueryClient, useQuery } from '@tanstack/react-query';
-import * as Api from '../api';
-import { buildAppContextKey } from '../config/keys';
-import { getApiHost, getData, getDataOrThrow } from '../config/utils';
-import { AppContextRecord, QueryClientConfig } from '../types';
 import { convertJs } from '@graasp/sdk';
 
-export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+
+import * as Api from '../api';
+import { buildAppContextKey } from '../config/keys';
+import { getApiHost, getDataOrThrow } from '../config/utils';
+import { AppContextRecord, QueryClientConfig } from '../types';
+
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+export default (queryConfig: QueryClientConfig) => {
   const { retry, cacheTime, staleTime } = queryConfig;
   const defaultOptions = {
     retry,
@@ -14,20 +17,20 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
   };
   return {
     useAppContext: () => {
+      const queryClient = useQueryClient();
       const apiHost = getApiHost(queryClient);
-      const { itemId } = getData(queryClient, { shouldMemberExist: false });
+      const { itemId, token } = getDataOrThrow(queryClient, {
+        shouldMemberExist: false,
+      });
 
       return useQuery({
         queryKey: buildAppContextKey(itemId),
-        queryFn: (): Promise<AppContextRecord> => {
-          const { token, itemId } = getDataOrThrow(queryClient, { shouldMemberExist: false });
-
-          return Api.getContext({
+        queryFn: (): Promise<AppContextRecord> =>
+          Api.getContext({
             itemId,
             token,
             apiHost,
-          }).then((data) => convertJs(data));
-        },
+          }).then((data) => convertJs(data)),
         ...defaultOptions,
       });
     },

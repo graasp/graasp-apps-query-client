@@ -1,7 +1,8 @@
-import { buildGetAppActionsRoute, buildPostAppActionRoute } from './routes';
-import { ApiData } from '../types';
 import { AppAction } from '@graasp/sdk';
+
+import { ApiData } from '../types';
 import configureAxios from './axios';
+import { buildGetAppActionsRoute, buildPostAppActionRoute } from './routes';
 
 const axios = configureAxios();
 

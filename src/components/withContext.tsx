@@ -1,79 +1,155 @@
-import qs from 'qs';
-import React, { createContext, FC, useContext } from 'react';
+import React, { ReactElement, createContext, useContext } from 'react';
+
+import { Context, PermissionLevel, convertJs } from '@graasp/sdk';
+
 import { UseQueryResult } from '@tanstack/react-query';
-import { buildMockLocalContext } from '../mockServer/fixtures';
+
 import { LocalContext, LocalContextRecord } from '../types';
 import { AutoResizer } from './AutoResizer';
-import { Context as ContextType, convertJs, PermissionLevel } from '@graasp/sdk';
 
-const defaultValue: LocalContext = {
+export const defaultContextValue: LocalContext = {
   apiHost: '',
   itemId: '',
-  memberId: undefined,
+  memberId: '',
   settings: {},
   dev: false,
   offline: false,
   lang: 'en',
-  context: ContextType.Builder,
+  context: Context.Builder,
   standalone: false,
   permission: PermissionLevel.Read,
 };
 
-const Context = createContext<LocalContextRecord>(convertJs(defaultValue));
+const LocalContextContext = createContext<LocalContextRecord>(convertJs(defaultContextValue));
 
-interface Props {
-  useGetLocalContext: (itemId: string) => UseQueryResult<LocalContextRecord, unknown>;
+interface WithLocalContextProps {
+  children: ReactElement;
+  useGetLocalContext: (
+    itemId: string,
+    defaultValue: LocalContext,
+  ) => UseQueryResult<LocalContextRecord, unknown>;
   LoadingComponent?: React.ReactElement;
-  defaultValue?: LocalContextRecord;
+  defaultValue: LocalContext;
   onError?: (error: unknown) => void;
   useAutoResize?: (itemId: string) => void;
 }
 
-const withContext =
-  <P extends object>(Component: React.ComponentType<P>, props: Props): FC<P> =>
-  (childProps: P) => {
+const WithLocalContext = (
+  {
+    LoadingComponent,
+    defaultValue,
+    useGetLocalContext,
+    onError,
+    useAutoResize,
+    children,
+  }: WithLocalContextProps,
+): JSX.Element => {
+  const itemId = new URL(window.location.toString()).searchParams.get('itemId') || '';
+  const { data: context, isLoading, isError, error } = useGetLocalContext(itemId, defaultValue);
+  if (context) {
+    return (
+      <LocalContextContext.Provider value={context}>
+        {useAutoResize ? (
+          <AutoResizer itemId={itemId} useAutoResize={useAutoResize}>
+            {children}
+          </AutoResizer>
+        ) : (
+          children
+        )}
+      </LocalContextContext.Provider>
+    );
+  }
+
+  if (isLoading) {
+    return LoadingComponent ?? <div>Loading LocalContext...</div>;
+  }
+
+  if (isError) {
+    if (onError) {
+      onError(error);
+    } else {
+      // eslint-disable-next-line no-console
+      console.error(error);
+    }
+  }
+  return (
+    <div>
+      Could not get `LocalContext`. Check if you have mocking enabled, or if you are running in an
+      iframe, that the parent window replies to your messages
+    </div>
+  );
+};
+
+// **********************************************************************
+//
+// Do NOT use/change/update what is bellow here, it will be removed soon.
+//
+// **********************************************************************
+
+/**
+ * @deprecated
+ */
+interface Props {
+  useGetLocalContext: (
+    itemId: string,
+    defaultValue: LocalContext,
+  ) => UseQueryResult<LocalContextRecord, unknown>;
+  LoadingComponent?: React.ReactElement;
+  defaultValue: LocalContext;
+  onError?: (error: unknown) => void;
+  useAutoResize?: (itemId: string) => void;
+}
+
+/**
+ * @deprecated use `WithLocalContext` instead
+ */
+const withContext = <P extends object>(
+  Component: React.ComponentType<P>,
+  props: Props,
+): ((childProps: P) => JSX.Element) => {
+  const WithContextComponent = (childProps: P): JSX.Element => {
     const { LoadingComponent, defaultValue, useGetLocalContext, onError, useAutoResize } = props;
-    const { itemId } = qs.parse(window.location.search, {
-      ignoreQueryPrefix: true,
-    }) as { itemId: string };
-    const { data: context, isLoading, isError, error } = useGetLocalContext(itemId);
+
+    const itemId = new URL(window.location.toString()).searchParams.get('itemId') || '';
+    const { data: context, isLoading, isError, error } = useGetLocalContext(itemId, defaultValue);
+    if (context) {
+      const children = <Component {...childProps} />;
+
+      return (
+        <LocalContextContext.Provider value={context}>
+          {useAutoResize ? (
+            <AutoResizer itemId={itemId} useAutoResize={useAutoResize}>
+              {children}
+            </AutoResizer>
+          ) : (
+            children
+          )}
+        </LocalContextContext.Provider>
+      );
+    }
 
     if (isLoading) {
-      return LoadingComponent ?? <div>loading...</div>;
+      return LoadingComponent ?? <div>Loading LocalContext...</div>;
     }
 
     if (isError) {
       if (onError) {
         onError(error);
       } else {
+        // eslint-disable-next-line no-console
         console.error(error);
       }
     }
-
-    // todo: define a context to default to
-    const value = context ?? defaultValue ?? convertJs(buildMockLocalContext({ itemId }));
-
-    const children = <Component {...(childProps as P)} />;
-
     return (
-      <Context.Provider value={value}>
-        {useAutoResize ? (
-          <AutoResizer useAutoResize={() => useAutoResize(itemId)}>{children}</AutoResizer>
-        ) : (
-          children
-        )}
-      </Context.Provider>
+      <div>
+        Could not get `LocalContext`. Check if you have mocking enabled, or if you are running in an
+        iframe, that the parent window replies to your messages
+      </div>
     );
   };
-
-const useLocalContext = () => useContext(Context);
-
-export {
-  useLocalContext,
-  /**
-   * @deprecated Using `React.useContext(Context)` is deprecated.
-   * Please use exported `useLocalContext()` hook instead
-   */
-  Context,
-  withContext,
+  return WithContextComponent;
 };
+
+const useLocalContext = (): LocalContextRecord => useContext(LocalContextContext);
+
+export { useLocalContext, WithLocalContext, withContext };

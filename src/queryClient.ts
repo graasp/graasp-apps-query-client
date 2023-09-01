@@ -1,18 +1,19 @@
-import { getReasonPhrase, StatusCodes } from 'http-status-codes';
 import {
+  Hydrate,
   QueryClient,
   QueryClientProvider,
-  useMutation,
-  Hydrate,
   dehydrate,
+  useMutation,
   useQuery,
 } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import { MUTATION_KEYS, QUERY_KEYS, buildPostMessageKeys } from './config/keys';
+import { StatusCodes, getReasonPhrase } from 'http-status-codes';
+
+import { API_ROUTES } from './api/routes';
 import { CACHE_TIME_MILLISECONDS, STALE_TIME_MILLISECONDS } from './config/constants';
+import { MUTATION_KEYS, QUERY_KEYS, buildPostMessageKeys } from './config/keys';
 import configureHooks from './hooks';
 import configureMutations from './mutations';
-import { API_ROUTES } from './api/routes';
 import { QueryClientConfig } from './types';
 import { getWebsocketClient } from './ws';
 
@@ -38,6 +39,7 @@ const defaultRetryFunction = (failureCount: number, error: unknown) => {
   return false;
 };
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export default (config: Partial<QueryClientConfig>) => {
   const baseConfig = {
     SHOW_NOTIFICATIONS: config?.SHOW_NOTIFICATIONS || false,
@@ -80,7 +82,7 @@ export default (config: Partial<QueryClientConfig>) => {
   const websocketClient = getWebsocketClient(queryConfig);
 
   // set up hooks given config
-  const hooks = configureHooks(queryClient, queryConfig, websocketClient);
+  const hooks = configureHooks(queryConfig, websocketClient);
 
   // returns the queryClient and relative instances
   return {

@@ -1,3 +1,7 @@
+import { AppData, UUID } from '@graasp/sdk';
+
+import { ApiData } from '../types';
+import configureAxios from './axios';
 import {
   buildDeleteAppDataRoute,
   buildDownloadAppDataFileRoute,
@@ -5,9 +9,6 @@ import {
   buildPatchAppDataRoute,
   buildPostAppDataRoute,
 } from './routes';
-import { ApiData } from '../types';
-import { AppData, UUID } from '@graasp/sdk';
-import configureAxios from './axios';
 
 const axios = configureAxios();
 
@@ -49,7 +50,7 @@ export const patchAppData = (args: ApiData & Partial<AppData> & { id: UUID }): P
         },
       },
     )
-    .then(({ data }) => data);
+    .then(({ data: newData }) => newData);
 };
 
 export const deleteAppData = (
@@ -80,7 +81,7 @@ export const getAppDataFile = async ({
   id: string;
   apiHost: string;
   token: string;
-}) => {
+}): Promise<Blob> => {
   const url = await axios
     .get(`${apiHost}/${buildDownloadAppDataFileRoute(id)}`, {
       headers: {

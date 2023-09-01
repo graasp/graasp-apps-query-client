@@ -1,19 +1,18 @@
+import { PermissionLevel, convertJs } from '@graasp/sdk';
+import { AppActionRecord } from '@graasp/sdk/frontend';
+
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { List } from 'immutable';
-import { QueryClient, useQuery } from '@tanstack/react-query';
+
 import * as Api from '../api';
 import { buildAppActionsKey } from '../config/keys';
 import { getApiHost, getData, getDataOrThrow, getPermissionLevel } from '../config/utils';
 import { QueryClientConfig } from '../types';
-import { PermissionLevel, convertJs } from '@graasp/sdk';
-import { AppActionRecord } from '@graasp/sdk/frontend';
-import { WebsocketClient } from '../ws/ws-client';
 import { configureWsAppActionsHooks } from '../ws/hooks/app';
+import { WebsocketClient } from '../ws/ws-client';
 
-export default (
-  queryClient: QueryClient,
-  queryConfig: QueryClientConfig,
-  websocketClient?: WebsocketClient,
-) => {
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+export default (queryConfig: QueryClientConfig, websocketClient?: WebsocketClient) => {
   const { retry, cacheTime, staleTime } = queryConfig;
   const defaultOptions = {
     retry,
@@ -26,8 +25,10 @@ export default (
       const enabled = options?.enabled ?? true;
       const getUpdates = options?.enabled ?? true;
       const enableWs = getUpdates ?? queryConfig.enableWebsocket;
+      const queryClient = useQueryClient();
       const apiHost = getApiHost(queryClient);
       const permissionLevel = getPermissionLevel(queryClient);
+
       const { itemId } = getData(queryClient);
 
       useAppActionsUpdates(enableWs && permissionLevel === PermissionLevel.Admin ? itemId : null);
@@ -35,7 +36,7 @@ export default (
       return useQuery({
         queryKey: buildAppActionsKey(itemId),
         queryFn: (): Promise<List<AppActionRecord>> => {
-          const { token, itemId } = getDataOrThrow(queryClient);
+          const { token } = getDataOrThrow(queryClient);
 
           return Api.getAppActions({ itemId, token, apiHost }).then((data) => convertJs(data));
         },

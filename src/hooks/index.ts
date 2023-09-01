@@ -1,24 +1,21 @@
 import { QueryClient } from '@tanstack/react-query';
+
 import { QueryClientConfig } from '../types';
+import { WebsocketClient } from '../ws/ws-client';
 import configureAppsHooks from './app';
+import configureAppActionHooks from './appAction';
 import configureAppDataHooks from './appData';
 import configureAppSettingHooks from './appSetting';
-import configureAppActionHooks from './appAction';
 import configurePostMessageHooks from './postMessage';
-import { WebsocketClient } from '../ws/ws-client';
 import { useChatbotApi } from './useChatbotApi';
 
-export default (
-  queryClient: QueryClient,
-  queryConfig: QueryClientConfig,
-  websocketClient?: WebsocketClient,
-) => {
+export default (queryConfig: QueryClientConfig, websocketClient?: WebsocketClient) => {
   return {
-    ...configureAppsHooks(queryClient, queryConfig),
-    ...configureAppDataHooks(queryClient, queryConfig, websocketClient),
-    ...configurePostMessageHooks(queryClient, queryConfig),
-    ...configureAppSettingHooks(queryClient, queryConfig, websocketClient),
-    ...configureAppActionHooks(queryClient, queryConfig, websocketClient),
+    ...configureAppsHooks(queryConfig),
+    ...configureAppDataHooks(queryConfig, websocketClient),
+    ...configurePostMessageHooks(queryConfig),
+    ...configureAppSettingHooks(queryConfig, websocketClient),
+    ...configureAppActionHooks(queryConfig, websocketClient),
     useChatbotApi,
   };
 };

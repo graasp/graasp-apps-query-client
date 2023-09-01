@@ -1,5 +1,3 @@
-import { v4 } from 'uuid';
-import { LocalContext } from '../src/types';
 import {
   AppAction,
   AppData,
@@ -10,6 +8,10 @@ import {
   ItemType,
   MemberType,
 } from '@graasp/sdk';
+
+import { v4 } from 'uuid';
+
+import { LocalContext } from '../src/types';
 
 export const API_HOST = 'http://localhost:3000';
 export const WS_HOST = 'ws://localhost:3000';

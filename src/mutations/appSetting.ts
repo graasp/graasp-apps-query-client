@@ -1,18 +1,21 @@
-import { QueryClient, useMutation } from '@tanstack/react-query';
-import { List } from 'immutable';
-import * as Api from '../api';
-import { buildAppSettingsKey, MUTATION_KEYS } from '../config/keys';
-import { QueryClientConfig } from '../types';
-import { getApiHost, getData, getDataOrThrow } from '../config/utils';
-import {
-  patchAppSettingRoutine,
-  postAppSettingRoutine,
-  deleteAppSettingRoutine,
-  uploadAppSettingFileRoutine,
-} from '../routines';
 import { AppSetting, convertJs } from '@graasp/sdk';
 import { AppSettingRecord } from '@graasp/sdk/frontend';
 
+import { QueryClient, useMutation } from '@tanstack/react-query';
+import { List } from 'immutable';
+
+import * as Api from '../api';
+import { MUTATION_KEYS, buildAppSettingsKey } from '../config/keys';
+import { getApiHost, getData, getDataOrThrow } from '../config/utils';
+import {
+  deleteAppSettingRoutine,
+  patchAppSettingRoutine,
+  postAppSettingRoutine,
+  uploadAppSettingFileRoutine,
+} from '../routines';
+import { QueryClientConfig } from '../types';
+
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
   const { notifier, enableWebsocket } = queryConfig;
 

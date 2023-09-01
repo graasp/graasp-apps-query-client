@@ -1,6 +1,7 @@
 import {
   AppAction,
   AppData,
+  AppItemType,
   AppSetting,
   Context,
   CurrentMember,
@@ -40,6 +41,7 @@ export type QueryClientConfig = {
   targetWindow?: Window;
   WS_HOST?: string;
   enableWebsocket?: boolean;
+  isStandalone?: boolean;
 
   /**
    * @deprecated Use GRAASP_APP_KEY instead
@@ -61,19 +63,20 @@ export type WindowPostMessage = (message: unknown) => void;
 export type LocalContext = {
   apiHost: string;
   itemId: UUID;
-  memberId?: UUID;
+  memberId: UUID;
   settings?: unknown;
   dev?: boolean;
   offline?: boolean;
   lang?: string;
-  context?: EnumToUnionType<Context> | 'standalone' | Context;
+  context: EnumToUnionType<Context> | 'standalone' | Context;
   standalone?: boolean;
-  permission?: PermissionLevel;
+  permission: PermissionLevel;
 };
 
 export type LocalContextRecord = ImmutableCast<LocalContext>;
 
-export type AppContext = DiscriminatedItem & {
+export type AppContext = {
+  item: AppItemType;
   children: DiscriminatedItem[];
   members: Member[];
 };
@@ -86,10 +89,25 @@ export interface ApiData {
   apiHost: string;
 }
 
+export type MockAppData = Omit<AppData, 'item' | 'creator' | 'member'> & {
+  itemId: string;
+  creatorId: string;
+  memberId: string;
+};
+export type MockAppAction = Omit<AppAction, 'item' | 'member'> & {
+  itemId: string;
+  memberId: string;
+};
+export type MockAppSetting = Omit<AppSetting, 'item' | 'creator'> & {
+  itemId: string;
+  creatorId: string;
+};
+
 export interface Database {
-  appData: AppData[];
-  appActions: AppAction[];
-  appSettings: AppSetting[];
+  appContext: LocalContext;
+  appData: MockAppData[];
+  appActions: MockAppAction[];
+  appSettings: MockAppSetting[];
   // we pass the members as `CurrentMember` to be able to access all their properties, but they will be exposed as `Member`
   members: CurrentMember[];
   items: DiscriminatedItem[];

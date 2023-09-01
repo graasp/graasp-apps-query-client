@@ -1,13 +1,15 @@
 import React from 'react';
-import { v4 } from 'uuid';
-import { renderHook, RenderResult, WaitFor } from '@testing-library/react-hooks';
-import nock, { ReplyHeaders } from 'nock';
+
+import { MutationObserverResult, QueryObserverBaseResult } from '@tanstack/react-query';
+import { RenderResult, WaitFor, renderHook } from '@testing-library/react-hooks';
 import { StatusCodes } from 'http-status-codes';
-import { QueryObserverBaseResult, MutationObserverResult } from '@tanstack/react-query';
+import nock, { ReplyHeaders } from 'nock';
+import { v4 } from 'uuid';
+
 import configureHooks from '../src/hooks';
+import configureQueryClient from '../src/queryClient';
 import { Notifier, QueryClientConfig } from '../src/types';
 import { API_HOST, MOCK_APP_ORIGIN, REQUEST_METHODS } from './constants';
-import configureQueryClient from '../src/queryClient';
 
 type Args = { enableWebsocket?: boolean; notifier?: Notifier; GRAASP_APP_KEY?: string | null };
 type NockRequestMethods = Lowercase<`${REQUEST_METHODS}`>;
@@ -35,7 +37,7 @@ export const setUpTest = (args?: Args) => {
   const { queryClient, QueryClientProvider, useMutation } = configureQueryClient(queryConfig);
 
   // configure hooks
-  const hooks = configureHooks(queryClient, queryConfig);
+  const hooks = configureHooks(queryConfig);
 
   const wrapper = ({ children }: { children: React.ReactNode }) => (
     <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>

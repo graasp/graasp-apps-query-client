@@ -1,7 +1,6 @@
 /**
  * All the type definitions should be moved to @graasp/sdk
  */
-
 import { AppAction, AppData, AppSetting } from '@graasp/sdk';
 
 export enum AppOperations {

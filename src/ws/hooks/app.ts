@@ -2,14 +2,15 @@
  * Graasp websocket client
  * React effect hooks to subscribe to real-time updates and mutate query client
  */
-import { List } from 'immutable';
 import { useEffect } from 'react';
 
 import { UUID, convertJs } from '@graasp/sdk';
 import { AppActionRecord, AppDataRecord, AppSettingRecord } from '@graasp/sdk/frontend';
 
-import { Channel, WebsocketClient } from '../ws-client';
 import { useQueryClient } from '@tanstack/react-query';
+import { List } from 'immutable';
+
+import { APP_ACTIONS_TOPIC, APP_DATA_TOPIC, APP_SETTINGS_TOPIC } from '../../config/constants';
 import { buildAppActionsKey, buildAppDataKey, buildAppSettingsKey } from '../../config/keys';
 import {
   AppActionEvent,
@@ -18,7 +19,7 @@ import {
   AppOperations,
   AppSettingEvent,
 } from '../types';
-import { APP_ACTIONS_TOPIC, APP_DATA_TOPIC, APP_SETTINGS_TOPIC } from '../../config/constants';
+import { Channel, WebsocketClient } from '../ws-client';
 
 export const configureWsAppDataHooks = (websocketClient?: WebsocketClient) => {
   return {

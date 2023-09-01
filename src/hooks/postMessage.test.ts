@@ -1,16 +1,19 @@
 import { Context } from '@graasp/sdk';
+
 import { renderHook } from '@testing-library/react-hooks';
 import { Record } from 'immutable';
 import { v4 } from 'uuid';
+
 import { API_HOST, buildMockLocalContext } from '../../test/constants';
 import { mockHook, mockWindowForPostMessage, setUpTest } from '../../test/utils';
+import { defaultContextValue } from '../components/withContext';
 import { DEFAULT_CONTEXT, DEFAULT_LANG, DEFAULT_PERMISSION, MOCK_TOKEN } from '../config/constants';
 import {
   MissingAppKeyError,
   MissingAppOriginError,
   MissingMessageChannelPortError,
 } from '../config/errors';
-import { AUTH_TOKEN_KEY, buildPostMessageKeys, LOCAL_CONTEXT_KEY } from '../config/keys';
+import { AUTH_TOKEN_KEY, LOCAL_CONTEXT_KEY, buildPostMessageKeys } from '../config/keys';
 import { LocalContext } from '../types';
 
 const mockItemId = 'mock-item-id';
@@ -22,7 +25,7 @@ describe('PostMessage Hooks', () => {
 
     describe('Successful requests', () => {
       const { hooks, wrapper, queryClient } = setUpTest();
-      const hook = () => hooks.useGetLocalContext(mockItemId);
+      const hook = () => hooks.useGetLocalContext(mockItemId, defaultContextValue);
 
       afterEach(() => {
         queryClient.clear();
@@ -94,7 +97,7 @@ describe('PostMessage Hooks', () => {
     describe('Failed requests', () => {
       it('Gracefully fails on response error', async () => {
         const { hooks, wrapper, queryClient } = setUpTest({ GRAASP_APP_KEY: v4() });
-        const hook = () => hooks.useGetLocalContext(mockItemId);
+        const hook = () => hooks.useGetLocalContext(mockItemId, defaultContextValue);
         const event = {
           data: JSON.stringify({
             type: POST_MESSAGE_KEYS.GET_CONTEXT_FAILURE,
@@ -115,7 +118,7 @@ describe('PostMessage Hooks', () => {
 
       it('Fails if app origin is undefined', async () => {
         const { hooks, wrapper, queryClient } = setUpTest({ GRAASP_APP_KEY: v4() });
-        const hook = () => hooks.useGetLocalContext(mockItemId);
+        const hook = () => hooks.useGetLocalContext(mockItemId, defaultContextValue);
         const event = {
           data: JSON.stringify({
             type: POST_MESSAGE_KEYS.GET_CONTEXT_FAILURE,
@@ -136,7 +139,7 @@ describe('PostMessage Hooks', () => {
 
       it('Fails if app id is undefined', async () => {
         const { hooks, wrapper, queryClient } = setUpTest({ GRAASP_APP_KEY: null });
-        const hook = () => hooks.useGetLocalContext(mockItemId);
+        const hook = () => hooks.useGetLocalContext(mockItemId, defaultContextValue);
         const event = {
           data: JSON.stringify({}),
         } as unknown as MessageEvent;
@@ -183,7 +186,10 @@ describe('PostMessage Hooks', () => {
           }),
         } as unknown as MessageEvent;
         mockWindowForPostMessage(event);
-        await mockHook({ hook: () => hooks.useGetLocalContext(mockItemId), wrapper });
+        await mockHook({
+          hook: () => hooks.useGetLocalContext(mockItemId, defaultContextValue),
+          wrapper,
+        });
 
         const event1 = {
           data: JSON.stringify({
@@ -262,7 +268,10 @@ describe('PostMessage Hooks', () => {
         }),
       } as unknown as MessageEvent;
       mockWindowForPostMessage(event);
-      await mockHook({ hook: () => hooks.useGetLocalContext(mockItemId), wrapper });
+      await mockHook({
+        hook: () => hooks.useGetLocalContext(mockItemId, defaultContextValue),
+        wrapper,
+      });
 
       // mock window height
       global.document = {

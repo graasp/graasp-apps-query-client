@@ -1,3 +1,4 @@
+/* eslint-disable max-classes-per-file */
 import { UUID } from '@graasp/sdk';
 
 export class MissingTokenError extends Error {

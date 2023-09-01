@@ -1,18 +1,20 @@
-import { v4 } from 'uuid';
-import { createServer, Model, Factory, RestSerializer, Response, Request } from 'miragejs';
-import { API_ROUTES } from '../api/routes';
-
-import { buildMockLocalContext, MOCK_SERVER_ITEM, MOCK_SERVER_MEMBER } from './fixtures';
-import { Database, LocalContext } from 'src/types';
 import {
   AppAction,
   AppData,
   AppDataVisibility,
   AppSetting,
-  CurrentMember,
+  CompleteMember,
   Member,
   MemberType,
 } from '@graasp/sdk';
+
+import { Factory, Model, Request, Response, RestSerializer, Server, createServer } from 'miragejs';
+import { v4 } from 'uuid';
+
+import { API_ROUTES } from '../api/routes';
+import { Database, LocalContext } from '../types';
+import { MOCK_SERVER_ITEM, MOCK_SERVER_MEMBER, buildMockLocalContext } from './fixtures';
+import { mockServiceWorkerServer } from './msw-browser';
 
 const {
   buildGetAppDataRoute,
@@ -38,15 +40,22 @@ const ApplicationSerializer = RestSerializer.extend({
 
 type ExternalUrls = (((req: Request) => unknown) | string)[];
 
-const buildAppDataDownloadUrl = (id: string) => `/download-app-data-url/${id}`;
+const buildAppDataDownloadUrl = (id: string): string => `/download-app-data-url/${id}`;
+
+export enum MockSolution {
+  MirageJS = 'mirage',
+  ServiceWorker = 'service-worker',
+}
 
 export const buildDatabase = ({
+  appContext = buildMockLocalContext(),
   appData = [],
   appActions = [],
   appSettings = [],
   members = [MOCK_SERVER_MEMBER],
   items = [MOCK_SERVER_ITEM],
-}: Partial<Database> = {}) => ({
+}: Partial<Database> = {}): Database => ({
+  appContext,
   appData,
   appActions,
   appSettings,
@@ -54,7 +63,7 @@ export const buildDatabase = ({
   items,
 });
 
-export const mockServer = ({
+export const mockMirageServer = ({
   database = buildDatabase(),
   appContext = buildMockLocalContext(),
   externalUrls = [],
@@ -66,7 +75,7 @@ export const mockServer = ({
   errors?: {
     deleteAppDataShouldThrow?: boolean;
   };
-}) => {
+}): Server => {
   const { appData, appActions, appSettings, members, items } = database;
   const {
     itemId: currentItemId,
@@ -135,7 +144,7 @@ export const mockServer = ({
         item: currentItem,
         creator: currentMember,
       }),
-      member: Factory.extend<CurrentMember>({
+      member: Factory.extend<CompleteMember>({
         id: () => v4(),
         extra: () => ({}),
         email: (idx) => `app-setting-email-${idx}`,
@@ -221,12 +230,12 @@ export const mockServer = ({
           }
 
           const { id } = request.params;
-          const appData = schema.findBy('appDataResource', { id });
-          if (!appData) {
+          const localAppData = schema.findBy('appDataResource', { id });
+          if (!localAppData) {
             return new Response(404, {}, { errors: ['not found'] });
           }
-          appData.destroy();
-          return appData.attrs;
+          localAppData.destroy();
+          return localAppData.attrs;
         },
       );
 
@@ -307,12 +316,12 @@ export const mockServer = ({
       );
 
       // context
-      this.get(`/${buildGetContextRoute(currentItem.id)}`, (schema) => {
+      this.get(`/${buildGetContextRoute(currentItem.id)}`, (schema) =>
         // todo: complete returned data
-        return {
+        ({
           members: schema.all('member').models,
-        };
-      });
+        }),
+      );
 
       // files
       // needs double mock redirection for download file
@@ -323,20 +332,24 @@ export const mockServer = ({
       });
       this.get(`/${buildAppDataDownloadUrl(':id')}`, (schema, request) => {
         const { id } = request.params;
-        const appData = schema.findBy('appDataResource', { id });
+        const localAppData = schema.findBy('appDataResource', { id });
         // this call returns the app data itself for simplification
         // bug: this is supposed to be a blob
-        return appData;
+        return localAppData;
       });
 
-      this.post(`/${buildUploadAppDataFilesRoute(currentItem.id)})`, (schema) => {
-        // const appData: Partial<AppData> = {
-        //   data: {},
-        //   itemId: currentItemId,
-        //   memberId: currentMemberId,
-        // }
-        return schema.create('appDataResource');
-      });
+      this.post(
+        `/${buildUploadAppDataFilesRoute(currentItem.id)})`,
+        // eslint-disable-next-line arrow-body-style
+        (schema) => {
+          // const appData: Partial<AppData> = {
+          //   data: {},
+          //   itemId: currentItemId,
+          //   memberId: currentMemberId,
+          // }
+          return schema.create('appDataResource');
+        },
+      );
 
       // OpenAI routes
       this.post(`/${buildPostChatBotRoute(currentItem.id)}`, () => {
@@ -351,19 +364,22 @@ export const mockServer = ({
   });
 };
 
-const mockApi = ({
-  appContext: c,
-  database,
-  externalUrls,
-  errors,
-}: {
-  appContext: Partial<LocalContext> & Pick<LocalContext, 'itemId'>;
-  database?: Database;
-  externalUrls?: ExternalUrls;
-  errors?: {
-    deleteAppDataShouldThrow?: boolean;
-  };
-}) => {
+const mockApi = (
+  {
+    appContext: c,
+    database,
+    externalUrls,
+    errors,
+  }: {
+    appContext: Partial<LocalContext> & Pick<LocalContext, 'itemId'>;
+    database?: Database;
+    externalUrls?: ExternalUrls;
+    errors?: {
+      deleteAppDataShouldThrow?: boolean;
+    };
+  },
+  solution: `${MockSolution}` | MockSolution,
+): void => {
   const appContext = buildMockLocalContext(c);
   // automatically append item id as a query string
   const searchParams = new URLSearchParams(window.location.search);
@@ -371,7 +387,20 @@ const mockApi = ({
     searchParams.set('itemId', appContext.itemId);
     window.location.search = searchParams.toString();
   }
-  mockServer({ database: buildDatabase(database), appContext, externalUrls, errors });
+  switch (solution) {
+    case MockSolution.MirageJS:
+      mockMirageServer({
+        database: buildDatabase(database),
+        appContext,
+        externalUrls,
+        errors,
+      });
+      break;
+    case MockSolution.ServiceWorker:
+    default:
+      mockServiceWorkerServer({ appContext, database });
+      break;
+  }
 };
 
 export default mockApi;

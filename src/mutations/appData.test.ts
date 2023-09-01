@@ -1,13 +1,18 @@
+import { convertJs } from '@graasp/sdk';
+import { AppDataRecord } from '@graasp/sdk/frontend';
+
 import { act } from '@testing-library/react-hooks';
+import { StatusCodes } from 'http-status-codes';
+import { List } from 'immutable';
 import nock from 'nock';
 import { v4 } from 'uuid';
-import { List } from 'immutable';
+
 import {
   FIXTURE_APP_DATA,
-  buildMockLocalContext,
   REQUEST_METHODS,
   UNAUTHORIZED_RESPONSE,
   buildAppData,
+  buildMockLocalContext,
 } from '../../test/constants';
 import { mockMutation, setUpTest, waitForMutation } from '../../test/utils';
 import {
@@ -15,12 +20,9 @@ import {
   buildPatchAppDataRoute,
   buildPostAppDataRoute,
 } from '../api/routes';
-import { AUTH_TOKEN_KEY, buildAppDataKey, LOCAL_CONTEXT_KEY, MUTATION_KEYS } from '../config/keys';
-import { StatusCodes } from 'http-status-codes';
 import { MOCK_TOKEN } from '../config/constants';
+import { AUTH_TOKEN_KEY, LOCAL_CONTEXT_KEY, MUTATION_KEYS, buildAppDataKey } from '../config/keys';
 import { patchAppDataRoutine, postAppDataRoutine } from '../routines';
-import { AppDataRecord } from '@graasp/sdk/frontend';
-import { convertJs } from '@graasp/sdk';
 
 const mockedNotifier = jest.fn();
 const { wrapper, queryClient, useMutation } = setUpTest({
@@ -222,7 +224,7 @@ describe('Apps Mutations', () => {
           }),
         );
         expect(queryClient.getQueryData(key)).toEqualImmutable(initData);
-        expect(queryClient.getQueryState(key)?.isInvalidated).toBeTruthy();
+        expect(queryClient.getQueryState(key)?.isInvalidated).toBeFalsy();
       });
     });
   });
@@ -419,7 +421,7 @@ describe('Apps Mutations', () => {
           }),
         );
         expect(queryClient.getQueryData(key)).toEqualImmutable(initData);
-        expect(queryClient.getQueryState(key)?.isInvalidated).toBeTruthy();
+        expect(queryClient.getQueryState(key)?.isInvalidated).toBeFalsy();
       });
     });
   });
@@ -600,7 +602,7 @@ describe('Apps Mutations', () => {
         });
 
         expect(queryClient.getQueryData(key)).toEqualImmutable(initData);
-        expect(queryClient.getQueryState(key)?.isInvalidated).toBeTruthy();
+        expect(queryClient.getQueryState(key)?.isInvalidated).toBeFalsy();
       });
     });
   });

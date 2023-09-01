@@ -1,8 +1,11 @@
+import { AppData, UUID, convertJs } from '@graasp/sdk';
+import { AppDataRecord } from '@graasp/sdk/frontend';
+
 import { QueryClient, useMutation } from '@tanstack/react-query';
 import { List } from 'immutable';
+
 import * as Api from '../api';
-import { buildAppDataKey, MUTATION_KEYS } from '../config/keys';
-import { QueryClientConfig } from '../types';
+import { MUTATION_KEYS, buildAppDataKey } from '../config/keys';
 import { getApiHost, getData, getDataOrThrow } from '../config/utils';
 import {
   deleteAppDataRoutine,
@@ -10,8 +13,7 @@ import {
   postAppDataRoutine,
   uploadAppDataFileRoutine,
 } from '../routines';
-import { AppData, UUID, convertJs } from '@graasp/sdk';
-import { AppDataRecord } from '@graasp/sdk/frontend';
+import { QueryClientConfig } from '../types';
 
 export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
   const { notifier, enableWebsocket } = queryConfig;

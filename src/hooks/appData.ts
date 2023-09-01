@@ -1,18 +1,21 @@
+import { convertJs } from '@graasp/sdk';
+import { AppDataRecord } from '@graasp/sdk/frontend';
+
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { List } from 'immutable';
-import { QueryClient, useQuery } from '@tanstack/react-query';
+
 import * as Api from '../api';
 import { MissingFileIdError } from '../config/errors';
 import { buildAppDataKey, buildFileContentKey } from '../config/keys';
 import { getApiHost, getData, getDataOrThrow } from '../config/utils';
 import { QueryClientConfig } from '../types';
-import { AppDataRecord } from '@graasp/sdk/frontend';
-import { convertJs } from '@graasp/sdk';
-import { WebsocketClient } from '../ws/ws-client';
 import { configureWsAppDataHooks } from '../ws/hooks/app';
+import { WebsocketClient } from '../ws/ws-client';
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export default (
-  queryClient: QueryClient,
   queryConfig: QueryClientConfig,
+
   websocketClient?: WebsocketClient,
 ) => {
   const { retry, cacheTime, staleTime } = queryConfig;
@@ -26,6 +29,8 @@ export default (
     useAppData: (options?: { refetchInterval?: number; getUpdates?: boolean }) => {
       const refetchInterval = options?.refetchInterval ?? false;
       const getUpdates = options?.getUpdates ?? true;
+      const queryClient = useQueryClient();
+
       const apiHost = getApiHost(queryClient);
       const { itemId } = getData(queryClient);
 
@@ -36,7 +41,7 @@ export default (
       return useQuery({
         queryKey: buildAppDataKey(itemId),
         queryFn: (): Promise<List<AppDataRecord>> => {
-          const { token, itemId } = getDataOrThrow(queryClient);
+          const { token } = getDataOrThrow(queryClient);
           return Api.getAppData({ itemId, token, apiHost }).then((data) => convertJs(data));
         },
         ...defaultOptions,
@@ -48,6 +53,7 @@ export default (
       payload?: { fileId: string },
       { enabled = true }: { enabled?: boolean } = {},
     ) => {
+      const queryClient = useQueryClient();
       const apiHost = getApiHost(queryClient);
 
       return useQuery({

@@ -1,26 +1,31 @@
 import { QueryClient } from '@tanstack/react-query';
-import { Record } from 'immutable';
-import { LocalContext, QueryClientConfig } from '../types';
-import { AUTH_TOKEN_KEY, LOCAL_CONTEXT_KEY } from './keys';
+// eslint-disable-next-line import/no-extraneous-dependencies
 import { StatusCodes } from 'http-status-codes';
+import { Record } from 'immutable';
+
+import { LocalContext, LocalContextRecord, QueryClientConfig } from '../types';
 import {
   MissingAppKeyError,
   MissingAppOriginError,
   MissingNecessaryDataError,
   MissingPermissionError,
 } from './errors';
+import { AUTH_TOKEN_KEY, LOCAL_CONTEXT_KEY } from './keys';
 
 export class MissingApiHostError extends Error {
   statusCode: number;
+
   constructor() {
-    super('Api Host is not defined. Did you set up the context with useContext?');
+    super(
+      'Api Host is not defined. Do You have it in your .env ? Did you set up the context with useContext?',
+    );
     this.statusCode = StatusCodes.BAD_REQUEST;
   }
 }
 
-export const getApiHost = (queryClient: QueryClient) => {
-  const context = queryClient.getQueryData<Record<LocalContext>>(LOCAL_CONTEXT_KEY);
-  const apiHost = context?.get('apiHost');
+export const getApiHost = (queryClient: QueryClient): string => {
+  const context = queryClient.getQueryData<LocalContextRecord>(LOCAL_CONTEXT_KEY);
+  const apiHost = context?.apiHost;
   if (!apiHost) {
     throw new MissingApiHostError();
   }
@@ -39,21 +44,30 @@ export const getPermissionLevel = (queryClient: QueryClient) => {
 export const getData = (
   queryClient: QueryClient,
   options: { shouldMemberExist?: boolean } = {},
-) => {
+): { itemId: string; memberId?: string; token: string } => {
   const data = queryClient.getQueryData<Record<LocalContext>>(LOCAL_CONTEXT_KEY);
+  if (!data) {
+    throw new Error('`LocalContext` was undefined');
+  }
   const token = queryClient.getQueryData<string>(AUTH_TOKEN_KEY);
-  const itemId = data?.get('itemId');
-  const memberId = data?.get('memberId');
+  if (!token) {
+    throw new MissingNecessaryDataError({ token });
+  }
+  const itemId = data.get('itemId');
+  const memberId = data.get('memberId');
 
   if (options.shouldMemberExist ?? true) {
     if (!memberId) {
+      // eslint-disable-next-line no-console
       console.debug('member id is not defined');
     }
   }
   if (!itemId) {
+    // eslint-disable-next-line no-console
     console.error('item id is not defined');
   }
   if (!token) {
+    // eslint-disable-next-line no-console
     console.error('token is not defined');
   }
 
@@ -63,7 +77,7 @@ export const getData = (
 export const getDataOrThrow = (
   queryClient: QueryClient,
   options: { shouldMemberExist?: boolean } = {},
-) => {
+): { itemId: string; memberId?: string; token: string } => {
   const { itemId, token, memberId } = getData(queryClient);
   if (!itemId || !token) {
     throw new MissingNecessaryDataError({ itemId, token });
@@ -76,18 +90,18 @@ export const getDataOrThrow = (
   return { itemId, token, memberId };
 };
 
-export const buildAppKeyAndOriginPayload = (queryConfig: QueryClientConfig) => {
-  const payload = {
-    key: queryConfig.GRAASP_APP_KEY,
-    origin: window?.location?.origin,
-  };
+export const buildAppKeyAndOriginPayload = (
+  queryConfig: QueryClientConfig,
+): { key: string; origin: string } => {
+  const key = queryConfig.GRAASP_APP_KEY;
+  const origin = window?.location?.origin;
 
-  if (!payload.key) {
+  if (!key) {
     throw new MissingAppKeyError();
   }
-  if (!payload.origin) {
+  if (!origin) {
     throw new MissingAppOriginError();
   }
 
-  return payload;
+  return { key, origin };
 };

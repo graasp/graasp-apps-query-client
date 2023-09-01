@@ -2,17 +2,20 @@
  * This file contains hooks using windowParent.postMessage
  * These are used before the app requests a token
  */
-
-import { RecordOf } from 'immutable';
 import { useEffect } from 'react';
-import { QueryClient, useQuery } from '@tanstack/react-query';
-import { DEFAULT_CONTEXT, DEFAULT_LANG, DEFAULT_PERMISSION } from '../config/constants';
+
+import { convertJs } from '@graasp/sdk';
+import { ImmutableCast } from '@graasp/sdk/frontend';
+
+import { UseQueryResult, useQuery } from '@tanstack/react-query';
+
+import { useLocalContext } from '../components';
+import { DEFAULT_CONTEXT, DEFAULT_LANG, DEFAULT_PERMISSION, MOCK_TOKEN } from '../config/constants';
 import { MissingMessageChannelPortError } from '../config/errors';
-import { AUTH_TOKEN_KEY, buildPostMessageKeys, LOCAL_CONTEXT_KEY } from '../config/keys';
+import { AUTH_TOKEN_KEY, LOCAL_CONTEXT_KEY, buildPostMessageKeys } from '../config/keys';
 import { buildAppKeyAndOriginPayload } from '../config/utils';
 import { getAuthTokenRoutine, getLocalContextRoutine } from '../routines';
 import { LocalContext, LocalContextRecord, QueryClientConfig, WindowPostMessage } from '../types';
-import { convertJs } from '@graasp/sdk';
 
 // build context from given data and default values
 export const buildContext = (payload: LocalContext): LocalContext => {
@@ -43,16 +46,16 @@ export const buildContext = (payload: LocalContext): LocalContext => {
   };
 };
 
-const configurePostMessageHooks = (_queryClient: QueryClient, queryConfig: QueryClientConfig) => {
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+const configurePostMessageHooks = (queryConfig: QueryClientConfig) => {
   let port2: MessagePort;
 
-  const postMessage: WindowPostMessage = (data) => {
-    const targetWindow = queryConfig?.targetWindow ?? window.parent;
-    if (targetWindow?.postMessage) {
-      targetWindow.postMessage(JSON.stringify(data), '*');
-    } else {
-      console.error('unable to find postMessage');
+  const postMessage: WindowPostMessage = (data: unknown) => {
+    if (queryConfig?.isStandalone) {
+      console.log('running in standalone, should not call postmessage');
+      return;
     }
+    window.postMessage(JSON.stringify(data), '*');
   };
 
   /**
@@ -65,7 +68,7 @@ const configurePostMessageHooks = (_queryClient: QueryClient, queryConfig: Query
    * @returns event function handler
    */
   const receiveContextMessage =
-    <A>(
+    <A, B>(
       successType: string,
       errorType: string,
       {
@@ -75,8 +78,7 @@ const configurePostMessageHooks = (_queryClient: QueryClient, queryConfig: Query
         resolve: (value: A) => void;
         reject: (reason?: unknown) => void;
       },
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      formatResolvedValue?: (data: { payload: any; event: MessageEvent }) => A,
+      formatResolvedValue: (data: { payload: B; event: MessageEvent }) => A,
     ) =>
     (event: MessageEvent) => {
       try {
@@ -86,11 +88,9 @@ const configurePostMessageHooks = (_queryClient: QueryClient, queryConfig: Query
         }
 
         const { type, payload } = JSON.parse(event.data) || {};
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const format = formatResolvedValue ?? ((data: { payload: any }) => data.payload);
         // get init message getting the Message Channel port
         if (type === successType) {
-          resolve(format({ payload, event }));
+          resolve(formatResolvedValue({ payload, event }));
         } else if (type === errorType) {
           reject({ payload, event });
         } else {
@@ -101,18 +101,28 @@ const configurePostMessageHooks = (_queryClient: QueryClient, queryConfig: Query
       }
     };
 
-  let getLocalContextFunction: ((event: MessageEvent) => void) | null = null;
-  const useGetLocalContext = (itemId: string) =>
-    useQuery({
+  const useGetLocalContext = (
+    itemId: string,
+    defaultValue: LocalContext,
+  ): UseQueryResult<LocalContextRecord> => {
+    let getLocalContextFunction: ((event: MessageEvent) => void) | null = null;
+    return useQuery({
       queryKey: LOCAL_CONTEXT_KEY,
       queryFn: async () => {
+        // eslint-disable-next-line no-console
+        console.debug('[apps-query-client] Get Local context');
+        if (queryConfig.isStandalone) {
+          return convertJs(buildContext(defaultValue));
+        }
         const POST_MESSAGE_KEYS = buildPostMessageKeys(itemId);
         const postMessagePayload = buildAppKeyAndOriginPayload(queryConfig);
 
-        const formatResolvedValue = (result: {
-          event: MessageEvent;
-          payload: LocalContext;
-        }): LocalContextRecord => {
+        const formatResolvedValue = (
+          result: {
+            event: MessageEvent;
+            payload: LocalContext;
+          },
+        ): LocalContextRecord => {
           const { event, payload } = result;
           // get init message getting the Message Channel port
           const context = buildContext(payload);
@@ -124,7 +134,7 @@ const configurePostMessageHooks = (_queryClient: QueryClient, queryConfig: Query
           return convertJs(context);
         };
 
-        return new Promise<RecordOf<LocalContext>>((resolve, reject) => {
+        return new Promise<ImmutableCast<LocalContext>>((resolve, reject) => {
           getLocalContextFunction = receiveContextMessage(
             POST_MESSAGE_KEYS.GET_CONTEXT_SUCCESS,
             POST_MESSAGE_KEYS.GET_CONTEXT_FAILURE,
@@ -156,15 +166,23 @@ const configurePostMessageHooks = (_queryClient: QueryClient, queryConfig: Query
         }
       },
     });
+  };
 
-  let getAuthTokenFunction;
-  const useAuthToken = (itemId: string) =>
-    useQuery({
+  const useAuthToken = (itemId: string): UseQueryResult<string> => {
+    let getAuthTokenFunction;
+    const context = useLocalContext();
+    return useQuery({
       queryKey: AUTH_TOKEN_KEY,
       queryFn: () => {
+        // eslint-disable-next-line no-console
+        console.debug('[apps-query-client] Get Auth token');
+        if (queryConfig.isStandalone) {
+          return `${MOCK_TOKEN} ${context.memberId}`;
+        }
         const POST_MESSAGE_KEYS = buildPostMessageKeys(itemId);
         if (!port2) {
           const error = new MissingMessageChannelPortError();
+          // eslint-disable-next-line no-console
           console.error(error);
           throw error;
         }
@@ -178,9 +196,7 @@ const configurePostMessageHooks = (_queryClient: QueryClient, queryConfig: Query
               resolve,
               reject,
             },
-            (data: { payload: { token: string } }): string => {
-              return data.payload.token;
-            },
+            (data: { payload: { token: string } }): string => data.payload.token,
           );
 
           port2.onmessage = getAuthTokenFunction;
@@ -199,36 +215,43 @@ const configurePostMessageHooks = (_queryClient: QueryClient, queryConfig: Query
         });
       },
     });
+  };
 
-  const useAutoResize = (itemId: string) => {
+  const useAutoResize = (itemId: string): void => {
     const POST_MESSAGE_KEYS = buildPostMessageKeys(itemId);
 
-    const sendHeight = (height: number) => {
-      port2.postMessage(
-        JSON.stringify({ type: POST_MESSAGE_KEYS.POST_AUTO_RESIZE, payload: height }),
-      );
-    };
-
     useEffect(() => {
-      if (!port2) {
-        const error = new MissingMessageChannelPortError();
-        console.error(error);
-      }
+      if (!queryConfig.isStandalone) {
+        const sendHeight = (height: number): void => {
+          port2.postMessage(
+            JSON.stringify({
+              type: POST_MESSAGE_KEYS.POST_AUTO_RESIZE,
+              payload: height,
+            }),
+          );
+        };
+        if (!port2) {
+          const error = new MissingMessageChannelPortError();
+          // eslint-disable-next-line no-console
+          console.error(error);
+        }
 
-      // send the current height first: since useEffect runs after the first render
-      // the host is never informed of the initial app size otherwise
-      sendHeight(document.body.scrollHeight);
+        // send the current height first: since useEffect runs after the first render
+        // the host is never informed of the initial app size otherwise
+        sendHeight(document.body.scrollHeight);
 
-      // subsequent updates are handled by the resize observer
-      const resizeObserver = new ResizeObserver((entries) => {
-        entries.forEach((entry) => {
-          const height = entry.contentRect.height;
-          sendHeight(height);
+        // subsequent updates are handled by the resize observer
+        const resizeObserver = new ResizeObserver((entries) => {
+          entries.forEach((entry) => {
+            const { height } = entry.contentRect;
+            sendHeight(height);
+          });
         });
-      });
-      resizeObserver.observe(document.body);
+        resizeObserver.observe(document.body);
 
-      return () => resizeObserver.disconnect();
+        return () => resizeObserver.disconnect();
+      }
+      return () => {};
     }, [itemId]);
   };
 
