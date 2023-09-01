@@ -26,28 +26,29 @@ export type AppActionData = Data;
 export type AppSettingData = Data;
 
 export type Token = string;
-
-export type QueryClientConfig = {
-  API_HOST?: string; // set during usecontext
+export type RequiredQueryClientConfig = {
+  API_HOST: string;
+  GRAASP_APP_KEY: string;
+};
+export type OptionalQueryClientConfig = {
   SHOW_NOTIFICATIONS: boolean;
-  notifier?: Notifier;
+  notifier: Notifier;
   staleTime: number;
   cacheTime: number;
-  retry?: number | boolean | ((failureCount: number, error: unknown) => boolean);
-  refetchOnWindowFocus?: boolean;
-  keepPreviousData?: boolean;
-  GRAASP_APP_KEY?: string | null;
-  shouldRetry?: boolean;
-  targetWindow?: Window;
-  WS_HOST?: string;
-  enableWebsocket?: boolean;
-  isStandalone?: boolean;
+  retry: number | boolean | ((failureCount: number, error: unknown) => boolean);
+  refetchOnWindowFocus: boolean;
+  keepPreviousData: boolean;
+  WS_HOST: string;
+  enableWebsocket: boolean;
+  isStandalone: boolean;
 
   /**
    * @deprecated Use GRAASP_APP_KEY instead
    */
   GRAASP_APP_ID?: string | null;
 };
+export type QueryClientConfig = RequiredQueryClientConfig & OptionalQueryClientConfig;
+export type InputQueryClientConfig = RequiredQueryClientConfig & Partial<OptionalQueryClientConfig>;
 
 export class UndefinedArgument extends Error {
   constructor() {
@@ -105,9 +106,9 @@ export type MockAppSetting = Omit<AppSetting, 'item' | 'creator'> & {
 
 export interface Database {
   appContext: LocalContext;
-  appData: MockAppData[];
-  appActions: MockAppAction[];
-  appSettings: MockAppSetting[];
+  appData: AppData[];
+  appActions: AppAction[];
+  appSettings: AppSetting[];
   // we pass the members as `CurrentMember` to be able to access all their properties, but they will be exposed as `Member`
   members: CurrentMember[];
   items: DiscriminatedItem[];

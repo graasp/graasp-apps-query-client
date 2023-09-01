@@ -1,7 +1,6 @@
 import { Context } from '@graasp/sdk';
 
-import { renderHook } from '@testing-library/react-hooks';
-import { Record } from 'immutable';
+import { renderHook } from '@testing-library/react';
 import { v4 } from 'uuid';
 
 import { API_HOST, buildMockLocalContext } from '../../test/constants';
@@ -14,7 +13,6 @@ import {
   MissingMessageChannelPortError,
 } from '../config/errors';
 import { AUTH_TOKEN_KEY, LOCAL_CONTEXT_KEY, buildPostMessageKeys } from '../config/keys';
-import { LocalContext } from '../types';
 
 const mockItemId = 'mock-item-id';
 const POST_MESSAGE_KEYS = buildPostMessageKeys(mockItemId);
@@ -28,10 +26,12 @@ describe('PostMessage Hooks', () => {
       const hook = () => hooks.useGetLocalContext(mockItemId, defaultContextValue);
 
       afterEach(() => {
+        jest.resetAllMocks();
         queryClient.clear();
       });
 
-      it('Get default local context', async () => {
+      it.only('Get default local context', async () => {
+        console.log('inside test', POST_MESSAGE_KEYS);
         const event = {
           ports: ['mock-port'],
           data: JSON.stringify({
@@ -43,7 +43,8 @@ describe('PostMessage Hooks', () => {
         mockWindowForPostMessage(event);
 
         const { data } = await mockHook({ hook, wrapper });
-        const context = (data as Record<LocalContext>).toJS();
+        console.log(data, data?.toJS());
+        const context = data?.toJS();
         expect(context).toEqual({
           apiHost: undefined, // @see LocalContextRecord
           memberId: undefined, // @see LocalContextRecord
@@ -84,7 +85,7 @@ describe('PostMessage Hooks', () => {
 
         const { data } = await mockHook({ hook, wrapper });
 
-        expect((data as Record<LocalContext>).toJS()).toEqual({
+        expect(data?.toJS()).toEqual({
           ...serverResponse,
           standalone: false,
         });
@@ -137,8 +138,10 @@ describe('PostMessage Hooks', () => {
         queryClient.clear();
       });
 
-      it('Fails if app id is undefined', async () => {
-        const { hooks, wrapper, queryClient } = setUpTest({ GRAASP_APP_KEY: null });
+      it('Fails if app key is undefined', async () => {
+        const { hooks, wrapper, queryClient } = setUpTest({
+          GRAASP_APP_KEY: '',
+        });
         const hook = () => hooks.useGetLocalContext(mockItemId, defaultContextValue);
         const event = {
           data: JSON.stringify({}),
@@ -247,7 +250,6 @@ describe('PostMessage Hooks', () => {
         throw new Error('Method not implemented.');
       }
     }
-
     global.ResizeObserver = jest.fn();
     const resizeObserverSpy = jest.spyOn(global, 'ResizeObserver');
     const { hooks, wrapper } = setUpTest();

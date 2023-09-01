@@ -1,7 +1,7 @@
 import { convertJs } from '@graasp/sdk';
 import { AppSettingRecord } from '@graasp/sdk/frontend';
 
-import { act } from '@testing-library/react-hooks';
+import { act } from '@testing-library/react';
 import { StatusCodes } from 'http-status-codes';
 import { List } from 'immutable';
 import nock from 'nock';
@@ -30,9 +30,10 @@ import {
 import { patchAppSettingRoutine, postAppSettingRoutine } from '../routines';
 
 const mockedNotifier = jest.fn();
-const { wrapper, queryClient, useMutation } = setUpTest({
+const { wrapper, queryClient, mutations } = setUpTest({
   notifier: mockedNotifier,
 });
+const itemId = v4();
 
 describe('App Settings Mutations', () => {
   afterEach(() => {
@@ -41,12 +42,11 @@ describe('App Settings Mutations', () => {
   });
 
   describe(MUTATION_KEYS.POST_APP_SETTING[0], () => {
-    const itemId = v4();
     const key = buildAppSettingsKey(itemId);
     const toAdd = buildAppSetting();
-    const initData = convertJs(FIXTURE_APP_SETTINGS);
+    const initData = FIXTURE_APP_SETTINGS;
     const route = `/${buildPostAppSettingRoute({ itemId })}`;
-    const mutation = () => useMutation(MUTATION_KEYS.POST_APP_SETTING);
+    const mutation = mutations.usePostAppSetting;
 
     describe('Successful requests', () => {
       beforeEach(() => {
@@ -56,7 +56,7 @@ describe('App Settings Mutations', () => {
       });
 
       it('Create app setting', async () => {
-        queryClient.setQueryData(key, initData);
+        queryClient.setQueryData(key, convertJs(initData));
 
         const response = toAdd;
 
@@ -80,8 +80,8 @@ describe('App Settings Mutations', () => {
         });
 
         expect(queryClient.getQueryState(key)?.isInvalidated).toBeTruthy();
-        expect(queryClient.getQueryData<List<AppSettingRecord>>(key)).toEqualImmutable(
-          initData.push(convertJs(toAdd)),
+        expect(queryClient.getQueryData<List<AppSettingRecord>>(key)?.toJS()).toEqual(
+          [...initData, toAdd],
         );
       });
     });
@@ -92,7 +92,7 @@ describe('App Settings Mutations', () => {
         queryClient.setQueryData(AUTH_TOKEN_KEY, MOCK_TOKEN);
         queryClient.setQueryData(LOCAL_CONTEXT_KEY, convertJs(buildMockLocalContext({ itemId })));
 
-        queryClient.setQueryData(key, initData);
+        queryClient.setQueryData(key, convertJs(initData));
 
         const response = UNAUTHORIZED_RESPONSE;
 
@@ -122,7 +122,7 @@ describe('App Settings Mutations', () => {
           }),
         );
         expect(queryClient.getQueryState(key)?.isInvalidated).toBeTruthy();
-        expect(queryClient.getQueryData<List<AppSettingRecord>>(key)).toEqualImmutable(initData);
+        expect(queryClient.getQueryData<List<AppSettingRecord>>(key)?.toJS()).toEqual(initData);
       });
 
       it('Throw if itemId is undefined', async () => {
@@ -159,7 +159,7 @@ describe('App Settings Mutations', () => {
           }),
         );
         expect(queryClient.getQueryData(key)).toEqualImmutable(initData);
-        // since the itemid is not defined, we do not check data for its key
+        // since the itemId is not defined, we do not check data for its key
       });
 
       it('Throw if memberId is undefined', async () => {
@@ -242,7 +242,7 @@ describe('App Settings Mutations', () => {
     const toPatch = buildAppSetting({ id: appDataId, data: { new: 'data' } });
     const updatedData = convertJs([toPatch, ...initData.delete(0).toJS()]);
     const route = `/${buildPatchAppSettingRoute({ id: toPatch.id, itemId })}`;
-    const mutation = () => useMutation(MUTATION_KEYS.PATCH_APP_SETTING);
+    const mutation = mutations.usePatchAppSetting;
 
     describe('Successful requests', () => {
       beforeEach(() => {
@@ -275,6 +275,7 @@ describe('App Settings Mutations', () => {
 
         expect(queryClient.getQueryState(key)?.isInvalidated).toBeTruthy();
         const result = queryClient.getQueryData<List<AppSettingRecord>>(key);
+        console.log(result?.toJS())
         // check data and length
         expect(result?.first()?.data?.toJS()).toMatchObject(toPatch.data);
         expect(result?.size).toBe(updatedData.size);
@@ -435,7 +436,7 @@ describe('App Settings Mutations', () => {
     const toDelete = FIXTURE_APP_SETTINGS[0];
     const initData = convertJs([toDelete, FIXTURE_APP_SETTINGS[1]]);
     const route = `/${buildDeleteAppSettingRoute({ itemId, id: toDelete.id })}`;
-    const mutation = () => useMutation(MUTATION_KEYS.DELETE_APP_SETTING);
+    const mutation = mutations.useDeleteAppSetting;
 
     describe('Successful requests', () => {
       const response = toDelete;

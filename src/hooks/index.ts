@@ -1,5 +1,3 @@
-import { QueryClient } from '@tanstack/react-query';
-
 import { QueryClientConfig } from '../types';
 import { WebsocketClient } from '../ws/ws-client';
 import configureAppsHooks from './app';

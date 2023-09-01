@@ -47,7 +47,7 @@ describe('App Data Hooks', () => {
       const endpoints = [{ route, response }];
       const { data } = await mockHook({ endpoints, hook, wrapper });
 
-      expect((data as List<AppDataRecord>).toJS()).toEqual(response);
+      expect(data?.toJS()).toEqual(response);
 
       // verify cache keys
       expect(queryClient.getQueryData(key)).toEqualImmutable(convertJs(response));

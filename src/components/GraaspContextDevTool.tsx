@@ -19,6 +19,9 @@ import {
 
 import { Context, HttpMethod, Member, PermissionLevel } from '@graasp/sdk';
 
+import { useQueryClient } from '@tanstack/react-query';
+
+import { buildAppContextKey } from '../config/keys';
 import { LocalContext } from '../types';
 import { UpdateArgument } from './utils/hooks';
 import { TokenContext } from './withToken';
@@ -35,6 +38,7 @@ const GraaspContextDevTool = ({ members, context, setContext }: Props): JSX.Elem
   const toggleToolsState = (): void => {
     setOpen((prev) => !prev);
   };
+  const queryClient = useQueryClient();
 
   const handleResetDB = (): void => {
     fetch('/__mocks/reset', { method: HttpMethod.DELETE });
@@ -49,6 +53,7 @@ const GraaspContextDevTool = ({ members, context, setContext }: Props): JSX.Elem
       body: JSON.stringify({ [key]: newValue }),
       headers: [['authorization', token]],
     });
+    queryClient.invalidateQueries(buildAppContextKey(context.itemId));
   };
 
   const onChange = <K extends keyof LocalContext>(key: K, newValue: LocalContext[K]): void => {

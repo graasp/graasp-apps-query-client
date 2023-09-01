@@ -3,6 +3,8 @@ import {
   AppData,
   AppDataVisibility,
   AppSetting,
+  DiscriminatedItem,
+  Member,
   PermissionLevel,
   PermissionLevelCompare,
 } from '@graasp/sdk';
@@ -11,7 +13,7 @@ import { RestHandler, rest } from 'msw';
 import { v4 } from 'uuid';
 
 import { API_ROUTES } from '../api/routes';
-import { Database, LocalContext, MockAppAction, MockAppData, MockAppSetting } from '../types';
+import { Database, LocalContext, MockAppData, MockAppSetting } from '../types';
 import { AppMocks } from './msw-db';
 
 const {
@@ -56,6 +58,22 @@ export const buildMSWMocks = (
     return permission;
   };
 
+  const getItemFromId = async (itemId: string): Promise<DiscriminatedItem> => {
+    const item = await db.item.where('id').equals(itemId).first();
+    if (!item) {
+      throw new Error('Item was not found in items database');
+    }
+    return item;
+  };
+
+  const getMemberFromId = async (memberId: string): Promise<Member> => {
+    const member = await db.member.where('id').equals(memberId).first();
+    if (!member) {
+      throw new Error('Item was not found in items database');
+    }
+    return member;
+  };
+
   const handlers = [
     // *************************
     //       App Data
@@ -69,12 +87,22 @@ export const buildMSWMocks = (
       const permission = await getPermissionForMember(memberId);
       let value;
       if (permission === PermissionLevel.Admin) {
-        // return all app data
-        value = await db.appData.toArray();
+        // return all app data of the item
+        value = await db.appData.where('item.id').equals(reqItemId).toArray();
       } else {
-        // return only app data created by the user
-        // todo: also query the app data that were set for another user using the `memberId`
-        value = await db.appData.where({ creatorId: memberId, itemId: reqItemId }).toArray();
+        value = await db.appData
+          .where('item.id')
+          .equals(reqItemId)
+          .and((x) => {
+            // app data with visibility item should be returned to anyone
+            if (x.visibility === AppDataVisibility.Item) {
+              return true;
+            } else {
+              // if app data is not "visibility item" only return app data that were created by the member or addressed to him
+              return x.creator?.id === memberId || x.member.id === memberId;
+            }
+          })
+          .toArray();
       }
 
       return res(ctx.status(200), ctx.json(value));
@@ -85,19 +113,21 @@ export const buildMSWMocks = (
       `${apiHost}/${buildPostAppDataRoute({ itemId: ':itemId' })}`,
       async (req, res, ctx) => {
         const reqItemId = req.params.itemId;
+        const item = await getItemFromId(reqItemId as string);
         const memberId = getMemberIdFromToken(req.headers.get('Authorization'));
+        const member = await getMemberFromId(memberId);
 
         const body: Pick<AppData, 'data' | 'type'> & {
           visibility?: AppData['visibility'];
         } = await req.json();
 
-        const appData: MockAppData = {
+        const appData: AppData = {
           id: v4(),
           createdAt: new Date(),
           updatedAt: new Date(),
-          itemId: reqItemId as string,
-          creatorId: memberId,
-          memberId,
+          item,
+          creator: member,
+          member,
           visibility: AppDataVisibility.Member,
           ...body,
         };
@@ -117,7 +147,7 @@ export const buildMSWMocks = (
           visibility?: AppData['visibility'];
         } = await req.json();
 
-        const appData: Partial<MockAppData> = {
+        const appData: Partial<AppData> = {
           updatedAt: new Date(),
           ...body,
         };
@@ -148,7 +178,7 @@ export const buildMSWMocks = (
     rest.get(`${apiHost}/${buildGetAppSettingsRoute(':itemId')}`, async (req, res, ctx) => {
       const reqItemId = req.params.itemId;
 
-      const value = await db.appSetting.where('itemId').equals(reqItemId).toArray();
+      const value = await db.appSetting.where('item.id').equals(reqItemId).toArray();
       return res(ctx.status(200), ctx.json(value));
     }),
 
@@ -157,19 +187,21 @@ export const buildMSWMocks = (
       `${apiHost}/${buildPostAppSettingRoute({ itemId: ':itemId' })}`,
       async (req, res, ctx) => {
         const reqItemId = req.params.itemId;
+        const item = await getItemFromId(reqItemId as string);
         const memberId = getMemberIdFromToken(req.headers.get('Authorization'));
+        const member = await getMemberFromId(memberId);
         const permission = await getPermissionForMember(memberId);
         if (PermissionLevelCompare.lte(PermissionLevel.Write, permission)) {
           return res(ctx.status(403), ctx.json({ message: 'member can not admin' }));
         }
 
         const body: Pick<AppSetting, 'data' | 'name'> = await req.json();
-        const appSetting: MockAppSetting = {
+        const appSetting: AppSetting = {
           id: v4(),
           createdAt: new Date(),
           updatedAt: new Date(),
-          itemId: reqItemId as string,
-          creatorId: memberId,
+          item,
+          creator: member,
           ...body,
         };
         const value = await db.appSetting.add(appSetting);
@@ -243,14 +275,16 @@ export const buildMSWMocks = (
       `${apiHost}/${buildPostAppActionRoute({ itemId: ':itemId' })}`,
       async (req, res, ctx) => {
         const reqItemId = req.params.itemId;
+        const item = await getItemFromId(reqItemId as string);
         const memberId = getMemberIdFromToken(req.headers.get('Authorization'));
+        const member = await getMemberFromId(memberId);
 
         const body: Pick<AppAction, 'data' | 'type'> = await req.json();
-        const appAction: MockAppAction = {
+        const appAction: AppAction = {
           id: v4(),
           createdAt: new Date(),
-          itemId: reqItemId as string,
-          memberId,
+          item,
+          member,
           ...body,
         };
         const value = await db.appAction.add(appAction);

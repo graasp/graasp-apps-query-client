@@ -4,22 +4,20 @@ import { Database, LocalContext } from '../types';
 import { buildMockLocalContext } from './fixtures';
 import { buildMSWMocks } from './msw-handlers';
 
-export const mockServiceWorkerServer = (
-  {
-    appContext,
-    database,
-  }: {
-    appContext: Partial<LocalContext> & Pick<LocalContext, 'itemId'>;
-    database?: Database;
-  },
-): { worker: SetupWorker; resetDB: (data: Database) => void } => {
+export const mockServiceWorkerServer = ({
+  appContext,
+  database,
+}: {
+  appContext: Partial<LocalContext> & Pick<LocalContext, 'itemId'>;
+  database?: Database;
+}): { worker: SetupWorker; resetDB: (data: Database) => void } => {
   const fullAppContext = buildMockLocalContext(appContext);
   const mswMocks = buildMSWMocks(fullAppContext, database);
   mswMocks.db.on('populate', (transaction) => {
     if (database) {
       // seed database with data
       // eslint-disable-next-line no-console
-      console.log('Populating the DB with provided mock data');
+      console.info('Populating the DB with provided mock data');
       transaction.table('item').bulkAdd(database?.items);
       transaction.table('member').bulkAdd(database?.members);
       transaction.table('appData').bulkAdd(database?.appData);

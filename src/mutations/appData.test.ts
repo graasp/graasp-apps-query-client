@@ -1,7 +1,7 @@
 import { convertJs } from '@graasp/sdk';
 import { AppDataRecord } from '@graasp/sdk/frontend';
 
-import { act } from '@testing-library/react-hooks';
+import { act } from '@testing-library/react';
 import { StatusCodes } from 'http-status-codes';
 import { List } from 'immutable';
 import nock from 'nock';
@@ -25,7 +25,7 @@ import { AUTH_TOKEN_KEY, LOCAL_CONTEXT_KEY, MUTATION_KEYS, buildAppDataKey } fro
 import { patchAppDataRoutine, postAppDataRoutine } from '../routines';
 
 const mockedNotifier = jest.fn();
-const { wrapper, queryClient, useMutation } = setUpTest({
+const { wrapper, queryClient, mutations } = setUpTest({
   notifier: mockedNotifier,
 });
 
@@ -41,7 +41,7 @@ describe('Apps Mutations', () => {
     const toAdd = buildAppData();
     const initData = convertJs(FIXTURE_APP_DATA);
     const route = `/${buildPostAppDataRoute({ itemId })}`;
-    const mutation = () => useMutation(MUTATION_KEYS.POST_APP_DATA);
+    const mutation = mutations.usePostAppData;
 
     describe('Successful requests', () => {
       beforeEach(() => {
@@ -237,7 +237,7 @@ describe('Apps Mutations', () => {
     const toPatch = buildAppData({ id: appDataId, data: { new: 'data' } });
     const updatedData = convertJs([toPatch, ...initData.delete(0).toJS()]);
     const route = `/${buildPatchAppDataRoute({ id: toPatch.id, itemId })}`;
-    const mutation = () => useMutation(MUTATION_KEYS.PATCH_APP_DATA);
+    const mutation = mutations.usePatchAppData;
 
     describe('Successful requests', () => {
       beforeEach(() => {
@@ -432,7 +432,7 @@ describe('Apps Mutations', () => {
     const toDelete = FIXTURE_APP_DATA[0];
     const initData = convertJs([toDelete, FIXTURE_APP_DATA[1]]);
     const route = `/${buildDeleteAppDataRoute({ itemId, id: toDelete.id })}`;
-    const mutation = () => useMutation(MUTATION_KEYS.DELETE_APP_DATA);
+    const mutation = mutations.useDeleteAppData;
 
     describe('Successful requests', () => {
       const response = toDelete;

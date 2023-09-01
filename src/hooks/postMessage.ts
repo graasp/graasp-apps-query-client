@@ -51,11 +51,16 @@ const configurePostMessageHooks = (queryConfig: QueryClientConfig) => {
   let port2: MessagePort;
 
   const postMessage: WindowPostMessage = (data: unknown) => {
+    if (window === window.parent) {
+      console.log(window, window.parent);
+      console.log('looks like windows are teh same');
+    }
+    console.log('sending a message', data);
     if (queryConfig?.isStandalone) {
       console.log('running in standalone, should not call postmessage');
       return;
     }
-    window.postMessage(JSON.stringify(data), '*');
+    window.parent.postMessage(JSON.stringify(data), '*');
   };
 
   /**
@@ -88,6 +93,7 @@ const configurePostMessageHooks = (queryConfig: QueryClientConfig) => {
         }
 
         const { type, payload } = JSON.parse(event.data) || {};
+        console.log('received context', type, payload);
         // get init message getting the Message Channel port
         if (type === successType) {
           resolve(formatResolvedValue({ payload, event }));
@@ -111,18 +117,17 @@ const configurePostMessageHooks = (queryConfig: QueryClientConfig) => {
       queryFn: async () => {
         // eslint-disable-next-line no-console
         console.debug('[apps-query-client] Get Local context');
+        console.log(itemId);
         if (queryConfig.isStandalone) {
           return convertJs(buildContext(defaultValue));
         }
         const POST_MESSAGE_KEYS = buildPostMessageKeys(itemId);
         const postMessagePayload = buildAppKeyAndOriginPayload(queryConfig);
 
-        const formatResolvedValue = (
-          result: {
-            event: MessageEvent;
-            payload: LocalContext;
-          },
-        ): LocalContextRecord => {
+        const formatResolvedValue = (result: {
+          event: MessageEvent;
+          payload: LocalContext;
+        }): LocalContextRecord => {
           const { event, payload } = result;
           // get init message getting the Message Channel port
           const context = buildContext(payload);
@@ -130,7 +135,7 @@ const configurePostMessageHooks = (queryConfig: QueryClientConfig) => {
           // will use port for further communication
           // set as a global variable
           [port2] = event.ports;
-
+          console.log(context);
           return convertJs(context);
         };
 
@@ -146,7 +151,7 @@ const configurePostMessageHooks = (queryConfig: QueryClientConfig) => {
           );
           window.addEventListener('message', getLocalContextFunction);
 
-          // request parent to provide item data (item id, settings...) and access token
+          // request parent to provide item data (item id, settings...)
           postMessage({
             type: POST_MESSAGE_KEYS.GET_CONTEXT,
             payload: postMessagePayload,

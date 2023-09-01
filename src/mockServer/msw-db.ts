@@ -1,8 +1,8 @@
-import { DiscriminatedItem, Member } from '@graasp/sdk';
+import { AppAction, AppData, AppSetting, DiscriminatedItem, Member } from '@graasp/sdk';
 
 import Dexie from 'dexie';
 
-import { Database, LocalContext, MockAppAction, MockAppData, MockAppSetting } from '../types';
+import { Database, LocalContext } from '../types';
 
 type OptionalIndexed<T extends { id: string }, P extends keyof T = 'id'> = {
   [Key in keyof T as Key extends P ? Key : never]?: T[Key];
@@ -10,9 +10,9 @@ type OptionalIndexed<T extends { id: string }, P extends keyof T = 'id'> = {
   [Key in keyof T as Key extends P ? never : Key]: T[Key];
 };
 
-export type IMockAppData = OptionalIndexed<MockAppData>;
-export type IMockAppSetting = OptionalIndexed<MockAppSetting>;
-export type IMockAppAction = OptionalIndexed<MockAppAction>;
+export type IMockAppData = OptionalIndexed<AppData>;
+export type IMockAppSetting = OptionalIndexed<AppSetting>;
+export type IMockAppAction = OptionalIndexed<AppAction>;
 
 export class AppMocks extends Dexie {
   item!: Dexie.Table<DiscriminatedItem, string>;
@@ -21,11 +21,11 @@ export class AppMocks extends Dexie {
 
   appContext!: Dexie.Table<LocalContext, string>;
 
-  appData!: Dexie.Table<MockAppData, string>;
+  appData!: Dexie.Table<AppData, string>;
 
-  appSetting!: Dexie.Table<MockAppSetting, string>;
+  appSetting!: Dexie.Table<AppSetting, string>;
 
-  appAction!: Dexie.Table<MockAppAction, string>;
+  appAction!: Dexie.Table<AppAction, string>;
 
   constructor() {
     super('graasp-app-mocks');
@@ -38,13 +38,14 @@ export class AppMocks extends Dexie {
       item: 'id',
       member: 'id',
       appContext: 'memberId',
-      appData: 'id, [itemId+creatorId], type, visibility',
-      appSetting: 'id, itemId, name',
+      appData: 'id, [item.id+creator.id], member.id, type, visibility',
+      appSetting: 'id, item.id, name',
       appAction: 'id, memberId',
     });
   }
 
   seed(data: Database): void {
+    console.log(data);
     // pre-load the IndexDB with data
     this.item.bulkAdd(data.items);
     this.member.bulkAdd(data.members);

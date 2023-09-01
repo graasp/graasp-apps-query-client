@@ -1,6 +1,7 @@
-import { renderHook } from '@testing-library/react-hooks';
 import React from 'react';
+
 import { QueryClient } from '@tanstack/react-query';
+import { renderHook } from '@testing-library/react';
 
 import configureQueryClient from '../src/queryClient';
 import { Notifier, QueryClientConfig } from '../src/types';
@@ -17,16 +18,18 @@ const MockedWebsocket = (handlers: Handler[]) => ({
   unsubscribe: jest.fn(),
 });
 
-export const setUpWsTest = (args?: {
-  enableWebsocket?: boolean;
-  notifier?: Notifier;
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  configureWsAppActionsHooks: Function,
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  configureWsAppDataHooks: Function,
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  configureWsAppSettingHooks: Function,
-}) => {
+export const setUpWsTest = (
+  args?: {
+    enableWebsocket?: boolean;
+    notifier?: Notifier;
+    // eslint-disable-next-line @typescript-eslint/ban-types
+    configureWsAppActionsHooks: Function;
+    // eslint-disable-next-line @typescript-eslint/ban-types
+    configureWsAppDataHooks: Function;
+    // eslint-disable-next-line @typescript-eslint/ban-types
+    configureWsAppSettingHooks: Function;
+  },
+) => {
   const {
     notifier = () => {
       // do nothing
@@ -53,10 +56,13 @@ export const setUpWsTest = (args?: {
     notifier,
     enableWebsocket: false,
     WS_HOST,
+    GRAASP_APP_KEY: '1234',
+    refetchOnWindowFocus: false,
+    keepPreviousData: true,
+    isStandalone: false,
   };
 
-  const { QueryClientProvider, useMutation } =
-    configureQueryClient(queryConfig);
+  const { QueryClientProvider, useMutation } = configureQueryClient(queryConfig);
 
   const handlers: Handler[] = [];
   const websocketClient = MockedWebsocket(handlers);
@@ -70,11 +76,7 @@ export const setUpWsTest = (args?: {
 
   const queryClient = new QueryClient();
 
-  const wrapper = ({
-    children,
-  }: {
-    children: React.ReactNode;
-  }): JSX.Element => (
+  const wrapper = ({ children }: { children: React.ReactNode }): JSX.Element => (
     <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
   );
 
@@ -91,7 +93,7 @@ export const mockWsHook = async ({ hook, wrapper, enabled }: any) => {
     result: any;
   } = renderHook(hook, { wrapper });
 
-  if(result.error) console.error(result.error);
+  if (result.error) console.error(result.error);
 
   // this hook is disabled, it will never fetch
   if (enabled === false) {
@@ -102,10 +104,7 @@ export const mockWsHook = async ({ hook, wrapper, enabled }: any) => {
   return result.current;
 };
 
-export const getHandlerByChannel = (
-  handlers: Handler[],
-  channel: Channel,
-): Handler | undefined =>
+export const getHandlerByChannel = (handlers: Handler[], channel: Channel): Handler | undefined =>
   handlers.find(
     ({ channel: thisChannel }) =>
       channel.name === thisChannel.name && channel.topic === thisChannel.topic,

@@ -17,7 +17,7 @@ import { AUTH_TOKEN_KEY, LOCAL_CONTEXT_KEY, buildAppContextKey } from '../config
 import { MissingApiHostError } from '../config/utils';
 import { LocalContext } from '../types';
 
-const { hooks, wrapper, queryClient } = setUpTest();
+const { hooks, wrapper, queryClient, mutations } = setUpTest();
 const itemId = v4();
 
 describe('App Hooks', () => {
@@ -34,7 +34,7 @@ describe('App Hooks', () => {
   describe('useAppContext', () => {
     const key = buildAppContextKey(itemId);
     const route = `/${buildGetContextRoute(itemId)}`;
-    const hook = () => hooks.useAppContext();
+    const hook = hooks.useAppContext;
 
     it('Receive app context', async () => {
       // preset context
@@ -42,7 +42,7 @@ describe('App Hooks', () => {
       const endpoints = [{ route, response }];
       const { data } = await mockHook({ endpoints, hook, wrapper });
 
-      expect((data as Record<LocalContext>).toJS()).toEqual(response);
+      expect(data?.toJS()).toEqual(response);
 
       // verify cache keys
       expect((queryClient.getQueryData(key) as Record<LocalContext>).toJS()).toEqual(response);
