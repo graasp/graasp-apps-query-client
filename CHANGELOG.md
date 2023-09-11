@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.0.4](https://github.com/graasp/graasp-apps-query-client/compare/v2.0.3...v2.0.4) (2023-09-11)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @types/react to v18.2.21 ([#155](https://github.com/graasp/graasp-apps-query-client/issues/155)) ([d6945fb](https://github.com/graasp/graasp-apps-query-client/commit/d6945fb6d8700e3935685c1ca47daa21640d08d3))
+* remove usage of process.env ([#163](https://github.com/graasp/graasp-apps-query-client/issues/163)) ([5d25550](https://github.com/graasp/graasp-apps-query-client/commit/5d255506ab5f3aa60f8e1bc3e33a3a07f9af9b2d))
+* **ws:** checks api host to create url ([#171](https://github.com/graasp/graasp-apps-query-client/issues/171)) ([7222d01](https://github.com/graasp/graasp-apps-query-client/commit/7222d01dfe44d0b6224a1405c0154849e156dca0)), closes [#170](https://github.com/graasp/graasp-apps-query-client/issues/170)
+
 ## [2.0.3](https://github.com/graasp/graasp-apps-query-client/compare/v2.0.2...v2.0.3) (2023-08-21)
 
 
