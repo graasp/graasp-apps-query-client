@@ -16,10 +16,13 @@ import { API_ROUTES } from './api/routes';
 import { QueryClientConfig } from './types';
 import { getWebsocketClient } from './ws';
 
-const makeWsHostFromAPIHost = (apiHost?: string) => {
-  const url = new URL('/ws', apiHost);
-  url.protocol = 'ws:';
-  return url.toString();
+const makeWsHostFromAPIHost = (apiHost?: string): string | undefined => {
+  if (apiHost) {
+    const url = new URL('/ws', apiHost);
+    url.protocol = 'ws:';
+    return url.toString();
+  }
+  return undefined;
 };
 
 // Query client retry function decides when and how many times a request should be retried
