@@ -159,7 +159,7 @@ export const mockServer = ({
     routes() {
       // app data
       this.get(`/${buildGetAppDataRoute(currentItem.id)}`, (schema) => {
-        return schema.all('appDataResource');
+        return schema.all('appDataResource') ?? [];
       });
       this.post(`/${buildPostAppDataRoute({ itemId: currentItem.id })}`, (schema, request) => {
         if (!currentMember) {
@@ -222,7 +222,7 @@ export const mockServer = ({
 
       // app actions
       this.get(`/${buildGetAppActionsRoute(currentItem.id)}`, (schema) => {
-        return schema.all('appActionResource');
+        return schema.all('appActionResource') ?? [];
       });
       this.post(`/${buildPostAppActionRoute({ itemId: currentItem.id })}`, (schema, request) => {
         const { requestBody } = request;
@@ -236,7 +236,7 @@ export const mockServer = ({
 
       // app settings
       this.get(`/${buildGetAppSettingsRoute(currentItem.id)}`, (schema) => {
-        return schema.all('appSetting');
+        return schema.all('appSetting') ?? [];
       });
 
       this.post(`/${buildPostAppSettingRoute({ itemId: currentItem.id })}`, (schema, request) => {
