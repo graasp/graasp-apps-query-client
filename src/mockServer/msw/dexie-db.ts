@@ -2,7 +2,7 @@ import { AppAction, AppData, AppSetting, DiscriminatedItem, Member } from '@graa
 
 import Dexie from 'dexie';
 
-import { Database, LocalContext } from '../types';
+import { Database, LocalContext } from '../../types';
 
 type OptionalIndexed<T extends { id: string }, P extends keyof T = 'id'> = {
   [Key in keyof T as Key extends P ? Key : never]?: T[Key];
@@ -38,7 +38,7 @@ export class AppMocks extends Dexie {
       item: 'id',
       member: 'id',
       appContext: 'memberId',
-      appData: 'id, [item.id+creator.id], member.id, type, visibility',
+      appData: 'id, item.id, [item.id+creator.id], member.id, type, visibility',
       appSetting: 'id, item.id, name',
       appAction: 'id, memberId',
     });

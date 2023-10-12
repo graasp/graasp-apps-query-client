@@ -158,3 +158,4 @@ export const buildMockLocalContext = ({
 });
 
 export const MOCK_APP_ORIGIN = 'http://localhost';
+export const GRAASP_APP_KEY = '1234';

@@ -38,7 +38,7 @@ export type OptionalQueryClientConfig = {
   retry: number | boolean | ((failureCount: number, error: unknown) => boolean);
   refetchOnWindowFocus: boolean;
   keepPreviousData: boolean;
-  WS_HOST: string;
+  WS_HOST?: string;
   enableWebsocket: boolean;
   isStandalone: boolean;
 

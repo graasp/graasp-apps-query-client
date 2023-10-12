@@ -21,7 +21,7 @@ import { Context, HttpMethod, Member, PermissionLevel } from '@graasp/sdk';
 
 import { useQueryClient } from '@tanstack/react-query';
 
-import { buildAppContextKey } from '../config/keys';
+import { LOCAL_CONTEXT_KEY, buildAppContextKey } from '../config/keys';
 import { LocalContext } from '../types';
 import { UpdateArgument } from './utils/hooks';
 import { TokenContext } from './withToken';
@@ -50,10 +50,12 @@ const GraaspContextDevTool = ({ members, context, setContext }: Props): JSX.Elem
   ): void => {
     fetch('/__mocks/context', {
       method: HttpMethod.POST,
-      body: JSON.stringify({ [key]: newValue }),
+      body: JSON.stringify({ ...context, [key]: newValue }),
       headers: [['authorization', token]],
+    }).then(() => {
+      console.log('invalidating local Context');
+      queryClient.refetchQueries(LOCAL_CONTEXT_KEY);
     });
-    queryClient.invalidateQueries(buildAppContextKey(context.itemId));
   };
 
   const onChange = <K extends keyof LocalContext>(key: K, newValue: LocalContext[K]): void => {
@@ -62,7 +64,7 @@ const GraaspContextDevTool = ({ members, context, setContext }: Props): JSX.Elem
   };
 
   return (
-    <Box position="absolute" top={0} right={0} m={2}>
+    <Box position="fixed" zIndex={9999} top={0} right={0} m={2}>
       <IconButton onClick={toggleToolsState}>
         <Construction />
       </IconButton>
@@ -98,7 +100,8 @@ const GraaspContextDevTool = ({ members, context, setContext }: Props): JSX.Elem
                 <ToggleButton value={PermissionLevel.Admin}>Admin</ToggleButton>
               </ToggleButtonGroup>
             </FormControl>
-            <FormControl>
+            {/* Needs some work to work correctly */}
+            <FormControl disabled>
               <Select
                 value={context.memberId}
                 onChange={({ target }) => onChange('memberId', target.value)}

@@ -3,12 +3,7 @@ export * as Api from './api';
 export * as Hooks from './hooks';
 export { API_ROUTES } from './api/routes';
 export * as ROUTINES from './routines';
-export {
-  default as mockApi,
-  mockMirageServer,
-  buildDatabase,
-  MockSolution,
-} from './mockServer/mockServer';
+export { default as mockApi, buildDatabase, MockSolution } from './mockServer/mockServer';
 export { buildMockLocalContext } from './mockServer/fixtures';
 export * from './components';
 export * from './types';

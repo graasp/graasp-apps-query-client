@@ -6,15 +6,14 @@ import {
   DiscriminatedItem,
   Member,
   PermissionLevel,
-  PermissionLevelCompare,
 } from '@graasp/sdk';
 
 import { RestHandler, rest } from 'msw';
 import { v4 } from 'uuid';
 
-import { API_ROUTES } from '../api/routes';
-import { Database, LocalContext, MockAppData, MockAppSetting } from '../types';
-import { AppMocks } from './msw-db';
+import { API_ROUTES } from '../../api/routes';
+import { Database, LocalContext, MockAppSetting } from '../../types';
+import { AppMocks } from './dexie-db';
 
 const {
   buildGetAppDataRoute,
@@ -50,7 +49,7 @@ export const buildMSWMocks = (
   const db = new AppMocks();
 
   const getPermissionForMember = async (memberId: string): Promise<PermissionLevel> => {
-    const localContextForMember = await db.appContext.where('memberId').equals(memberId).first();
+    const localContextForMember = await db.appContext.get(memberId);
     if (!localContextForMember) {
       throw new Error('Member was not found in localContext database');
     }
@@ -191,7 +190,9 @@ export const buildMSWMocks = (
         const memberId = getMemberIdFromToken(req.headers.get('Authorization'));
         const member = await getMemberFromId(memberId);
         const permission = await getPermissionForMember(memberId);
-        if (PermissionLevelCompare.lte(PermissionLevel.Write, permission)) {
+
+        // when member is not an admin -> return an error
+        if (PermissionLevel.Admin !== permission) {
           return res(ctx.status(403), ctx.json({ message: 'member can not admin' }));
         }
 
@@ -219,6 +220,14 @@ export const buildMSWMocks = (
       async (req, res, ctx) => {
         const { id } = req.params;
 
+        const memberId = getMemberIdFromToken(req.headers.get('Authorization'));
+        const permission = await getPermissionForMember(memberId);
+
+        // when member is not an admin -> return an error
+        if (PermissionLevel.Admin !== permission) {
+          return res(ctx.status(403), ctx.json({ message: 'member can not admin' }));
+        }
+
         const body: Pick<AppSetting, 'data' | 'id'> = await req.json();
         const appSetting: Partial<MockAppSetting> = {
           updatedAt: new Date(),
@@ -238,6 +247,14 @@ export const buildMSWMocks = (
       })}`,
       async (req, res, ctx) => {
         const { id } = req.params;
+
+        const memberId = getMemberIdFromToken(req.headers.get('Authorization'));
+        const permission = await getPermissionForMember(memberId);
+
+        // when member is not an admin -> return an error
+        if (PermissionLevel.Admin !== permission) {
+          return res(ctx.status(403), ctx.json({ message: 'member can not admin' }));
+        }
 
         const value = await db.appSetting.get(id as string);
         await db.appSetting.delete(id as string);
@@ -308,14 +325,19 @@ export const buildMSWMocks = (
     }),
 
     // plumbing
-    rest.delete('/__mocks/reset', (req, res, ctx) => {
+    rest.delete('/__mocks/reset', (_req, res, ctx) => {
       db.resetDB(database);
       return res(ctx.status(200));
+    }),
+    rest.get('/__mocks/context', async (req, res, ctx) => {
+      const memberId = getMemberIdFromToken(req.headers.get('Authorization'));
+      const value = await db.appContext.where('memberId').equals(memberId).first();
+      return res(ctx.status(200), ctx.json(value));
     }),
     rest.post('/__mocks/context', async (req, res, ctx) => {
       const memberId = getMemberIdFromToken(req.headers.get('Authorization'));
       const body: Partial<LocalContext> = await req.json();
-      console.log(body);
+      await db.appContext.update(memberId, body);
 
       const value = await db.appContext.where('memberId').equals(memberId).first();
       return res(ctx.status(200), ctx.json(value));

@@ -6,7 +6,7 @@ import { renderHook } from '@testing-library/react';
 import configureQueryClient from '../src/queryClient';
 import { Notifier, QueryClientConfig } from '../src/types';
 import { Channel } from '../src/ws/ws-client';
-import { API_HOST, WS_HOST } from './constants';
+import { API_HOST, GRAASP_APP_KEY, WS_HOST } from './constants';
 
 export type Handler = { channel: Channel; handler: (event: unknown) => void };
 
@@ -18,18 +18,16 @@ const MockedWebsocket = (handlers: Handler[]) => ({
   unsubscribe: jest.fn(),
 });
 
-export const setUpWsTest = (
-  args?: {
-    enableWebsocket?: boolean;
-    notifier?: Notifier;
-    // eslint-disable-next-line @typescript-eslint/ban-types
-    configureWsAppActionsHooks: Function;
-    // eslint-disable-next-line @typescript-eslint/ban-types
-    configureWsAppDataHooks: Function;
-    // eslint-disable-next-line @typescript-eslint/ban-types
-    configureWsAppSettingHooks: Function;
-  },
-) => {
+export const setUpWsTest = (args?: {
+  enableWebsocket?: boolean;
+  notifier?: Notifier;
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  configureWsAppActionsHooks: Function;
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  configureWsAppDataHooks: Function;
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  configureWsAppSettingHooks: Function;
+}) => {
   const {
     notifier = () => {
       // do nothing
@@ -56,7 +54,7 @@ export const setUpWsTest = (
     notifier,
     enableWebsocket: false,
     WS_HOST,
-    GRAASP_APP_KEY: '1234',
+    GRAASP_APP_KEY,
     refetchOnWindowFocus: false,
     keepPreviousData: true,
     isStandalone: false,

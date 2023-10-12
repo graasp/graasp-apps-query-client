@@ -7,8 +7,9 @@ import { useEffect } from 'react';
 import { convertJs } from '@graasp/sdk';
 import { ImmutableCast } from '@graasp/sdk/frontend';
 
-import { UseQueryResult, useQuery } from '@tanstack/react-query';
+import { UseQueryResult, useQuery, useQueryClient } from '@tanstack/react-query';
 
+import * as Api from '../api';
 import { useLocalContext } from '../components';
 import { DEFAULT_CONTEXT, DEFAULT_LANG, DEFAULT_PERMISSION, MOCK_TOKEN } from '../config/constants';
 import { MissingMessageChannelPortError } from '../config/errors';
@@ -112,6 +113,7 @@ const configurePostMessageHooks = (queryConfig: QueryClientConfig) => {
     defaultValue: LocalContext,
   ): UseQueryResult<LocalContextRecord> => {
     let getLocalContextFunction: ((event: MessageEvent) => void) | null = null;
+    const queryClient = useQueryClient();
     return useQuery({
       queryKey: LOCAL_CONTEXT_KEY,
       queryFn: async () => {
@@ -119,7 +121,16 @@ const configurePostMessageHooks = (queryConfig: QueryClientConfig) => {
         console.debug('[apps-query-client] Get Local context');
         console.log(itemId);
         if (queryConfig.isStandalone) {
-          return convertJs(buildContext(defaultValue));
+          const authToken = queryClient.getQueryData<string>(AUTH_TOKEN_KEY);
+          if (authToken) {
+            const newContext = await Api.getMockContext({
+              token: authToken,
+            });
+            return convertJs(buildContext(newContext));
+          } else {
+            console.log('token was not found in data cache, using default value');
+            return convertJs(buildContext(defaultValue));
+          }
         }
         const POST_MESSAGE_KEYS = buildPostMessageKeys(itemId);
         const postMessagePayload = buildAppKeyAndOriginPayload(queryConfig);
@@ -175,14 +186,19 @@ const configurePostMessageHooks = (queryConfig: QueryClientConfig) => {
 
   const useAuthToken = (itemId: string): UseQueryResult<string> => {
     let getAuthTokenFunction;
-    const context = useLocalContext();
+    const queryClient = useQueryClient();
     return useQuery({
       queryKey: AUTH_TOKEN_KEY,
       queryFn: () => {
         // eslint-disable-next-line no-console
         console.debug('[apps-query-client] Get Auth token');
         if (queryConfig.isStandalone) {
-          return `${MOCK_TOKEN} ${context.memberId}`;
+          const context = queryClient.getQueryData<LocalContext>(LOCAL_CONTEXT_KEY);
+          if (context) {
+            return `${MOCK_TOKEN} ${context.memberId}`;
+          } else {
+            throw new Error('there was an error getting the query data for the LocalContext');
+          }
         }
         const POST_MESSAGE_KEYS = buildPostMessageKeys(itemId);
         if (!port2) {
