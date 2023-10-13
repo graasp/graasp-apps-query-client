@@ -3,6 +3,7 @@ export const ITEMS_ROUTE = 'items';
 export const APP_ITEMS_ROUTE = 'app-items';
 export const APP_ACTIONS_ENDPOINT = 'app-action';
 export const APP_SETTINGS_ROUTE = 'app-settings';
+export const CHAT_BOT_ENDPOINT = 'chat-bot';
 
 export const buildGetAppDataRoute = (itemId: string) =>
   `${APP_ITEMS_ROUTE}/${itemId}/${APP_DATA_ENDPOINT}`;
@@ -48,6 +49,9 @@ export const buildPatchAppSettingRoute = (payload: { itemId: string; id: string 
 export const buildDeleteAppSettingRoute = (payload: { itemId: string; id: string }) =>
   `${APP_ITEMS_ROUTE}/${payload.itemId}/${APP_SETTINGS_ROUTE}/${payload.id}`;
 
+  export const buildPostChatBotRoute = (itemId: string) =>
+  `${APP_ITEMS_ROUTE}/${itemId}/${CHAT_BOT_ENDPOINT}`;
+
 export const API_ROUTES = {
   buildDownloadAppDataFileRoute,
   buildDeleteAppDataRoute,
@@ -64,4 +68,5 @@ export const API_ROUTES = {
   buildDeleteAppSettingRoute,
   buildUploadAppSettingFilesRoute,
   buildDownloadAppSettingFileRoute,
+  buildPostChatBotRoute,
 };
