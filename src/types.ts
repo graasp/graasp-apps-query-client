@@ -92,3 +92,5 @@ export interface Database {
   members: Member[];
   items: Item[];
 }
+
+export type UserDataType = { [key: string]: unknown };
