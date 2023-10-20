@@ -1,6 +1,6 @@
 import { v4 } from 'uuid';
 import { createServer, Model, Factory, RestSerializer, Response, Request } from 'miragejs';
-import { API_ROUTES, buildUploadAppDataFilesRoute } from '../api/routes';
+import { API_ROUTES } from '../api/routes';
 
 import { buildMockLocalContext, MOCK_SERVER_ITEM, MOCK_SERVER_MEMBER } from './fixtures';
 import { Database, LocalContext } from 'src/types';
@@ -19,6 +19,8 @@ const {
   buildPatchAppSettingRoute,
   buildPostAppActionRoute,
   buildPostAppSettingRoute,
+  buildPostChatBotRoute,
+  buildUploadAppDataFilesRoute,
 } = API_ROUTES;
 
 const ApplicationSerializer = RestSerializer.extend({
@@ -326,6 +328,11 @@ export const mockServer = ({
         //   memberId: currentMemberId,
         // }
         return schema.create('appDataResource');
+      });
+
+      // OpenAI routes
+      this.post(`/${buildPostChatBotRoute(currentItem.id)}`, () => {
+        return { completion: 'Biip boop i am a bot' };
       });
 
       // passthrough external urls
