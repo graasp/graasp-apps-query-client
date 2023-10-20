@@ -5128,6 +5128,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@tanstack/query-core@npm:4.32.6":
+  version: 4.32.6
+  resolution: "@tanstack/query-core@npm:4.32.6"
+  checksum: c06f4b8d7edfc237d34da14c4ff2c71f4e6de662f123914419e9c2fbb9dccb7c1d3f46afd66ca5fea40687c5a99e514750a32a05e809d0db76343a90a45c76a8
+  languageName: node
+  linkType: hard
+
 "@tanstack/react-query-devtools@npm:4.32.5":
   version: 4.32.5
   resolution: "@tanstack/react-query-devtools@npm:4.32.5"
@@ -5159,6 +5166,25 @@ __metadata:
     react-native:
       optional: true
   checksum: dd36cc8dbdb4bb10d79a18c9ddc842b52b4e85ba09a13aac169028bef04a864dc1a06cf5b5e70dc8308b93bd20b2d40d2a37f5efaeaa43ffaf261bc6ec01d140
+  languageName: node
+  linkType: hard
+
+"@tanstack/react-query@npm:4.32.6":
+  version: 4.32.6
+  resolution: "@tanstack/react-query@npm:4.32.6"
+  dependencies:
+    "@tanstack/query-core": 4.32.6
+    use-sync-external-store: ^1.2.0
+  peerDependencies:
+    react: ^16.8.0 || ^17.0.0 || ^18.0.0
+    react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
+    react-native: "*"
+  peerDependenciesMeta:
+    react-dom:
+      optional: true
+    react-native:
+      optional: true
+  checksum: 5ce7939515329d64aee35703de8f030bba383717e68eefb17a32492cca44d8421175b7045e0fd6314faff11cee8a570f42208685947a97bc50d0023d5ae1029e
   languageName: node
   linkType: hard
 
@@ -10560,7 +10586,7 @@ __metadata:
     "@graasp/apps-query-client": "link:.."
     "@mui/icons-material": 5.14.0
     "@mui/material": 5.14.0
-    "@tanstack/react-query": 4.32.5
+    "@tanstack/react-query": 4.32.6
     "@testing-library/jest-dom": 5.16.5
     "@testing-library/react": 14.0.0
     "@testing-library/user-event": 14.4.3
