@@ -3,8 +3,8 @@ import {
   AppData,
   AppItemType,
   AppSetting,
+  CompleteMember,
   Context,
-  CurrentMember,
   DiscriminatedItem,
   Member,
   PermissionLevel,
@@ -109,8 +109,8 @@ export interface Database {
   appData: AppData[];
   appActions: AppAction[];
   appSettings: AppSetting[];
-  // we pass the members as `CurrentMember` to be able to access all their properties, but they will be exposed as `Member`
-  members: CurrentMember[];
+  // we pass the members as `CompleteMember` to be able to access all their properties, but they will be exposed as `Member`
+  members: CompleteMember[];
   items: DiscriminatedItem[];
 }
 

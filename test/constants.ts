@@ -3,7 +3,7 @@ import {
   AppData,
   AppDataVisibility,
   AppSetting,
-  CurrentMember,
+  CompleteMember,
   FolderItemType,
   ItemType,
   MemberType,
@@ -18,7 +18,7 @@ export const WS_HOST = 'ws://localhost:3000';
 export const DOMAIN = 'domain';
 export const UNAUTHORIZED_RESPONSE = { some: 'error' };
 
-export const MEMBER_RESPONSE: CurrentMember = {
+export const MEMBER_RESPONSE: CompleteMember = {
   id: '42',
   name: 'username',
   type: MemberType.Individual,
@@ -28,7 +28,7 @@ export const MEMBER_RESPONSE: CurrentMember = {
   updatedAt: new Date(),
 };
 
-export const MEMBERS_RESPONSE: CurrentMember[] = [
+export const MEMBERS_RESPONSE: CompleteMember[] = [
   MEMBER_RESPONSE,
   {
     id: '421',

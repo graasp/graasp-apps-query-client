@@ -1,7 +1,7 @@
 import {
   AppItemType,
+  CompleteMember,
   Context,
-  CurrentMember,
   ItemType,
   MemberType,
   PermissionLevel,
@@ -10,7 +10,7 @@ import {
 import { buildContext } from '../hooks/postMessage';
 import { LocalContext } from '../types';
 
-export const MOCK_SERVER_MEMBER: CurrentMember = {
+export const MOCK_SERVER_MEMBER: CompleteMember = {
   id: 'mock-member-id',
   name: 'mock-member-name',
   email: 'email@email.com',
