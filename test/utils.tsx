@@ -1,17 +1,21 @@
 import React from 'react';
-import { v4 } from 'uuid';
-import { renderHook, RenderResult, WaitFor } from '@testing-library/react-hooks';
-import nock, { ReplyHeaders } from 'nock';
+
+import { HttpMethod } from '@graasp/sdk';
+
+import { QueryObserverBaseResult, UseMutationResult } from '@tanstack/react-query';
+import { RenderHookOptions, renderHook, waitFor } from '@testing-library/react';
 import { StatusCodes } from 'http-status-codes';
-import { QueryObserverBaseResult, MutationObserverResult } from '@tanstack/react-query';
+import nock, { InterceptFunction, ReplyHeaders, Scope } from 'nock';
+import { v4 } from 'uuid';
+
 import configureHooks from '../src/hooks';
-import { Notifier, QueryClientConfig } from '../src/types';
-import { API_HOST, MOCK_APP_ORIGIN, REQUEST_METHODS } from './constants';
 import configureQueryClient from '../src/queryClient';
+import { Notifier, QueryClientConfig } from '../src/types';
+import { API_HOST, MOCK_APP_ORIGIN, RequestMethods, WS_HOST } from './constants';
 
-type Args = { enableWebsocket?: boolean; notifier?: Notifier; GRAASP_APP_KEY?: string | null };
-type NockRequestMethods = Lowercase<`${REQUEST_METHODS}`>;
+type Args = { enableWebsocket?: boolean; notifier?: Notifier; GRAASP_APP_KEY?: string };
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export const setUpTest = (args?: Args) => {
   const {
     notifier = () => {
@@ -21,59 +25,68 @@ export const setUpTest = (args?: Args) => {
   } = args ?? {};
   const queryConfig: QueryClientConfig = {
     API_HOST,
-    retry: () => {
-      return false;
-    },
-    shouldRetry: false,
+    retry: () => false,
     cacheTime: 0,
     staleTime: 0,
     SHOW_NOTIFICATIONS: false,
     notifier,
     GRAASP_APP_KEY,
+    keepPreviousData: true,
+    refetchOnWindowFocus: false,
+    WS_HOST,
+    enableWebsocket: false,
+    isStandalone: false,
   };
 
-  const { queryClient, QueryClientProvider, useMutation } = configureQueryClient(queryConfig);
+  const { queryClient, QueryClientProvider, mutations, useMutation } =
+    configureQueryClient(queryConfig);
 
   // configure hooks
-  const hooks = configureHooks(queryClient, queryConfig);
+  const hooks = configureHooks(queryConfig);
 
-  const wrapper = ({ children }: { children: React.ReactNode }) => (
+  const wrapper = ({ children }: { children: React.ReactNode }): JSX.Element => (
     <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
   );
 
-  return { hooks, wrapper, queryClient, useMutation };
+  return { hooks, wrapper, queryClient, mutations, useMutation };
 };
 
 export type Endpoint = {
   route: string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   response: any;
-  method?: `${REQUEST_METHODS}`;
+  method?: `${RequestMethods}`;
   statusCode?: number;
   headers?: ReplyHeaders;
 };
 
-interface MockArguments {
+interface MockArguments<TProps> {
   endpoints?: Endpoint[];
-  wrapper: (args: { children: React.ReactNode }) => JSX.Element;
+  wrapper: RenderHookOptions<TProps>['wrapper'];
 }
-
-interface MockHookArguments extends MockArguments {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  hook: () => any;
+interface MockHookArguments<TProps, TResult extends QueryObserverBaseResult>
+  extends MockArguments<TProps> {
+  hook: (props: TProps) => TResult;
   enabled?: boolean;
 }
-interface MockMutationArguments extends MockArguments {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  mutation: () => any;
+interface MockMutationArguments<TProps, TData, TError, TVariables, TContext>
+  extends MockArguments<TProps> {
+  mutation: () => UseMutationResult<TData, TError, TVariables, TContext>;
 }
 
-export const mockEndpoints = (endpoints: Endpoint[]) => {
+type NockMethodType = Exclude<
+  {
+    [MethodName in keyof Scope]: Scope[MethodName] extends InterceptFunction ? MethodName : never;
+  }[keyof Scope],
+  undefined
+>;
+
+export const mockEndpoints = (endpoints: Endpoint[]): nock.Scope => {
   // mock endpoint with given response
   // we open to all hosts specially for redirection to aws (get file endpoints)
   const server = nock(/.*/);
   endpoints.forEach(({ route, method, statusCode, response, headers }) => {
-    server[(method || REQUEST_METHODS.GET).toLowerCase() as NockRequestMethods](route).reply(
+    server[(method || HttpMethod.GET).toLowerCase() as NockMethodType](route).reply(
       statusCode || StatusCodes.OK,
       response,
       headers,
@@ -82,44 +95,45 @@ export const mockEndpoints = (endpoints: Endpoint[]) => {
   return server;
 };
 
-export const mockHook = async ({ endpoints, hook, wrapper, enabled }: MockHookArguments) => {
-  endpoints && mockEndpoints(endpoints);
+export const mockHook = async <TProps, TResult extends QueryObserverBaseResult>({
+  endpoints,
+  hook,
+  wrapper,
+  enabled,
+}: MockHookArguments<TProps, TResult>): Promise<TResult> => {
+  if (endpoints) {
+    mockEndpoints(endpoints);
+  }
 
   // wait for rendering hook
-  const {
-    result,
-    waitFor,
-  }: {
-    result: RenderResult<QueryObserverBaseResult>;
-    waitFor: WaitFor;
-  } = renderHook(hook, { wrapper });
+  const { result } = renderHook(hook, { wrapper });
 
   // this hook is disabled, it will never fetch
   if (enabled === false) {
     return result.current;
   }
   await waitFor(() => {
-    return result.current.isSuccess || result.current.isError;
+    expect(result.current.isSuccess || result.current.isError).toBe(true);
   });
 
   // return hook data
   return result.current;
 };
 
-export const mockMutation = async ({ mutation, wrapper, endpoints }: MockMutationArguments) => {
-  endpoints && mockEndpoints(endpoints);
+export const mockMutation = async <TData, TError, TVariables, TContext, TProps>({
+  mutation,
+  wrapper,
+  endpoints,
+}: MockMutationArguments<TProps, TData, TError, TVariables, TContext>): Promise<
+  UseMutationResult<TData, TError, TVariables, TContext>
+> => {
+  if (endpoints) {
+    mockEndpoints(endpoints);
+  }
 
   // wait for rendering hook
-  const {
-    result,
-    waitFor,
-  }: {
-    // data, error and variables types are always different
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    result: RenderResult<MutationObserverResult<any, any, any>>;
-    waitFor: WaitFor;
-  } = renderHook(mutation, { wrapper });
-  await waitFor(() => result.current.isIdle);
+  const { result } = renderHook(mutation, { wrapper });
+  await waitFor(() => expect(result.current.isIdle).toBe(true));
 
   // return mutation data
   return result.current;
@@ -127,7 +141,7 @@ export const mockMutation = async ({ mutation, wrapper, endpoints }: MockMutatio
 
 // util function to wait some time after a mutation is performed
 // this is necessary for success and error callback to fully execute
-export const waitForMutation = async (t = 500) => {
+export const waitForMutation = async (t = 500): Promise<void> => {
   await new Promise((r) => {
     setTimeout(r, t);
   });
@@ -136,14 +150,15 @@ export const waitForMutation = async (t = 500) => {
 export const mockWindowForPostMessage = (
   event: MessageEvent,
   origin: string | null = MOCK_APP_ORIGIN,
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 ) => {
-  global.window = {
+  globalThis.window = {
     location: { origin },
     parent: {
       postMessage: jest.fn(),
     },
     removeEventListener: jest.fn(),
-    // eslint-disable-next-line @typescript-eslint/ban-types
+    // eslint-disable-next-line @typescript-eslint/ban-types, arrow-body-style
     addEventListener: (_event: string, f: Function) => {
       // check event listener works as expected given mock input
       return f(event);

@@ -1,15 +1,19 @@
-import { QueryClient, useMutation } from '@tanstack/react-query';
-import { List } from 'immutable';
-import * as Api from '../api';
-import { buildAppActionsKey, MUTATION_KEYS } from '../config/keys';
-import { QueryClientConfig } from '../types';
-import { getApiHost, getData, getDataOrThrow } from '../config/utils';
-import { postAppActionRoutine } from '../routines';
 import { AppAction, convertJs } from '@graasp/sdk';
 import { AppActionRecord } from '@graasp/sdk/frontend';
 
+import { QueryClient, useMutation } from '@tanstack/react-query';
+import { List } from 'immutable';
+
+import * as Api from '../api';
+import { MUTATION_KEYS, buildAppActionsKey } from '../config/keys';
+import { getApiHost, getData, getDataOrThrow } from '../config/utils';
+import { postAppActionRoutine } from '../routines';
+import { QueryClientConfig } from '../types';
+
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
   const { enableWebsocket } = queryConfig;
+
   queryClient.setMutationDefaults(MUTATION_KEYS.POST_APP_ACTION, {
     mutationFn: (payload: Partial<AppAction>) => {
       const apiHost = getApiHost(queryClient);
@@ -29,7 +33,10 @@ export default (queryClient: QueryClient, queryConfig: QueryClientConfig) => {
       }
     },
     onError: (error) => {
-      queryConfig?.notifier?.({ type: postAppActionRoutine.FAILURE, payload: { error } });
+      queryConfig?.notifier?.({
+        type: postAppActionRoutine.FAILURE,
+        payload: { error },
+      });
     },
     onSettled: () => {
       if (!enableWebsocket) {

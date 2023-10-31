@@ -43,12 +43,7 @@ import {
 
 const values = configureQueryClient({
   GRAASP_APP_KEY: process.env.REACT_APP_GRAASP_APP_KEY,
-  // build mock parent window given cypress (app) context or mock data
-  targetWindow: process.env.REACT_APP_ENABLE_MOCK_API === 'true'
-    ? buildMockParentWindow(
-        buildMockLocalContext(window.appContext),
-      )
-    : window.parent,
+  isStandalone: MOCK_API,
 });
 export values;
 ```

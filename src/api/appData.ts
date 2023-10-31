@@ -1,3 +1,7 @@
+import { AppData, UUID } from '@graasp/sdk';
+
+import { ApiData } from '../types';
+import configureAxios from './axios';
 import {
   buildDeleteAppDataRoute,
   buildDownloadAppDataFileRoute,
@@ -5,16 +9,13 @@ import {
   buildPatchAppDataRoute,
   buildPostAppDataRoute,
 } from './routes';
-import { ApiData } from '../types';
-import { AppData, UUID } from '@graasp/sdk';
-import configureAxios from './axios';
 
 const axios = configureAxios();
 
-export const getAppData = async (args: ApiData): Promise<AppData[]> => {
+export const getAppData = async (args: ApiData) => {
   const { token, itemId, apiHost } = args;
   return axios
-    .get(`${apiHost}/${buildGetAppDataRoute(itemId)}`, {
+    .get<AppData[]>(`${apiHost}/${buildGetAppDataRoute(itemId)}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -26,10 +27,10 @@ export const postAppData = (
   args: ApiData & {
     body: unknown;
   },
-): Promise<AppData> => {
+) => {
   const { token, itemId, apiHost, body } = args;
   return axios
-    .post(`${apiHost}/${buildPostAppDataRoute({ itemId })}`, body, {
+    .post<AppData>(`${apiHost}/${buildPostAppDataRoute({ itemId })}`, body, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -37,10 +38,10 @@ export const postAppData = (
     .then(({ data }) => data);
 };
 
-export const patchAppData = (args: ApiData & Partial<AppData> & { id: UUID }): Promise<AppData> => {
+export const patchAppData = (args: ApiData & Partial<AppData> & { id: UUID }) => {
   const { token, itemId, id, apiHost, data } = args;
   return axios
-    .patch(
+    .patch<AppData>(
       `${apiHost}/${buildPatchAppDataRoute({ itemId, id })}`,
       { data },
       {
@@ -49,17 +50,17 @@ export const patchAppData = (args: ApiData & Partial<AppData> & { id: UUID }): P
         },
       },
     )
-    .then(({ data }) => data);
+    .then(({ data: newData }) => newData);
 };
 
 export const deleteAppData = (
   args: ApiData & {
     id: string;
   },
-): Promise<AppData> => {
+) => {
   const { token, itemId, id, apiHost } = args;
   return axios
-    .delete(`${apiHost}/${buildDeleteAppDataRoute({ itemId, id })}`, {
+    .delete<AppData>(`${apiHost}/${buildDeleteAppDataRoute({ itemId, id })}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -82,14 +83,14 @@ export const getAppDataFile = async ({
   token: string;
 }) => {
   const url = await axios
-    .get(`${apiHost}/${buildDownloadAppDataFileRoute(id)}`, {
+    .get<string>(`${apiHost}/${buildDownloadAppDataFileRoute(id)}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     })
     .then(({ data }) => data);
   return axios
-    .get(url, {
+    .get<Blob>(url, {
       responseType: 'blob',
       withCredentials: false,
     })

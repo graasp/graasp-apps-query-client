@@ -1,19 +1,20 @@
-import { getReasonPhrase, StatusCodes } from 'http-status-codes';
 import {
+  Hydrate,
   QueryClient,
   QueryClientProvider,
-  useMutation,
-  Hydrate,
   dehydrate,
+  useMutation,
   useQuery,
 } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import { MUTATION_KEYS, QUERY_KEYS, buildPostMessageKeys } from './config/keys';
+import { StatusCodes, getReasonPhrase } from 'http-status-codes';
+
+import { API_ROUTES } from './api/routes';
 import { CACHE_TIME_MILLISECONDS, STALE_TIME_MILLISECONDS } from './config/constants';
+import { MUTATION_KEYS, QUERY_KEYS, buildPostMessageKeys } from './config/keys';
 import configureHooks from './hooks';
 import configureMutations from './mutations';
-import { API_ROUTES } from './api/routes';
-import { QueryClientConfig } from './types';
+import { OptionalQueryClientConfig, QueryClientConfig, RequiredQueryClientConfig } from './types';
 import { getWebsocketClient } from './ws';
 
 const makeWsHostFromAPIHost = (apiHost?: string): string | undefined => {
@@ -26,7 +27,7 @@ const makeWsHostFromAPIHost = (apiHost?: string): string | undefined => {
 };
 
 // Query client retry function decides when and how many times a request should be retried
-const defaultRetryFunction = (failureCount: number, error: unknown) => {
+const defaultRetryFunction = (failureCount: number, error: unknown): boolean => {
   // retry if the request timed out
   const codes = [StatusCodes.GATEWAY_TIMEOUT, StatusCodes.REQUEST_TIMEOUT];
   const reasons = codes.map((code) => getReasonPhrase(code));
@@ -38,36 +39,50 @@ const defaultRetryFunction = (failureCount: number, error: unknown) => {
   return false;
 };
 
-export default (config: Partial<QueryClientConfig>) => {
-  const baseConfig = {
-    SHOW_NOTIFICATIONS: config?.SHOW_NOTIFICATIONS || false,
-    keepPreviousData: config?.keepPreviousData || false,
-    retry: config?.retry ?? defaultRetryFunction,
-  };
-
+const configure = (
+  config: RequiredQueryClientConfig & Partial<OptionalQueryClientConfig>,
+): {
+  API_ROUTES: typeof API_ROUTES;
+  buildPostMessageKeys: typeof buildPostMessageKeys;
+  dehydrate: typeof dehydrate;
+  Hydrate: typeof Hydrate;
+  hooks: ReturnType<typeof configureHooks>;
+  mutations: ReturnType<typeof configureMutations>;
+  MUTATION_KEYS: typeof MUTATION_KEYS;
+  QUERY_KEYS: typeof QUERY_KEYS;
+  queryClient: QueryClient;
+  QueryClientProvider: typeof QueryClientProvider;
+  ReactQueryDevtools: typeof ReactQueryDevtools;
+  useMutation: typeof useMutation;
+  useQuery: typeof useQuery;
+} => {
   // define config for query client
   const queryConfig: QueryClientConfig = {
-    ...baseConfig,
-    targetWindow: config?.targetWindow,
+    API_HOST: config.API_HOST,
+    SHOW_NOTIFICATIONS: config.SHOW_NOTIFICATIONS ?? false,
     GRAASP_APP_KEY: config.GRAASP_APP_KEY ?? config.GRAASP_APP_ID,
-    notifier: config?.notifier,
+    keepPreviousData: config.keepPreviousData || true,
+    retry: config.retry ?? defaultRetryFunction,
+    notifier: config.notifier ?? console.info,
     // time until data in cache considered stale if cache not invalidated
-    staleTime: config?.staleTime || STALE_TIME_MILLISECONDS,
+    staleTime: config.staleTime || STALE_TIME_MILLISECONDS,
     // time before cache labeled as inactive to be garbage collected
-    cacheTime: config?.cacheTime || CACHE_TIME_MILLISECONDS,
+    cacheTime: config.cacheTime || CACHE_TIME_MILLISECONDS,
     // derive WS_HOST from API_HOST if needed
     // TODO: pass it with the context
-    WS_HOST: config?.WS_HOST || makeWsHostFromAPIHost(config?.API_HOST),
+    WS_HOST: config.WS_HOST || makeWsHostFromAPIHost(config.API_HOST),
     // whether websocket support should be enabled
-    enableWebsocket: Boolean(config?.enableWebsocket),
+    enableWebsocket: Boolean(config.enableWebsocket),
+    refetchOnWindowFocus: config.refetchOnWindowFocus ?? false,
+    isStandalone: config.isStandalone ?? false,
   };
 
   // create queryclient with given config
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {
-        refetchOnWindowFocus: config?.refetchOnWindowFocus || false,
-        retry: config?.shouldRetry ?? queryConfig.retry,
+        refetchOnWindowFocus: queryConfig.refetchOnWindowFocus,
+        retry: queryConfig.retry,
       },
     },
   });
@@ -80,7 +95,7 @@ export default (config: Partial<QueryClientConfig>) => {
   const websocketClient = getWebsocketClient(queryConfig);
 
   // set up hooks given config
-  const hooks = configureHooks(queryClient, queryConfig, websocketClient);
+  const hooks = configureHooks(queryConfig, websocketClient);
 
   // returns the queryClient and relative instances
   return {
@@ -99,3 +114,4 @@ export default (config: Partial<QueryClientConfig>) => {
     useQuery,
   };
 };
+export default configure;

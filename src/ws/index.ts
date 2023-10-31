@@ -14,5 +14,5 @@ export const getWebsocketClient = (queryConfig: QueryClientConfig): WebsocketCli
   if (enableWebsocket && typeof WS_HOST !== 'undefined') {
     return configureWebsocketClient({ ...queryConfig, WS_HOST });
   }
-  return;
+  return undefined;
 };

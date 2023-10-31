@@ -1,7 +1,7 @@
-import { List } from 'immutable';
-
-import { AppActionRecord, AppDataRecord, AppSettingRecord } from '@graasp/sdk/frontend';
 import { convertJs } from '@graasp/sdk';
+import { AppActionRecord, AppDataRecord, AppSettingRecord } from '@graasp/sdk/frontend';
+
+import { List } from 'immutable';
 
 import {
   FIXTURE_APP_ACTIONS,
@@ -13,13 +13,8 @@ import {
   buildAppSetting,
 } from '../../../test/constants';
 import { getHandlerByChannel, mockWsHook, setUpWsTest } from '../../../test/wsUtils';
-import { buildAppActionsKey, buildAppDataKey, buildAppSettingsKey } from '../../config/keys';
-import {
-  configureWsAppActionsHooks,
-  configureWsAppDataHooks,
-  configureWsAppSettingHooks,
-} from './app';
 import { APP_ACTIONS_TOPIC, APP_DATA_TOPIC, APP_SETTINGS_TOPIC } from '../../config/constants';
+import { buildAppActionsKey, buildAppDataKey, buildAppSettingsKey } from '../../config/keys';
 import {
   AppActionEvent,
   AppDataEvent,
@@ -27,6 +22,11 @@ import {
   AppOperations,
   AppSettingEvent,
 } from '../types';
+import {
+  configureWsAppActionsHooks,
+  configureWsAppDataHooks,
+  configureWsAppSettingHooks,
+} from './app';
 
 const { hooks, wrapper, queryClient, handlers } = setUpWsTest({
   configureWsAppActionsHooks,

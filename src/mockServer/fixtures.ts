@@ -1,9 +1,16 @@
-import { AppItemType, ItemType, Member, MemberType, PermissionLevel } from '@graasp/sdk';
-import { buildContext } from '../hooks/postMessage';
-import { LocalContext } from '../types';
-import { Context } from '@graasp/sdk';
+import {
+  AppItemType,
+  CompleteMember,
+  Context,
+  ItemType,
+  MemberType,
+  PermissionLevel,
+} from '@graasp/sdk';
 
-export const MOCK_SERVER_MEMBER: Member = {
+import { buildContext } from '../hooks/postMessage';
+import { Database, LocalContext } from '../types';
+
+export const MOCK_SERVER_MEMBER: CompleteMember = {
   id: 'mock-member-id',
   name: 'mock-member-name',
   email: 'email@email.com',
@@ -30,7 +37,7 @@ export const MOCK_SERVER_ITEM: AppItemType = {
   settings: {},
 };
 
-export const buildMockLocalContext = (appContext?: Partial<LocalContext>) => {
+export const buildMockLocalContext = (appContext?: Partial<LocalContext>): LocalContext => {
   const context: LocalContext = {
     memberId: MOCK_SERVER_MEMBER.id,
     itemId: MOCK_SERVER_ITEM.id,
@@ -44,3 +51,19 @@ export const buildMockLocalContext = (appContext?: Partial<LocalContext>) => {
 
   return buildContext(context);
 };
+
+export const buildDatabase = ({
+  appContext = buildMockLocalContext(),
+  appData = [],
+  appActions = [],
+  appSettings = [],
+  members = [MOCK_SERVER_MEMBER],
+  items = [MOCK_SERVER_ITEM],
+}: Partial<Database> = {}): Database => ({
+  appContext,
+  appData,
+  appActions,
+  appSettings,
+  members,
+  items,
+});

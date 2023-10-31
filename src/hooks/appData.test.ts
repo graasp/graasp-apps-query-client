@@ -1,25 +1,25 @@
+import { convertJs } from '@graasp/sdk';
+
 import { StatusCodes } from 'http-status-codes';
-import { List } from 'immutable';
 import nock from 'nock';
 import { v4 } from 'uuid';
+
 import {
-  buildMockLocalContext,
   FIXTURE_APP_DATA,
   S3_FILE_BLOB_RESPONSE,
   UNAUTHORIZED_RESPONSE,
+  buildMockLocalContext,
 } from '../../test/constants';
 import { Endpoint, mockHook, setUpTest } from '../../test/utils';
 import { buildDownloadAppDataFileRoute, buildGetAppDataRoute } from '../api/routes';
 import { MOCK_TOKEN } from '../config/constants';
 import {
   AUTH_TOKEN_KEY,
+  LOCAL_CONTEXT_KEY,
   buildAppDataKey,
   buildFileContentKey,
-  LOCAL_CONTEXT_KEY,
 } from '../config/keys';
 import { MissingApiHostError } from '../config/utils';
-import { AppDataRecord } from '@graasp/sdk/frontend';
-import { convertJs } from '@graasp/sdk';
 
 const { hooks, wrapper, queryClient } = setUpTest();
 const itemId = v4();
@@ -45,7 +45,7 @@ describe('App Data Hooks', () => {
       const endpoints = [{ route, response }];
       const { data } = await mockHook({ endpoints, hook, wrapper });
 
-      expect((data as List<AppDataRecord>).toJS()).toEqual(response);
+      expect(data?.toJS()).toEqual(response);
 
       // verify cache keys
       expect(queryClient.getQueryData(key)).toEqualImmutable(convertJs(response));

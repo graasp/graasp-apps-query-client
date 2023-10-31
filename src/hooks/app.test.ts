@@ -1,19 +1,21 @@
+import { convertJs } from '@graasp/sdk';
+
 import { StatusCodes } from 'http-status-codes';
 import { Record } from 'immutable';
 import nock from 'nock';
 import { v4 } from 'uuid';
+
 import {
-  buildMockLocalContext,
   FIXTURE_CONTEXT,
   UNAUTHORIZED_RESPONSE,
+  buildMockLocalContext,
 } from '../../test/constants';
 import { mockHook, setUpTest } from '../../test/utils';
 import { buildGetContextRoute } from '../api/routes';
 import { MOCK_TOKEN } from '../config/constants';
-import { AUTH_TOKEN_KEY, buildAppContextKey, LOCAL_CONTEXT_KEY } from '../config/keys';
+import { AUTH_TOKEN_KEY, LOCAL_CONTEXT_KEY, buildAppContextKey } from '../config/keys';
 import { MissingApiHostError } from '../config/utils';
 import { LocalContext } from '../types';
-import { convertJs } from '@graasp/sdk';
 
 const { hooks, wrapper, queryClient } = setUpTest();
 const itemId = v4();
@@ -32,7 +34,7 @@ describe('App Hooks', () => {
   describe('useAppContext', () => {
     const key = buildAppContextKey(itemId);
     const route = `/${buildGetContextRoute(itemId)}`;
-    const hook = () => hooks.useAppContext();
+    const hook = hooks.useAppContext;
 
     it('Receive app context', async () => {
       // preset context
@@ -40,7 +42,7 @@ describe('App Hooks', () => {
       const endpoints = [{ route, response }];
       const { data } = await mockHook({ endpoints, hook, wrapper });
 
-      expect((data as Record<LocalContext>).toJS()).toEqual(response);
+      expect(data?.toJS()).toEqual(response);
 
       // verify cache keys
       expect((queryClient.getQueryData(key) as Record<LocalContext>).toJS()).toEqual(response);

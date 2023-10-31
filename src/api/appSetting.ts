@@ -1,3 +1,7 @@
+import { AppSetting } from '@graasp/sdk';
+
+import { ApiData } from '../types';
+import configureAxios from './axios';
 import {
   buildDeleteAppSettingRoute,
   buildDownloadAppSettingFileRoute,
@@ -5,16 +9,13 @@ import {
   buildPatchAppSettingRoute,
   buildPostAppSettingRoute,
 } from './routes';
-import configureAxios from './axios';
-import { ApiData } from '../types';
-import { AppSetting } from '@graasp/sdk';
 
 const axios = configureAxios();
 
-export const getAppSettings = async (args: ApiData): Promise<AppSetting[]> => {
+export const getAppSettings = async (args: ApiData) => {
   const { token, itemId, apiHost } = args;
   return axios
-    .get(`${apiHost}/${buildGetAppSettingsRoute(itemId)}`, {
+    .get<AppSetting[]>(`${apiHost}/${buildGetAppSettingsRoute(itemId)}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -29,7 +30,7 @@ export const postAppSetting = (
 ) => {
   const { token, itemId, apiHost, body } = args;
   return axios
-    .post(`${apiHost}/${buildPostAppSettingRoute({ itemId })}`, body, {
+    .post<AppSetting>(`${apiHost}/${buildPostAppSettingRoute({ itemId })}`, body, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -45,7 +46,7 @@ export const patchAppSetting = (
 ) => {
   const { token, itemId, id, apiHost, data } = args;
   return axios
-    .patch(
+    .patch<AppSetting>(
       `${apiHost}/${buildPatchAppSettingRoute({ itemId, id })}`,
       { data },
       {
@@ -54,7 +55,7 @@ export const patchAppSetting = (
         },
       },
     )
-    .then(({ data }) => data);
+    .then(({ data: newData }) => newData);
 };
 
 export const deleteAppSetting = (
@@ -64,7 +65,7 @@ export const deleteAppSetting = (
 ) => {
   const { token, itemId, id, apiHost } = args;
   return axios
-    .delete(`${apiHost}/${buildDeleteAppSettingRoute({ itemId, id })}`, {
+    .delete<AppSetting>(`${apiHost}/${buildDeleteAppSettingRoute({ itemId, id })}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -88,14 +89,14 @@ export const getAppSettingFileContent = async ({
   token: string;
 }) => {
   const url = await axios
-    .get(`${apiHost}/${buildDownloadAppSettingFileRoute(id)}`, {
+    .get<string>(`${apiHost}/${buildDownloadAppSettingFileRoute(id)}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     })
     .then(({ data }) => data);
   return axios
-    .get(url, {
+    .get<Blob>(url, {
       responseType: 'blob',
       withCredentials: false,
     })

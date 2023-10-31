@@ -1,14 +1,16 @@
-import { renderHook } from '@testing-library/react-hooks';
 import React from 'react';
+
 import { QueryClient } from '@tanstack/react-query';
+import { renderHook } from '@testing-library/react';
 
 import configureQueryClient from '../src/queryClient';
 import { Notifier, QueryClientConfig } from '../src/types';
 import { Channel } from '../src/ws/ws-client';
-import { API_HOST, WS_HOST } from './constants';
+import { API_HOST, GRAASP_APP_KEY, WS_HOST } from './constants';
 
 export type Handler = { channel: Channel; handler: (event: unknown) => void };
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const MockedWebsocket = (handlers: Handler[]) => ({
   subscribe: jest.fn((channel, handler) => {
     // eslint-disable-next-line no-param-reassign
@@ -21,11 +23,12 @@ export const setUpWsTest = (args?: {
   enableWebsocket?: boolean;
   notifier?: Notifier;
   // eslint-disable-next-line @typescript-eslint/ban-types
-  configureWsAppActionsHooks: Function,
+  configureWsAppActionsHooks: Function;
   // eslint-disable-next-line @typescript-eslint/ban-types
-  configureWsAppDataHooks: Function,
+  configureWsAppDataHooks: Function;
   // eslint-disable-next-line @typescript-eslint/ban-types
-  configureWsAppSettingHooks: Function,
+  configureWsAppSettingHooks: Function;
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 }) => {
   const {
     notifier = () => {
@@ -53,10 +56,13 @@ export const setUpWsTest = (args?: {
     notifier,
     enableWebsocket: false,
     WS_HOST,
+    GRAASP_APP_KEY,
+    refetchOnWindowFocus: false,
+    keepPreviousData: true,
+    isStandalone: false,
   };
 
-  const { QueryClientProvider, useMutation } =
-    configureQueryClient(queryConfig);
+  const { QueryClientProvider, useMutation } = configureQueryClient(queryConfig);
 
   const handlers: Handler[] = [];
   const websocketClient = MockedWebsocket(handlers);
@@ -70,18 +76,14 @@ export const setUpWsTest = (args?: {
 
   const queryClient = new QueryClient();
 
-  const wrapper = ({
-    children,
-  }: {
-    children: React.ReactNode;
-  }): JSX.Element => (
+  const wrapper = ({ children }: { children: React.ReactNode }): JSX.Element => (
     <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
   );
 
   return { hooks, wrapper, queryClient, useMutation, handlers };
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/explicit-function-return-type
 export const mockWsHook = async ({ hook, wrapper, enabled }: any) => {
   // wait for rendering hook
   const {
@@ -91,7 +93,7 @@ export const mockWsHook = async ({ hook, wrapper, enabled }: any) => {
     result: any;
   } = renderHook(hook, { wrapper });
 
-  if(result.error) console.error(result.error);
+  if (result.error) console.error(result.error);
 
   // this hook is disabled, it will never fetch
   if (enabled === false) {
@@ -102,10 +104,7 @@ export const mockWsHook = async ({ hook, wrapper, enabled }: any) => {
   return result.current;
 };
 
-export const getHandlerByChannel = (
-  handlers: Handler[],
-  channel: Channel,
-): Handler | undefined =>
+export const getHandlerByChannel = (handlers: Handler[], channel: Channel): Handler | undefined =>
   handlers.find(
     ({ channel: thisChannel }) =>
       channel.name === thisChannel.name && channel.topic === thisChannel.topic,

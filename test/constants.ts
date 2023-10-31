@@ -1,22 +1,26 @@
-import { v4 } from 'uuid';
-import { LocalContext } from '../src/types';
 import {
   AppAction,
   AppData,
   AppDataVisibility,
   AppSetting,
+  CompleteMember,
+  Context,
   FolderItemType,
   ItemType,
-  Member,
   MemberType,
+  PermissionLevel,
 } from '@graasp/sdk';
+
+import { v4 } from 'uuid';
+
+import { LocalContext } from '../src/types';
 
 export const API_HOST = 'http://localhost:3000';
 export const WS_HOST = 'ws://localhost:3000';
 export const DOMAIN = 'domain';
 export const UNAUTHORIZED_RESPONSE = { some: 'error' };
 
-export const MEMBER_RESPONSE: Member = {
+export const MEMBER_RESPONSE: CompleteMember = {
   id: '42',
   name: 'username',
   type: MemberType.Individual,
@@ -26,7 +30,7 @@ export const MEMBER_RESPONSE: Member = {
   updatedAt: new Date(),
 };
 
-export const MEMBERS_RESPONSE: Member[] = [
+export const MEMBERS_RESPONSE: CompleteMember[] = [
   MEMBER_RESPONSE,
   {
     id: '421',
@@ -137,7 +141,7 @@ export const FIXTURE_CONTEXT = {
   ...MOCK_ITEM,
 };
 
-export enum REQUEST_METHODS {
+export enum RequestMethods {
   GET = 'GET',
   POST = 'POST',
   DELETE = 'DELETE',
@@ -148,11 +152,14 @@ export enum REQUEST_METHODS {
 export const buildMockLocalContext = ({
   itemId = v4(),
   memberId = v4(),
-}: Partial<LocalContext> = {}) => ({
+}: Partial<LocalContext> = {}): LocalContext => ({
   apiHost: API_HOST,
   itemId,
   memberId,
   settings: {},
+  context: Context.Builder,
+  permission: PermissionLevel.Read,
 });
 
 export const MOCK_APP_ORIGIN = 'http://localhost';
+export const GRAASP_APP_KEY = '1234';

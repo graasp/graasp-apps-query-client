@@ -1,26 +1,76 @@
-import React, { createContext, FC } from 'react';
-import qs from 'qs';
+import React, { ReactElement, createContext } from 'react';
+
 import { UseQueryResult } from '@tanstack/react-query';
+
 import { Token } from '../types';
 
-// mock token, necessary for first renders
-const defaultToken = 'mock-token';
+const TokenContext = createContext<string>('');
 
-const TokenContext = createContext<string>(defaultToken);
-
-interface Props {
+interface WithTokenContextProps {
+  children: ReactElement | (ReactElement | false | null)[];
   useAuthToken: (itemId: string) => UseQueryResult<Token, unknown>;
-  LoadingComponent?: React.ReactElement;
+  LoadingComponent?: JSX.Element;
   onError?: (error: unknown) => void;
 }
 
-const withToken =
-  <P extends object>(Component: React.ComponentType<P>, props: Props): FC<P> =>
-  (childProps: P) => {
+const WithTokenContext = ({
+  children,
+  LoadingComponent,
+  onError,
+  useAuthToken,
+}: WithTokenContextProps): JSX.Element => {
+  const itemId = new URL(window.location.toString()).searchParams.get('itemId') || '';
+
+  if (!itemId) {
+    const error = 'ItemId not found in querystring parameters';
+    if (onError) {
+      onError(error);
+    } else {
+      console.error(error);
+    }
+  }
+
+  const { data: token, isLoading, isError, error } = useAuthToken(itemId);
+
+  if (token) {
+    return <TokenContext.Provider value={token}>{children}</TokenContext.Provider>;
+  }
+
+  if (isLoading) {
+    return LoadingComponent ?? <div>loading...</div>;
+  }
+
+  if (isError) {
+    if (onError) {
+      onError(error);
+    } else {
+      console.error(error);
+    }
+  }
+  return <div>Whoops something went wrong...</div>;
+};
+
+/**
+ * @deprecated
+ */
+interface Props {
+  useAuthToken: (itemId: string) => UseQueryResult<Token, unknown>;
+  LoadingComponent?: JSX.Element;
+  onError?: (error: unknown) => void;
+}
+
+/**
+ * @deprecated use `WithTokenContext` instead
+ */
+const withToken = <P extends object>(
+  Component: React.ComponentType<P>,
+  props: Props,
+): ((childProps: P) => JSX.Element) => {
+  const WithTokenComponent = (childProps: P): JSX.Element => {
     const { LoadingComponent, onError, useAuthToken } = props;
-    const { itemId } = qs.parse(window.location.search, {
-      ignoreQueryPrefix: true,
-    });
+
+    const itemId = new URL(window.location.toString()).searchParams.get('itemId') || '';
+
     if (!itemId) {
       const error = 'ItemId not found in querystring parameters';
       if (onError) {
@@ -30,7 +80,15 @@ const withToken =
       }
     }
 
-    const { data, isLoading, isError, error } = useAuthToken(itemId as string);
+    const { data: token, isLoading, isError, error } = useAuthToken(itemId);
+
+    if (token) {
+      return (
+        <TokenContext.Provider value={token}>
+          <Component {...childProps} />
+        </TokenContext.Provider>
+      );
+    }
 
     if (isLoading) {
       return LoadingComponent ?? <div>loading...</div>;
@@ -43,13 +101,8 @@ const withToken =
         console.error(error);
       }
     }
-
-    const value = data ?? defaultToken;
-    return (
-      <TokenContext.Provider value={value}>
-        <Component {...(childProps as P)} />
-      </TokenContext.Provider>
-    );
+    return <div>Whoops something went wrong...</div>;
   };
-
-export { TokenContext, withToken };
+  return WithTokenComponent;
+};
+export { TokenContext, WithTokenContext, withToken };

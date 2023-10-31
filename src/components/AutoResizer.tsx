@@ -1,11 +1,13 @@
-import React, { FC, ReactNode } from 'react';
+import { ReactNode } from 'react';
 
 interface AutoResizerProps {
-  useAutoResize: () => void;
-  children?: ReactNode;
+  useAutoResize: (itemId: string) => void;
+  itemId: string;
+  children?: ReactNode | ReactNode[];
 }
 
-export const AutoResizer: FC<AutoResizerProps> = ({ useAutoResize, children }) => {
-  useAutoResize();
-  return <React.Fragment>{children}</React.Fragment>;
+export const AutoResizer = ({ useAutoResize, itemId, children }: AutoResizerProps): JSX.Element => {
+  useAutoResize(itemId);
+  // eslint-disable-next-line react/jsx-no-useless-fragment
+  return <>{children}</>;
 };
