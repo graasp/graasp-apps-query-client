@@ -12,10 +12,10 @@ import {
 
 const axios = configureAxios();
 
-export const getAppSettings = async (args: ApiData): Promise<AppSetting[]> => {
+export const getAppSettings = async (args: ApiData) => {
   const { token, itemId, apiHost } = args;
   return axios
-    .get(`${apiHost}/${buildGetAppSettingsRoute(itemId)}`, {
+    .get<AppSetting[]>(`${apiHost}/${buildGetAppSettingsRoute(itemId)}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -27,10 +27,10 @@ export const postAppSetting = (
   args: ApiData & {
     body: unknown;
   },
-): Promise<AppSetting> => {
+) => {
   const { token, itemId, apiHost, body } = args;
   return axios
-    .post(`${apiHost}/${buildPostAppSettingRoute({ itemId })}`, body, {
+    .post<AppSetting>(`${apiHost}/${buildPostAppSettingRoute({ itemId })}`, body, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -43,10 +43,10 @@ export const patchAppSetting = (
     id: string;
     data: unknown;
   },
-): Promise<AppSetting> => {
+) => {
   const { token, itemId, id, apiHost, data } = args;
   return axios
-    .patch(
+    .patch<AppSetting>(
       `${apiHost}/${buildPatchAppSettingRoute({ itemId, id })}`,
       { data },
       {
@@ -62,10 +62,10 @@ export const deleteAppSetting = (
   args: ApiData & {
     id: string;
   },
-): Promise<AppSetting> => {
+) => {
   const { token, itemId, id, apiHost } = args;
   return axios
-    .delete(`${apiHost}/${buildDeleteAppSettingRoute({ itemId, id })}`, {
+    .delete<AppSetting>(`${apiHost}/${buildDeleteAppSettingRoute({ itemId, id })}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -87,16 +87,16 @@ export const getAppSettingFileContent = async ({
   id: string;
   apiHost: string;
   token: string;
-}): Promise<Blob> => {
+}) => {
   const url = await axios
-    .get(`${apiHost}/${buildDownloadAppSettingFileRoute(id)}`, {
+    .get<string>(`${apiHost}/${buildDownloadAppSettingFileRoute(id)}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     })
     .then(({ data }) => data);
   return axios
-    .get(url, {
+    .get<Blob>(url, {
       responseType: 'blob',
       withCredentials: false,
     })

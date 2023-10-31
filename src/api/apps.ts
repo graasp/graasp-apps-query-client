@@ -4,10 +4,10 @@ import { buildGetContextRoute } from './routes';
 
 const axios = configureAxios();
 
-export const getContext = async (args: ApiData): Promise<AppContext> => {
+export const getContext = async (args: ApiData) => {
   const { token, itemId, apiHost } = args;
   return axios
-    .get(`${apiHost}/${buildGetContextRoute(itemId)}`, {
+    .get<AppContext>(`${apiHost}/${buildGetContextRoute(itemId)}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

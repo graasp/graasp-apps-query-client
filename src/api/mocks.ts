@@ -3,10 +3,10 @@ import configureAxios from './axios';
 
 const axios = configureAxios();
 
-export const getMockContext = async (args: { token: Token }): Promise<LocalContext> => {
+export const getMockContext = async (args: { token: Token }) => {
   const { token } = args;
   return axios
-    .get(`/__mocks/context`, {
+    .get<LocalContext>(`/__mocks/context`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
