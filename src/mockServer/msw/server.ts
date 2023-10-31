@@ -10,12 +10,14 @@ import { buildMSWMocks } from './handlers';
 export const mockServiceWorkerServer = ({
   appContext,
   database,
+  dbName,
 }: {
   appContext: Partial<LocalContext> & Pick<LocalContext, 'itemId'>;
   database?: Database;
+  dbName?: string;
 }): { worker: SetupWorker; resetDB: (data: Database) => void } => {
   const fullAppContext = buildMockLocalContext(appContext);
-  const mswMocks = buildMSWMocks(fullAppContext, database);
+  const mswMocks = buildMSWMocks(fullAppContext, database, dbName);
   mswMocks.db.on('populate', (transaction) => {
     if (database) {
       // seed database with data

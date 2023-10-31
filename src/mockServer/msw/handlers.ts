@@ -46,8 +46,9 @@ const getMemberIdFromToken = (bearer: string | null): string => {
 export const buildMSWMocks = (
   { apiHost }: LocalContext,
   database?: Database,
+  dbName?: string,
 ): { handlers: RestHandler[]; db: AppMocks } => {
-  const db = new AppMocks();
+  const db = new AppMocks(dbName);
 
   const getPermissionForMember = async (memberId: string): Promise<PermissionLevel> => {
     const localContextForMember = await db.appContext.get(memberId);

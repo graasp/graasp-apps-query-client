@@ -27,8 +27,8 @@ export class AppMocks extends Dexie {
 
   appAction!: Dexie.Table<AppAction, string>;
 
-  constructor() {
-    super('graasp-app-mocks');
+  constructor(name?: string) {
+    super(name ?? 'graasp-app-mocks');
 
     //
     // Define tables and indexes
