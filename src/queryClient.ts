@@ -63,8 +63,7 @@ const configure = (
     GRAASP_APP_KEY: config.GRAASP_APP_KEY ?? config.GRAASP_APP_ID,
     keepPreviousData: config.keepPreviousData || true,
     retry: config.retry ?? defaultRetryFunction,
-    // eslint-disable-next-line no-console
-    notifier: config.notifier ?? console.log,
+    notifier: config.notifier ?? console.info,
     // time until data in cache considered stale if cache not invalidated
     staleTime: config.staleTime || STALE_TIME_MILLISECONDS,
     // time before cache labeled as inactive to be garbage collected

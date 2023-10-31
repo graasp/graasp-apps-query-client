@@ -245,7 +245,6 @@ const configurePostMessageHooks = (queryConfig: QueryClientConfig) => {
         };
         if (!port2) {
           const error = new MissingMessageChannelPortError();
-          // eslint-disable-next-line no-console
           console.error(error);
         }
 

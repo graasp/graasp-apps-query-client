@@ -248,7 +248,6 @@ export const configureWebsocketClient = (
       }
 
       default:
-        // eslint-disable-next-line no-console
         console.info('Unknown WS message');
     }
   });

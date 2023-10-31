@@ -26,7 +26,6 @@ const WithTokenContext = ({
     if (onError) {
       onError(error);
     } else {
-      // eslint-disable-next-line no-console
       console.error(error);
     }
   }
@@ -45,7 +44,6 @@ const WithTokenContext = ({
     if (onError) {
       onError(error);
     } else {
-      // eslint-disable-next-line no-console
       console.error(error);
     }
   }
@@ -78,7 +76,6 @@ const withToken = <P extends object>(
       if (onError) {
         onError(error);
       } else {
-        // eslint-disable-next-line no-console
         console.error(error);
       }
     }
@@ -101,7 +98,6 @@ const withToken = <P extends object>(
       if (onError) {
         onError(error);
       } else {
-        // eslint-disable-next-line no-console
         console.error(error);
       }
     }

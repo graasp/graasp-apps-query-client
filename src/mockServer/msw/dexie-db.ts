@@ -55,13 +55,11 @@ export class AppMocks extends Dexie {
   }
 
   resetDB(data?: Database): void {
-    // eslint-disable-next-line no-console
-    console.log('Resetting DB');
+    console.info('Resetting DB');
     this.tables.map((table) => table.clear());
 
     if (data) {
-      // eslint-disable-next-line no-console
-      console.log('Seeding DB with initial data');
+      console.info('Seeding DB with initial data');
       this.seed(data);
     }
   }

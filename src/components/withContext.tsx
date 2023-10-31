@@ -66,7 +66,6 @@ const WithLocalContext = ({
     if (onError) {
       onError(error);
     } else {
-      // eslint-disable-next-line no-console
       console.error(error);
     }
   }
@@ -134,7 +133,6 @@ const withContext = <P extends object>(
       if (onError) {
         onError(error);
       } else {
-        // eslint-disable-next-line no-console
         console.error(error);
       }
     }

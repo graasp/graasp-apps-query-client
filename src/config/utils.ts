@@ -58,16 +58,13 @@ export const getData = (
 
   if (options.shouldMemberExist ?? true) {
     if (!memberId) {
-      // eslint-disable-next-line no-console
       console.debug('member id is not defined');
     }
   }
   if (!itemId) {
-    // eslint-disable-next-line no-console
     console.error('item id is not defined');
   }
   if (!token) {
-    // eslint-disable-next-line no-console
     console.error('token is not defined');
   }
 

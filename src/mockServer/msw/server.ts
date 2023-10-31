@@ -19,7 +19,6 @@ export const mockServiceWorkerServer = ({
   mswMocks.db.on('populate', (transaction) => {
     if (database) {
       // seed database with data
-      // eslint-disable-next-line no-console
       console.debug('Populating the DB with provided mock data');
       if (database.items.length) {
         transaction.table('item').bulkAdd(database?.items);
@@ -38,7 +37,6 @@ export const mockServiceWorkerServer = ({
       }
       transaction.table('appContext').add(database.appContext, database.appContext.memberId);
     } else {
-      // eslint-disable-next-line no-console
       console.debug('There was no data to populate the database');
     }
   });
