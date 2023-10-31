@@ -43,7 +43,7 @@
         "devDependencies": true
       }
     ],
-    "no-console": ["error", { "allow": ["warn", "error", "debug", "info"] }],
+    "no-console": ["warn", { "allow": ["warn", "error", "debug", "info"] }],
     "import/prefer-default-export": "off",
     "prettier/prettier": "error",
     "import/extensions": [

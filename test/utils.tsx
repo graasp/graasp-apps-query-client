@@ -8,7 +8,6 @@ import { StatusCodes } from 'http-status-codes';
 import nock, { InterceptFunction, ReplyHeaders, Scope } from 'nock';
 import { v4 } from 'uuid';
 
-// import { expect, vi } from 'vitest';
 import configureHooks from '../src/hooks';
 import configureQueryClient from '../src/queryClient';
 import { Notifier, QueryClientConfig } from '../src/types';
