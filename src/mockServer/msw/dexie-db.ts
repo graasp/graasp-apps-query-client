@@ -44,17 +44,29 @@ export class AppMocks extends Dexie {
     });
   }
 
-  seed(data: Database): void {
+  seed(data: Partial<Database>): void {
     // pre-load the IndexDB with data
-    this.item.bulkAdd(data.items);
-    this.member.bulkAdd(data.members);
-    this.appContext.add(data.appContext, data.appContext.memberId);
-    this.appData.bulkAdd(data.appData);
-    this.appSetting.bulkAdd(data.appSettings);
-    this.appAction.bulkAdd(data.appActions);
+    if (data.items?.length) {
+      this.item.bulkAdd(data.items);
+    }
+    if (data.members?.length) {
+      this.member.bulkAdd(data.members);
+    }
+    if (data.appContext) {
+      this.appContext.add(data.appContext, data.appContext.memberId);
+    }
+    if (data.appData?.length) {
+      this.appData.bulkAdd(data.appData);
+    }
+    if (data.appSettings?.length) {
+      this.appSetting.bulkAdd(data.appSettings);
+    }
+    if (data.appActions?.length) {
+      this.appAction.bulkAdd(data.appActions);
+    }
   }
 
-  resetDB(data?: Database): void {
+  resetDB(data?: Partial<Database>): void {
     console.info('Resetting DB');
     this.tables.map((table) => table.clear());
 

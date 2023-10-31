@@ -333,6 +333,11 @@ export const buildMSWMocks = (
       db.resetDB(database);
       return res(ctx.status(200));
     }),
+    rest.post('/__mocks/seed', async (req, res, ctx) => {
+      const seedData = await req.json();
+      db.resetDB(seedData);
+      return res(ctx.status(200));
+    }),
     rest.get('/__mocks/context', async (req, res, ctx) => {
       const memberId = getMemberIdFromToken(req.headers.get('Authorization'));
       const value = await db.appContext.where('memberId').equals(memberId).first();
