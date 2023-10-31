@@ -1,5 +1,5 @@
 import { Database, LocalContext } from '../types';
-import { MOCK_SERVER_ITEM, MOCK_SERVER_MEMBER, buildMockLocalContext } from './fixtures';
+import { buildDatabase, buildMockLocalContext } from './fixtures';
 import { mockMirageServer } from './mirage/server';
 import { mockServiceWorkerServer } from './msw/server';
 import { ExternalUrls } from './types';
@@ -8,22 +8,6 @@ export enum MockSolution {
   MirageJS = 'mirage',
   ServiceWorker = 'service-worker',
 }
-
-export const buildDatabase = ({
-  appContext = buildMockLocalContext(),
-  appData = [],
-  appActions = [],
-  appSettings = [],
-  members = [MOCK_SERVER_MEMBER],
-  items = [MOCK_SERVER_ITEM],
-}: Partial<Database> = {}): Database => ({
-  appContext,
-  appData,
-  appActions,
-  appSettings,
-  members,
-  items,
-});
 
 const mockApi = (
   {

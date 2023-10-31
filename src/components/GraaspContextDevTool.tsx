@@ -21,7 +21,7 @@ import { Context, HttpMethod, Member, PermissionLevel } from '@graasp/sdk';
 
 import { useQueryClient } from '@tanstack/react-query';
 
-import { LOCAL_CONTEXT_KEY, buildAppContextKey } from '../config/keys';
+import { LOCAL_CONTEXT_KEY } from '../config/keys';
 import { LocalContext } from '../types';
 import { UpdateArgument } from './utils/hooks';
 import { TokenContext } from './withToken';
@@ -53,7 +53,7 @@ const GraaspContextDevTool = ({ members, context, setContext }: Props): JSX.Elem
       body: JSON.stringify({ ...context, [key]: newValue }),
       headers: [['authorization', token]],
     }).then(() => {
-      console.log('invalidating local Context');
+      console.debug('invalidating local Context');
       queryClient.refetchQueries(LOCAL_CONTEXT_KEY);
     });
   };

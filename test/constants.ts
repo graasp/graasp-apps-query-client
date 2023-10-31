@@ -4,9 +4,11 @@ import {
   AppDataVisibility,
   AppSetting,
   CompleteMember,
+  Context,
   FolderItemType,
   ItemType,
   MemberType,
+  PermissionLevel,
 } from '@graasp/sdk';
 
 import { v4 } from 'uuid';
@@ -139,7 +141,7 @@ export const FIXTURE_CONTEXT = {
   ...MOCK_ITEM,
 };
 
-export enum REQUEST_METHODS {
+export enum RequestMethods {
   GET = 'GET',
   POST = 'POST',
   DELETE = 'DELETE',
@@ -150,11 +152,13 @@ export enum REQUEST_METHODS {
 export const buildMockLocalContext = ({
   itemId = v4(),
   memberId = v4(),
-}: Partial<LocalContext> = {}) => ({
+}: Partial<LocalContext> = {}): LocalContext => ({
   apiHost: API_HOST,
   itemId,
   memberId,
   settings: {},
+  context: Context.Builder,
+  permission: PermissionLevel.Read,
 });
 
 export const MOCK_APP_ORIGIN = 'http://localhost';

@@ -9,7 +9,7 @@ import { v4 } from 'uuid';
 
 import {
   FIXTURE_APP_DATA,
-  REQUEST_METHODS,
+  RequestMethods,
   UNAUTHORIZED_RESPONSE,
   buildAppData,
   buildMockLocalContext,
@@ -58,7 +58,7 @@ describe('Apps Mutations', () => {
         const endpoints = [
           {
             response,
-            method: REQUEST_METHODS.POST,
+            method: RequestMethods.POST,
             route,
           },
         ];
@@ -95,7 +95,7 @@ describe('Apps Mutations', () => {
           {
             response,
             statusCode: StatusCodes.UNAUTHORIZED,
-            method: REQUEST_METHODS.POST,
+            method: RequestMethods.POST,
             route,
           },
         ];
@@ -132,7 +132,7 @@ describe('Apps Mutations', () => {
         const endpoints = [
           {
             response: toAdd,
-            method: REQUEST_METHODS.POST,
+            method: RequestMethods.POST,
             route,
           },
         ];
@@ -169,7 +169,7 @@ describe('Apps Mutations', () => {
         const endpoints = [
           {
             response: toAdd,
-            method: REQUEST_METHODS.POST,
+            method: RequestMethods.POST,
             route,
           },
         ];
@@ -202,7 +202,7 @@ describe('Apps Mutations', () => {
         const endpoints = [
           {
             response: toAdd,
-            method: REQUEST_METHODS.POST,
+            method: RequestMethods.POST,
             route,
           },
         ];
@@ -254,7 +254,7 @@ describe('Apps Mutations', () => {
         const endpoints = [
           {
             response,
-            method: REQUEST_METHODS.PATCH,
+            method: RequestMethods.PATCH,
             route,
           },
         ];
@@ -292,7 +292,7 @@ describe('Apps Mutations', () => {
           {
             response,
             statusCode: StatusCodes.UNAUTHORIZED,
-            method: REQUEST_METHODS.PATCH,
+            method: RequestMethods.PATCH,
             route,
           },
         ];
@@ -329,7 +329,7 @@ describe('Apps Mutations', () => {
         const endpoints = [
           {
             response: toPatch,
-            method: REQUEST_METHODS.PATCH,
+            method: RequestMethods.PATCH,
             route,
           },
         ];
@@ -366,7 +366,7 @@ describe('Apps Mutations', () => {
         const endpoints = [
           {
             response: toPatch,
-            method: REQUEST_METHODS.PATCH,
+            method: RequestMethods.PATCH,
             route,
           },
         ];
@@ -399,7 +399,7 @@ describe('Apps Mutations', () => {
         const endpoints = [
           {
             response: toPatch,
-            method: REQUEST_METHODS.PATCH,
+            method: RequestMethods.PATCH,
             route,
           },
         ];
@@ -430,7 +430,6 @@ describe('Apps Mutations', () => {
     const itemId = v4();
     const key = buildAppDataKey(itemId);
     const toDelete = FIXTURE_APP_DATA[0];
-    const initData = convertJs([toDelete, FIXTURE_APP_DATA[1]]);
     const route = `/${buildDeleteAppDataRoute({ itemId, id: toDelete.id })}`;
     const mutation = mutations.useDeleteAppData;
 
@@ -443,12 +442,13 @@ describe('Apps Mutations', () => {
       });
 
       it('Delete app data', async () => {
+        const initData = convertJs([toDelete, FIXTURE_APP_DATA[1]]);
         queryClient.setQueryData(key, initData);
 
         const endpoints = [
           {
             response,
-            method: REQUEST_METHODS.DELETE,
+            method: RequestMethods.DELETE,
             route,
           },
         ];
@@ -485,7 +485,7 @@ describe('Apps Mutations', () => {
           {
             response,
             statusCode: StatusCodes.UNAUTHORIZED,
-            method: REQUEST_METHODS.DELETE,
+            method: RequestMethods.DELETE,
             route,
           },
         ];
@@ -521,7 +521,7 @@ describe('Apps Mutations', () => {
         const endpoints = [
           {
             response: toDelete,
-            method: REQUEST_METHODS.DELETE,
+            method: RequestMethods.DELETE,
             route,
           },
         ];
@@ -555,7 +555,7 @@ describe('Apps Mutations', () => {
         const endpoints = [
           {
             response: toDelete,
-            method: REQUEST_METHODS.DELETE,
+            method: RequestMethods.DELETE,
             route,
           },
         ];
@@ -585,7 +585,7 @@ describe('Apps Mutations', () => {
         const endpoints = [
           {
             response: toDelete,
-            method: REQUEST_METHODS.DELETE,
+            method: RequestMethods.DELETE,
             route,
           },
         ];

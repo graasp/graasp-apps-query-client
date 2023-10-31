@@ -32,7 +32,6 @@ describe.skip('PostMessage Hooks', () => {
       });
 
       it('Get default local context', async () => {
-        console.log('inside test', POST_MESSAGE_KEYS);
         const event = {
           ports: ['mock-port'],
           data: JSON.stringify({
@@ -44,7 +43,7 @@ describe.skip('PostMessage Hooks', () => {
         mockWindowForPostMessage(event);
 
         const { data } = await mockHook({ hook, wrapper });
-        console.log(data, data?.toJS());
+
         const context = data?.toJS();
         expect(context).toEqual({
           apiHost: undefined, // @see LocalContextRecord
@@ -172,11 +171,11 @@ describe.skip('PostMessage Hooks', () => {
       // mock port: necessary to test auth token
       const port = {
         postMessage: () => {
-          /*do nothing*/
+          /* do nothing */
         },
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         onmessage: (_event: unknown) => {
-          /*do nothing*/
+          /* do nothing */
         },
       };
 
@@ -241,12 +240,17 @@ describe.skip('PostMessage Hooks', () => {
 
   describe('useAutoResize', () => {
     class MockResizeObserver implements ResizeObserver {
+      // eslint-disable-next-line class-methods-use-this
       disconnect(): void {
         throw new Error('Method not implemented.');
       }
+
+      // eslint-disable-next-line class-methods-use-this
       observe(): void {
         throw new Error('Method not implemented.');
       }
+
+      // eslint-disable-next-line class-methods-use-this
       unobserve(): void {
         throw new Error('Method not implemented.');
       }

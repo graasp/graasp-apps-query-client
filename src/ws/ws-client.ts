@@ -15,9 +15,7 @@ export type Channel = {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type UpdateHandlerFn = (data: any) => void;
 
-const ClientActions = Websocket.ClientActions;
-const ServerMessageTypes = Websocket.ServerMessageTypes;
-const ResponseStatuses = Websocket.ResponseStatuses;
+const { ClientActions, ServerMessageTypes, ResponseStatuses } = Websocket;
 
 type ClientMessage = Websocket.ClientMessage;
 type ServerMessage = Websocket.ServerMessage;
@@ -26,7 +24,11 @@ type ServerMessage = Websocket.ServerMessage;
  * Helper to remove the first element in an array that
  * matches the provided value IN PLACE
  */
-function arrayRemoveFirstEqual<T>(array: Array<T>, value: T, eqFn = (a: T, b: T) => a === b) {
+function arrayRemoveFirstEqual<T>(
+  array: Array<T>,
+  value: T,
+  eqFn = (a: T, b: T) => a === b,
+): boolean {
   const pos = array.findIndex((v) => eqFn(v, value));
   if (pos === -1) {
     return false;
@@ -39,7 +41,7 @@ function arrayRemoveFirstEqual<T>(array: Array<T>, value: T, eqFn = (a: T, b: T)
  * Helper to add a value to a mapped array, creating the array
  * if the map entry does not exist
  */
-function addToMappedArray<S, T>(map: Map<S, Array<T>>, key: S, value: T) {
+function addToMappedArray<S, T>(map: Map<S, Array<T>>, key: S, value: T): void {
   const array = map.get(key);
   if (array === undefined) {
     map.set(key, [value]);
@@ -99,13 +101,13 @@ export const configureWebsocketClient = (
     parse: (data: string): ServerMessage => JSON.parse(data),
   };
 
-  const send = (request: ClientMessage) => {
+  const send = (request: ClientMessage): void => {
     if (ws.readyState === ws.OPEN) {
       ws.send(serdes.serialize(request));
     }
   };
 
-  const sendSubscribeRequest = (channel: Channel) => {
+  const sendSubscribeRequest = (channel: Channel): void => {
     send({
       realm: Websocket.Realms.Notif,
       action: ClientActions.Subscribe,
@@ -114,7 +116,7 @@ export const configureWebsocketClient = (
     });
   };
 
-  const sendUnsubscribeRequest = (channel: Channel) => {
+  const sendUnsubscribeRequest = (channel: Channel): void => {
     send({
       realm: Websocket.Realms.Notif,
       action: ClientActions.Unsubscribe,
@@ -147,7 +149,7 @@ export const configureWebsocketClient = (
     remove: (channel: Channel, handler: UpdateHandlerFn): boolean => {
       // helper to remove from a subscription map
       // eslint-disable-next-line no-underscore-dangle
-      const _remove = (
+      const helperRemove = (
         map: Map<string, Array<UpdateHandlerFn>>,
         channelKey: string,
         removeHandler: UpdateHandlerFn,
@@ -160,7 +162,10 @@ export const configureWebsocketClient = (
       };
       // helper to cleanup mapped array if it is empty
       // eslint-disable-next-line no-underscore-dangle
-      const _cleanup = (map: Map<string, Array<UpdateHandlerFn>>, channelKey: string): boolean => {
+      const helperCleanup = (
+        map: Map<string, Array<UpdateHandlerFn>>,
+        channelKey: string,
+      ): boolean => {
         const isNowEmpty = map.get(channelKey)?.length === 0;
         if (isNowEmpty) {
           // cleanup array
@@ -171,17 +176,17 @@ export const configureWebsocketClient = (
 
       const channelKey = buildChannelKey(channel);
       // find first map from which to remove from
-      if (_remove(subscriptions.early, channelKey, handler)) {
+      if (helperRemove(subscriptions.early, channelKey, handler)) {
         // no need to send unsubscribe if still in early
         return false;
       }
-      if (_remove(subscriptions.waitingAck, channelKey, handler)) {
+      if (helperRemove(subscriptions.waitingAck, channelKey, handler)) {
         // if in waitingAck must send unsubscribe if just got emptied
-        return _cleanup(subscriptions.waitingAck, channelKey);
+        return helperCleanup(subscriptions.waitingAck, channelKey);
       }
-      if (_remove(subscriptions.current, channelKey, handler)) {
+      if (helperRemove(subscriptions.current, channelKey, handler)) {
         // if in current must send unsubscribe if just got emptied
-        return _cleanup(subscriptions.current, channelKey);
+        return helperCleanup(subscriptions.current, channelKey);
       }
       return false;
     },
@@ -243,6 +248,7 @@ export const configureWebsocketClient = (
       }
 
       default:
+        // eslint-disable-next-line no-console
         console.info('Unknown WS message');
     }
   });

@@ -24,7 +24,7 @@ export default class MockWebSocket {
     this.addEventListener = this.addEventListener.bind(this);
   }
 
-  send(msg: string) {
+  send(msg: string): void {
     const req = JSON.parse(msg);
     // acknowledge request
     if (req.action?.includes('subscribe')) {
@@ -40,14 +40,14 @@ export default class MockWebSocket {
     }
   }
 
-  receive(msg: object) {
+  receive(msg: object): void {
     const event = {
       data: JSON.stringify(msg),
     };
     this.onmessage?.(event);
   }
 
-  addEventListener(event: 'message' | 'open', handler: (message?: unknown) => void) {
+  addEventListener(event: 'message' | 'open', handler: (message?: unknown) => void): void {
     this[`on${event}`] = handler;
     if (event === 'open') {
       handler();

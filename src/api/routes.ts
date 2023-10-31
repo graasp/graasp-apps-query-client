@@ -50,7 +50,7 @@ export const buildPatchAppSettingRoute = (payload: { itemId: string; id: string 
 export const buildDeleteAppSettingRoute = (payload: { itemId: string; id: string }): string =>
   `${APP_ITEMS_ROUTE}/${payload.itemId}/${APP_SETTINGS_ROUTE}/${payload.id}`;
 
-  export const buildPostChatBotRoute = (itemId: string) =>
+export const buildPostChatBotRoute = (itemId: string) =>
   `${APP_ITEMS_ROUTE}/${itemId}/${CHAT_BOT_ENDPOINT}`;
 
 export const API_ROUTES = {

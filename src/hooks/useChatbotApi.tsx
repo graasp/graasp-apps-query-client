@@ -2,8 +2,8 @@ import { useContext, useEffect, useState } from 'react';
 
 import { ChatBotMessage } from '@graasp/sdk';
 
-import { TokenContext, useLocalContext } from '../components';
 import { API_ROUTES } from '../api/routes';
+import { TokenContext, useLocalContext } from '../components';
 import { UserDataType } from '../types';
 
 const { buildPostChatBotRoute } = API_ROUTES;
@@ -20,8 +20,7 @@ export const useChatbotApi = (callback: CallbackType): ReturnType => {
   const [data, setData] = useState<UserDataType>({});
   const token = useContext(TokenContext);
   const context = useLocalContext();
-  const apiHost = context.apiHost;
-  const itemId = context.itemId;
+  const { apiHost, itemId } = context;
   const apiUrl = `${apiHost}/${buildPostChatBotRoute(itemId)}`;
 
   useEffect(

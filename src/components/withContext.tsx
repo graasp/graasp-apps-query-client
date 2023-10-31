@@ -34,16 +34,14 @@ interface WithLocalContextProps {
   useAutoResize?: (itemId: string) => void;
 }
 
-const WithLocalContext = (
-  {
-    LoadingComponent,
-    defaultValue,
-    useGetLocalContext,
-    onError,
-    useAutoResize,
-    children,
-  }: WithLocalContextProps,
-): JSX.Element => {
+const WithLocalContext = ({
+  LoadingComponent,
+  defaultValue,
+  useGetLocalContext,
+  onError,
+  useAutoResize,
+  children,
+}: WithLocalContextProps): JSX.Element => {
   const itemId = new URL(window.location.toString()).searchParams.get('itemId') || '';
   const { data: context, isLoading, isError, error } = useGetLocalContext(itemId, defaultValue);
   if (context) {

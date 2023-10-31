@@ -23,6 +23,7 @@ const {
   buildDeleteAppDataRoute,
   buildDeleteAppSettingRoute,
   // todo: implement mock file upload
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   buildDownloadAppDataFileRoute,
   buildGetAppActionsRoute,
   buildGetAppSettingsRoute,
@@ -96,10 +97,9 @@ export const buildMSWMocks = (
             // app data with visibility item should be returned to anyone
             if (x.visibility === AppDataVisibility.Item) {
               return true;
-            } else {
-              // if app data is not "visibility item" only return app data that were created by the member or addressed to him
-              return x.creator?.id === memberId || x.member.id === memberId;
             }
+            // if app data is not "visibility item" only return app data that were created by the member or addressed to him
+            return x.creator?.id === memberId || x.member.id === memberId;
           })
           .toArray();
       }

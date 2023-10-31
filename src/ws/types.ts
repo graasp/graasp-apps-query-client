@@ -1,7 +1,7 @@
 /**
  * All the type definitions should be moved to @graasp/sdk
  */
-import { AppAction, AppData, AppSetting } from '@graasp/sdk';
+import { AppAction, AppData, AppSetting, UnionOfConst } from '@graasp/sdk';
 
 export enum AppOperations {
   POST = 'post',
@@ -11,13 +11,13 @@ export enum AppOperations {
 
 export type AppOperation = AppOperations | `${AppOperations}`;
 
-export enum AppEventKinds {
-  AppData = 'app-data',
-  AppSettings = 'app-settings',
-  AppActions = 'app-actions',
-}
+export const AppEventKinds = {
+  AppData: 'app-data',
+  AppSettings: 'app-settings',
+  AppActions: 'app-actions',
+} as const;
 
-export type AppEventKind = AppEventKinds | `${AppEventKinds}`;
+export type AppEventKind = UnionOfConst<typeof AppEventKinds>;
 
 /**
  * All websocket events for app will have this shape
@@ -31,7 +31,7 @@ export interface AppEvent {
  * Events that affect an app data
  */
 export interface AppDataEvent extends AppEvent {
-  kind: AppEventKinds.AppData;
+  kind: typeof AppEventKinds.AppData;
   appData: AppData;
 }
 
@@ -39,7 +39,7 @@ export interface AppDataEvent extends AppEvent {
  * Events that affect an app action
  */
 export interface AppActionEvent extends AppEvent {
-  kind: AppEventKinds.AppActions;
+  kind: typeof AppEventKinds.AppActions;
   appAction: AppAction;
 }
 
@@ -47,6 +47,6 @@ export interface AppActionEvent extends AppEvent {
  * Events that affect an app setting
  */
 export interface AppSettingEvent extends AppEvent {
-  kind: AppEventKinds.AppSettings;
+  kind: typeof AppEventKinds.AppSettings;
   appSetting: AppSetting;
 }

@@ -17,7 +17,7 @@ import { AUTH_TOKEN_KEY, LOCAL_CONTEXT_KEY, buildAppContextKey } from '../config
 import { MissingApiHostError } from '../config/utils';
 import { LocalContext } from '../types';
 
-const { hooks, wrapper, queryClient, mutations } = setUpTest();
+const { hooks, wrapper, queryClient } = setUpTest();
 const itemId = v4();
 
 describe('App Hooks', () => {

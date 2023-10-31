@@ -45,7 +45,6 @@ export class AppMocks extends Dexie {
   }
 
   seed(data: Database): void {
-    console.log(data);
     // pre-load the IndexDB with data
     this.item.bulkAdd(data.items);
     this.member.bulkAdd(data.members);

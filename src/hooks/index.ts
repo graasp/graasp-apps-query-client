@@ -7,13 +7,11 @@ import configureAppSettingHooks from './appSetting';
 import configurePostMessageHooks from './postMessage';
 import { useChatbotApi } from './useChatbotApi';
 
-export default (queryConfig: QueryClientConfig, websocketClient?: WebsocketClient) => {
-  return {
-    ...configureAppsHooks(queryConfig),
-    ...configureAppDataHooks(queryConfig, websocketClient),
-    ...configurePostMessageHooks(queryConfig),
-    ...configureAppSettingHooks(queryConfig, websocketClient),
-    ...configureAppActionHooks(queryConfig, websocketClient),
-    useChatbotApi,
-  };
-};
+export default (queryConfig: QueryClientConfig, websocketClient?: WebsocketClient) => ({
+  ...configureAppsHooks(queryConfig),
+  ...configureAppDataHooks(queryConfig, websocketClient),
+  ...configurePostMessageHooks(queryConfig),
+  ...configureAppSettingHooks(queryConfig, websocketClient),
+  ...configureAppActionHooks(queryConfig, websocketClient),
+  useChatbotApi,
+});

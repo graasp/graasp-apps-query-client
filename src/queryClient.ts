@@ -27,7 +27,7 @@ const makeWsHostFromAPIHost = (apiHost?: string): string | undefined => {
 };
 
 // Query client retry function decides when and how many times a request should be retried
-const defaultRetryFunction = (failureCount: number, error: unknown) => {
+const defaultRetryFunction = (failureCount: number, error: unknown): boolean => {
   // retry if the request timed out
   const codes = [StatusCodes.GATEWAY_TIMEOUT, StatusCodes.REQUEST_TIMEOUT];
   const reasons = codes.map((code) => getReasonPhrase(code));
@@ -39,8 +39,23 @@ const defaultRetryFunction = (failureCount: number, error: unknown) => {
   return false;
 };
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-const configure = (config: RequiredQueryClientConfig & Partial<OptionalQueryClientConfig>) => {
+const configure = (
+  config: RequiredQueryClientConfig & Partial<OptionalQueryClientConfig>,
+): {
+  API_ROUTES: typeof API_ROUTES;
+  buildPostMessageKeys: typeof buildPostMessageKeys;
+  dehydrate: typeof dehydrate;
+  Hydrate: typeof Hydrate;
+  hooks: ReturnType<typeof configureHooks>;
+  mutations: ReturnType<typeof configureMutations>;
+  MUTATION_KEYS: typeof MUTATION_KEYS;
+  QUERY_KEYS: typeof QUERY_KEYS;
+  queryClient: QueryClient;
+  QueryClientProvider: typeof QueryClientProvider;
+  ReactQueryDevtools: typeof ReactQueryDevtools;
+  useMutation: typeof useMutation;
+  useQuery: typeof useQuery;
+} => {
   // define config for query client
   const queryConfig: QueryClientConfig = {
     API_HOST: config.API_HOST,
@@ -48,6 +63,7 @@ const configure = (config: RequiredQueryClientConfig & Partial<OptionalQueryClie
     GRAASP_APP_KEY: config.GRAASP_APP_KEY ?? config.GRAASP_APP_ID,
     keepPreviousData: config.keepPreviousData || true,
     retry: config.retry ?? defaultRetryFunction,
+    // eslint-disable-next-line no-console
     notifier: config.notifier ?? console.log,
     // time until data in cache considered stale if cache not invalidated
     staleTime: config.staleTime || STALE_TIME_MILLISECONDS,

@@ -1,8 +1,6 @@
 import { convertJs } from '@graasp/sdk';
-import { AppSettingRecord } from '@graasp/sdk/frontend';
 
 import { StatusCodes } from 'http-status-codes';
-import { List } from 'immutable';
 import nock from 'nock';
 import { v4 } from 'uuid';
 

@@ -9,7 +9,7 @@ import { v4 } from 'uuid';
 
 import {
   FIXTURE_APP_SETTINGS,
-  REQUEST_METHODS,
+  RequestMethods,
   UNAUTHORIZED_RESPONSE,
   buildAppSetting,
   buildMockLocalContext,
@@ -33,7 +33,6 @@ const mockedNotifier = jest.fn();
 const { wrapper, queryClient, mutations } = setUpTest({
   notifier: mockedNotifier,
 });
-const itemId = v4();
 
 describe('App Settings Mutations', () => {
   afterEach(() => {
@@ -42,6 +41,7 @@ describe('App Settings Mutations', () => {
   });
 
   describe(MUTATION_KEYS.POST_APP_SETTING[0], () => {
+    const itemId = v4();
     const key = buildAppSettingsKey(itemId);
     const toAdd = buildAppSetting();
     const initData = FIXTURE_APP_SETTINGS;
@@ -63,7 +63,7 @@ describe('App Settings Mutations', () => {
         const endpoints = [
           {
             response,
-            method: REQUEST_METHODS.POST,
+            method: RequestMethods.POST,
             route,
           },
         ];
@@ -80,9 +80,10 @@ describe('App Settings Mutations', () => {
         });
 
         expect(queryClient.getQueryState(key)?.isInvalidated).toBeTruthy();
-        expect(queryClient.getQueryData<List<AppSettingRecord>>(key)?.toJS()).toEqual(
-          [...initData, toAdd],
-        );
+        expect(queryClient.getQueryData<List<AppSettingRecord>>(key)?.toJS()).toEqual([
+          ...initData,
+          toAdd,
+        ]);
       });
     });
 
@@ -100,7 +101,7 @@ describe('App Settings Mutations', () => {
           {
             response,
             statusCode: StatusCodes.UNAUTHORIZED,
-            method: REQUEST_METHODS.POST,
+            method: RequestMethods.POST,
             route,
           },
         ];
@@ -137,7 +138,7 @@ describe('App Settings Mutations', () => {
         const endpoints = [
           {
             response: toAdd,
-            method: REQUEST_METHODS.POST,
+            method: RequestMethods.POST,
             route,
           },
         ];
@@ -174,7 +175,7 @@ describe('App Settings Mutations', () => {
         const endpoints = [
           {
             response: toAdd,
-            method: REQUEST_METHODS.POST,
+            method: RequestMethods.POST,
             route,
           },
         ];
@@ -207,7 +208,7 @@ describe('App Settings Mutations', () => {
         const endpoints = [
           {
             response: toAdd,
-            method: REQUEST_METHODS.POST,
+            method: RequestMethods.POST,
             route,
           },
         ];
@@ -257,7 +258,7 @@ describe('App Settings Mutations', () => {
         const endpoints = [
           {
             response: toPatch,
-            method: REQUEST_METHODS.PATCH,
+            method: RequestMethods.PATCH,
             route,
           },
         ];
@@ -275,7 +276,6 @@ describe('App Settings Mutations', () => {
 
         expect(queryClient.getQueryState(key)?.isInvalidated).toBeTruthy();
         const result = queryClient.getQueryData<List<AppSettingRecord>>(key);
-        console.log(result?.toJS())
         // check data and length
         expect(result?.first()?.data?.toJS()).toMatchObject(toPatch.data);
         expect(result?.size).toBe(updatedData.size);
@@ -296,7 +296,7 @@ describe('App Settings Mutations', () => {
           {
             response,
             statusCode: StatusCodes.UNAUTHORIZED,
-            method: REQUEST_METHODS.PATCH,
+            method: RequestMethods.PATCH,
             route,
           },
         ];
@@ -333,7 +333,7 @@ describe('App Settings Mutations', () => {
         const endpoints = [
           {
             response: toPatch,
-            method: REQUEST_METHODS.PATCH,
+            method: RequestMethods.PATCH,
             route,
           },
         ];
@@ -370,7 +370,7 @@ describe('App Settings Mutations', () => {
         const endpoints = [
           {
             response: toPatch,
-            method: REQUEST_METHODS.PATCH,
+            method: RequestMethods.PATCH,
             route,
           },
         ];
@@ -403,7 +403,7 @@ describe('App Settings Mutations', () => {
         const endpoints = [
           {
             response: toPatch,
-            method: REQUEST_METHODS.PATCH,
+            method: RequestMethods.PATCH,
             route,
           },
         ];
@@ -434,7 +434,6 @@ describe('App Settings Mutations', () => {
     const itemId = v4();
     const key = buildAppSettingsKey(itemId);
     const toDelete = FIXTURE_APP_SETTINGS[0];
-    const initData = convertJs([toDelete, FIXTURE_APP_SETTINGS[1]]);
     const route = `/${buildDeleteAppSettingRoute({ itemId, id: toDelete.id })}`;
     const mutation = mutations.useDeleteAppSetting;
 
@@ -447,12 +446,13 @@ describe('App Settings Mutations', () => {
       });
 
       it('Delete app data', async () => {
+        const initData = convertJs([toDelete, FIXTURE_APP_SETTINGS[1]]);
         queryClient.setQueryData(key, initData);
 
         const endpoints = [
           {
             response,
-            method: REQUEST_METHODS.DELETE,
+            method: RequestMethods.DELETE,
             route,
           },
         ];
@@ -489,7 +489,7 @@ describe('App Settings Mutations', () => {
           {
             response,
             statusCode: StatusCodes.UNAUTHORIZED,
-            method: REQUEST_METHODS.DELETE,
+            method: RequestMethods.DELETE,
             route,
           },
         ];
@@ -519,13 +519,13 @@ describe('App Settings Mutations', () => {
           convertJs({ ...buildMockLocalContext(), itemId: null }),
         );
 
-        const initData = convertJs([toDelete]);
-        queryClient.setQueryData(key, initData);
+        const initialData = convertJs([toDelete]);
+        queryClient.setQueryData(key, initialData);
 
         const endpoints = [
           {
             response: toDelete,
-            method: REQUEST_METHODS.DELETE,
+            method: RequestMethods.DELETE,
             route,
           },
         ];
@@ -541,7 +541,7 @@ describe('App Settings Mutations', () => {
           await waitForMutation();
         });
 
-        expect(queryClient.getQueryData(key)).toEqualImmutable(initData);
+        expect(queryClient.getQueryData(key)).toEqualImmutable(initialData);
         // since the itemid is not defined, we do not check data for its key
       });
 
@@ -553,13 +553,13 @@ describe('App Settings Mutations', () => {
           convertJs({ ...buildMockLocalContext({ itemId }), memberId: null }),
         );
 
-        const initData = convertJs([toDelete]);
-        queryClient.setQueryData(key, initData);
+        const initialData = convertJs([toDelete]);
+        queryClient.setQueryData(key, initialData);
 
         const endpoints = [
           {
             response: toDelete,
-            method: REQUEST_METHODS.DELETE,
+            method: RequestMethods.DELETE,
             route,
           },
         ];
@@ -575,7 +575,7 @@ describe('App Settings Mutations', () => {
           await waitForMutation();
         });
 
-        expect(queryClient.getQueryData(key)).toEqualImmutable(initData);
+        expect(queryClient.getQueryData(key)).toEqualImmutable(initialData);
         expect(queryClient.getQueryState(key)?.isInvalidated).toBeTruthy();
       });
 
@@ -583,13 +583,13 @@ describe('App Settings Mutations', () => {
         // set necessary data
         queryClient.setQueryData(LOCAL_CONTEXT_KEY, convertJs(buildMockLocalContext({ itemId })));
 
-        const initData = convertJs([toDelete]);
-        queryClient.setQueryData(key, initData);
+        const initialData = convertJs([toDelete]);
+        queryClient.setQueryData(key, initialData);
 
         const endpoints = [
           {
             response: toDelete,
-            method: REQUEST_METHODS.DELETE,
+            method: RequestMethods.DELETE,
             route,
           },
         ];
@@ -605,7 +605,7 @@ describe('App Settings Mutations', () => {
           await waitForMutation();
         });
 
-        expect(queryClient.getQueryData(key)).toEqualImmutable(initData);
+        expect(queryClient.getQueryData(key)).toEqualImmutable(initialData);
         expect(queryClient.getQueryState(key)?.isInvalidated).toBeFalsy();
       });
     });

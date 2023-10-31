@@ -8,7 +8,7 @@ import {
 } from '@graasp/sdk';
 
 import { buildContext } from '../hooks/postMessage';
-import { LocalContext } from '../types';
+import { Database, LocalContext } from '../types';
 
 export const MOCK_SERVER_MEMBER: CompleteMember = {
   id: 'mock-member-id',
@@ -51,3 +51,19 @@ export const buildMockLocalContext = (appContext?: Partial<LocalContext>): Local
 
   return buildContext(context);
 };
+
+export const buildDatabase = ({
+  appContext = buildMockLocalContext(),
+  appData = [],
+  appActions = [],
+  appSettings = [],
+  members = [MOCK_SERVER_MEMBER],
+  items = [MOCK_SERVER_ITEM],
+}: Partial<Database> = {}): Database => ({
+  appContext,
+  appData,
+  appActions,
+  appSettings,
+  members,
+  items,
+});

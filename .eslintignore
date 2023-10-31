@@ -3,3 +3,7 @@
 dist/*
 # data definition files
 **/*.d.ts
+# jest config
+jest.config.ts
+coverage/*
+commitlint.config.js

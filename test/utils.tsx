@@ -12,11 +12,11 @@ import { v4 } from 'uuid';
 import configureHooks from '../src/hooks';
 import configureQueryClient from '../src/queryClient';
 import { Notifier, QueryClientConfig } from '../src/types';
-import { API_HOST, MOCK_APP_ORIGIN, REQUEST_METHODS, WS_HOST } from './constants';
+import { API_HOST, MOCK_APP_ORIGIN, RequestMethods, WS_HOST } from './constants';
 
 type Args = { enableWebsocket?: boolean; notifier?: Notifier; GRAASP_APP_KEY?: string };
-type NockRequestMethods = Lowercase<`${REQUEST_METHODS}`>;
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export const setUpTest = (args?: Args) => {
   const {
     notifier = () => {
@@ -26,9 +26,7 @@ export const setUpTest = (args?: Args) => {
   } = args ?? {};
   const queryConfig: QueryClientConfig = {
     API_HOST,
-    retry: () => {
-      return false;
-    },
+    retry: () => false,
     cacheTime: 0,
     staleTime: 0,
     SHOW_NOTIFICATIONS: false,
@@ -47,7 +45,7 @@ export const setUpTest = (args?: Args) => {
   // configure hooks
   const hooks = configureHooks(queryConfig);
 
-  const wrapper = ({ children }: { children: React.ReactNode }) => (
+  const wrapper = ({ children }: { children: React.ReactNode }): JSX.Element => (
     <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
   );
 
@@ -58,7 +56,7 @@ export type Endpoint = {
   route: string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   response: any;
-  method?: `${REQUEST_METHODS}`;
+  method?: `${RequestMethods}`;
   statusCode?: number;
   headers?: ReplyHeaders;
 };
@@ -84,7 +82,7 @@ type NockMethodType = Exclude<
   undefined
 >;
 
-export const mockEndpoints = (endpoints: Endpoint[]) => {
+export const mockEndpoints = (endpoints: Endpoint[]): nock.Scope => {
   // mock endpoint with given response
   // we open to all hosts specially for redirection to aws (get file endpoints)
   const server = nock(/.*/);
@@ -104,7 +102,9 @@ export const mockHook = async <TProps, TResult extends QueryObserverBaseResult>(
   wrapper,
   enabled,
 }: MockHookArguments<TProps, TResult>): Promise<TResult> => {
-  endpoints && mockEndpoints(endpoints);
+  if (endpoints) {
+    mockEndpoints(endpoints);
+  }
 
   // wait for rendering hook
   const { result } = renderHook(hook, { wrapper });
@@ -125,7 +125,9 @@ export const mockMutation = async <TData, TError, TVariables, TContext, TProps>(
   mutation,
   wrapper,
   endpoints,
-}: MockMutationArguments<TProps, TData, TError, TVariables, TContext>) => {
+}: MockMutationArguments<TProps, TData, TError, TVariables, TContext>): Promise<
+  UseMutationResult<TData, TError, TVariables, TContext>
+> => {
   if (endpoints) {
     mockEndpoints(endpoints);
   }
@@ -140,7 +142,7 @@ export const mockMutation = async <TData, TError, TVariables, TContext, TProps>(
 
 // util function to wait some time after a mutation is performed
 // this is necessary for success and error callback to fully execute
-export const waitForMutation = async (t = 500) => {
+export const waitForMutation = async (t = 500): Promise<void> => {
   await new Promise((r) => {
     setTimeout(r, t);
   });
@@ -149,6 +151,7 @@ export const waitForMutation = async (t = 500) => {
 export const mockWindowForPostMessage = (
   event: MessageEvent,
   origin: string | null = MOCK_APP_ORIGIN,
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 ) => {
   globalThis.window = {
     location: { origin },
@@ -156,9 +159,8 @@ export const mockWindowForPostMessage = (
       postMessage: jest.fn(),
     },
     removeEventListener: jest.fn(),
-    // eslint-disable-next-line @typescript-eslint/ban-types
+    // eslint-disable-next-line @typescript-eslint/ban-types, arrow-body-style
     addEventListener: (_event: string, f: Function) => {
-      console.log('replying with predefined event', event);
       // check event listener works as expected given mock input
       return f(event);
     },

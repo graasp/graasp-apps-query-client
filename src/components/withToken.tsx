@@ -13,9 +13,12 @@ interface WithTokenContextProps {
   onError?: (error: unknown) => void;
 }
 
-const WithTokenContext = (
-  { children, LoadingComponent, onError, useAuthToken }: WithTokenContextProps,
-): JSX.Element => {
+const WithTokenContext = ({
+  children,
+  LoadingComponent,
+  onError,
+  useAuthToken,
+}: WithTokenContextProps): JSX.Element => {
   const itemId = new URL(window.location.toString()).searchParams.get('itemId') || '';
 
   if (!itemId) {

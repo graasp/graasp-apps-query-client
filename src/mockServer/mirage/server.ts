@@ -10,8 +10,9 @@ import {
 import { Factory, Model, Response, RestSerializer, Server, createServer } from 'miragejs';
 import { v4 } from 'uuid';
 
-import { API_ROUTES, Database, LocalContext, buildDatabase, buildMockLocalContext } from '../..';
-import { MOCK_SERVER_MEMBER } from '../fixtures';
+import { API_ROUTES } from '../../api/routes';
+import { Database, LocalContext } from '../../types';
+import { MOCK_SERVER_MEMBER, buildDatabase, buildMockLocalContext } from '../fixtures';
 import { ExternalUrls } from '../types';
 
 const {
@@ -152,9 +153,10 @@ export const mockMirageServer = ({
     },
     routes() {
       // app data
-      this.get(`/${buildGetAppDataRoute(currentItem.id)}`, (schema) => {
-        return schema.all('appDataResource') ?? [];
-      });
+      this.get(
+        `/${buildGetAppDataRoute(currentItem.id)}`,
+        (schema) => schema.all('appDataResource') ?? [],
+      );
       this.post(`/${buildPostAppDataRoute({ itemId: currentItem.id })}`, (schema, request) => {
         if (!currentMember) {
           return new Response(401, {}, { errors: ['user not authenticated'] });
@@ -215,9 +217,10 @@ export const mockMirageServer = ({
       );
 
       // app actions
-      this.get(`/${buildGetAppActionsRoute(currentItem.id)}`, (schema) => {
-        return schema.all('appActionResource') ?? [];
-      });
+      this.get(
+        `/${buildGetAppActionsRoute(currentItem.id)}`,
+        (schema) => schema.all('appActionResource') ?? [],
+      );
       this.post(`/${buildPostAppActionRoute({ itemId: currentItem.id })}`, (schema, request) => {
         const { requestBody } = request;
         const data = JSON.parse(requestBody);
@@ -229,9 +232,10 @@ export const mockMirageServer = ({
       });
 
       // app settings
-      this.get(`/${buildGetAppSettingsRoute(currentItem.id)}`, (schema) => {
-        return schema.all('appSetting') ?? [];
-      });
+      this.get(
+        `/${buildGetAppSettingsRoute(currentItem.id)}`,
+        (schema) => schema.all('appSetting') ?? [],
+      );
 
       this.post(`/${buildPostAppSettingRoute({ itemId: currentItem.id })}`, (schema, request) => {
         if (!currentMember) {
@@ -327,9 +331,9 @@ export const mockMirageServer = ({
       );
 
       // OpenAI routes
-      this.post(`/${buildPostChatBotRoute(currentItem.id)}`, () => {
-        return { completion: 'Biip boop i am a bot' };
-      });
+      this.post(`/${buildPostChatBotRoute(currentItem.id)}`, () => ({
+        completion: 'Biip boop i am a bot',
+      }));
 
       // passthrough external urls
       externalUrls.forEach((url) => {
