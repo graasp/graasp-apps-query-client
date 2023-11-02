@@ -4,7 +4,7 @@
  */
 import { useEffect } from 'react';
 
-import { UseQueryResult, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 
 import * as Api from '../api';
 import { DEFAULT_CONTEXT, DEFAULT_LANG, DEFAULT_PERMISSION, MOCK_TOKEN } from '../config/constants';
@@ -102,10 +102,7 @@ const configurePostMessageHooks = (queryConfig: QueryClientConfig) => {
       }
     };
 
-  const useGetLocalContext = (
-    itemId: string,
-    defaultValue: LocalContext,
-  ): UseQueryResult<LocalContext> => {
+  const useGetLocalContext = (itemId: string, defaultValue: LocalContext) => {
     let getLocalContextFunction: ((event: MessageEvent) => void) | null = null;
     const queryClient = useQueryClient();
     return useQuery({
@@ -176,7 +173,7 @@ const configurePostMessageHooks = (queryConfig: QueryClientConfig) => {
     });
   };
 
-  const useAuthToken = (itemId: string): UseQueryResult<string> => {
+  const useAuthToken = (itemId: string) => {
     let getAuthTokenFunction;
     const queryClient = useQueryClient();
     return useQuery({

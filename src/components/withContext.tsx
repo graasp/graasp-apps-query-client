@@ -1,6 +1,6 @@
 import React, { ReactElement, createContext, useContext } from 'react';
 
-import { Context, PermissionLevel,  } from '@graasp/sdk';
+import { Context, PermissionLevel } from '@graasp/sdk';
 
 import { UseQueryResult } from '@tanstack/react-query';
 
@@ -20,7 +20,7 @@ export const defaultContextValue: LocalContext = {
   permission: PermissionLevel.Read,
 };
 
-const LocalContextContext = createContext<LocalContext>((defaultContextValue));
+const LocalContextContext = createContext<LocalContext>(defaultContextValue);
 
 interface WithLocalContextProps {
   children: ReactElement;

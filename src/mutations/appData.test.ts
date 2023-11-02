@@ -73,7 +73,7 @@ describe('Apps Mutations', () => {
         });
 
         expect(queryClient.getQueryState(key)?.isInvalidated).toBeTruthy();
-        expect(queryClient.getQueryData<AppData[]>(key)).toEqual([...initData, toAdd]);
+        expect(queryClient.getQueryData(key)).toEqual([...initData, toAdd]);
       });
     });
 
@@ -113,7 +113,7 @@ describe('Apps Mutations', () => {
           }),
         );
         expect(queryClient.getQueryState(key)?.isInvalidated).toBeTruthy();
-        expect(queryClient.getQueryData<AppData[]>(key)).toEqual(initData);
+        expect(queryClient.getQueryData(key)).toEqual(initData);
       });
 
       it('Throw if itemId is undefined', async () => {
@@ -267,7 +267,7 @@ describe('Apps Mutations', () => {
         // check data and length
         const result = queryClient.getQueryData<AppData[]>(key);
         expect(result?.[0]?.data).toMatchObject(toPatch.data);
-        expect(result?.length).toBe(updatedData.length);
+        expect(result).toHaveLength(updatedData.length);
       });
     });
 
@@ -307,7 +307,7 @@ describe('Apps Mutations', () => {
           }),
         );
         expect(queryClient.getQueryState(key)?.isInvalidated).toBeTruthy();
-        expect(queryClient.getQueryData<AppData[]>(key)).toEqual(initData);
+        expect(queryClient.getQueryData(key)).toEqual(initData);
       });
 
       it('Throw if itemId is undefined', async () => {
@@ -455,7 +455,7 @@ describe('Apps Mutations', () => {
         });
 
         expect(queryClient.getQueryState(key)?.isInvalidated).toBeTruthy();
-        expect(queryClient.getQueryData<AppData[]>(key)).toEqual([FIXTURE_APP_DATA[1]]);
+        expect(queryClient.getQueryData(key)).toEqual([FIXTURE_APP_DATA[1]]);
       });
     });
 
@@ -490,7 +490,7 @@ describe('Apps Mutations', () => {
         });
 
         expect(queryClient.getQueryState(key)?.isInvalidated).toBeTruthy();
-        expect(queryClient.getQueryData<AppData[]>(key)).toEqual([toDelete]);
+        expect(queryClient.getQueryData(key)).toEqual([toDelete]);
       });
 
       it('Throw if itemId is undefined', async () => {

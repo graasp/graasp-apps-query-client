@@ -36,7 +36,7 @@ export default (queryConfig: QueryClientConfig, websocketClient?: WebsocketClien
         queryFn: () => {
           const { token } = getDataOrThrow(queryClient);
 
-          return Api.getAppActions({ itemId, token, apiHost }).then((data) => data);
+          return Api.getAppActions({ itemId, token, apiHost });
         },
         ...defaultOptions,
         enabled,

@@ -61,7 +61,7 @@ export default (
             throw new MissingFileIdError();
           }
           const { fileId } = payload;
-          return Api.getAppDataFile({ id: fileId, apiHost, token }).then((data) => data);
+          return Api.getAppDataFile({ id: fileId, apiHost, token });
         },
         ...defaultOptions,
         enabled,

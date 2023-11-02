@@ -23,7 +23,7 @@ export default (queryConfig: QueryClientConfig) => {
 
       return useQuery({
         queryKey: buildAppContextKey(itemId),
-        queryFn: (): Promise<AppContext> =>
+        queryFn: () =>
           Api.getContext({
             itemId,
             token,

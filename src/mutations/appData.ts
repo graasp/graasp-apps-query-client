@@ -29,11 +29,10 @@ export default (queryConfig: QueryClientConfig) => {
         return Api.postAppData({ ...data, body: payload, apiHost });
       },
       {
-        onSuccess: (newAppData: AppData) => {
+        onSuccess: (newData: AppData) => {
           const { itemId } = getData(queryClient);
           const key = buildAppDataKey(itemId);
           const prevData = queryClient.getQueryData<AppData[]>(key);
-          const newData: AppData = newAppData;
           if (!prevData) {
             queryClient.setQueryData(key, newData);
           } else if (!prevData.some((a) => a.id === newData.id)) {

@@ -18,7 +18,7 @@
     "esModuleInterop": true,
     "declarationMap": true,
     "baseUrl": ".",
-    "types": ["vite/client", "jest", "./node_modules/jest-immutable-matchers"]
+    "types": ["vite/client", "jest"]
   },
   "include": ["src"],
   "references": [

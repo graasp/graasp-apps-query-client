@@ -1,7 +1,6 @@
 import {
   AppAction,
   AppData,
-  AppItemType,
   AppSetting,
   CompleteMember,
   Context,

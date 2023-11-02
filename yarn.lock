@@ -2275,7 +2275,6 @@ __metadata:
     husky: "npm:8.0.3"
     jest: "npm:29.7.0"
     jest-environment-jsdom: "npm:29.7.0"
-    jest-immutable-matchers: "npm:3.0.0"
     miragejs: "npm:0.1.48"
     msw: "npm:1.3.2"
     nock: "npm:13.3.7"
@@ -8812,16 +8811,6 @@ __metadata:
     fsevents:
       optional: true
   checksum: 8531b42003581cb18a69a2774e68c456fb5a5c3280b1b9b77475af9e346b6a457250f9d756bfeeae2fe6cbc9ef28434c205edab9390ee970a919baddfa08bb85
-  languageName: node
-  linkType: hard
-
-"jest-immutable-matchers@npm:3.0.0":
-  version: 3.0.0
-  resolution: "jest-immutable-matchers@npm:3.0.0"
-  peerDependencies:
-    immutable: ">=3.0.0"
-    jest: ">=21.0.0"
-  checksum: af272c96e4840fa84d88c97a482c164a1d1e11ff8fd6a9e2899e053a59f70413685a07a8f78e433f1a424d5f1ae5a3a79c216edb9b609d9e1866792d39488ac3
   languageName: node
   linkType: hard
 

@@ -44,7 +44,7 @@ export const configureWsAppDataHooks = (websocketClient?: WebsocketClient) => ({
 
       const handler = (event: AppDataEvent): void => {
         if (event.kind === AppEventKinds.AppData) {
-          const appDataList: AppData[] | undefined = queryClient.getQueryData(appDataKey);
+          const appDataList = queryClient.getQueryData<AppData[]>(appDataKey);
           const newAppData: AppData = event.appData;
           switch (event.op) {
             case AppOperations.POST: {
@@ -116,7 +116,7 @@ export const configureWsAppActionsHooks = (websocketClient?: WebsocketClient) =>
 
       const handler = (event: AppActionEvent): void => {
         if (event.kind === AppEventKinds.AppActions) {
-          const appActionsList: AppAction[] | undefined = queryClient.getQueryData(appActionKey);
+          const appActionsList = queryClient.getQueryData<AppAction[]>(appActionKey);
           const newAppAction: AppAction = event.appAction;
           switch (event.op) {
             case AppOperations.POST: {
@@ -169,7 +169,7 @@ export const configureWsAppSettingHooks = (websocketClient?: WebsocketClient) =>
 
       const handler = (event: AppSettingEvent): void => {
         if (event.kind === AppEventKinds.AppSettings) {
-          const appSettingList: AppSetting[] | undefined = queryClient.getQueryData(appSettingsKey);
+          const appSettingList = queryClient.getQueryData<AppSetting[]>(appSettingsKey);
           const newAppSetting: AppSetting = event.appSetting;
           switch (event.op) {
             case AppOperations.POST: {

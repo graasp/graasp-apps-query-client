@@ -38,23 +38,22 @@ describe('Websockets App Hooks', () => {
 
   describe('useAppDataUpdates', () => {
     const appDataArray = FIXTURE_APP_DATA;
-    const appDataList: AppData[] = appDataArray;
     const itemId = FIXTURE_CONTEXT.id;
     const appDataKey = buildAppDataKey(itemId);
     const channel = { name: itemId, topic: APP_DATA_TOPIC };
     const hook = () => hooks.useAppDataUpdates(itemId);
 
     it('check that the tests are initialized', async () => {
-      queryClient.setQueryData(appDataKey, appDataList);
+      queryClient.setQueryData(appDataKey, appDataArray);
       expect(typeof hook).toBe('function');
       mockWsHook({ hook, wrapper, enabled: true });
       expect(handlers.length).toBeGreaterThan(0);
       expect(queryClient).toBeDefined();
-      expect(queryClient.getQueryData(appDataKey)).toEqual(appDataList);
+      expect(queryClient.getQueryData(appDataKey)).toEqual(appDataArray);
     });
 
     it('Receives post app data', async () => {
-      queryClient.setQueryData(appDataKey, appDataList);
+      queryClient.setQueryData(appDataKey, appDataArray);
       await mockWsHook({ hook, wrapper });
 
       const newAppData = buildAppData({ data: { message: 'This data was posted.' } });
@@ -74,7 +73,7 @@ describe('Websockets App Hooks', () => {
     });
 
     it('Receives patch app data', async () => {
-      queryClient.setQueryData(appDataKey, appDataList);
+      queryClient.setQueryData(appDataKey, appDataArray);
       await mockWsHook({ hook, wrapper });
 
       const newAppData = appDataArray[0];
@@ -93,7 +92,7 @@ describe('Websockets App Hooks', () => {
     });
 
     it('Receives delete app data', async () => {
-      queryClient.setQueryData(appDataKey, appDataList);
+      queryClient.setQueryData(appDataKey, appDataArray);
       await mockWsHook({ hook, wrapper });
 
       const newAppData = appDataArray[1]; // Doesn't work with same app data than other tests (index 0)
@@ -117,7 +116,7 @@ describe('Websockets App Hooks', () => {
 
     it('Receives delete app data, while having a single app data remaining', async () => {
       const lastAppData = appDataArray[1];
-      const singleAppDataList: AppData[] = [lastAppData];
+      const singleAppDataList = [lastAppData];
       queryClient.setQueryData(appDataKey, singleAppDataList);
       expect(singleAppDataList.length).toEqual(1);
       await mockWsHook({ hook, wrapper });
@@ -142,23 +141,22 @@ describe('Websockets App Hooks', () => {
 
   describe('useAppActionsUpdates', () => {
     const appActionsArray = FIXTURE_APP_ACTIONS;
-    const appActionsList: AppAction[] = appActionsArray;
     const itemId = FIXTURE_CONTEXT.id;
     const appActionsKey = buildAppActionsKey(itemId);
     const channel = { name: itemId, topic: APP_ACTIONS_TOPIC };
     const hook = () => hooks.useAppActionsUpdates(itemId);
 
     it('check that the tests are initialized', async () => {
-      queryClient.setQueryData(appActionsKey, appActionsList);
+      queryClient.setQueryData(appActionsKey, appActionsArray);
       expect(typeof hook).toBe('function');
       mockWsHook({ hook, wrapper, enabled: true });
       expect(handlers.length).toBeGreaterThan(0);
       expect(queryClient).toBeDefined();
-      expect(queryClient.getQueryData(appActionsKey)).toEqual(appActionsList);
+      expect(queryClient.getQueryData(appActionsKey)).toEqual(appActionsArray);
     });
 
     it('Receives post app action', async () => {
-      queryClient.setQueryData(appActionsKey, appActionsList);
+      queryClient.setQueryData(appActionsKey, appActionsArray);
       await mockWsHook({ hook, wrapper });
 
       const newAppAction = buildAppAction({ data: { text: 'new action' } });
@@ -180,23 +178,22 @@ describe('Websockets App Hooks', () => {
 
   describe('useAppSettingsUpdates', () => {
     const appSettingsArray = FIXTURE_APP_SETTINGS;
-    const appSettingsList: AppSetting[] = appSettingsArray;
     const itemId = FIXTURE_CONTEXT.id;
     const appSettingsKey = buildAppSettingsKey(itemId);
     const channel = { name: itemId, topic: APP_SETTINGS_TOPIC };
     const hook = () => hooks.useAppSettingsUpdates(itemId);
 
     it('check that the tests are initialized', async () => {
-      queryClient.setQueryData(appSettingsKey, appSettingsList);
+      queryClient.setQueryData(appSettingsKey, appSettingsArray);
       expect(typeof hook).toBe('function');
       mockWsHook({ hook, wrapper, enabled: true });
       expect(handlers.length).toBeGreaterThan(0);
       expect(queryClient).toBeDefined();
-      expect(queryClient.getQueryData(appSettingsKey)).toEqual(appSettingsList);
+      expect(queryClient.getQueryData(appSettingsKey)).toEqual(appSettingsArray);
     });
 
     it('Receives post app setting', async () => {
-      queryClient.setQueryData(appSettingsKey, appSettingsList);
+      queryClient.setQueryData(appSettingsKey, appSettingsArray);
       await mockWsHook({ hook, wrapper });
 
       const newAppSetting = buildAppSetting({ data: { togggle: true, parameter1: 'fixed' } });
@@ -215,7 +212,7 @@ describe('Websockets App Hooks', () => {
     });
 
     it('Receives patch app setting', async () => {
-      queryClient.setQueryData(appSettingsKey, appSettingsList);
+      queryClient.setQueryData(appSettingsKey, appSettingsArray);
       await mockWsHook({ hook, wrapper });
 
       const newAppSetting = appSettingsArray[0];
@@ -235,7 +232,7 @@ describe('Websockets App Hooks', () => {
     });
 
     it('Receives delete app setting', async () => {
-      queryClient.setQueryData(appSettingsKey, appSettingsList);
+      queryClient.setQueryData(appSettingsKey, appSettingsArray);
       await mockWsHook({ hook, wrapper });
 
       const newAppSetting = appSettingsArray[1]; // Doesn't work with same app data than other tests (index 0)

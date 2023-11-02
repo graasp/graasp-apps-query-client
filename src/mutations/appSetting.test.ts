@@ -265,7 +265,7 @@ describe('App Settings Mutations', () => {
         const result = queryClient.getQueryData<AppSetting[]>(key);
         // check data and length
         expect(result?.[0]?.data).toMatchObject(toPatch.data);
-        expect(result?.length).toBe(updatedData.length);
+        expect(result).toHaveLength(updatedData.length);
       });
     });
 
