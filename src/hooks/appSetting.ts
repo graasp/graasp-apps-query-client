@@ -1,8 +1,6 @@
-import { convertJs } from '@graasp/sdk';
 import { AppSettingRecord } from '@graasp/sdk/frontend';
 
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { List } from 'immutable';
 
 import * as Api from '../api';
 import { MissingFileIdError } from '../config/errors';
@@ -34,7 +32,7 @@ export default (queryConfig: QueryClientConfig, websocketClient?: WebsocketClien
 
       return useQuery({
         queryKey: buildAppSettingsKey(itemId),
-        queryFn: (): Promise<List<AppSettingRecord>> => {
+        queryFn: () => {
           const { token: localToken, itemId: localItemId } = getDataOrThrow(queryClient, {
             shouldMemberExist: false,
           });
@@ -43,7 +41,7 @@ export default (queryConfig: QueryClientConfig, websocketClient?: WebsocketClien
             itemId: localItemId,
             token: localToken,
             apiHost,
-          }).then((data) => convertJs(data));
+          });
         },
         ...defaultOptions,
         enabled: Boolean(itemId) && Boolean(token),
@@ -75,7 +73,7 @@ export default (queryConfig: QueryClientConfig, websocketClient?: WebsocketClien
             id: appSettingId,
             apiHost,
             token: localToken,
-          }).then((data) => data);
+          });
         },
         ...defaultOptions,
         enabled: Boolean(payload?.appSettingId) && Boolean(token) && enabled,

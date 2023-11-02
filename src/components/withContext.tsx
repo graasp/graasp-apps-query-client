@@ -1,11 +1,11 @@
 import React, { ReactElement, createContext, useContext } from 'react';
 
-import { Context, PermissionLevel, convertJs } from '@graasp/sdk';
+import { Context, PermissionLevel,  } from '@graasp/sdk';
 
 import { UseQueryResult } from '@tanstack/react-query';
 
-import { LocalContext, LocalContextRecord } from '../types';
 import { AutoResizer } from './AutoResizer';
+import { LocalContext } from '../types';
 
 export const defaultContextValue: LocalContext = {
   apiHost: '',
@@ -20,14 +20,14 @@ export const defaultContextValue: LocalContext = {
   permission: PermissionLevel.Read,
 };
 
-const LocalContextContext = createContext<LocalContextRecord>(convertJs(defaultContextValue));
+const LocalContextContext = createContext<LocalContext>((defaultContextValue));
 
 interface WithLocalContextProps {
   children: ReactElement;
   useGetLocalContext: (
     itemId: string,
     defaultValue: LocalContext,
-  ) => UseQueryResult<LocalContextRecord, unknown>;
+  ) => UseQueryResult<LocalContext, unknown>;
   LoadingComponent?: React.ReactElement;
   defaultValue: LocalContext;
   onError?: (error: unknown) => void;
@@ -90,7 +90,7 @@ interface Props {
   useGetLocalContext: (
     itemId: string,
     defaultValue: LocalContext,
-  ) => UseQueryResult<LocalContextRecord, unknown>;
+  ) => UseQueryResult<LocalContext, unknown>;
   LoadingComponent?: React.ReactElement;
   defaultValue: LocalContext;
   onError?: (error: unknown) => void;
@@ -146,6 +146,6 @@ const withContext = <P extends object>(
   return WithContextComponent;
 };
 
-const useLocalContext = (): LocalContextRecord => useContext(LocalContextContext);
+const useLocalContext = (): LocalContext => useContext(LocalContextContext);
 
 export { useLocalContext, WithLocalContext, withContext };

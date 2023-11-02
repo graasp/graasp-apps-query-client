@@ -2273,7 +2273,6 @@ __metadata:
     eslint-plugin-react-hooks: "npm:4.6.0"
     http-status-codes: "npm:2.3.0"
     husky: "npm:8.0.3"
-    immutable: "npm:4.3.4"
     jest: "npm:29.7.0"
     jest-environment-jsdom: "npm:29.7.0"
     jest-immutable-matchers: "npm:3.0.0"

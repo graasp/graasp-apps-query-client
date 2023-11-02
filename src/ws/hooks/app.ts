@@ -4,11 +4,9 @@
  */
 import { useEffect } from 'react';
 
-import { UUID, convertJs } from '@graasp/sdk';
-import { AppActionRecord, AppDataRecord, AppSettingRecord } from '@graasp/sdk/frontend';
+import { AppAction, AppData, AppSetting, UUID } from '@graasp/sdk';
 
 import { useQueryClient } from '@tanstack/react-query';
-import { List } from 'immutable';
 
 import { APP_ACTIONS_TOPIC, APP_DATA_TOPIC, APP_SETTINGS_TOPIC } from '../../config/constants';
 import { buildAppActionsKey, buildAppDataKey, buildAppSettingsKey } from '../../config/keys';
@@ -46,31 +44,34 @@ export const configureWsAppDataHooks = (websocketClient?: WebsocketClient) => ({
 
       const handler = (event: AppDataEvent): void => {
         if (event.kind === AppEventKinds.AppData) {
-          const appDataList: List<AppDataRecord> | undefined = queryClient.getQueryData(appDataKey);
-          const newAppData: AppDataRecord = convertJs(event.appData);
+          const appDataList: AppData[] | undefined = queryClient.getQueryData(appDataKey);
+          const newAppData: AppData = event.appData;
           switch (event.op) {
             case AppOperations.POST: {
               if (!appDataList?.some(({ id }) => id === newAppData.id))
                 queryClient.setQueryData(
                   appDataKey,
-                  appDataList ? appDataList.push(newAppData) : List.of(newAppData),
+                  appDataList ? [...(appDataList ?? []), newAppData] : [newAppData],
                 );
               break;
             }
             case AppOperations.PATCH: {
-              const appDataPatchedIndex = appDataList?.findIndex((a) => a.id === newAppData.id);
-              if (typeof appDataPatchedIndex !== 'undefined' && appDataPatchedIndex >= 0) {
-                queryClient.setQueryData(
-                  appDataKey,
-                  appDataList?.set(appDataPatchedIndex, newAppData),
-                );
+              if (appDataList) {
+                const appDataPatchedIndex = appDataList.findIndex((a) => a.id === newAppData.id);
+                if (appDataPatchedIndex >= 0) {
+                  queryClient.setQueryData(appDataKey, [
+                    ...appDataList.slice(0, appDataPatchedIndex),
+                    newAppData,
+                    ...appDataList.slice(appDataPatchedIndex, appDataList.length),
+                  ]);
+                }
               }
               break;
             }
             case AppOperations.DELETE: {
               queryClient.setQueryData(
                 appDataKey,
-                appDataList?.filterNot(({ id }) => id === newAppData.id),
+                appDataList?.filter(({ id }) => id !== newAppData.id),
               );
               break;
             }
@@ -115,15 +116,14 @@ export const configureWsAppActionsHooks = (websocketClient?: WebsocketClient) =>
 
       const handler = (event: AppActionEvent): void => {
         if (event.kind === AppEventKinds.AppActions) {
-          const appActionsList: List<AppActionRecord> | undefined =
-            queryClient.getQueryData(appActionKey);
-          const newAppAction: AppActionRecord = convertJs(event.appAction);
+          const appActionsList: AppAction[] | undefined = queryClient.getQueryData(appActionKey);
+          const newAppAction: AppAction = event.appAction;
           switch (event.op) {
             case AppOperations.POST: {
               if (!appActionsList?.some(({ id }) => id === newAppAction.id)) {
                 queryClient.setQueryData(
                   appActionKey,
-                  appActionsList ? appActionsList.push(newAppAction) : List.of(newAppAction),
+                  appActionsList ? [...(appActionsList ?? []), newAppAction] : [newAppAction],
                 );
               }
               break;
@@ -169,35 +169,37 @@ export const configureWsAppSettingHooks = (websocketClient?: WebsocketClient) =>
 
       const handler = (event: AppSettingEvent): void => {
         if (event.kind === AppEventKinds.AppSettings) {
-          const appSettingList: List<AppSettingRecord> | undefined =
-            queryClient.getQueryData(appSettingsKey);
-          const newAppSetting: AppSettingRecord = convertJs(event.appSetting);
+          const appSettingList: AppSetting[] | undefined = queryClient.getQueryData(appSettingsKey);
+          const newAppSetting: AppSetting = event.appSetting;
           switch (event.op) {
             case AppOperations.POST: {
               if (!appSettingList?.some(({ id }) => id === newAppSetting.id)) {
                 queryClient.setQueryData(
                   appSettingsKey,
-                  appSettingList ? appSettingList.push(newAppSetting) : List.of(newAppSetting),
+                  appSettingList ? [...(appSettingList ?? []), newAppSetting] : [newAppSetting],
                 );
               }
               break;
             }
             case AppOperations.PATCH: {
-              const appSettingPatchedIndex = appSettingList?.findIndex(
-                (a) => a.id === newAppSetting.id,
-              );
-              if (typeof appSettingPatchedIndex !== 'undefined' && appSettingPatchedIndex >= 0) {
-                queryClient.setQueryData(
-                  appSettingsKey,
-                  appSettingList?.set(appSettingPatchedIndex, newAppSetting),
+              if (appSettingList) {
+                const appSettingPatchedIndex = appSettingList.findIndex(
+                  (a) => a.id === newAppSetting.id,
                 );
+                if (appSettingPatchedIndex >= 0) {
+                  queryClient.setQueryData(appSettingsKey, [
+                    ...appSettingList.slice(0, appSettingPatchedIndex),
+                    newAppSetting,
+                    ...appSettingList.slice(appSettingPatchedIndex, appSettingList.length),
+                  ]);
+                }
               }
               break;
             }
             case AppOperations.DELETE: {
               queryClient.setQueryData(
                 appSettingsKey,
-                appSettingList?.filterNot(({ id }) => id === newAppSetting.id),
+                appSettingList?.filter(({ id }) => id !== newAppSetting.id),
               );
               break;
             }

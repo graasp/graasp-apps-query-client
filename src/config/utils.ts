@@ -1,9 +1,7 @@
 import { QueryClient } from '@tanstack/react-query';
-// eslint-disable-next-line import/no-extraneous-dependencies
 import { StatusCodes } from 'http-status-codes';
-import { Record } from 'immutable';
 
-import { LocalContext, LocalContextRecord, QueryClientConfig } from '../types';
+import { LocalContext, QueryClientConfig } from '../types';
 import {
   MissingAppKeyError,
   MissingAppOriginError,
@@ -23,8 +21,8 @@ export class MissingApiHostError extends Error {
   }
 }
 
-export const getApiHost = (queryClient: QueryClient): string => {
-  const context = queryClient.getQueryData<LocalContextRecord>(LOCAL_CONTEXT_KEY);
+export const getApiHost = (queryClient: QueryClient) => {
+  const context = queryClient.getQueryData<LocalContext>(LOCAL_CONTEXT_KEY);
   const apiHost = context?.apiHost;
   if (!apiHost) {
     throw new MissingApiHostError();
@@ -33,8 +31,8 @@ export const getApiHost = (queryClient: QueryClient): string => {
 };
 
 export const getPermissionLevel = (queryClient: QueryClient) => {
-  const context = queryClient.getQueryData<Record<LocalContext>>(LOCAL_CONTEXT_KEY);
-  const permission = context?.get('permission');
+  const context = queryClient.getQueryData<LocalContext>(LOCAL_CONTEXT_KEY);
+  const permission = context?.permission;
   if (!permission) {
     throw new MissingPermissionError();
   }
@@ -45,7 +43,7 @@ export const getData = (
   queryClient: QueryClient,
   options: { shouldMemberExist?: boolean } = {},
 ): { itemId: string; memberId?: string; token: string } => {
-  const data = queryClient.getQueryData<Record<LocalContext>>(LOCAL_CONTEXT_KEY);
+  const data = queryClient.getQueryData<LocalContext>(LOCAL_CONTEXT_KEY);
   if (!data) {
     throw new Error('`LocalContext` was undefined');
   }
@@ -53,8 +51,8 @@ export const getData = (
   if (!token) {
     throw new MissingNecessaryDataError({ token });
   }
-  const itemId = data.get('itemId');
-  const memberId = data.get('memberId');
+  const { itemId } = data;
+  const { memberId } = data;
 
   if (options.shouldMemberExist ?? true) {
     if (!memberId) {

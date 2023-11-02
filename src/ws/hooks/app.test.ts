@@ -1,7 +1,4 @@
-import { convertJs } from '@graasp/sdk';
-import { AppActionRecord, AppDataRecord, AppSettingRecord } from '@graasp/sdk/frontend';
-
-import { List } from 'immutable';
+import { AppAction, AppData, AppSetting } from '@graasp/sdk';
 
 import {
   FIXTURE_APP_ACTIONS,
@@ -41,7 +38,7 @@ describe('Websockets App Hooks', () => {
 
   describe('useAppDataUpdates', () => {
     const appDataArray = FIXTURE_APP_DATA;
-    const appDataList: List<AppDataRecord> = convertJs(appDataArray);
+    const appDataList: AppData[] = appDataArray;
     const itemId = FIXTURE_CONTEXT.id;
     const appDataKey = buildAppDataKey(itemId);
     const channel = { name: itemId, topic: APP_DATA_TOPIC };
@@ -53,7 +50,7 @@ describe('Websockets App Hooks', () => {
       mockWsHook({ hook, wrapper, enabled: true });
       expect(handlers.length).toBeGreaterThan(0);
       expect(queryClient).toBeDefined();
-      expect(queryClient.getQueryData(appDataKey)).toEqualImmutable(appDataList);
+      expect(queryClient.getQueryData(appDataKey)).toEqual(appDataList);
     });
 
     it('Receives post app data', async () => {
@@ -72,10 +69,8 @@ describe('Websockets App Hooks', () => {
       h?.handler(appDataEvent);
 
       expect(
-        queryClient
-          .getQueryData<List<AppDataRecord>>(appDataKey)
-          ?.find((a) => a.id === newAppData.id),
-      ).toEqualImmutable(convertJs(newAppData));
+        queryClient.getQueryData<AppData[]>(appDataKey)?.find((a) => a.id === newAppData.id),
+      ).toEqual(newAppData);
     });
 
     it('Receives patch app data', async () => {
@@ -92,12 +87,9 @@ describe('Websockets App Hooks', () => {
       };
 
       getHandlerByChannel(handlers, channel)?.handler(appDataEvent);
-
       expect(
-        queryClient
-          .getQueryData<List<AppDataRecord>>(appDataKey)
-          ?.find((a) => a.id === newAppData.id),
-      ).toEqualImmutable(convertJs(newAppData));
+        queryClient.getQueryData<AppData[]>(appDataKey)?.find((a) => a.id === newAppData.id),
+      ).toEqual(newAppData);
     });
 
     it('Receives delete app data', async () => {
@@ -107,10 +99,8 @@ describe('Websockets App Hooks', () => {
       const newAppData = appDataArray[1]; // Doesn't work with same app data than other tests (index 0)
 
       expect(
-        queryClient
-          .getQueryData<List<AppDataRecord>>(appDataKey)
-          ?.find((a) => a.id === newAppData.id),
-      ).toEqualImmutable(convertJs(newAppData));
+        queryClient.getQueryData<AppData[]>(appDataKey)?.find((a) => a.id === newAppData.id),
+      ).toEqual(newAppData);
 
       const appDataEvent: AppDataEvent = {
         kind: AppEventKinds.AppData,
@@ -121,24 +111,20 @@ describe('Websockets App Hooks', () => {
       getHandlerByChannel(handlers, channel)?.handler(appDataEvent);
 
       expect(
-        queryClient
-          .getQueryData<List<AppDataRecord>>(appDataKey)
-          ?.find((a) => a.id === newAppData.id),
+        queryClient.getQueryData<AppData[]>(appDataKey)?.find((a) => a.id === newAppData.id),
       ).toBeUndefined();
     });
 
     it('Receives delete app data, while having a single app data remaining', async () => {
       const lastAppData = appDataArray[1];
-      const singleAppDataList: List<AppDataRecord> = convertJs([lastAppData]);
+      const singleAppDataList: AppData[] = [lastAppData];
       queryClient.setQueryData(appDataKey, singleAppDataList);
-      expect(singleAppDataList.size).toEqual(1);
+      expect(singleAppDataList.length).toEqual(1);
       await mockWsHook({ hook, wrapper });
 
       expect(
-        queryClient
-          .getQueryData<List<AppDataRecord>>(appDataKey)
-          ?.find((a) => a.id === lastAppData.id),
-      ).toEqualImmutable(convertJs(lastAppData));
+        queryClient.getQueryData<AppData[]>(appDataKey)?.find((a) => a.id === lastAppData.id),
+      ).toEqual(lastAppData);
 
       const appDataEvent: AppDataEvent = {
         kind: AppEventKinds.AppData,
@@ -148,15 +134,15 @@ describe('Websockets App Hooks', () => {
 
       getHandlerByChannel(handlers, channel)?.handler(appDataEvent);
 
-      const queryData = queryClient.getQueryData<List<AppDataRecord>>(appDataKey);
-      expect(queryData?.size).toEqual(0);
+      const queryData = queryClient.getQueryData<AppData[]>(appDataKey);
+      expect(queryData?.length).toEqual(0);
       expect(queryData?.find((a) => a.id === lastAppData.id)).toBeUndefined();
     });
   });
 
   describe('useAppActionsUpdates', () => {
     const appActionsArray = FIXTURE_APP_ACTIONS;
-    const appActionsList: List<AppActionRecord> = convertJs(appActionsArray);
+    const appActionsList: AppAction[] = appActionsArray;
     const itemId = FIXTURE_CONTEXT.id;
     const appActionsKey = buildAppActionsKey(itemId);
     const channel = { name: itemId, topic: APP_ACTIONS_TOPIC };
@@ -168,7 +154,7 @@ describe('Websockets App Hooks', () => {
       mockWsHook({ hook, wrapper, enabled: true });
       expect(handlers.length).toBeGreaterThan(0);
       expect(queryClient).toBeDefined();
-      expect(queryClient.getQueryData(appActionsKey)).toEqualImmutable(appActionsList);
+      expect(queryClient.getQueryData(appActionsKey)).toEqual(appActionsList);
     });
 
     it('Receives post app action', async () => {
@@ -187,16 +173,14 @@ describe('Websockets App Hooks', () => {
       h?.handler(appActionEvent);
 
       expect(
-        queryClient
-          .getQueryData<List<AppActionRecord>>(appActionsKey)
-          ?.find((a) => a.id === newAppAction.id),
-      ).toEqualImmutable(convertJs(newAppAction));
+        queryClient.getQueryData<AppAction[]>(appActionsKey)?.find((a) => a.id === newAppAction.id),
+      ).toEqual(newAppAction);
     });
   });
 
   describe('useAppSettingsUpdates', () => {
     const appSettingsArray = FIXTURE_APP_SETTINGS;
-    const appSettingsList: List<AppSettingRecord> = convertJs(appSettingsArray);
+    const appSettingsList: AppSetting[] = appSettingsArray;
     const itemId = FIXTURE_CONTEXT.id;
     const appSettingsKey = buildAppSettingsKey(itemId);
     const channel = { name: itemId, topic: APP_SETTINGS_TOPIC };
@@ -208,7 +192,7 @@ describe('Websockets App Hooks', () => {
       mockWsHook({ hook, wrapper, enabled: true });
       expect(handlers.length).toBeGreaterThan(0);
       expect(queryClient).toBeDefined();
-      expect(queryClient.getQueryData(appSettingsKey)).toEqualImmutable(appSettingsList);
+      expect(queryClient.getQueryData(appSettingsKey)).toEqual(appSettingsList);
     });
 
     it('Receives post app setting', async () => {
@@ -225,12 +209,9 @@ describe('Websockets App Hooks', () => {
 
       const h = getHandlerByChannel(handlers, channel);
       h?.handler(appDataEvent);
-
       expect(
-        queryClient
-          .getQueryData<List<AppDataRecord>>(appSettingsKey)
-          ?.find((a) => a.id === newAppSetting.id),
-      ).toEqualImmutable(convertJs(newAppSetting));
+        queryClient.getQueryData<AppData[]>(appSettingsKey)?.find((a) => a.id === newAppSetting.id),
+      ).toEqual(newAppSetting);
     });
 
     it('Receives patch app setting', async () => {
@@ -249,10 +230,8 @@ describe('Websockets App Hooks', () => {
       getHandlerByChannel(handlers, channel)?.handler(appDataEvent);
 
       expect(
-        queryClient
-          .getQueryData<List<AppDataRecord>>(appSettingsKey)
-          ?.find((a) => a.id === newAppSetting.id),
-      ).toEqualImmutable(convertJs(newAppSetting));
+        queryClient.getQueryData<AppData[]>(appSettingsKey)?.find((a) => a.id === newAppSetting.id),
+      ).toEqual(newAppSetting);
     });
 
     it('Receives delete app setting', async () => {
@@ -262,10 +241,8 @@ describe('Websockets App Hooks', () => {
       const newAppSetting = appSettingsArray[1]; // Doesn't work with same app data than other tests (index 0)
 
       expect(
-        queryClient
-          .getQueryData<List<AppDataRecord>>(appSettingsKey)
-          ?.find((a) => a.id === newAppSetting.id),
-      ).toEqualImmutable(convertJs(newAppSetting));
+        queryClient.getQueryData<AppData[]>(appSettingsKey)?.find((a) => a.id === newAppSetting.id),
+      ).toEqual(newAppSetting);
 
       const appDataEvent: AppSettingEvent = {
         kind: AppEventKinds.AppSettings,
@@ -276,9 +253,7 @@ describe('Websockets App Hooks', () => {
       getHandlerByChannel(handlers, channel)?.handler(appDataEvent);
 
       expect(
-        queryClient
-          .getQueryData<List<AppDataRecord>>(appSettingsKey)
-          ?.find((a) => a.id === newAppSetting.id),
+        queryClient.getQueryData<AppData[]>(appSettingsKey)?.find((a) => a.id === newAppSetting.id),
       ).toBeUndefined();
     });
   });

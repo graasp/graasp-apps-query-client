@@ -13,6 +13,7 @@ import {
   MissingMessageChannelPortError,
 } from '../config/errors';
 import { AUTH_TOKEN_KEY, LOCAL_CONTEXT_KEY, buildPostMessageKeys } from '../config/keys';
+import { LocalContext } from '../types';
 
 const mockItemId = 'mock-item-id';
 const POST_MESSAGE_KEYS = buildPostMessageKeys(mockItemId);
@@ -43,8 +44,7 @@ describe.skip('PostMessage Hooks', () => {
         mockWindowForPostMessage(event);
 
         const { data } = await mockHook({ hook, wrapper });
-
-        const context = data?.toJS();
+        const context = data as LocalContext;
         expect(context).toEqual({
           apiHost: undefined, // @see LocalContextRecord
           memberId: undefined, // @see LocalContextRecord
@@ -85,7 +85,7 @@ describe.skip('PostMessage Hooks', () => {
 
         const { data } = await mockHook({ hook, wrapper });
 
-        expect(data?.toJS()).toEqual({
+        expect(data).toEqual({
           ...serverResponse,
           standalone: false,
         });

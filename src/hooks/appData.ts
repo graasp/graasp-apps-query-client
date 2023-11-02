@@ -1,8 +1,4 @@
-import { convertJs } from '@graasp/sdk';
-import { AppDataRecord } from '@graasp/sdk/frontend';
-
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { List } from 'immutable';
 
 import * as Api from '../api';
 import { MissingFileIdError } from '../config/errors';
@@ -40,9 +36,9 @@ export default (
 
       return useQuery({
         queryKey: buildAppDataKey(itemId),
-        queryFn: (): Promise<List<AppDataRecord>> => {
+        queryFn: () => {
           const { token } = getDataOrThrow(queryClient);
-          return Api.getAppData({ itemId, token, apiHost }).then((data) => convertJs(data));
+          return Api.getAppData({ itemId, token, apiHost });
         },
         ...defaultOptions,
         refetchInterval,

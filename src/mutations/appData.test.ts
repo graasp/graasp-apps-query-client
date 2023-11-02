@@ -1,9 +1,7 @@
-import { convertJs } from '@graasp/sdk';
-import { AppDataRecord } from '@graasp/sdk/frontend';
+import { AppData } from '@graasp/sdk';
 
 import { act } from '@testing-library/react';
 import { StatusCodes } from 'http-status-codes';
-import { List } from 'immutable';
 import nock from 'nock';
 import { v4 } from 'uuid';
 
@@ -21,7 +19,7 @@ import {
   buildPostAppDataRoute,
 } from '../api/routes';
 import { MOCK_TOKEN } from '../config/constants';
-import { AUTH_TOKEN_KEY, LOCAL_CONTEXT_KEY, MUTATION_KEYS, buildAppDataKey } from '../config/keys';
+import { AUTH_TOKEN_KEY, LOCAL_CONTEXT_KEY, buildAppDataKey } from '../config/keys';
 import { patchAppDataRoutine, postAppDataRoutine } from '../routines';
 
 const mockedNotifier = jest.fn();
@@ -35,11 +33,11 @@ describe('Apps Mutations', () => {
     nock.cleanAll();
   });
 
-  describe(MUTATION_KEYS.POST_APP_DATA[0], () => {
+  describe('usePostAppData', () => {
     const itemId = v4();
     const key = buildAppDataKey(itemId);
     const toAdd = buildAppData();
-    const initData = convertJs(FIXTURE_APP_DATA);
+    const initData = FIXTURE_APP_DATA;
     const route = `/${buildPostAppDataRoute({ itemId })}`;
     const mutation = mutations.usePostAppData;
 
@@ -47,7 +45,7 @@ describe('Apps Mutations', () => {
       beforeEach(() => {
         // set necessary data
         queryClient.setQueryData(AUTH_TOKEN_KEY, MOCK_TOKEN);
-        queryClient.setQueryData(LOCAL_CONTEXT_KEY, convertJs(buildMockLocalContext({ itemId })));
+        queryClient.setQueryData(LOCAL_CONTEXT_KEY, buildMockLocalContext({ itemId }));
       });
 
       it('Create app data', async () => {
@@ -75,9 +73,7 @@ describe('Apps Mutations', () => {
         });
 
         expect(queryClient.getQueryState(key)?.isInvalidated).toBeTruthy();
-        expect(queryClient.getQueryData<List<AppDataRecord>>(key)).toEqualImmutable(
-          initData.push(convertJs(toAdd)),
-        );
+        expect(queryClient.getQueryData<AppData[]>(key)).toEqual([...initData, toAdd]);
       });
     });
 
@@ -85,7 +81,7 @@ describe('Apps Mutations', () => {
       it('Unauthorized', async () => {
         // set necessary data
         queryClient.setQueryData(AUTH_TOKEN_KEY, MOCK_TOKEN);
-        queryClient.setQueryData(LOCAL_CONTEXT_KEY, convertJs(buildMockLocalContext({ itemId })));
+        queryClient.setQueryData(LOCAL_CONTEXT_KEY, buildMockLocalContext({ itemId }));
 
         queryClient.setQueryData(key, initData);
 
@@ -117,16 +113,13 @@ describe('Apps Mutations', () => {
           }),
         );
         expect(queryClient.getQueryState(key)?.isInvalidated).toBeTruthy();
-        expect(queryClient.getQueryData<List<AppDataRecord>>(key)).toEqualImmutable(initData);
+        expect(queryClient.getQueryData<AppData[]>(key)).toEqual(initData);
       });
 
       it('Throw if itemId is undefined', async () => {
         // set necessary data
         queryClient.setQueryData(AUTH_TOKEN_KEY, MOCK_TOKEN);
-        queryClient.setQueryData(
-          LOCAL_CONTEXT_KEY,
-          convertJs({ ...buildMockLocalContext(), itemId: null }),
-        );
+        queryClient.setQueryData(LOCAL_CONTEXT_KEY, { ...buildMockLocalContext(), itemId: null });
         queryClient.setQueryData(key, initData);
 
         const endpoints = [
@@ -153,17 +146,17 @@ describe('Apps Mutations', () => {
             type: postAppDataRoutine.FAILURE,
           }),
         );
-        expect(queryClient.getQueryData(key)).toEqualImmutable(initData);
+        expect(queryClient.getQueryData(key)).toEqual(initData);
         // since the itemid is not defined, we do not check data for its key
       });
 
       it('Throw if memberId is undefined', async () => {
         // set necessary data
         queryClient.setQueryData(AUTH_TOKEN_KEY, MOCK_TOKEN);
-        queryClient.setQueryData(
-          LOCAL_CONTEXT_KEY,
-          convertJs({ ...buildMockLocalContext({ itemId }), memberId: null }),
-        );
+        queryClient.setQueryData(LOCAL_CONTEXT_KEY, {
+          ...buildMockLocalContext({ itemId }),
+          memberId: null,
+        });
         queryClient.setQueryData(key, initData);
 
         const endpoints = [
@@ -181,7 +174,7 @@ describe('Apps Mutations', () => {
         });
 
         await act(async () => {
-          await mockedMutation.mutate({ id: toAdd.id });
+          mockedMutation.mutate(toAdd);
           await waitForMutation();
         });
 
@@ -190,13 +183,13 @@ describe('Apps Mutations', () => {
             type: postAppDataRoutine.FAILURE,
           }),
         );
-        expect(queryClient.getQueryData(key)).toEqualImmutable(initData);
+        expect(queryClient.getQueryData(key)).toEqual(initData);
         expect(queryClient.getQueryState(key)?.isInvalidated).toBeTruthy();
       });
 
       it('Throw if token is undefined', async () => {
         // set necessary data
-        queryClient.setQueryData(LOCAL_CONTEXT_KEY, convertJs(buildMockLocalContext({ itemId })));
+        queryClient.setQueryData(LOCAL_CONTEXT_KEY, buildMockLocalContext({ itemId }));
         queryClient.setQueryData(key, initData);
 
         const endpoints = [
@@ -214,7 +207,7 @@ describe('Apps Mutations', () => {
         });
 
         await act(async () => {
-          await mockedMutation.mutate({ id: toAdd.id });
+          await mockedMutation.mutate(toAdd);
           await waitForMutation();
         });
 
@@ -223,19 +216,19 @@ describe('Apps Mutations', () => {
             type: postAppDataRoutine.FAILURE,
           }),
         );
-        expect(queryClient.getQueryData(key)).toEqualImmutable(initData);
+        expect(queryClient.getQueryData(key)).toEqual(initData);
         expect(queryClient.getQueryState(key)?.isInvalidated).toBeFalsy();
       });
     });
   });
 
-  describe(MUTATION_KEYS.PATCH_APP_DATA[0], () => {
-    const initData = convertJs(FIXTURE_APP_DATA);
+  describe('usePatchAppData', () => {
+    const initData = FIXTURE_APP_DATA;
     const itemId = v4();
-    const appDataId = initData.first()?.id ?? v4();
+    const appDataId = initData[0]?.id ?? v4();
     const key = buildAppDataKey(itemId);
     const toPatch = buildAppData({ id: appDataId, data: { new: 'data' } });
-    const updatedData = convertJs([toPatch, ...initData.delete(0).toJS()]);
+    const updatedData = [toPatch, ...initData.slice(1)];
     const route = `/${buildPatchAppDataRoute({ id: toPatch.id, itemId })}`;
     const mutation = mutations.usePatchAppData;
 
@@ -243,7 +236,7 @@ describe('Apps Mutations', () => {
       beforeEach(() => {
         // set necessary data
         queryClient.setQueryData(AUTH_TOKEN_KEY, MOCK_TOKEN);
-        queryClient.setQueryData(LOCAL_CONTEXT_KEY, convertJs(buildMockLocalContext({ itemId })));
+        queryClient.setQueryData(LOCAL_CONTEXT_KEY, buildMockLocalContext({ itemId }));
       });
 
       it('Patch app data', async () => {
@@ -272,9 +265,9 @@ describe('Apps Mutations', () => {
 
         expect(queryClient.getQueryState(key)?.isInvalidated).toBeTruthy();
         // check data and length
-        const result = queryClient.getQueryData<List<AppDataRecord>>(key);
-        expect(result?.first()?.data?.toJS()).toMatchObject(toPatch.data);
-        expect(result?.size).toBe(updatedData.size);
+        const result = queryClient.getQueryData<AppData[]>(key);
+        expect(result?.[0]?.data).toMatchObject(toPatch.data);
+        expect(result?.length).toBe(updatedData.length);
       });
     });
 
@@ -282,7 +275,7 @@ describe('Apps Mutations', () => {
       it('Unauthorized', async () => {
         // set necessary data
         queryClient.setQueryData(AUTH_TOKEN_KEY, MOCK_TOKEN);
-        queryClient.setQueryData(LOCAL_CONTEXT_KEY, convertJs(buildMockLocalContext({ itemId })));
+        queryClient.setQueryData(LOCAL_CONTEXT_KEY, buildMockLocalContext({ itemId }));
 
         queryClient.setQueryData(key, initData);
 
@@ -314,16 +307,13 @@ describe('Apps Mutations', () => {
           }),
         );
         expect(queryClient.getQueryState(key)?.isInvalidated).toBeTruthy();
-        expect(queryClient.getQueryData<List<AppDataRecord>>(key)).toEqualImmutable(initData);
+        expect(queryClient.getQueryData<AppData[]>(key)).toEqual(initData);
       });
 
       it('Throw if itemId is undefined', async () => {
         // set necessary data
         queryClient.setQueryData(AUTH_TOKEN_KEY, MOCK_TOKEN);
-        queryClient.setQueryData(
-          LOCAL_CONTEXT_KEY,
-          convertJs({ ...buildMockLocalContext(), itemId: null }),
-        );
+        queryClient.setQueryData(LOCAL_CONTEXT_KEY, { ...buildMockLocalContext(), itemId: null });
         queryClient.setQueryData(key, initData);
 
         const endpoints = [
@@ -350,17 +340,17 @@ describe('Apps Mutations', () => {
             type: patchAppDataRoutine.FAILURE,
           }),
         );
-        expect(queryClient.getQueryData(key)).toEqualImmutable(initData);
+        expect(queryClient.getQueryData(key)).toEqual(initData);
         // since the itemid is not defined, we do not check data for its key
       });
 
       it('Throw if memberId is undefined', async () => {
         // set necessary data
         queryClient.setQueryData(AUTH_TOKEN_KEY, MOCK_TOKEN);
-        queryClient.setQueryData(
-          LOCAL_CONTEXT_KEY,
-          convertJs({ ...buildMockLocalContext({ itemId }), memberId: null }),
-        );
+        queryClient.setQueryData(LOCAL_CONTEXT_KEY, {
+          ...buildMockLocalContext({ itemId }),
+          memberId: null,
+        });
         queryClient.setQueryData(key, initData);
 
         const endpoints = [
@@ -387,13 +377,13 @@ describe('Apps Mutations', () => {
             type: patchAppDataRoutine.FAILURE,
           }),
         );
-        expect(queryClient.getQueryData(key)).toEqualImmutable(initData);
+        expect(queryClient.getQueryData(key)).toEqual(initData);
         expect(queryClient.getQueryState(key)?.isInvalidated).toBeTruthy();
       });
 
       it('Throw if token is undefined', async () => {
         // set necessary data
-        queryClient.setQueryData(LOCAL_CONTEXT_KEY, convertJs(buildMockLocalContext({ itemId })));
+        queryClient.setQueryData(LOCAL_CONTEXT_KEY, buildMockLocalContext({ itemId }));
         queryClient.setQueryData(key, initData);
 
         const endpoints = [
@@ -420,13 +410,13 @@ describe('Apps Mutations', () => {
             type: patchAppDataRoutine.FAILURE,
           }),
         );
-        expect(queryClient.getQueryData(key)).toEqualImmutable(initData);
+        expect(queryClient.getQueryData(key)).toEqual(initData);
         expect(queryClient.getQueryState(key)?.isInvalidated).toBeFalsy();
       });
     });
   });
 
-  describe(MUTATION_KEYS.DELETE_APP_DATA[0], () => {
+  describe('useDeleteAppData', () => {
     const itemId = v4();
     const key = buildAppDataKey(itemId);
     const toDelete = FIXTURE_APP_DATA[0];
@@ -438,11 +428,11 @@ describe('Apps Mutations', () => {
       beforeEach(() => {
         // set necessary data
         queryClient.setQueryData(AUTH_TOKEN_KEY, MOCK_TOKEN);
-        queryClient.setQueryData(LOCAL_CONTEXT_KEY, convertJs(buildMockLocalContext({ itemId })));
+        queryClient.setQueryData(LOCAL_CONTEXT_KEY, buildMockLocalContext({ itemId }));
       });
 
       it('Delete app data', async () => {
-        const initData = convertJs([toDelete, FIXTURE_APP_DATA[1]]);
+        const initData = [toDelete, FIXTURE_APP_DATA[1]];
         queryClient.setQueryData(key, initData);
 
         const endpoints = [
@@ -465,9 +455,7 @@ describe('Apps Mutations', () => {
         });
 
         expect(queryClient.getQueryState(key)?.isInvalidated).toBeTruthy();
-        expect(queryClient.getQueryData<List<AppDataRecord>>(key)).toEqualImmutable(
-          convertJs([FIXTURE_APP_DATA[1]]),
-        );
+        expect(queryClient.getQueryData<AppData[]>(key)).toEqual([FIXTURE_APP_DATA[1]]);
       });
     });
 
@@ -475,9 +463,9 @@ describe('Apps Mutations', () => {
       it('Unauthorized', async () => {
         // set necessary data
         queryClient.setQueryData(AUTH_TOKEN_KEY, MOCK_TOKEN);
-        queryClient.setQueryData(LOCAL_CONTEXT_KEY, convertJs(buildMockLocalContext({ itemId })));
+        queryClient.setQueryData(LOCAL_CONTEXT_KEY, buildMockLocalContext({ itemId }));
 
-        queryClient.setQueryData(key, convertJs([toDelete]));
+        queryClient.setQueryData(key, [toDelete]);
 
         const response = UNAUTHORIZED_RESPONSE;
 
@@ -502,20 +490,15 @@ describe('Apps Mutations', () => {
         });
 
         expect(queryClient.getQueryState(key)?.isInvalidated).toBeTruthy();
-        expect(queryClient.getQueryData<List<AppDataRecord>>(key)).toEqualImmutable(
-          convertJs([toDelete]),
-        );
+        expect(queryClient.getQueryData<AppData[]>(key)).toEqual([toDelete]);
       });
 
       it('Throw if itemId is undefined', async () => {
         // set necessary data
         queryClient.setQueryData(AUTH_TOKEN_KEY, MOCK_TOKEN);
-        queryClient.setQueryData(
-          LOCAL_CONTEXT_KEY,
-          convertJs({ ...buildMockLocalContext(), itemId: null }),
-        );
+        queryClient.setQueryData(LOCAL_CONTEXT_KEY, { ...buildMockLocalContext(), itemId: null });
 
-        const initData = convertJs([toDelete]);
+        const initData = [toDelete];
         queryClient.setQueryData(key, initData);
 
         const endpoints = [
@@ -537,19 +520,19 @@ describe('Apps Mutations', () => {
           await waitForMutation();
         });
 
-        expect(queryClient.getQueryData(key)).toEqualImmutable(initData);
+        expect(queryClient.getQueryData(key)).toEqual(initData);
         // since the itemid is not defined, we do not check data for its key
       });
 
       it('Throw if memberId is undefined', async () => {
         // set necessary data
         queryClient.setQueryData(AUTH_TOKEN_KEY, MOCK_TOKEN);
-        queryClient.setQueryData(
-          LOCAL_CONTEXT_KEY,
-          convertJs({ ...buildMockLocalContext({ itemId }), memberId: null }),
-        );
+        queryClient.setQueryData(LOCAL_CONTEXT_KEY, {
+          ...buildMockLocalContext({ itemId }),
+          memberId: null,
+        });
 
-        const initData = convertJs([toDelete]);
+        const initData = [toDelete];
         queryClient.setQueryData(key, initData);
 
         const endpoints = [
@@ -571,15 +554,15 @@ describe('Apps Mutations', () => {
           await waitForMutation();
         });
 
-        expect(queryClient.getQueryData(key)).toEqualImmutable(initData);
+        expect(queryClient.getQueryData(key)).toEqual(initData);
         expect(queryClient.getQueryState(key)?.isInvalidated).toBeTruthy();
       });
 
       it('Throw if token is undefined', async () => {
         // set necessary data
-        queryClient.setQueryData(LOCAL_CONTEXT_KEY, convertJs(buildMockLocalContext({ itemId })));
+        queryClient.setQueryData(LOCAL_CONTEXT_KEY, buildMockLocalContext({ itemId }));
 
-        const initData = convertJs([toDelete]);
+        const initData = [toDelete];
         queryClient.setQueryData(key, initData);
 
         const endpoints = [
@@ -601,7 +584,7 @@ describe('Apps Mutations', () => {
           await waitForMutation();
         });
 
-        expect(queryClient.getQueryData(key)).toEqualImmutable(initData);
+        expect(queryClient.getQueryData(key)).toEqual(initData);
         expect(queryClient.getQueryState(key)?.isInvalidated).toBeFalsy();
       });
     });
