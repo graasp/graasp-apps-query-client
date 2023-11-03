@@ -51,8 +51,7 @@ export const getData = (
   if (!token) {
     throw new MissingNecessaryDataError({ token });
   }
-  const { itemId } = data;
-  const { memberId } = data;
+  const { itemId, memberId } = data;
 
   if (options.shouldMemberExist ?? true) {
     if (!memberId) {

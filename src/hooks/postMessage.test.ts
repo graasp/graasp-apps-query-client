@@ -45,9 +45,9 @@ describe.skip('PostMessage Hooks', () => {
 
         const { data } = await mockHook({ hook, wrapper });
         expect(data).toEqual({
-          apiHost: undefined, // @see LocalContextRecord
-          memberId: undefined, // @see LocalContextRecord
-          itemId: undefined, // @see LocalContextRecord
+          apiHost: undefined, // @see LocalContext
+          memberId: undefined, // @see LocalContext
+          itemId: undefined, // @see LocalContext
           context: DEFAULT_CONTEXT,
           lang: DEFAULT_LANG,
           permission: DEFAULT_PERMISSION,
