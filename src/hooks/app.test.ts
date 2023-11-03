@@ -12,7 +12,6 @@ import { buildGetContextRoute } from '../api/routes';
 import { MOCK_TOKEN } from '../config/constants';
 import { AUTH_TOKEN_KEY, LOCAL_CONTEXT_KEY, buildAppContextKey } from '../config/keys';
 import { MissingApiHostError } from '../config/utils';
-import { LocalContext } from '../types';
 
 const { hooks, wrapper, queryClient } = setUpTest();
 const itemId = v4();

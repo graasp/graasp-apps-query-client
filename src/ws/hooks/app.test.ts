@@ -1,4 +1,4 @@
-import { AppAction, AppData, AppSetting } from '@graasp/sdk';
+import { AppAction, AppData } from '@graasp/sdk';
 
 import {
   FIXTURE_APP_ACTIONS,

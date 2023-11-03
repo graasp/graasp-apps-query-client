@@ -4,8 +4,8 @@ import { Context, PermissionLevel } from '@graasp/sdk';
 
 import { UseQueryResult } from '@tanstack/react-query';
 
-import { AutoResizer } from './AutoResizer';
 import { LocalContext } from '../types';
+import { AutoResizer } from './AutoResizer';
 
 export const defaultContextValue: LocalContext = {
   apiHost: '',

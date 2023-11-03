@@ -13,7 +13,6 @@ import {
   MissingMessageChannelPortError,
 } from '../config/errors';
 import { AUTH_TOKEN_KEY, LOCAL_CONTEXT_KEY, buildPostMessageKeys } from '../config/keys';
-import { LocalContext } from '../types';
 
 const mockItemId = 'mock-item-id';
 const POST_MESSAGE_KEYS = buildPostMessageKeys(mockItemId);

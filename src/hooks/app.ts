@@ -3,7 +3,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import * as Api from '../api';
 import { buildAppContextKey } from '../config/keys';
 import { getApiHost, getDataOrThrow } from '../config/utils';
-import { AppContext, QueryClientConfig } from '../types';
+import { QueryClientConfig } from '../types';
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export default (queryConfig: QueryClientConfig) => {

@@ -1,5 +1,3 @@
-import { AppSettingRecord } from '@graasp/sdk/frontend';
-
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 
 import * as Api from '../api';
