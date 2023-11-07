@@ -12,6 +12,7 @@ export const defaultContextValue: LocalContext = {
   itemId: '',
   memberId: '',
   settings: {},
+  mobile: false,
   dev: false,
   offline: false,
   lang: 'en',

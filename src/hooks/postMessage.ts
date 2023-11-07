@@ -25,6 +25,7 @@ export const buildContext = (payload: LocalContext): LocalContext => {
     lang = DEFAULT_LANG,
     offline = false,
     dev = false,
+    mobile = false,
     settings = {},
   } = payload;
 
@@ -38,14 +39,74 @@ export const buildContext = (payload: LocalContext): LocalContext => {
     lang,
     offline,
     dev,
+    mobile,
     standalone,
     settings,
   };
 };
 
+class CommunicationChannel {
+  isMobile: boolean;
+
+  channel: null | ((data: string) => void) = null;
+
+  port2: MessagePort | null = null;
+
+  messageHandler: ((evt: MessageEvent) => void) | null = null;
+
+  constructor(
+    args:
+      | { isMobile: false; port2: MessagePort }
+      | { isMobile: true; handler?: (evt: MessageEvent) => void },
+  ) {
+    this.isMobile = args.isMobile;
+    if (args.isMobile) {
+      if (args.handler) {
+        this.addHandler(args.handler);
+      }
+    } else if (args.port2) {
+      // when we are not on react native we use port communication
+      this.port2 = args.port2;
+      this.channel = args.port2.postMessage;
+    }
+  }
+
+  /**
+   * Function to send Data from the app to the Parent
+   * @param data Data to be sent to the parent
+   */
+  postMessage(data: unknown): void {
+    if (this.isMobile) {
+      window.parent.postMessage(JSON.stringify(data));
+    } else {
+      this.port2?.postMessage(JSON.stringify(data));
+    }
+  }
+
+  addHandler(handler: (evt: MessageEvent) => void): void {
+    this.messageHandler = handler;
+    if (this.isMobile) {
+      window.addEventListener('message', this.messageHandler);
+    } else if (this.port2) {
+      this.port2.onmessage = handler;
+    }
+  }
+
+  removeHandler() {
+    if (this.messageHandler) {
+      window.removeEventListener('message', this.messageHandler);
+    }
+  }
+
+  useHandler(handler: (evt: MessageEvent) => void): void {
+    this.removeHandler();
+    this.addHandler(handler);
+  }
+}
+
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const configurePostMessageHooks = (queryConfig: QueryClientConfig) => {
-  let port2: MessagePort;
+  let communicationChannel: CommunicationChannel | null = null;
 
   const postMessage: WindowPostMessage = (data: unknown) => {
     console.debug('[app-postMessage] sending:', data);
@@ -98,6 +159,10 @@ const configurePostMessageHooks = (queryConfig: QueryClientConfig) => {
           reject(`the type '${type}' for payload '${JSON.stringify(payload)}' is not recognized`);
         }
       } catch (e) {
+        queryConfig.notifier({
+          type: 'Resolution/rejection',
+          payload: { message: (e as Error).message },
+        });
         reject('an error occurred');
       }
     };
@@ -133,9 +198,14 @@ const configurePostMessageHooks = (queryConfig: QueryClientConfig) => {
           // get init message getting the Message Channel port
           const context = buildContext(payload);
 
-          // will use port for further communication
-          // set as a global variable
-          [port2] = event.ports;
+          if (context.mobile) {
+            communicationChannel = new CommunicationChannel({ isMobile: true });
+          } else {
+            communicationChannel = new CommunicationChannel({
+              isMobile: false,
+              port2: event.ports[0],
+            });
+          }
           return context;
         };
 
@@ -159,7 +229,7 @@ const configurePostMessageHooks = (queryConfig: QueryClientConfig) => {
         });
       },
       onError: (error: Error) => {
-        queryConfig?.notifier?.({
+        queryConfig.notifier({
           type: getLocalContextRoutine.FAILURE,
           payload: { error },
         });
@@ -188,8 +258,12 @@ const configurePostMessageHooks = (queryConfig: QueryClientConfig) => {
           throw new Error('there was an error getting the query data for the LocalContext');
         }
         const POST_MESSAGE_KEYS = buildPostMessageKeys(itemId);
-        if (!port2) {
+        if (!communicationChannel) {
           const error = new MissingMessageChannelPortError();
+          queryConfig.notifier({
+            type: 'error',
+            payload: { message: 'No communication Channel available' },
+          });
           console.error(error);
           throw error;
         }
@@ -206,13 +280,11 @@ const configurePostMessageHooks = (queryConfig: QueryClientConfig) => {
             (data: { payload: { token: string } }): string => data.payload.token,
           );
 
-          port2.onmessage = getAuthTokenFunction;
-          port2.postMessage(
-            JSON.stringify({
-              type: POST_MESSAGE_KEYS.GET_AUTH_TOKEN,
-              payload: postMessagePayload,
-            }),
-          );
+          communicationChannel?.useHandler(getAuthTokenFunction);
+          communicationChannel?.postMessage({
+            type: POST_MESSAGE_KEYS.GET_AUTH_TOKEN,
+            payload: postMessagePayload,
+          });
         });
       },
       onError: (error: Error) => {
@@ -230,14 +302,14 @@ const configurePostMessageHooks = (queryConfig: QueryClientConfig) => {
     useEffect(() => {
       if (!queryConfig.isStandalone) {
         const sendHeight = (height: number): void => {
-          port2.postMessage(
+          communicationChannel?.postMessage(
             JSON.stringify({
               type: POST_MESSAGE_KEYS.POST_AUTO_RESIZE,
               payload: height,
             }),
           );
         };
-        if (!port2) {
+        if (!communicationChannel) {
           const error = new MissingMessageChannelPortError();
           console.error(error);
         }
