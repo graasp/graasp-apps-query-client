@@ -2,6 +2,29 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.0.0](https://github.com/graasp/graasp-apps-query-client/compare/v2.0.4...v3.0.0) (2023-11-09)
+
+
+### ⚠ BREAKING CHANGES
+
+* remove immutable ([#182](https://github.com/graasp/graasp-apps-query-client/issues/182))
+* add msw alternative for mocking ([#169](https://github.com/graasp/graasp-apps-query-client/issues/169))
+
+### Features
+
+* add a GraaspDevTools component ([4ddc15f](https://github.com/graasp/graasp-apps-query-client/commit/4ddc15f6814f3e9e01130ec04b27d9bfb9715a05))
+* add msw alternative for mocking ([#169](https://github.com/graasp/graasp-apps-query-client/issues/169)) ([4ddc15f](https://github.com/graasp/graasp-apps-query-client/commit/4ddc15f6814f3e9e01130ec04b27d9bfb9715a05))
+* implements chatbot post function builder (graasp/graasp[#641](https://github.com/graasp/graasp-apps-query-client/issues/641)) ([#177](https://github.com/graasp/graasp-apps-query-client/issues/177)) ([95d7b51](https://github.com/graasp/graasp-apps-query-client/commit/95d7b51143a92b8a2e464be05a5bb75b1d7321b0))
+* remove immutable ([#182](https://github.com/graasp/graasp-apps-query-client/issues/182)) ([ba43537](https://github.com/graasp/graasp-apps-query-client/commit/ba435370681187eaea74fccc9670fb4eb41da385))
+* transform Contexts from HOC to components for nesting ([4ddc15f](https://github.com/graasp/graasp-apps-query-client/commit/4ddc15f6814f3e9e01130ec04b27d9bfb9715a05))
+
+
+### Bug Fixes
+
+* miragejs returns empty arrays ([#172](https://github.com/graasp/graasp-apps-query-client/issues/172)) ([5beff49](https://github.com/graasp/graasp-apps-query-client/commit/5beff49951b5e1e449aa67a9e8b53f2c98c9af9a))
+* update yarn to v4 ([4ddc15f](https://github.com/graasp/graasp-apps-query-client/commit/4ddc15f6814f3e9e01130ec04b27d9bfb9715a05))
+* upgrade node to v18 ([4ddc15f](https://github.com/graasp/graasp-apps-query-client/commit/4ddc15f6814f3e9e01130ec04b27d9bfb9715a05))
+
 ## [2.0.4](https://github.com/graasp/graasp-apps-query-client/compare/v2.0.3...v2.0.4) (2023-09-11)
 
 
