@@ -1,8 +1,6 @@
-import { PermissionLevel, convertJs } from '@graasp/sdk';
-import { AppActionRecord } from '@graasp/sdk/frontend';
+import { PermissionLevel } from '@graasp/sdk';
 
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { List } from 'immutable';
 
 import * as Api from '../api';
 import { buildAppActionsKey } from '../config/keys';
@@ -35,10 +33,10 @@ export default (queryConfig: QueryClientConfig, websocketClient?: WebsocketClien
 
       return useQuery({
         queryKey: buildAppActionsKey(itemId),
-        queryFn: (): Promise<List<AppActionRecord>> => {
+        queryFn: () => {
           const { token } = getDataOrThrow(queryClient);
 
-          return Api.getAppActions({ itemId, token, apiHost }).then((data) => convertJs(data));
+          return Api.getAppActions({ itemId, token, apiHost });
         },
         ...defaultOptions,
         enabled,

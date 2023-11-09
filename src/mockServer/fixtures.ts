@@ -16,8 +16,8 @@ export const MOCK_SERVER_MEMBER: CompleteMember = {
   email: 'email@email.com',
   extra: {},
   type: MemberType.Individual,
-  createdAt: new Date(),
-  updatedAt: new Date(),
+  createdAt: new Date().toISOString(),
+  updatedAt: new Date().toISOString(),
 };
 
 export const MOCK_SERVER_ITEM: AppItemType = {
@@ -31,8 +31,8 @@ export const MOCK_SERVER_ITEM: AppItemType = {
     },
   },
   type: ItemType.APP,
-  createdAt: new Date(),
-  updatedAt: new Date(),
+  createdAt: new Date().toISOString(),
+  updatedAt: new Date().toISOString(),
   creator: MOCK_SERVER_MEMBER,
   settings: {},
 };

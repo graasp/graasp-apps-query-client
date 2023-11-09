@@ -11,7 +11,7 @@ import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
 import { API_ROUTES } from './api/routes';
 import { CACHE_TIME_MILLISECONDS, STALE_TIME_MILLISECONDS } from './config/constants';
-import { MUTATION_KEYS, QUERY_KEYS, buildPostMessageKeys } from './config/keys';
+import { QUERY_KEYS, buildPostMessageKeys } from './config/keys';
 import configureHooks from './hooks';
 import configureMutations from './mutations';
 import { OptionalQueryClientConfig, QueryClientConfig, RequiredQueryClientConfig } from './types';
@@ -48,7 +48,6 @@ const configure = (
   Hydrate: typeof Hydrate;
   hooks: ReturnType<typeof configureHooks>;
   mutations: ReturnType<typeof configureMutations>;
-  MUTATION_KEYS: typeof MUTATION_KEYS;
   QUERY_KEYS: typeof QUERY_KEYS;
   queryClient: QueryClient;
   QueryClientProvider: typeof QueryClientProvider;
@@ -89,7 +88,7 @@ const configure = (
 
   // set up mutations given config
   // mutations are attached to queryClient
-  const mutations = configureMutations(queryClient, queryConfig);
+  const mutations = configureMutations(queryConfig);
 
   // set up websocket client
   const websocketClient = getWebsocketClient(queryConfig);
@@ -104,7 +103,6 @@ const configure = (
     dehydrate,
     hooks,
     Hydrate,
-    MUTATION_KEYS,
     mutations,
     QUERY_KEYS,
     queryClient,

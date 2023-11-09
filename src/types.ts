@@ -1,7 +1,6 @@
 import {
   AppAction,
   AppData,
-  AppItemType,
   AppSetting,
   CompleteMember,
   Context,
@@ -10,7 +9,6 @@ import {
   PermissionLevel,
   UUID,
 } from '@graasp/sdk';
-import { ImmutableCast } from '@graasp/sdk/frontend';
 
 // generic type
 type EnumToUnionType<T> = T extends `${infer R}` ? R : never;
@@ -74,15 +72,10 @@ export type LocalContext = {
   permission: PermissionLevel;
 };
 
-export type LocalContextRecord = ImmutableCast<LocalContext>;
-
-export type AppContext = {
-  item: AppItemType;
+export type AppContext = DiscriminatedItem & {
   children: DiscriminatedItem[];
   members: Member[];
 };
-
-export type AppContextRecord = ImmutableCast<AppContext>;
 
 export interface ApiData {
   token: Token;

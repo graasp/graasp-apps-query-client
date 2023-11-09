@@ -43,12 +43,10 @@ describe.skip('PostMessage Hooks', () => {
         mockWindowForPostMessage(event);
 
         const { data } = await mockHook({ hook, wrapper });
-
-        const context = data?.toJS();
-        expect(context).toEqual({
-          apiHost: undefined, // @see LocalContextRecord
-          memberId: undefined, // @see LocalContextRecord
-          itemId: undefined, // @see LocalContextRecord
+        expect(data).toEqual({
+          apiHost: undefined, // @see LocalContext
+          memberId: undefined, // @see LocalContext
+          itemId: undefined, // @see LocalContext
           context: DEFAULT_CONTEXT,
           lang: DEFAULT_LANG,
           permission: DEFAULT_PERMISSION,
@@ -85,7 +83,7 @@ describe.skip('PostMessage Hooks', () => {
 
         const { data } = await mockHook({ hook, wrapper });
 
-        expect(data?.toJS()).toEqual({
+        expect(data).toEqual({
           ...serverResponse,
           standalone: false,
         });

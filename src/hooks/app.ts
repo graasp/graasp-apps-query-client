@@ -1,11 +1,9 @@
-import { convertJs } from '@graasp/sdk';
-
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 
 import * as Api from '../api';
 import { buildAppContextKey } from '../config/keys';
 import { getApiHost, getDataOrThrow } from '../config/utils';
-import { AppContextRecord, QueryClientConfig } from '../types';
+import { QueryClientConfig } from '../types';
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export default (queryConfig: QueryClientConfig) => {
@@ -25,12 +23,12 @@ export default (queryConfig: QueryClientConfig) => {
 
       return useQuery({
         queryKey: buildAppContextKey(itemId),
-        queryFn: (): Promise<AppContextRecord> =>
+        queryFn: () =>
           Api.getContext({
             itemId,
             token,
             apiHost,
-          }).then((data) => convertJs(data)),
+          }),
         ...defaultOptions,
       });
     },

@@ -1,7 +1,4 @@
-import { convertJs } from '@graasp/sdk';
-
 import { StatusCodes } from 'http-status-codes';
-import { Record } from 'immutable';
 import nock from 'nock';
 import { v4 } from 'uuid';
 
@@ -15,7 +12,6 @@ import { buildGetContextRoute } from '../api/routes';
 import { MOCK_TOKEN } from '../config/constants';
 import { AUTH_TOKEN_KEY, LOCAL_CONTEXT_KEY, buildAppContextKey } from '../config/keys';
 import { MissingApiHostError } from '../config/utils';
-import { LocalContext } from '../types';
 
 const { hooks, wrapper, queryClient } = setUpTest();
 const itemId = v4();
@@ -23,7 +19,7 @@ const itemId = v4();
 describe('App Hooks', () => {
   beforeEach(() => {
     queryClient.setQueryData(AUTH_TOKEN_KEY, MOCK_TOKEN);
-    queryClient.setQueryData(LOCAL_CONTEXT_KEY, convertJs(buildMockLocalContext({ itemId })));
+    queryClient.setQueryData(LOCAL_CONTEXT_KEY, buildMockLocalContext({ itemId }));
   });
 
   afterEach(() => {
@@ -42,10 +38,10 @@ describe('App Hooks', () => {
       const endpoints = [{ route, response }];
       const { data } = await mockHook({ endpoints, hook, wrapper });
 
-      expect(data?.toJS()).toEqual(response);
+      expect(data).toEqual(response);
 
       // verify cache keys
-      expect((queryClient.getQueryData(key) as Record<LocalContext>).toJS()).toEqual(response);
+      expect(queryClient.getQueryData(key)).toEqual(response);
     });
     it('Cannot fetch context if local context does not exist', async () => {
       const response = FIXTURE_CONTEXT;

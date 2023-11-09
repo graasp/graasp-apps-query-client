@@ -4,10 +4,7 @@
  */
 import { useEffect } from 'react';
 
-import { convertJs } from '@graasp/sdk';
-import { ImmutableCast } from '@graasp/sdk/frontend';
-
-import { UseQueryResult, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 
 import * as Api from '../api';
 import { DEFAULT_CONTEXT, DEFAULT_LANG, DEFAULT_PERMISSION, MOCK_TOKEN } from '../config/constants';
@@ -15,7 +12,7 @@ import { MissingMessageChannelPortError } from '../config/errors';
 import { AUTH_TOKEN_KEY, LOCAL_CONTEXT_KEY, buildPostMessageKeys } from '../config/keys';
 import { buildAppKeyAndOriginPayload } from '../config/utils';
 import { getAuthTokenRoutine, getLocalContextRoutine } from '../routines';
-import { LocalContext, LocalContextRecord, QueryClientConfig, WindowPostMessage } from '../types';
+import { LocalContext, QueryClientConfig, WindowPostMessage } from '../types';
 
 // build context from given data and default values
 export const buildContext = (payload: LocalContext): LocalContext => {
@@ -105,10 +102,7 @@ const configurePostMessageHooks = (queryConfig: QueryClientConfig) => {
       }
     };
 
-  const useGetLocalContext = (
-    itemId: string,
-    defaultValue: LocalContext,
-  ): UseQueryResult<LocalContextRecord> => {
+  const useGetLocalContext = (itemId: string, defaultValue: LocalContext) => {
     let getLocalContextFunction: ((event: MessageEvent) => void) | null = null;
     const queryClient = useQueryClient();
     return useQuery({
@@ -121,12 +115,12 @@ const configurePostMessageHooks = (queryConfig: QueryClientConfig) => {
             const newContext = await Api.getMockContext({
               token: authToken,
             });
-            return convertJs(buildContext(newContext));
+            return buildContext(newContext);
           }
           console.debug(
             '[app-get-local-context] token was not found in data cache, using default value',
           );
-          return convertJs(buildContext(defaultValue));
+          return buildContext(defaultValue);
         }
         const POST_MESSAGE_KEYS = buildPostMessageKeys(itemId);
         const postMessagePayload = buildAppKeyAndOriginPayload(queryConfig);
@@ -134,7 +128,7 @@ const configurePostMessageHooks = (queryConfig: QueryClientConfig) => {
         const formatResolvedValue = (result: {
           event: MessageEvent;
           payload: LocalContext;
-        }): LocalContextRecord => {
+        }): LocalContext => {
           const { event, payload } = result;
           // get init message getting the Message Channel port
           const context = buildContext(payload);
@@ -142,10 +136,10 @@ const configurePostMessageHooks = (queryConfig: QueryClientConfig) => {
           // will use port for further communication
           // set as a global variable
           [port2] = event.ports;
-          return convertJs(context);
+          return context;
         };
 
-        return new Promise<ImmutableCast<LocalContext>>((resolve, reject) => {
+        return new Promise<LocalContext>((resolve, reject) => {
           getLocalContextFunction = receiveContextMessage(
             POST_MESSAGE_KEYS.GET_CONTEXT_SUCCESS,
             POST_MESSAGE_KEYS.GET_CONTEXT_FAILURE,
@@ -179,7 +173,7 @@ const configurePostMessageHooks = (queryConfig: QueryClientConfig) => {
     });
   };
 
-  const useAuthToken = (itemId: string): UseQueryResult<string> => {
+  const useAuthToken = (itemId: string) => {
     let getAuthTokenFunction;
     const queryClient = useQueryClient();
     return useQuery({

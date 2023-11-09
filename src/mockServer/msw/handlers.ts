@@ -122,8 +122,8 @@ export const buildMSWMocks = (
 
         const appData: AppData = {
           id: v4(),
-          createdAt: new Date(),
-          updatedAt: new Date(),
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
           item,
           creator: member,
           member,
@@ -147,7 +147,7 @@ export const buildMSWMocks = (
         } = await req.json();
 
         const appData: Partial<AppData> = {
-          updatedAt: new Date(),
+          updatedAt: new Date().toISOString(),
           ...body,
         };
         const value = await db.appData.update(id as string, appData);
@@ -199,8 +199,8 @@ export const buildMSWMocks = (
         const body: Pick<AppSetting, 'data' | 'name'> = await req.json();
         const appSetting: AppSetting = {
           id: v4(),
-          createdAt: new Date(),
-          updatedAt: new Date(),
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
           item,
           creator: member,
           ...body,
@@ -230,7 +230,7 @@ export const buildMSWMocks = (
 
         const body: Pick<AppSetting, 'data' | 'id'> = await req.json();
         const appSetting: Partial<MockAppSetting> = {
-          updatedAt: new Date(),
+          updatedAt: new Date().toISOString(),
           ...body,
         };
         const value = await db.appSetting.update(id as string, appSetting);
@@ -299,7 +299,7 @@ export const buildMSWMocks = (
         const body: Pick<AppAction, 'data' | 'type'> = await req.json();
         const appAction: AppAction = {
           id: v4(),
-          createdAt: new Date(),
+          createdAt: new Date().toISOString(),
           item,
           member,
           ...body,

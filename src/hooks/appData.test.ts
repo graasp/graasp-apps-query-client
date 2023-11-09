@@ -1,5 +1,3 @@
-import { convertJs } from '@graasp/sdk';
-
 import { StatusCodes } from 'http-status-codes';
 import nock from 'nock';
 import { v4 } from 'uuid';
@@ -27,7 +25,7 @@ const itemId = v4();
 describe('App Data Hooks', () => {
   beforeEach(() => {
     queryClient.setQueryData(AUTH_TOKEN_KEY, MOCK_TOKEN);
-    queryClient.setQueryData(LOCAL_CONTEXT_KEY, convertJs(buildMockLocalContext({ itemId })));
+    queryClient.setQueryData(LOCAL_CONTEXT_KEY, buildMockLocalContext({ itemId }));
   });
 
   afterEach(() => {
@@ -45,16 +43,16 @@ describe('App Data Hooks', () => {
       const endpoints = [{ route, response }];
       const { data } = await mockHook({ endpoints, hook, wrapper });
 
-      expect(data?.toJS()).toEqual(response);
+      expect(data).toEqual(response);
 
       // verify cache keys
-      expect(queryClient.getQueryData(key)).toEqualImmutable(convertJs(response));
+      expect(queryClient.getQueryData(key)).toEqual(response);
     });
     it('Cannot fetch app data if context does not exist', async () => {
-      queryClient.setQueryData(
-        LOCAL_CONTEXT_KEY,
-        convertJs({ ...buildMockLocalContext({ itemId }), apiHost: null }),
-      );
+      queryClient.setQueryData(LOCAL_CONTEXT_KEY, {
+        ...buildMockLocalContext({ itemId }),
+        apiHost: null,
+      });
 
       const response = FIXTURE_APP_DATA;
       const endpoints = [{ route, response }];

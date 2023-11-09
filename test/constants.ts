@@ -26,8 +26,8 @@ export const MEMBER_RESPONSE: CompleteMember = {
   type: MemberType.Individual,
   email: 'username@graasp.org',
   extra: {},
-  createdAt: new Date(),
-  updatedAt: new Date(),
+  createdAt: new Date().toISOString(),
+  updatedAt: new Date().toISOString(),
 };
 
 export const MEMBERS_RESPONSE: CompleteMember[] = [
@@ -38,8 +38,8 @@ export const MEMBERS_RESPONSE: CompleteMember[] = [
     email: 'username1@graasp.org',
     type: MemberType.Individual,
     extra: {},
-    createdAt: new Date(),
-    updatedAt: new Date(),
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
   },
 ];
 
@@ -79,8 +79,8 @@ export const MOCK_ITEM: FolderItemType = {
   id: '123',
   name: '',
   path: '',
-  createdAt: new Date(),
-  updatedAt: new Date(),
+  createdAt: new Date().toISOString(),
+  updatedAt: new Date().toISOString(),
   creator: MEMBER_RESPONSE,
   settings: {},
 };
@@ -90,8 +90,8 @@ export const buildAppData = ({ id = v4(), data = {} }: Partial<AppData> = {}): A
   data,
   type: 'type',
   creator: MEMBER_RESPONSE,
-  createdAt: new Date(),
-  updatedAt: new Date(),
+  createdAt: new Date().toISOString(),
+  updatedAt: new Date().toISOString(),
   member: MEMBER_RESPONSE,
   item: MOCK_ITEM,
   visibility: AppDataVisibility.Member,
@@ -103,7 +103,7 @@ export const buildAppAction = ({ id = v4(), data = {} }: Partial<AppAction> = {}
   id,
   data,
   type: 'action',
-  createdAt: new Date(),
+  createdAt: new Date().toISOString(),
   member: MEMBER_RESPONSE,
   item: MOCK_ITEM,
 });
@@ -122,8 +122,8 @@ export const buildAppSetting = ({
   id,
   data,
   name: 'app-setting-name',
-  createdAt: new Date(),
-  updatedAt: new Date(),
+  createdAt: new Date().toISOString(),
+  updatedAt: new Date().toISOString(),
   item: MOCK_ITEM,
   creator: MEMBER_RESPONSE,
 });
