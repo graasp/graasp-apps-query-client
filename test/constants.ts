@@ -157,6 +157,7 @@ export const buildMockLocalContext = ({
   itemId,
   memberId,
   settings: {},
+  mobile: false,
   context: Context.Builder,
   permission: PermissionLevel.Read,
 });

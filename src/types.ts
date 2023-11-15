@@ -60,6 +60,7 @@ export class UndefinedArgument extends Error {
 export type WindowPostMessage = (message: unknown) => void;
 
 export type LocalContext = {
+  mobile?: boolean;
   apiHost: string;
   itemId: UUID;
   memberId: UUID;
