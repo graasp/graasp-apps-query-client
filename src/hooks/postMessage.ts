@@ -50,13 +50,13 @@ class CommunicationChannel {
 
   channel: null | ((data: string) => void) = null;
 
-  port2: MessagePort | null = null;
+  messagePort: MessagePort | null = null;
 
   messageHandler: ((evt: MessageEvent) => void) | null = null;
 
   constructor(
     args:
-      | { isMobile: false; port2: MessagePort }
+      | { isMobile: false; messagePort: MessagePort }
       | { isMobile: true; handler?: (evt: MessageEvent) => void },
   ) {
     this.isMobile = args.isMobile;
@@ -64,10 +64,10 @@ class CommunicationChannel {
       if (args.handler) {
         this.addHandler(args.handler);
       }
-    } else if (args.port2) {
+    } else if (args.messagePort) {
       // when we are not on react native we use port communication
-      this.port2 = args.port2;
-      this.channel = args.port2.postMessage;
+      this.messagePort = args.messagePort;
+      this.channel = args.messagePort.postMessage;
     }
   }
 
@@ -79,7 +79,7 @@ class CommunicationChannel {
     if (this.isMobile) {
       window.parent.postMessage(JSON.stringify(data));
     } else {
-      this.port2?.postMessage(JSON.stringify(data));
+      this.messagePort?.postMessage(JSON.stringify(data));
     }
   }
 
@@ -87,8 +87,8 @@ class CommunicationChannel {
     this.messageHandler = handler;
     if (this.isMobile) {
       window.addEventListener('message', this.messageHandler);
-    } else if (this.port2) {
-      this.port2.onmessage = handler;
+    } else if (this.messagePort) {
+      this.messagePort.onmessage = handler;
     }
   }
 
@@ -160,7 +160,7 @@ const configurePostMessageHooks = (queryConfig: QueryClientConfig) => {
         }
       } catch (e) {
         queryConfig.notifier({
-          type: 'Resolution/rejection',
+          type: 'error',
           payload: { message: (e as Error).message },
         });
         reject('an error occurred');
@@ -203,7 +203,7 @@ const configurePostMessageHooks = (queryConfig: QueryClientConfig) => {
           } else {
             communicationChannel = new CommunicationChannel({
               isMobile: false,
-              port2: event.ports[0],
+              messagePort: event.ports[0],
             });
           }
           return context;
