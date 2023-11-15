@@ -107,4 +107,7 @@ export interface Database {
   items: DiscriminatedItem[];
 }
 
-export type UserDataType = { [key: string]: unknown };
+export type ChatBotCompletion = {
+  completion: string;
+  model: string;
+};
