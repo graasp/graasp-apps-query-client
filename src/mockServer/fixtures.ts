@@ -53,14 +53,12 @@ export const buildMockLocalContext = (appContext?: Partial<LocalContext>): Local
 };
 
 export const buildDatabase = ({
-  appContext = buildMockLocalContext(),
   appData = [],
   appActions = [],
   appSettings = [],
   members = [MOCK_SERVER_MEMBER],
   items = [MOCK_SERVER_ITEM],
 }: Partial<Database> = {}): Database => ({
-  appContext,
   appData,
   appActions,
   appSettings,

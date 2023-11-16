@@ -44,7 +44,7 @@ export class AppMocks extends Dexie {
     });
   }
 
-  seed(data: Partial<Database>): void {
+  seed(data: Partial<Database> & { appContext?: LocalContext }): void {
     // pre-load the IndexDB with data
     if (data.items?.length) {
       this.item.bulkAdd(data.items);
@@ -66,7 +66,7 @@ export class AppMocks extends Dexie {
     }
   }
 
-  resetDB(data?: Partial<Database>): void {
+  resetDB(data?: Partial<Database> & { appContext?: LocalContext }): void {
     console.info('Resetting DB');
     this.tables.map((table) => table.clear());
 

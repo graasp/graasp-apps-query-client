@@ -37,7 +37,7 @@ export const mockServiceWorkerServer = ({
       if (database.appSettings.length) {
         transaction.table('appSetting').bulkAdd(database.appSettings);
       }
-      transaction.table('appContext').add(database.appContext, database.appContext.memberId);
+      transaction.table('appContext').add(fullAppContext, fullAppContext.memberId);
     } else {
       console.debug('There was no data to populate the database');
     }

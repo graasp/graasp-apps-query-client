@@ -99,7 +99,6 @@ export type MockAppSetting = Omit<AppSetting, 'item' | 'creator'> & {
 };
 
 export interface Database {
-  appContext: LocalContext;
   appData: AppData[];
   appActions: AppAction[];
   appSettings: AppSetting[];
