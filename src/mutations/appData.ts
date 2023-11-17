@@ -39,10 +39,10 @@ export default (queryConfig: QueryClientConfig) => {
             const newArray = [...(prevData ?? []), newData];
             queryClient.setQueryData(key, newArray);
           }
-          queryConfig?.notifier?.({ type: postAppDataRoutine.SUCCESS, payload: newData });
+          queryConfig.notifier?.({ type: postAppDataRoutine.SUCCESS, payload: newData });
         },
         onError: (error: Error) => {
-          queryConfig?.notifier?.({ type: postAppDataRoutine.FAILURE, payload: { error } });
+          queryConfig.notifier?.({ type: postAppDataRoutine.FAILURE, payload: { error } });
         },
         onSettled: () => {
           if (!enableWebsocket) {

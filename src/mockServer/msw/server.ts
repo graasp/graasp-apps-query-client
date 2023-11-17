@@ -10,12 +10,14 @@ import { buildMSWMocks } from './handlers';
 export const mockServiceWorkerServer = ({
   appContext,
   database,
+  dbName,
 }: {
   appContext: Partial<LocalContext> & Pick<LocalContext, 'itemId'>;
   database?: Database;
+  dbName?: string;
 }): { worker: SetupWorker; resetDB: (data: Database) => void } => {
   const fullAppContext = buildMockLocalContext(appContext);
-  const mswMocks = buildMSWMocks(fullAppContext, database);
+  const mswMocks = buildMSWMocks(fullAppContext, database, dbName);
   mswMocks.db.on('populate', (transaction) => {
     if (database) {
       // seed database with data
@@ -35,7 +37,7 @@ export const mockServiceWorkerServer = ({
       if (database.appSettings.length) {
         transaction.table('appSetting').bulkAdd(database.appSettings);
       }
-      transaction.table('appContext').add(database.appContext, database.appContext.memberId);
+      transaction.table('appContext').add(fullAppContext, fullAppContext.memberId);
     } else {
       console.debug('There was no data to populate the database');
     }

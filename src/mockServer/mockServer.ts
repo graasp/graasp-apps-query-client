@@ -15,6 +15,7 @@ const mockApi = (
     database,
     externalUrls,
     errors,
+    dbName,
   }: {
     appContext: Partial<LocalContext> & Pick<LocalContext, 'itemId'>;
     database?: Database;
@@ -22,6 +23,7 @@ const mockApi = (
     errors?: {
       deleteAppDataShouldThrow?: boolean;
     };
+    dbName?: string;
   },
   solution: `${MockSolution}` | MockSolution,
 ): void => {
@@ -43,7 +45,7 @@ const mockApi = (
       break;
     case MockSolution.ServiceWorker:
     default:
-      mockServiceWorkerServer({ appContext, database });
+      mockServiceWorkerServer({ appContext, database, dbName });
       break;
   }
 };

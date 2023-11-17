@@ -46,8 +46,9 @@ const getMemberIdFromToken = (bearer: string | null): string => {
 export const buildMSWMocks = (
   { apiHost }: LocalContext,
   database?: Database,
+  dbName?: string,
 ): { handlers: RestHandler[]; db: AppMocks } => {
-  const db = new AppMocks();
+  const db = new AppMocks(dbName);
 
   const getPermissionForMember = async (memberId: string): Promise<PermissionLevel> => {
     const localContextForMember = await db.appContext.get(memberId);
@@ -130,7 +131,8 @@ export const buildMSWMocks = (
           visibility: AppDataVisibility.Member,
           ...body,
         };
-        const value = await db.appData.add(appData);
+        const newId = await db.appData.add(appData);
+        const value = await db.appData.get(newId);
 
         return res(ctx.status(200), ctx.json(value));
       },
@@ -150,7 +152,8 @@ export const buildMSWMocks = (
           updatedAt: new Date().toISOString(),
           ...body,
         };
-        const value = await db.appData.update(id as string, appData);
+        await db.appData.update(id as string, appData);
+        const value = await db.appData.get(id as string);
 
         return res(ctx.status(200), ctx.json(value));
       },
@@ -205,7 +208,8 @@ export const buildMSWMocks = (
           creator: member,
           ...body,
         };
-        const value = await db.appSetting.add(appSetting);
+        const newId = await db.appSetting.add(appSetting);
+        const value = await db.appSetting.get(newId);
 
         return res(ctx.status(200), ctx.json(value));
       },
@@ -233,7 +237,8 @@ export const buildMSWMocks = (
           updatedAt: new Date().toISOString(),
           ...body,
         };
-        const value = await db.appSetting.update(id as string, appSetting);
+        await db.appSetting.update(id as string, appSetting);
+        const value = await db.appSetting.get(id as string);
 
         return res(ctx.status(200), ctx.json(value));
       },
@@ -327,6 +332,11 @@ export const buildMSWMocks = (
     // plumbing
     rest.delete('/__mocks/reset', (_req, res, ctx) => {
       db.resetDB(database);
+      return res(ctx.status(200));
+    }),
+    rest.post('/__mocks/seed', async (req, res, ctx) => {
+      const seedData = await req.json();
+      db.resetDB(seedData);
       return res(ctx.status(200));
     }),
     rest.get('/__mocks/context', async (req, res, ctx) => {
