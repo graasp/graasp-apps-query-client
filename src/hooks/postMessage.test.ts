@@ -253,8 +253,8 @@ describe.skip('PostMessage Hooks', () => {
         throw new Error('Method not implemented.');
       }
     }
-    global.ResizeObserver = jest.fn();
-    const resizeObserverSpy = jest.spyOn(global, 'ResizeObserver');
+    globalThis.ResizeObserver = jest.fn();
+    const resizeObserverSpy = jest.spyOn(globalThis, 'ResizeObserver');
     const { hooks, wrapper } = setUpTest();
 
     /// mock port
@@ -279,7 +279,7 @@ describe.skip('PostMessage Hooks', () => {
       });
 
       // mock window height
-      global.document = {
+      globalThis.document = {
         body: { scrollHeight: 420 },
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } as any;

@@ -78,7 +78,7 @@ type NockMethodType = Exclude<
   {
     [MethodName in keyof Scope]: Scope[MethodName] extends InterceptFunction ? MethodName : never;
   }[keyof Scope],
-  undefined
+  undefined | 'intercept'
 >;
 
 export const mockEndpoints = (endpoints: Endpoint[]): nock.Scope => {
