@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.1.0](https://github.com/graasp/graasp-apps-query-client/compare/v3.0.0...v3.1.0) (2023-11-19)
+
+
+### Features
+
+* add mobile context communication ([#196](https://github.com/graasp/graasp-apps-query-client/issues/196)) ([645b37d](https://github.com/graasp/graasp-apps-query-client/commit/645b37d32b8df67c62db5043704e8a3840979b52))
+
+
+### Bug Fixes
+
+* **deps:** update dependency @graasp/sdk to v2.1.0 ([#193](https://github.com/graasp/graasp-apps-query-client/issues/193)) ([753147c](https://github.com/graasp/graasp-apps-query-client/commit/753147c509abd01f93ced643c6157f69ff03d3ba))
+* return values of mock DB ([#198](https://github.com/graasp/graasp-apps-query-client/issues/198)) ([e4b584f](https://github.com/graasp/graasp-apps-query-client/commit/e4b584fad78b8cbaa748365f16bf94bf97a1a5ac))
+* update deps and fix issues ([#204](https://github.com/graasp/graasp-apps-query-client/issues/204)) ([9c1293a](https://github.com/graasp/graasp-apps-query-client/commit/9c1293ad5096fabc9e3ef45eca90203690ebf2f9))
+
 ## [3.0.0](https://github.com/graasp/graasp-apps-query-client/compare/v2.0.4...v3.0.0) (2023-11-09)
 
 
