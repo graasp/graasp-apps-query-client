@@ -46,6 +46,7 @@ const getMemberIdFromToken = (bearer: string | null): string => {
 export const buildMSWMocks = (
   { apiHost }: LocalContext,
   database?: Database,
+  appContext?: LocalContext,
   dbName?: string,
 ): { handlers: RestHandler[]; db: AppMocks } => {
   const db = new AppMocks(dbName);
@@ -331,7 +332,7 @@ export const buildMSWMocks = (
 
     // plumbing
     rest.delete('/__mocks/reset', (_req, res, ctx) => {
-      db.resetDB(database);
+      db.resetDB({ ...database, appContext });
       return res(ctx.status(200));
     }),
     rest.post('/__mocks/seed', async (req, res, ctx) => {
