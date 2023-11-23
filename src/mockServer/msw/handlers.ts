@@ -44,11 +44,11 @@ const getMemberIdFromToken = (bearer: string | null): string => {
 };
 
 export const buildMSWMocks = (
-  { apiHost }: LocalContext,
+  appContext: LocalContext,
   database?: Database,
-  appContext?: LocalContext,
   dbName?: string,
 ): { handlers: RestHandler[]; db: AppMocks } => {
+  const { apiHost } = appContext;
   const db = new AppMocks(dbName);
 
   const getPermissionForMember = async (memberId: string): Promise<PermissionLevel> => {
