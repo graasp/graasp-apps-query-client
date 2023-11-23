@@ -27,7 +27,7 @@ export default (queryConfig: QueryClientConfig) => {
           const newData: AppAction = newAppAction;
           // check that the websocket event has not already been received and therefore the data were added
           if (!prevData) {
-            queryClient.setQueryData(key, newData);
+            queryClient.setQueryData(key, [newData ?? []]);
           } else if (!prevData.some((a) => a.id === newData.id)) {
             queryClient.setQueryData(key, [...(prevData ?? []), newData]);
           }
