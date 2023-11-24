@@ -31,7 +31,8 @@ export default (queryConfig: QueryClientConfig) => {
           const prevData = queryClient.getQueryData<AppSetting[]>(key);
           const newData: AppSetting = newAppSetting;
           if (!prevData) {
-            queryClient.setQueryData(key, newData);
+            // we need to wrap the created AppSetting in an array because the cache key will receive all the settings but the post call only return the current posted data
+            queryClient.setQueryData<AppSetting[]>(key, [newData]);
           } else if (!prevData.some((a) => a.id === newData.id)) {
             queryClient.setQueryData(key, [...(prevData ?? []), newData]);
           }
