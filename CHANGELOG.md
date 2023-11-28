@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.2.0](https://github.com/graasp/graasp-apps-query-client/compare/v3.1.0...v3.2.0) (2023-11-28)
+
+
+### ⚠ BREAKING CHANGES
+
+* update chatbot to be a query-client ([#199](https://github.com/graasp/graasp-apps-query-client/issues/199)) ([53fdba7](https://github.com/graasp/graasp-apps-query-client/commit/53fdba746423d662ea2a5f075403f0a670eb5d7f))
+
+### Bug Fixes
+
+* pass mock context when resetting the DB ([#207](https://github.com/graasp/graasp-apps-query-client/issues/207)) ([07847b8](https://github.com/graasp/graasp-apps-query-client/commit/07847b894cf34dd60b5817e72a1b48665b2d6915))
+* ensure to store array in setQueryData of post data and setting ([#210](https://github.com/graasp/graasp-apps-query-client/issues/210)) ([fad7b6f](https://github.com/graasp/graasp-apps-query-client/commit/fad7b6f74de0188d91f0a99bd1a1ed7b62a85883))
+
 ## [3.1.0](https://github.com/graasp/graasp-apps-query-client/compare/v3.0.0...v3.1.0) (2023-11-19)
 
 
