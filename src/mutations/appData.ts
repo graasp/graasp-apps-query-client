@@ -34,7 +34,8 @@ export default (queryConfig: QueryClientConfig) => {
           const key = buildAppDataKey(itemId);
           const prevData = queryClient.getQueryData<AppData[]>(key);
           if (!prevData) {
-            queryClient.setQueryData(key, newData);
+            // we need to wrap the created AppData in an array because the cache key will receive all the data but the post call only return the current posted data
+            queryClient.setQueryData<AppData[]>(key, [newData]);
           } else if (!prevData.some((a) => a.id === newData.id)) {
             const newArray = [...(prevData ?? []), newData];
             queryClient.setQueryData(key, newArray);
