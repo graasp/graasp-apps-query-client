@@ -5,7 +5,6 @@ import configureAppActionHooks from './appAction';
 import configureAppDataHooks from './appData';
 import configureAppSettingHooks from './appSetting';
 import configurePostMessageHooks from './postMessage';
-import { useChatbotApi } from './useChatbotApi';
 
 export default (queryConfig: QueryClientConfig, websocketClient?: WebsocketClient) => ({
   ...configureAppsHooks(queryConfig),
@@ -13,5 +12,4 @@ export default (queryConfig: QueryClientConfig, websocketClient?: WebsocketClien
   ...configurePostMessageHooks(queryConfig),
   ...configureAppSettingHooks(queryConfig, websocketClient),
   ...configureAppActionHooks(queryConfig, websocketClient),
-  useChatbotApi,
 });
