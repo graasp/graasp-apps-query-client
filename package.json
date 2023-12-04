@@ -6,6 +6,7 @@
   "module": "./dist/index.es.js",
   "source": "./src/index.ts",
   "types": "./dist/index.d.ts",
+  "type": "module",
   "sideEffects": false,
   "repository": "git@github.com:graasp/graasp-apps-query-client.git",
   "author": "Graasp",
@@ -19,7 +20,6 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "deploy": "gh-pages -d example/build",
     "commit-msg": "commitlint --edit $1",
     "hooks:uninstall": "husky uninstall",
     "hooks:install": "husky install",
