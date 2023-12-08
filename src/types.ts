@@ -111,3 +111,10 @@ export type ChatBotCompletion = {
   completion: string;
   model: string;
 };
+
+export interface ChatbotThreadMessage {
+  // represent the appDataTypes of the chatbot in the current app
+  botDataType: string;
+  msgType: string;
+  data: string;
+}
