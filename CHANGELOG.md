@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.3.0](https://github.com/graasp/graasp-apps-query-client/compare/v3.2.1...v3.3.0) (2023-12-08)
+
+
+### Features
+
+* migrate chatbot prompt utils from apps to apps-query-client ([#219](https://github.com/graasp/graasp-apps-query-client/issues/219)) ([3e1f023](https://github.com/graasp/graasp-apps-query-client/commit/3e1f02327ae8b41ef8078b8dff28e75bd6f0abac))
+
+
+### Bug Fixes
+
+* use type module in package json ([8b99e61](https://github.com/graasp/graasp-apps-query-client/commit/8b99e61d0c039cdaedd42d03b1f8685d5dbd7c76))
+
 ## [3.2.1](https://github.com/graasp/graasp-apps-query-client/compare/v3.2.0...v3.2.1) (2023-12-04)
 
 

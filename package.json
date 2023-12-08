@@ -1,6 +1,6 @@
 {
   "name": "@graasp/apps-query-client",
-  "version": "3.2.1",
+  "version": "3.3.0",
   "description": "Query client repository for Graasp apps",
   "main": "./dist/index.cjs.js",
   "module": "./dist/index.es.js",
