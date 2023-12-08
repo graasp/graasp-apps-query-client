@@ -7,3 +7,4 @@ export { default as mockApi, MockSolution } from './mockServer/mockServer';
 export { buildMockLocalContext, buildDatabase } from './mockServer/fixtures';
 export * from './components';
 export * from './types';
+export * from './utils';
