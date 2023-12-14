@@ -181,7 +181,15 @@ export const buildMSWMocks = (
     rest.get(`${apiHost}/${buildGetAppSettingsRoute(':itemId')}`, async (req, res, ctx) => {
       const reqItemId = req.params.itemId;
 
-      const value = await db.appSetting.where('item.id').equals(reqItemId).toArray();
+      const url = new URL(req.url);
+      const settingName = url.searchParams.get('name');
+
+      const value = await db.appSetting
+        .where('item.id')
+        .equals(reqItemId)
+        // filter settings and return only setting with the given name if parameter was set otherwise return everything
+        .and((x) => (settingName ? x.name === settingName : true))
+        .toArray();
       return res(ctx.status(200), ctx.json(value));
     }),
 
