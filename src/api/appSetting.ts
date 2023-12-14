@@ -1,6 +1,6 @@
-import { AppSetting } from '@graasp/sdk';
+import { AppSetting, appendQueryParamToUrl } from '@graasp/sdk';
 
-import { ApiData } from '../types';
+import { ApiData, Data } from '../types';
 import configureAxios from './axios';
 import {
   buildDeleteAppSettingRoute,
@@ -12,10 +12,16 @@ import {
 
 const axios = configureAxios();
 
-export const getAppSettings = async (args: ApiData) => {
-  const { token, itemId, apiHost } = args;
+export const getAppSettings = async <DataType extends Data = Data>(
+  args: ApiData & { filters?: { name: string } },
+) => {
+  const { token, itemId, apiHost, filters } = args;
+  const url = appendQueryParamToUrl(
+    `${apiHost}/${buildGetAppSettingsRoute(itemId)}`,
+    filters ?? {},
+  );
   return axios
-    .get<AppSetting[]>(`${apiHost}/${buildGetAppSettingsRoute(itemId)}`, {
+    .get<AppSetting<DataType>[]>(url, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

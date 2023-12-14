@@ -2,7 +2,8 @@ import { UUID } from '@graasp/sdk';
 
 export const buildAppDataKey = (id?: UUID) => ['app-data', id] as const;
 export const buildAppActionsKey = (id?: UUID) => ['app-action', id] as const;
-export const buildAppSettingsKey = (id?: UUID) => ['app-setting', id] as const;
+export const buildAppSettingsKey = (id?: UUID, filters?: { [key: string]: unknown }) =>
+  ['app-setting', id, filters] as const;
 export const buildAppContextKey = (id?: UUID) => ['context', id] as const;
 export const AUTH_TOKEN_KEY = ['AUTH_TOKEN_KEY'];
 export const LOCAL_CONTEXT_KEY = ['LOCAL_CONTEXT_KEY'];
