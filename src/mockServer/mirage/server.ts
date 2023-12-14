@@ -232,10 +232,13 @@ export const mockMirageServer = ({
       });
 
       // app settings
-      this.get(
-        `/${buildGetAppSettingsRoute(currentItem.id)}`,
-        (schema) => schema.all('appSetting') ?? [],
-      );
+      this.get(`/${buildGetAppSettingsRoute(currentItem.id)}`, (schema, request) => {
+        const settingName = new URL(request.url).searchParams.get('name');
+        return (
+          schema.all('appSetting').filter((x) => (settingName ? x.name === settingName : true)) ??
+          []
+        );
+      });
 
       this.post(`/${buildPostAppSettingRoute({ itemId: currentItem.id })}`, (schema, request) => {
         if (!currentMember) {
