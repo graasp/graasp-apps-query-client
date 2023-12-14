@@ -84,13 +84,19 @@ export const buildMSWMocks = (
     // GET /app-items/:itemId/app-data
     rest.get(`${apiHost}/${buildGetAppDataRoute(':itemId')}`, async (req, res, ctx) => {
       const reqItemId = req.params.itemId;
+      const dataType = new URL(req.url).searchParams.get('type');
 
       const memberId = getMemberIdFromToken(req.headers.get('Authorization'));
       const permission = await getPermissionForMember(memberId);
       let value;
       if (permission === PermissionLevel.Admin) {
         // return all app data of the item
-        value = await db.appData.where('item.id').equals(reqItemId).toArray();
+        value = await db.appData
+          .where('item.id')
+          .equals(reqItemId)
+          // filter app data and return only app data with the given type if parameter was set otherwise return everything
+          .and((x) => (dataType ? x.type === dataType : true))
+          .toArray();
       } else {
         value = await db.appData
           .where('item.id')
@@ -103,6 +109,8 @@ export const buildMSWMocks = (
             // if app data is not "visibility item" only return app data that were created by the member or addressed to him
             return x.creator?.id === memberId || x.member.id === memberId;
           })
+          // filter the app data by type if specified
+          .and((x) => (dataType ? x.type === dataType : true))
           .toArray();
       }
 
