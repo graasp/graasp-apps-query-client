@@ -9,7 +9,7 @@ import { AppAction, AppData, AppSetting, UUID } from '@graasp/sdk';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { APP_ACTIONS_TOPIC, APP_DATA_TOPIC, APP_SETTINGS_TOPIC } from '../../config/constants';
-import { buildAppActionsKey, buildAppDataKey, buildAppSettingsKey } from '../../config/keys';
+import { appSettingKeys, buildAppActionsKey, buildAppDataKey } from '../../config/keys';
 import {
   AppActionEvent,
   AppDataEvent,
@@ -165,7 +165,7 @@ export const configureWsAppSettingHooks = (websocketClient?: WebsocketClient) =>
       }
 
       const channel: Channel = { name: itemId, topic: APP_SETTINGS_TOPIC };
-      const appSettingsKey = buildAppSettingsKey(itemId);
+      const appSettingsKey = appSettingKeys.singleId(itemId);
 
       const handler = (event: AppSettingEvent): void => {
         if (event.kind === AppEventKinds.AppSettings) {

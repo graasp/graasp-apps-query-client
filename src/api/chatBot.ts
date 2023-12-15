@@ -1,6 +1,6 @@
 import { ChatBotMessage } from '@graasp/sdk';
 
-import { ApiData, ChatBotCompletion } from 'src/types';
+import { ApiData, ChatBotCompletion } from 'types';
 
 import configureAxios from './axios';
 import { buildPostChatBotRoute } from './routes';

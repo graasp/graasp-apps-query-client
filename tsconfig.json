@@ -17,7 +17,7 @@
     "skipLibCheck": true,
     "esModuleInterop": true,
     "declarationMap": true,
-    "baseUrl": ".",
+    "baseUrl": "src",
     "types": ["vite/client", "jest", "node"]
   },
   "include": ["src"],

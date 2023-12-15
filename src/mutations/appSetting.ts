@@ -3,7 +3,7 @@ import { AppSetting } from '@graasp/sdk';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import * as Api from '../api';
-import { buildAppSettingsKey } from '../config/keys';
+import { appSettingKeys } from '../config/keys';
 import { getApiHost, getData, getDataOrThrow } from '../config/utils';
 import {
   deleteAppSettingRoutine,
@@ -26,25 +26,14 @@ export default (queryConfig: QueryClientConfig) => {
       },
       {
         onSuccess: (newAppSetting: AppSetting) => {
-          const { itemId } = getData(queryClient);
-          const key = buildAppSettingsKey(itemId);
-          const prevData = queryClient.getQueryData<AppSetting[]>(key);
-          const newData: AppSetting = newAppSetting;
-          if (!prevData) {
-            // we need to wrap the created AppSetting in an array because the cache key will receive all the settings but the post call only return the current posted data
-            queryClient.setQueryData<AppSetting[]>(key, [newData]);
-          } else if (!prevData.some((a) => a.id === newData.id)) {
-            queryClient.setQueryData(key, [...(prevData ?? []), newData]);
-          }
-          queryConfig?.notifier?.({ type: postAppSettingRoutine.SUCCESS, payload: newData });
+          queryConfig?.notifier?.({ type: postAppSettingRoutine.SUCCESS, payload: newAppSetting });
         },
         onError: (error: Error) => {
           queryConfig?.notifier?.({ type: postAppSettingRoutine.FAILURE, payload: { error } });
         },
         onSettled: () => {
           if (!enableWebsocket) {
-            const { itemId } = getData(queryClient);
-            queryClient.invalidateQueries(buildAppSettingsKey(itemId));
+            queryClient.invalidateQueries(appSettingKeys.single());
           }
         },
       },
@@ -63,12 +52,12 @@ export default (queryConfig: QueryClientConfig) => {
         onMutate: async (payload) => {
           let context;
           const { itemId } = getData(queryClient);
-          const prevData = queryClient.getQueryData<AppSetting[]>(buildAppSettingsKey(itemId));
+          const prevData = queryClient.getQueryData<AppSetting[]>(appSettingKeys.singleId(itemId));
           if (itemId && prevData) {
             const newData = prevData.map((appData) =>
               appData.id === payload.id ? { ...appData, ...payload } : appData,
             );
-            queryClient.setQueryData(buildAppSettingsKey(itemId), newData);
+            queryClient.setQueryData(appSettingKeys.singleId(itemId), newData);
             context = prevData;
           }
           return context;
@@ -81,16 +70,15 @@ export default (queryConfig: QueryClientConfig) => {
 
           if (prevData) {
             const { itemId } = getData(queryClient);
-            const data = queryClient.getQueryData<AppSetting[]>(buildAppSettingsKey(itemId));
+            const data = queryClient.getQueryData<AppSetting[]>(appSettingKeys.singleId(itemId));
             if (itemId && data) {
-              queryClient.setQueryData(buildAppSettingsKey(itemId), prevData);
+              queryClient.setQueryData(appSettingKeys.singleId(itemId), prevData);
             }
           }
         },
         onSettled: () => {
           if (!enableWebsocket) {
-            const data = getData(queryClient);
-            queryClient.invalidateQueries(buildAppSettingsKey(data?.itemId));
+            queryClient.invalidateQueries(appSettingKeys.single());
           }
         },
       },
@@ -108,10 +96,10 @@ export default (queryConfig: QueryClientConfig) => {
       {
         onMutate: async (payload) => {
           const { itemId } = getDataOrThrow(queryClient);
-          const prevData = queryClient.getQueryData<AppSetting[]>(buildAppSettingsKey(itemId));
+          const prevData = queryClient.getQueryData<AppSetting[]>(appSettingKeys.singleId(itemId));
           if (prevData && itemId) {
             queryClient.setQueryData(
-              buildAppSettingsKey(itemId),
+              appSettingKeys.singleId(itemId),
               prevData?.filter(({ id: appDataId }) => appDataId !== payload.id),
             );
           }
@@ -125,9 +113,9 @@ export default (queryConfig: QueryClientConfig) => {
 
           if (prevData) {
             const { itemId } = getData(queryClient);
-            const data = queryClient.getQueryData<AppSetting[]>(buildAppSettingsKey(itemId));
+            const data = queryClient.getQueryData<AppSetting[]>(appSettingKeys.singleId(itemId));
             if (itemId && data) {
-              queryClient.setQueryData(buildAppSettingsKey(itemId), prevData);
+              queryClient.setQueryData(appSettingKeys.singleId(itemId), prevData);
             }
           }
         },
@@ -135,7 +123,7 @@ export default (queryConfig: QueryClientConfig) => {
           if (!enableWebsocket) {
             const { itemId } = getData(queryClient);
             if (itemId) {
-              queryClient.invalidateQueries(buildAppSettingsKey(itemId));
+              queryClient.invalidateQueries(appSettingKeys.single());
             }
           }
         },
@@ -168,7 +156,7 @@ export default (queryConfig: QueryClientConfig) => {
         onSettled: () => {
           const { itemId } = getData(queryClient);
           if (itemId) {
-            queryClient.invalidateQueries(buildAppSettingsKey(itemId));
+            queryClient.invalidateQueries(appSettingKeys.single());
           }
         },
       },

@@ -1,15 +1,21 @@
 import { UUID } from '@graasp/sdk';
 
+const APP_SETTING_KEY = 'app-setting';
 export const buildAppDataKey = (id?: UUID) => ['app-data', id] as const;
 export const buildAppActionsKey = (id?: UUID) => ['app-action', id] as const;
-export const buildAppSettingsKey = (id?: UUID, filters?: { [key: string]: unknown }) =>
-  ['app-setting', id, filters] as const;
+export const appSettingKeys = {
+  all: [APP_SETTING_KEY] as const,
+  single: () => [...appSettingKeys.all, 'single'] as const,
+  singleId: (id?: UUID, filters?: { [key: string]: unknown }) =>
+    [...appSettingKeys.single(), id, filters] as const,
+  fileContent: () => [...appSettingKeys.all, 'file-content'] as const,
+  fileContentId: (id?: UUID) => [...appSettingKeys.fileContent(), id] as const,
+};
+
 export const buildAppContextKey = (id?: UUID) => ['context', id] as const;
 export const AUTH_TOKEN_KEY = ['AUTH_TOKEN_KEY'];
 export const LOCAL_CONTEXT_KEY = ['LOCAL_CONTEXT_KEY'];
 export const buildFileContentKey = (id?: UUID) => ['app-data', 'files', 'content', id] as const;
-export const buildAppSettingFileContentKey = (id?: UUID) =>
-  ['app-setting', 'files', 'content', id] as const;
 
 export const buildPostMessageKeys = (itemId: UUID) =>
   ({
@@ -26,5 +32,5 @@ export const QUERY_KEYS = {
   buildAppDataKey,
   buildAppContextKey,
   buildAppActionsKey,
-  buildAppSettingsKey,
+  appSettingKeys,
 };
