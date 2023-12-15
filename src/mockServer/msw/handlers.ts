@@ -351,7 +351,7 @@ export const buildMSWMocks = (
     //       Chatbot
     // *************************
     // /app-items/:itemId/chat-bot
-    rest.get(`${apiHost}/${buildPostChatBotRoute(':itemId')}`, async (_req, res, ctx) =>
+    rest.post(`${apiHost}/${buildPostChatBotRoute(':itemId')}`, async (_req, res, ctx) =>
       res(
         ctx.status(200),
         ctx.json({ completion: 'biiip boop I am a chatbot', model: 'fake-gpt' }),
