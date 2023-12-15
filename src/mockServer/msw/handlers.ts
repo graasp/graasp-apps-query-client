@@ -30,6 +30,7 @@ const {
   buildPatchAppSettingRoute,
   buildPostAppActionRoute,
   buildPostAppSettingRoute,
+  buildPostChatBotRoute,
 } = API_ROUTES;
 
 const getMemberIdFromToken = (bearer: string | null): string => {
@@ -345,6 +346,17 @@ export const buildMSWMocks = (
 
       return res(ctx.status(200), ctx.json(value));
     }),
+
+    // *************************
+    //       Chatbot
+    // *************************
+    // /app-items/:itemId/chat-bot
+    rest.get(`${apiHost}/${buildPostChatBotRoute(':itemId')}`, async (_req, res, ctx) =>
+      res(
+        ctx.status(200),
+        ctx.json({ completion: 'biiip boop I am a chatbot', model: 'fake-gpt' }),
+      ),
+    ),
 
     // plumbing
     rest.delete('/__mocks/reset', (_req, res, ctx) => {
