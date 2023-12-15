@@ -26,10 +26,12 @@ export default (
       filters?: { type: string },
       options?: {
         refetchInterval?: number;
+        enabled?: boolean;
         getUpdates?: boolean;
       },
     ) => {
       const refetchInterval = options?.refetchInterval ?? false;
+      const enabled = options?.enabled ?? true;
       const getUpdates = options?.getUpdates ?? true;
       const queryClient = useQueryClient();
 
@@ -47,6 +49,7 @@ export default (
           return Api.getAppData<DataType>({ itemId, token, apiHost, filters });
         },
         ...defaultOptions,
+        enabled,
         refetchInterval,
       });
     },
