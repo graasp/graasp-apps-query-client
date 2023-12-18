@@ -32,7 +32,9 @@ export default (queryConfig: QueryClientConfig) => {
           queryConfig?.notifier?.({ type: postAppSettingRoutine.FAILURE, payload: { error } });
         },
         onSettled: () => {
+          // only invalidate when websockets are disabled (ws update the cache when they are enabled)
           if (!enableWebsocket) {
+            // invalidate all appSettings queries that depend on a single id
             queryClient.invalidateQueries(appSettingKeys.single());
           }
         },
@@ -133,8 +135,8 @@ export default (queryConfig: QueryClientConfig) => {
 
   // this mutation is used for its callback and invalidate the keys
   /**
-   * @param {UUID} id parent item id wher the file is uploaded in
-   * @param {error} [error] error occured during the file uploading
+   * @param {UUID} id parent item id where the file is uploaded in
+   * @param {error} [error] error occurred during the file uploading
    */
   const useUploadAppSettingFile = () => {
     const queryClient = useQueryClient();

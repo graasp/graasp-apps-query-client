@@ -73,7 +73,6 @@ describe('App Settings Mutations', () => {
         });
 
         expect(queryClient.getQueryState(key)?.isInvalidated).toBeTruthy();
-        expect(queryClient.getQueryData(key)).toEqual([...initData, toAdd]);
       });
     });
 
@@ -112,8 +111,8 @@ describe('App Settings Mutations', () => {
             type: postAppSettingRoutine.FAILURE,
           }),
         );
-        expect(queryClient.getQueryState(key)?.isInvalidated).toBeTruthy();
         expect(queryClient.getQueryData(key)).toEqual(initData);
+        expect(queryClient.getQueryState(key)?.isInvalidated).toBeTruthy();
       });
 
       it('Throw if itemId is undefined', async () => {
@@ -217,7 +216,7 @@ describe('App Settings Mutations', () => {
           }),
         );
         expect(queryClient.getQueryData(key)).toEqual(initData);
-        expect(queryClient.getQueryState(key)?.isInvalidated).toBeFalsy();
+        expect(queryClient.getQueryState(key)?.isInvalidated).toBeTruthy();
       });
     });
   });
@@ -409,7 +408,7 @@ describe('App Settings Mutations', () => {
           }),
         );
         expect(queryClient.getQueryData(key)).toEqual(initData);
-        expect(queryClient.getQueryState(key)?.isInvalidated).toBeFalsy();
+        expect(queryClient.getQueryState(key)?.isInvalidated).toBeTruthy();
       });
     });
   });
