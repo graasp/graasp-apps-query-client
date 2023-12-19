@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.4.0](https://github.com/graasp/graasp-apps-query-client/compare/v3.3.0...v3.4.0) (2023-12-19)
+
+
+### Features
+
+* add name to query param for setting ([#223](https://github.com/graasp/graasp-apps-query-client/issues/223)) ([483e37c](https://github.com/graasp/graasp-apps-query-client/commit/483e37c415534cb50f5a1374cba7de8a0f5dbc59))
+
+
+### Bug Fixes
+
+* **deps:** update mui (non-major) to v5.15.1 ([#221](https://github.com/graasp/graasp-apps-query-client/issues/221)) ([d543368](https://github.com/graasp/graasp-apps-query-client/commit/d543368f84a80d86ad2b24dae393bc1cc255bd52))
+* do not stringify app messages (resizing bug) ([483e37c](https://github.com/graasp/graasp-apps-query-client/commit/483e37c415534cb50f5a1374cba7de8a0f5dbc59))
+
 ## [3.3.0](https://github.com/graasp/graasp-apps-query-client/compare/v3.2.1...v3.3.0) (2023-12-08)
 
 
