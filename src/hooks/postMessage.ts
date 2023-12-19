@@ -79,6 +79,7 @@ class CommunicationChannel {
     if (this.isMobile) {
       window.parent.postMessage(JSON.stringify(data));
     } else {
+      console.debug('this.messagePort is', this.messagePort);
       this.messagePort?.postMessage(JSON.stringify(data));
     }
   }
@@ -302,6 +303,8 @@ const configurePostMessageHooks = (queryConfig: QueryClientConfig) => {
     useEffect(() => {
       if (!queryConfig.isStandalone) {
         const sendHeight = (height: number): void => {
+          console.debug('[app-postMessage] Sending height', height);
+          console.debug('communication channel is', communicationChannel);
           communicationChannel?.postMessage(
             JSON.stringify({
               type: POST_MESSAGE_KEYS.POST_AUTO_RESIZE,
