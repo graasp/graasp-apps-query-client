@@ -35,7 +35,7 @@ export default (queryConfig: QueryClientConfig) => {
           // only invalidate when websockets are disabled (ws update the cache when they are enabled)
           if (!enableWebsocket) {
             // invalidate all appSettings queries that depend on a single id
-            queryClient.invalidateQueries(appSettingKeys.single());
+            queryClient.invalidateQueries(appSettingKeys.allSingles());
           }
         },
       },
@@ -54,12 +54,12 @@ export default (queryConfig: QueryClientConfig) => {
         onMutate: async (payload) => {
           let context;
           const { itemId } = getData(queryClient);
-          const prevData = queryClient.getQueryData<AppSetting[]>(appSettingKeys.singleId(itemId));
+          const prevData = queryClient.getQueryData<AppSetting[]>(appSettingKeys.single(itemId));
           if (itemId && prevData) {
             const newData = prevData.map((appData) =>
               appData.id === payload.id ? { ...appData, ...payload } : appData,
             );
-            queryClient.setQueryData(appSettingKeys.singleId(itemId), newData);
+            queryClient.setQueryData(appSettingKeys.single(itemId), newData);
             context = prevData;
           }
           return context;
@@ -72,15 +72,15 @@ export default (queryConfig: QueryClientConfig) => {
 
           if (prevData) {
             const { itemId } = getData(queryClient);
-            const data = queryClient.getQueryData<AppSetting[]>(appSettingKeys.singleId(itemId));
+            const data = queryClient.getQueryData<AppSetting[]>(appSettingKeys.single(itemId));
             if (itemId && data) {
-              queryClient.setQueryData(appSettingKeys.singleId(itemId), prevData);
+              queryClient.setQueryData(appSettingKeys.single(itemId), prevData);
             }
           }
         },
         onSettled: () => {
           if (!enableWebsocket) {
-            queryClient.invalidateQueries(appSettingKeys.single());
+            queryClient.invalidateQueries(appSettingKeys.allSingles());
           }
         },
       },
@@ -98,10 +98,10 @@ export default (queryConfig: QueryClientConfig) => {
       {
         onMutate: async (payload) => {
           const { itemId } = getDataOrThrow(queryClient);
-          const prevData = queryClient.getQueryData<AppSetting[]>(appSettingKeys.singleId(itemId));
+          const prevData = queryClient.getQueryData<AppSetting[]>(appSettingKeys.single(itemId));
           if (prevData && itemId) {
             queryClient.setQueryData(
-              appSettingKeys.singleId(itemId),
+              appSettingKeys.single(itemId),
               prevData?.filter(({ id: appDataId }) => appDataId !== payload.id),
             );
           }
@@ -115,9 +115,9 @@ export default (queryConfig: QueryClientConfig) => {
 
           if (prevData) {
             const { itemId } = getData(queryClient);
-            const data = queryClient.getQueryData<AppSetting[]>(appSettingKeys.singleId(itemId));
+            const data = queryClient.getQueryData<AppSetting[]>(appSettingKeys.single(itemId));
             if (itemId && data) {
-              queryClient.setQueryData(appSettingKeys.singleId(itemId), prevData);
+              queryClient.setQueryData(appSettingKeys.single(itemId), prevData);
             }
           }
         },
@@ -125,7 +125,7 @@ export default (queryConfig: QueryClientConfig) => {
           if (!enableWebsocket) {
             const { itemId } = getData(queryClient);
             if (itemId) {
-              queryClient.invalidateQueries(appSettingKeys.single());
+              queryClient.invalidateQueries(appSettingKeys.allSingles());
             }
           }
         },
@@ -158,7 +158,7 @@ export default (queryConfig: QueryClientConfig) => {
         onSettled: () => {
           const { itemId } = getData(queryClient);
           if (itemId) {
-            queryClient.invalidateQueries(appSettingKeys.single());
+            queryClient.invalidateQueries(appSettingKeys.allSingles());
           }
         },
       },

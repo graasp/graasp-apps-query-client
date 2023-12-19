@@ -3,7 +3,7 @@ import { PermissionLevel } from '@graasp/sdk';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 
 import * as Api from '../api';
-import { buildAppActionsKey } from '../config/keys';
+import { appActionKeys } from '../config/keys';
 import { getApiHost, getData, getDataOrThrow, getPermissionLevel } from '../config/utils';
 import { QueryClientConfig } from '../types';
 import { configureWsAppActionsHooks } from '../ws/hooks/app';
@@ -32,7 +32,7 @@ export default (queryConfig: QueryClientConfig, websocketClient?: WebsocketClien
       useAppActionsUpdates(enableWs && permissionLevel === PermissionLevel.Admin ? itemId : null);
 
       return useQuery({
-        queryKey: buildAppActionsKey(itemId),
+        queryKey: appActionKeys.single(itemId),
         queryFn: () => {
           const { token } = getDataOrThrow(queryClient);
 

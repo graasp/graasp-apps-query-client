@@ -11,7 +11,7 @@ import {
 } from '../../../test/constants';
 import { getHandlerByChannel, mockWsHook, setUpWsTest } from '../../../test/wsUtils';
 import { APP_ACTIONS_TOPIC, APP_DATA_TOPIC, APP_SETTINGS_TOPIC } from '../../config/constants';
-import { appSettingKeys, buildAppActionsKey, buildAppDataKey } from '../../config/keys';
+import { appActionKeys, appDataKeys, appSettingKeys } from '../../config/keys';
 import {
   AppActionEvent,
   AppDataEvent,
@@ -39,7 +39,7 @@ describe('Websockets App Hooks', () => {
   describe('useAppDataUpdates', () => {
     const appDataArray = FIXTURE_APP_DATA;
     const itemId = FIXTURE_CONTEXT.id;
-    const appDataKey = buildAppDataKey(itemId);
+    const appDataKey = appDataKeys.single(itemId);
     const channel = { name: itemId, topic: APP_DATA_TOPIC };
     const hook = () => hooks.useAppDataUpdates(itemId);
 
@@ -142,7 +142,7 @@ describe('Websockets App Hooks', () => {
   describe('useAppActionsUpdates', () => {
     const appActionsArray = FIXTURE_APP_ACTIONS;
     const itemId = FIXTURE_CONTEXT.id;
-    const appActionsKey = buildAppActionsKey(itemId);
+    const appActionsKey = appActionKeys.single(itemId);
     const channel = { name: itemId, topic: APP_ACTIONS_TOPIC };
     const hook = () => hooks.useAppActionsUpdates(itemId);
 
@@ -179,7 +179,7 @@ describe('Websockets App Hooks', () => {
   describe('useAppSettingsUpdates', () => {
     const appSettingsArray = FIXTURE_APP_SETTINGS;
     const itemId = FIXTURE_CONTEXT.id;
-    const appSettingsKey = appSettingKeys.singleId(itemId);
+    const appSettingsKey = appSettingKeys.single(itemId);
     const channel = { name: itemId, topic: APP_SETTINGS_TOPIC };
     const hook = () => hooks.useAppSettingsUpdates(itemId);
 

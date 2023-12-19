@@ -3,7 +3,7 @@ import { AppAction } from '@graasp/sdk';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import * as Api from '../api';
-import { buildAppActionsKey } from '../config/keys';
+import { appActionKeys } from '../config/keys';
 import { getApiHost, getData, getDataOrThrow } from '../config/utils';
 import { postAppActionRoutine } from '../routines';
 import { QueryClientConfig } from '../types';
@@ -22,7 +22,7 @@ export default (queryConfig: QueryClientConfig) => {
       {
         onSuccess: (newAppAction: AppAction) => {
           const { itemId } = getData(queryClient);
-          const key = buildAppActionsKey(itemId);
+          const key = appActionKeys.single(itemId);
           const prevData = queryClient.getQueryData<AppAction[]>(key);
           const newData: AppAction = newAppAction;
           // check that the websocket event has not already been received and therefore the data were added
@@ -38,8 +38,7 @@ export default (queryConfig: QueryClientConfig) => {
         },
         onSettled: () => {
           if (!enableWebsocket) {
-            const { itemId } = getData(queryClient);
-            queryClient.invalidateQueries(buildAppActionsKey(itemId));
+            queryClient.invalidateQueries(appActionKeys.allSingles());
           }
         },
       },

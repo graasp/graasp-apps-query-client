@@ -29,7 +29,7 @@ describe('App Settings Hooks', () => {
   });
 
   describe('useAppSettings', () => {
-    const key = appSettingKeys.singleId(itemId);
+    const key = appSettingKeys.single(itemId);
     const route = `/${buildGetAppSettingsRoute(itemId)}`;
     const hook = () => hooks.useAppSettings();
 
@@ -115,7 +115,7 @@ describe('App Settings Hooks', () => {
     const id = 'some-id';
     const route = `/${buildDownloadAppSettingFileRoute(id)}`;
     const hook = () => hooks.useAppSettingFile({ appSettingId: id });
-    const key = appSettingKeys.fileContentId(id);
+    const key = appSettingKeys.fileContent(id);
 
     it('Receive file content', async () => {
       const endpoints = [

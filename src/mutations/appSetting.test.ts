@@ -35,7 +35,7 @@ describe('App Settings Mutations', () => {
 
   describe('usePostAppSetting', () => {
     const itemId = v4();
-    const key = appSettingKeys.singleId(itemId);
+    const key = appSettingKeys.single(itemId);
     const toAdd = buildAppSetting();
     const initData = FIXTURE_APP_SETTINGS;
     const route = `/${buildPostAppSettingRoute({ itemId })}`;
@@ -225,7 +225,7 @@ describe('App Settings Mutations', () => {
     const initData = FIXTURE_APP_SETTINGS;
     const itemId = v4();
     const appDataId = initData[0]?.id ?? v4();
-    const key = appSettingKeys.singleId(itemId);
+    const key = appSettingKeys.single(itemId);
     const toPatch = buildAppSetting({ id: appDataId, data: { new: 'data' } });
     const updatedData = [toPatch, ...initData.slice(1)];
     const route = `/${buildPatchAppSettingRoute({ id: toPatch.id, itemId })}`;
@@ -338,7 +338,7 @@ describe('App Settings Mutations', () => {
           }),
         );
         expect(queryClient.getQueryData(key)).toEqual(initData);
-        // since the itemid is not defined, we do not check data for its key
+        // since the itemId is not defined, we do not check data for its key
       });
 
       it('Throw if memberId is undefined', async () => {
@@ -415,7 +415,7 @@ describe('App Settings Mutations', () => {
 
   describe('useDeleteAppSetting', () => {
     const itemId = v4();
-    const key = appSettingKeys.singleId(itemId);
+    const key = appSettingKeys.single(itemId);
     const toDelete = FIXTURE_APP_SETTINGS[0];
     const route = `/${buildDeleteAppSettingRoute({ itemId, id: toDelete.id })}`;
     const mutation = mutations.useDeleteAppSetting;
@@ -518,7 +518,7 @@ describe('App Settings Mutations', () => {
         });
 
         expect(queryClient.getQueryData(key)).toEqual(initData);
-        // since the itemid is not defined, we do not check data for its key
+        // since the itemId is not defined, we do not check data for its key
       });
 
       it('Throw if memberId is undefined', async () => {

@@ -2,7 +2,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 
 import * as Api from '../api';
 import { MissingFileIdError } from '../config/errors';
-import { buildAppDataKey, buildFileContentKey } from '../config/keys';
+import { appDataKeys } from '../config/keys';
 import { getApiHost, getData, getDataOrThrow } from '../config/utils';
 import { Data, QueryClientConfig } from '../types';
 import { configureWsAppDataHooks } from '../ws/hooks/app';
@@ -43,7 +43,7 @@ export default (
       useAppDataUpdates(enableWs ? itemId : null);
 
       return useQuery({
-        queryKey: buildAppDataKey(itemId),
+        queryKey: appDataKeys.single(itemId),
         queryFn: () => {
           const { token } = getDataOrThrow(queryClient);
           return Api.getAppData<DataType>({ itemId, token, apiHost, filters });
@@ -62,7 +62,7 @@ export default (
       const apiHost = getApiHost(queryClient);
 
       return useQuery({
-        queryKey: buildFileContentKey(payload?.fileId),
+        queryKey: appDataKeys.fileContent(payload?.fileId),
         queryFn: () => {
           const { token } = getDataOrThrow(queryClient);
 

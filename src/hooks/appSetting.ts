@@ -32,7 +32,7 @@ export default (queryConfig: QueryClientConfig, websocketClient?: WebsocketClien
       useAppSettingsUpdates(enableWs ? itemId : null);
 
       return useQuery({
-        queryKey: appSettingKeys.singleId(itemId, filters),
+        queryKey: appSettingKeys.single(itemId, filters),
         queryFn: () => {
           const { token: localToken, itemId: localItemId } = getDataOrThrow(queryClient, {
             shouldMemberExist: false,
@@ -60,7 +60,7 @@ export default (queryConfig: QueryClientConfig, websocketClient?: WebsocketClien
       const { token } = getData(queryClient, { shouldMemberExist: false });
 
       return useQuery({
-        queryKey: appSettingKeys.fileContentId(payload?.appSettingId),
+        queryKey: appSettingKeys.fileContent(payload?.appSettingId),
         queryFn: (): Promise<Blob> => {
           const { token: localToken } = getDataOrThrow(queryClient, {
             shouldMemberExist: false,
