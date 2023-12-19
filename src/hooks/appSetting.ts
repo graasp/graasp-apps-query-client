@@ -2,9 +2,9 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 
 import * as Api from '../api';
 import { MissingFileIdError } from '../config/errors';
-import { buildAppSettingFileContentKey, buildAppSettingsKey } from '../config/keys';
+import { appSettingKeys } from '../config/keys';
 import { getApiHost, getData, getDataOrThrow } from '../config/utils';
-import { QueryClientConfig } from '../types';
+import { Data, QueryClientConfig } from '../types';
 import { configureWsAppSettingHooks } from '../ws/hooks/app';
 import { WebsocketClient } from '../ws/ws-client';
 
@@ -18,7 +18,10 @@ export default (queryConfig: QueryClientConfig, websocketClient?: WebsocketClien
   };
   const { useAppSettingsUpdates } = configureWsAppSettingHooks(websocketClient);
   return {
-    useAppSettings: (options?: { getUpdates: boolean }) => {
+    useAppSettings: <DataType extends Data = Data>(
+      filters?: { name: string },
+      options?: { getUpdates: boolean },
+    ) => {
       const getUpdates = options?.getUpdates ?? true;
       const queryClient = useQueryClient();
       const apiHost = getApiHost(queryClient);
@@ -29,16 +32,17 @@ export default (queryConfig: QueryClientConfig, websocketClient?: WebsocketClien
       useAppSettingsUpdates(enableWs ? itemId : null);
 
       return useQuery({
-        queryKey: buildAppSettingsKey(itemId),
+        queryKey: appSettingKeys.single(itemId, filters),
         queryFn: () => {
           const { token: localToken, itemId: localItemId } = getDataOrThrow(queryClient, {
             shouldMemberExist: false,
           });
 
-          return Api.getAppSettings({
+          return Api.getAppSettings<DataType>({
             itemId: localItemId,
             token: localToken,
             apiHost,
+            filters,
           });
         },
         ...defaultOptions,
@@ -56,7 +60,7 @@ export default (queryConfig: QueryClientConfig, websocketClient?: WebsocketClien
       const { token } = getData(queryClient, { shouldMemberExist: false });
 
       return useQuery({
-        queryKey: buildAppSettingFileContentKey(payload?.appSettingId),
+        queryKey: appSettingKeys.fileContent(payload?.appSettingId),
         queryFn: (): Promise<Blob> => {
           const { token: localToken } = getDataOrThrow(queryClient, {
             shouldMemberExist: false,

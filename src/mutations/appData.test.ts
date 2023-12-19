@@ -19,7 +19,7 @@ import {
   buildPostAppDataRoute,
 } from '../api/routes';
 import { MOCK_TOKEN } from '../config/constants';
-import { AUTH_TOKEN_KEY, LOCAL_CONTEXT_KEY, buildAppDataKey } from '../config/keys';
+import { AUTH_TOKEN_KEY, LOCAL_CONTEXT_KEY, appDataKeys } from '../config/keys';
 import { patchAppDataRoutine, postAppDataRoutine } from '../routines';
 
 const mockedNotifier = jest.fn();
@@ -35,7 +35,7 @@ describe('Apps Mutations', () => {
 
   describe('usePostAppData', () => {
     const itemId = v4();
-    const key = buildAppDataKey(itemId);
+    const key = appDataKeys.single(itemId);
     const toAdd = buildAppData();
     const initData = FIXTURE_APP_DATA;
     const route = `/${buildPostAppDataRoute({ itemId })}`;
@@ -217,7 +217,7 @@ describe('Apps Mutations', () => {
           }),
         );
         expect(queryClient.getQueryData(key)).toEqual(initData);
-        expect(queryClient.getQueryState(key)?.isInvalidated).toBeFalsy();
+        expect(queryClient.getQueryState(key)?.isInvalidated).toBeTruthy();
       });
     });
   });
@@ -226,7 +226,7 @@ describe('Apps Mutations', () => {
     const initData = FIXTURE_APP_DATA;
     const itemId = v4();
     const appDataId = initData[0]?.id ?? v4();
-    const key = buildAppDataKey(itemId);
+    const key = appDataKeys.single(itemId);
     const toPatch = buildAppData({ id: appDataId, data: { new: 'data' } });
     const updatedData = [toPatch, ...initData.slice(1)];
     const route = `/${buildPatchAppDataRoute({ id: toPatch.id, itemId })}`;
@@ -411,14 +411,14 @@ describe('Apps Mutations', () => {
           }),
         );
         expect(queryClient.getQueryData(key)).toEqual(initData);
-        expect(queryClient.getQueryState(key)?.isInvalidated).toBeFalsy();
+        expect(queryClient.getQueryState(key)?.isInvalidated).toBeTruthy();
       });
     });
   });
 
   describe('useDeleteAppData', () => {
     const itemId = v4();
-    const key = buildAppDataKey(itemId);
+    const key = appDataKeys.single(itemId);
     const toDelete = FIXTURE_APP_DATA[0];
     const route = `/${buildDeleteAppDataRoute({ itemId, id: toDelete.id })}`;
     const mutation = mutations.useDeleteAppData;

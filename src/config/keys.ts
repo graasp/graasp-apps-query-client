@@ -1,14 +1,37 @@
 import { UUID } from '@graasp/sdk';
 
-export const buildAppDataKey = (id?: UUID) => ['app-data', id] as const;
-export const buildAppActionsKey = (id?: UUID) => ['app-action', id] as const;
-export const buildAppSettingsKey = (id?: UUID) => ['app-setting', id] as const;
-export const buildAppContextKey = (id?: UUID) => ['context', id] as const;
+const APP_SETTING_KEY = 'app-setting';
+const APP_DATA_KEY = 'app-setting';
+const APP_ACTION_KEY = 'app-action';
+
+export const appSettingKeys = {
+  all: [APP_SETTING_KEY] as const,
+  allSingles: () => [...appSettingKeys.all, 'single'] as const,
+  single: (id?: UUID, filters?: { [key: string]: unknown }) =>
+    [...appSettingKeys.allSingles(), id, filters] as const,
+  allFileContents: () => [...appSettingKeys.all, 'file-content'] as const,
+  fileContent: (id?: UUID) => [...appSettingKeys.allFileContents(), id] as const,
+};
+
+export const appDataKeys = {
+  all: [APP_DATA_KEY] as const,
+  allSingles: () => [...appDataKeys.all, 'single'] as const,
+  single: (id?: UUID, filters?: { [key: string]: unknown }) =>
+    [...appDataKeys.allSingles(), id, filters] as const,
+  allFileContents: () => [...appDataKeys.all, 'file-content'] as const,
+  fileContent: (id?: UUID) => [...appDataKeys.allFileContents(), id] as const,
+};
+
+export const appActionKeys = {
+  all: [APP_ACTION_KEY] as const,
+  allSingles: () => [...appActionKeys.all, 'single'] as const,
+  single: (id?: UUID) => [...appActionKeys.allSingles(), id] as const,
+};
+
 export const AUTH_TOKEN_KEY = ['AUTH_TOKEN_KEY'];
 export const LOCAL_CONTEXT_KEY = ['LOCAL_CONTEXT_KEY'];
-export const buildFileContentKey = (id?: UUID) => ['app-data', 'files', 'content', id] as const;
-export const buildAppSettingFileContentKey = (id?: UUID) =>
-  ['app-setting', 'files', 'content', id] as const;
+
+export const buildAppContextKey = (id?: UUID) => ['context', id] as const;
 
 export const buildPostMessageKeys = (itemId: UUID) =>
   ({
@@ -22,8 +45,8 @@ export const buildPostMessageKeys = (itemId: UUID) =>
   }) as const;
 
 export const QUERY_KEYS = {
-  buildAppDataKey,
   buildAppContextKey,
-  buildAppActionsKey,
-  buildAppSettingsKey,
+  appSettingKeys,
+  appDataKeys,
+  appActionKeys,
 };

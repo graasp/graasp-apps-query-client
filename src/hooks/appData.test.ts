@@ -11,12 +11,7 @@ import {
 import { Endpoint, mockHook, setUpTest } from '../../test/utils';
 import { buildDownloadAppDataFileRoute, buildGetAppDataRoute } from '../api/routes';
 import { MOCK_TOKEN } from '../config/constants';
-import {
-  AUTH_TOKEN_KEY,
-  LOCAL_CONTEXT_KEY,
-  buildAppDataKey,
-  buildFileContentKey,
-} from '../config/keys';
+import { AUTH_TOKEN_KEY, LOCAL_CONTEXT_KEY, appDataKeys } from '../config/keys';
 import { MissingApiHostError } from '../config/utils';
 
 const { hooks, wrapper, queryClient } = setUpTest();
@@ -34,7 +29,7 @@ describe('App Data Hooks', () => {
   });
 
   describe('useAppData', () => {
-    const key = buildAppDataKey(itemId);
+    const key = appDataKeys.single(itemId);
     const route = `/${buildGetAppDataRoute(itemId)}`;
     const hook = () => hooks.useAppData();
 
@@ -125,7 +120,7 @@ describe('App Data Hooks', () => {
     const id = 'some-id';
     const route = `/${buildDownloadAppDataFileRoute(id)}`;
     const hook = () => hooks.useAppDataFile({ fileId: id });
-    const key = buildFileContentKey(id);
+    const key = appDataKeys.fileContent(id);
 
     it('Receive file content', async () => {
       const endpoints = [

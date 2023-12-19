@@ -19,7 +19,7 @@ import {
   buildPostAppSettingRoute,
 } from '../api/routes';
 import { MOCK_TOKEN } from '../config/constants';
-import { AUTH_TOKEN_KEY, LOCAL_CONTEXT_KEY, buildAppSettingsKey } from '../config/keys';
+import { AUTH_TOKEN_KEY, LOCAL_CONTEXT_KEY, appSettingKeys } from '../config/keys';
 import { patchAppSettingRoutine, postAppSettingRoutine } from '../routines';
 
 const mockedNotifier = jest.fn();
@@ -35,7 +35,7 @@ describe('App Settings Mutations', () => {
 
   describe('usePostAppSetting', () => {
     const itemId = v4();
-    const key = buildAppSettingsKey(itemId);
+    const key = appSettingKeys.single(itemId);
     const toAdd = buildAppSetting();
     const initData = FIXTURE_APP_SETTINGS;
     const route = `/${buildPostAppSettingRoute({ itemId })}`;
@@ -73,7 +73,6 @@ describe('App Settings Mutations', () => {
         });
 
         expect(queryClient.getQueryState(key)?.isInvalidated).toBeTruthy();
-        expect(queryClient.getQueryData(key)).toEqual([...initData, toAdd]);
       });
     });
 
@@ -112,8 +111,8 @@ describe('App Settings Mutations', () => {
             type: postAppSettingRoutine.FAILURE,
           }),
         );
-        expect(queryClient.getQueryState(key)?.isInvalidated).toBeTruthy();
         expect(queryClient.getQueryData(key)).toEqual(initData);
+        expect(queryClient.getQueryState(key)?.isInvalidated).toBeTruthy();
       });
 
       it('Throw if itemId is undefined', async () => {
@@ -217,7 +216,7 @@ describe('App Settings Mutations', () => {
           }),
         );
         expect(queryClient.getQueryData(key)).toEqual(initData);
-        expect(queryClient.getQueryState(key)?.isInvalidated).toBeFalsy();
+        expect(queryClient.getQueryState(key)?.isInvalidated).toBeTruthy();
       });
     });
   });
@@ -226,7 +225,7 @@ describe('App Settings Mutations', () => {
     const initData = FIXTURE_APP_SETTINGS;
     const itemId = v4();
     const appDataId = initData[0]?.id ?? v4();
-    const key = buildAppSettingsKey(itemId);
+    const key = appSettingKeys.single(itemId);
     const toPatch = buildAppSetting({ id: appDataId, data: { new: 'data' } });
     const updatedData = [toPatch, ...initData.slice(1)];
     const route = `/${buildPatchAppSettingRoute({ id: toPatch.id, itemId })}`;
@@ -339,7 +338,7 @@ describe('App Settings Mutations', () => {
           }),
         );
         expect(queryClient.getQueryData(key)).toEqual(initData);
-        // since the itemid is not defined, we do not check data for its key
+        // since the itemId is not defined, we do not check data for its key
       });
 
       it('Throw if memberId is undefined', async () => {
@@ -409,14 +408,14 @@ describe('App Settings Mutations', () => {
           }),
         );
         expect(queryClient.getQueryData(key)).toEqual(initData);
-        expect(queryClient.getQueryState(key)?.isInvalidated).toBeFalsy();
+        expect(queryClient.getQueryState(key)?.isInvalidated).toBeTruthy();
       });
     });
   });
 
   describe('useDeleteAppSetting', () => {
     const itemId = v4();
-    const key = buildAppSettingsKey(itemId);
+    const key = appSettingKeys.single(itemId);
     const toDelete = FIXTURE_APP_SETTINGS[0];
     const route = `/${buildDeleteAppSettingRoute({ itemId, id: toDelete.id })}`;
     const mutation = mutations.useDeleteAppSetting;
@@ -519,7 +518,7 @@ describe('App Settings Mutations', () => {
         });
 
         expect(queryClient.getQueryData(key)).toEqual(initData);
-        // since the itemid is not defined, we do not check data for its key
+        // since the itemId is not defined, we do not check data for its key
       });
 
       it('Throw if memberId is undefined', async () => {

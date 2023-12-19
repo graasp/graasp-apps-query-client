@@ -153,10 +153,12 @@ export const mockMirageServer = ({
     },
     routes() {
       // app data
-      this.get(
-        `/${buildGetAppDataRoute(currentItem.id)}`,
-        (schema) => schema.all('appDataResource') ?? [],
-      );
+      this.get(`/${buildGetAppDataRoute(currentItem.id)}`, (schema, request) => {
+        const dataType = new URL(request.url).searchParams.get('type');
+        return (
+          schema.all('appDataResource').filter((x) => (dataType ? x.type === dataType : true)) ?? []
+        );
+      });
       this.post(`/${buildPostAppDataRoute({ itemId: currentItem.id })}`, (schema, request) => {
         if (!currentMember) {
           return new Response(401, {}, { errors: ['user not authenticated'] });
@@ -232,10 +234,13 @@ export const mockMirageServer = ({
       });
 
       // app settings
-      this.get(
-        `/${buildGetAppSettingsRoute(currentItem.id)}`,
-        (schema) => schema.all('appSetting') ?? [],
-      );
+      this.get(`/${buildGetAppSettingsRoute(currentItem.id)}`, (schema, request) => {
+        const settingName = new URL(request.url).searchParams.get('name');
+        return (
+          schema.all('appSetting').filter((x) => (settingName ? x.name === settingName : true)) ??
+          []
+        );
+      });
 
       this.post(`/${buildPostAppSettingRoute({ itemId: currentItem.id })}`, (schema, request) => {
         if (!currentMember) {

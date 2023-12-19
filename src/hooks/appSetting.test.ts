@@ -11,12 +11,7 @@ import {
 import { Endpoint, mockHook, setUpTest } from '../../test/utils';
 import { buildDownloadAppSettingFileRoute, buildGetAppSettingsRoute } from '../api/routes';
 import { MOCK_TOKEN } from '../config/constants';
-import {
-  AUTH_TOKEN_KEY,
-  LOCAL_CONTEXT_KEY,
-  buildAppSettingFileContentKey,
-  buildAppSettingsKey,
-} from '../config/keys';
+import { AUTH_TOKEN_KEY, LOCAL_CONTEXT_KEY, appSettingKeys } from '../config/keys';
 import { MissingApiHostError } from '../config/utils';
 
 const { hooks, wrapper, queryClient } = setUpTest();
@@ -34,7 +29,7 @@ describe('App Settings Hooks', () => {
   });
 
   describe('useAppSettings', () => {
-    const key = buildAppSettingsKey(itemId);
+    const key = appSettingKeys.single(itemId);
     const route = `/${buildGetAppSettingsRoute(itemId)}`;
     const hook = () => hooks.useAppSettings();
 
@@ -120,7 +115,7 @@ describe('App Settings Hooks', () => {
     const id = 'some-id';
     const route = `/${buildDownloadAppSettingFileRoute(id)}`;
     const hook = () => hooks.useAppSettingFile({ appSettingId: id });
-    const key = buildAppSettingFileContentKey(id);
+    const key = appSettingKeys.fileContent(id);
 
     it('Receive file content', async () => {
       const endpoints = [
