@@ -305,12 +305,10 @@ const configurePostMessageHooks = (queryConfig: QueryClientConfig) => {
         const sendHeight = (height: number): void => {
           console.debug('[app-postMessage] Sending height', height);
           console.debug('communication channel is', communicationChannel);
-          communicationChannel?.postMessage(
-            JSON.stringify({
-              type: POST_MESSAGE_KEYS.POST_AUTO_RESIZE,
-              payload: height,
-            }),
-          );
+          communicationChannel?.postMessage({
+            type: POST_MESSAGE_KEYS.POST_AUTO_RESIZE,
+            payload: height,
+          });
         };
         if (!communicationChannel) {
           const error = new MissingMessageChannelPortError();
