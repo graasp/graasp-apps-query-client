@@ -1,5 +1,3 @@
-import { appendQueryParamToUrl } from '@graasp/sdk';
-
 export const APP_DATA_ENDPOINT = 'app-data';
 export const ITEMS_ROUTE = 'items';
 export const APP_ITEMS_ROUTE = 'app-items';

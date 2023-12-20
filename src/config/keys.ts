@@ -1,7 +1,7 @@
 import { UUID } from '@graasp/sdk';
 
 const APP_SETTING_KEY = 'app-setting';
-const APP_DATA_KEY = 'app-setting';
+const APP_DATA_KEY = 'app-data';
 const APP_ACTION_KEY = 'app-action';
 
 export const appSettingKeys = {
