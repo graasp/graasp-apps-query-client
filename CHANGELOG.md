@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.4.0](https://github.com/graasp/graasp-apps-query-client/compare/v3.3.0...v3.4.0) (2023-12-22)
+
+
+### Features
+
+* add name to query param for setting ([#223](https://github.com/graasp/graasp-apps-query-client/issues/223)) ([483e37c](https://github.com/graasp/graasp-apps-query-client/commit/483e37c415534cb50f5a1374cba7de8a0f5dbc59))
+
+
+### Bug Fixes
+
+* app data key ([#230](https://github.com/graasp/graasp-apps-query-client/issues/230)) ([fbbea51](https://github.com/graasp/graasp-apps-query-client/commit/fbbea51afe4c23681770679cba7eb4d359139428))
+* **deps:** update dependency @mui/material to v5.14.20 ([#211](https://github.com/graasp/graasp-apps-query-client/issues/211)) ([2831d97](https://github.com/graasp/graasp-apps-query-client/commit/2831d97cfea8b504f0cb821e22cadb722248a069))
+* **deps:** update mui (non-major) to v5.15.1 ([#221](https://github.com/graasp/graasp-apps-query-client/issues/221)) ([d543368](https://github.com/graasp/graasp-apps-query-client/commit/d543368f84a80d86ad2b24dae393bc1cc255bd52))
+* **deps:** update mui (non-major) to v5.15.1 ([#226](https://github.com/graasp/graasp-apps-query-client/issues/226)) ([594863c](https://github.com/graasp/graasp-apps-query-client/commit/594863c23cf7dc36aabd0175526f13dbc155a901))
+* do not stringify app messages (resizing bug) ([483e37c](https://github.com/graasp/graasp-apps-query-client/commit/483e37c415534cb50f5a1374cba7de8a0f5dbc59))
+
 ## [3.4.0](https://github.com/graasp/graasp-apps-query-client/compare/v3.3.0...v3.4.0) (2023-12-19)
 
 
