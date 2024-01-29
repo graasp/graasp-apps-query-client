@@ -1237,6 +1237,7 @@ __metadata:
     "@emotion/react": "npm:11.11.3"
     "@emotion/styled": "npm:11.11.0"
     "@graasp/sdk": "npm:3.6.0"
+    "@graasp/sdk": "npm:3.6.0"
     "@mui/icons-material": "npm:5.15.5"
     "@mui/material": "npm:5.15.5"
     "@tanstack/react-query": "npm:4.36.1"
