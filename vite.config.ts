@@ -19,12 +19,13 @@ export default defineConfig({
     },
     rollupOptions: {
       external: [
-        'react',
-        'react-dom',
-        '@mui/material',
         '@mui/icons-material',
-        '@tanstack/react-query',
+        '@mui/material',
         '@tanstack/react-query-devtools',
+        '@tanstack/react-query',
+        'date-fns',
+        'react-dom',
+        'react',
       ],
       output: {
         globals: {
