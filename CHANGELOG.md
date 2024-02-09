@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.4.2](https://github.com/graasp/graasp-apps-query-client/compare/v3.4.1...v3.4.2) (2024-02-09)
+
+
+### Bug Fixes
+
+* add date-fns dep ([2016434](https://github.com/graasp/graasp-apps-query-client/commit/201643456b37c7e10ab1f18907f99f7ff52869c1))
+* **deps:** update dependency @emotion/react to v11.11.3 ([cfda6b8](https://github.com/graasp/graasp-apps-query-client/commit/cfda6b84dd535e74a36b1f328f3064cc41c82893))
+* **deps:** update dependency @graasp/sdk to v3.5.0 ([#243](https://github.com/graasp/graasp-apps-query-client/issues/243)) ([7accd45](https://github.com/graasp/graasp-apps-query-client/commit/7accd45d5fdf99380eef01d21dd26b45852c32d1))
+* **deps:** update dependency @graasp/sdk to v3.6.0 ([2016434](https://github.com/graasp/graasp-apps-query-client/commit/201643456b37c7e10ab1f18907f99f7ff52869c1))
+* **deps:** update dependency @graasp/sdk to v3.6.0 ([2016434](https://github.com/graasp/graasp-apps-query-client/commit/201643456b37c7e10ab1f18907f99f7ff52869c1))
+* **deps:** update dependency @graasp/sdk to v3.6.0 ([#254](https://github.com/graasp/graasp-apps-query-client/issues/254)) ([2016434](https://github.com/graasp/graasp-apps-query-client/commit/201643456b37c7e10ab1f18907f99f7ff52869c1))
+* **deps:** update mui (non-major) to v5.15.4 ([de33eb4](https://github.com/graasp/graasp-apps-query-client/commit/de33eb4b0cf30e08bc4bd271bb21455da478e808))
+* **deps:** update mui (non-major) to v5.15.5 ([283f585](https://github.com/graasp/graasp-apps-query-client/commit/283f5854121dbff260e20d0d494efa6b55d38ef5))
+
 ## [3.4.1](https://github.com/graasp/graasp-apps-query-client/compare/v3.3.0...v3.4.1) (2023-12-22)
 
 
