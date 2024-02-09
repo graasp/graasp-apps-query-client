@@ -1237,7 +1237,6 @@ __metadata:
     "@emotion/react": "npm:11.11.3"
     "@emotion/styled": "npm:11.11.0"
     "@graasp/sdk": "npm:3.6.0"
-    "@graasp/sdk": "npm:3.6.0"
     "@mui/icons-material": "npm:5.15.5"
     "@mui/material": "npm:5.15.5"
     "@tanstack/react-query": "npm:4.36.1"
@@ -1249,8 +1248,6 @@ __metadata:
     "@types/react": "npm:18.2.48"
     "@types/react-dom": "npm:18.2.18"
     "@types/uuid": "npm:9.0.7"
-    "@typescript-eslint/eslint-plugin": "npm:6.20.0"
-    "@typescript-eslint/parser": "npm:6.20.0"
     "@typescript-eslint/eslint-plugin": "npm:6.20.0"
     "@typescript-eslint/parser": "npm:6.20.0"
     "@vitejs/plugin-react": "npm:4.2.1"
@@ -4068,7 +4065,7 @@ __metadata:
 "date-fns@npm:3.3.1":
   version: 3.3.1
   resolution: "date-fns@npm:3.3.1"
-  checksum: 98231936765dfb6fc6897676319b500a06a39f051b2c3ecbdd541a07ce9b1344b770277b8bfb1049fb7a2f70bf365ac8e6f1e2bb452b10e1a8101d518ca7f95d
+  checksum: 10/98231936765dfb6fc6897676319b500a06a39f051b2c3ecbdd541a07ce9b1344b770277b8bfb1049fb7a2f70bf365ac8e6f1e2bb452b10e1a8101d518ca7f95d
   languageName: node
   linkType: hard
 
