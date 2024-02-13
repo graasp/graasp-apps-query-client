@@ -6,6 +6,8 @@ import { UseQueryResult } from '@tanstack/react-query';
 
 import { LocalContext } from '../types';
 import { AutoResizer } from './AutoResizer';
+import { Button, Stack, Typography } from '@mui/material';
+import { Refresh } from '@mui/icons-material';
 
 export const defaultContextValue: LocalContext = {
   apiHost: '',
@@ -43,8 +45,14 @@ const WithLocalContext = ({
   useAutoResize,
   children,
 }: WithLocalContextProps): JSX.Element => {
-  const itemId = new URL(window.location.toString()).searchParams.get('itemId') || '';
-  const { data: context, isLoading, isError, error } = useGetLocalContext(itemId, defaultValue);
+  const itemId =
+    new URL(window.location.toString()).searchParams.get('itemId') || '';
+  const {
+    data: context,
+    isLoading,
+    isError,
+    error,
+  } = useGetLocalContext(itemId, defaultValue);
   if (context) {
     return (
       <LocalContextContext.Provider value={context}>
@@ -71,10 +79,16 @@ const WithLocalContext = ({
     }
   }
   return (
-    <div>
-      Could not get `LocalContext`. Check if you have mocking enabled, or if you are running in an
-      iframe, that the parent window replies to your messages
-    </div>
+    <Stack direction="column" alignItems="center" spacing={2}>
+      <Typography maxWidth="50ch">
+        Could not get `LocalContext`. Check if you have mocking enabled, or if
+        you are running in an iframe, that the parent window replies to your
+        messages.
+      </Typography>
+      <Button onClick={() => window.location.reload()} startIcon={<Refresh />}>
+        Refresh
+      </Button>
+    </Stack>
   );
 };
 
@@ -106,10 +120,22 @@ const withContext = <P extends object>(
   props: Props,
 ): ((childProps: P) => JSX.Element) => {
   const WithContextComponent = (childProps: P): JSX.Element => {
-    const { LoadingComponent, defaultValue, useGetLocalContext, onError, useAutoResize } = props;
+    const {
+      LoadingComponent,
+      defaultValue,
+      useGetLocalContext,
+      onError,
+      useAutoResize,
+    } = props;
 
-    const itemId = new URL(window.location.toString()).searchParams.get('itemId') || '';
-    const { data: context, isLoading, isError, error } = useGetLocalContext(itemId, defaultValue);
+    const itemId =
+      new URL(window.location.toString()).searchParams.get('itemId') || '';
+    const {
+      data: context,
+      isLoading,
+      isError,
+      error,
+    } = useGetLocalContext(itemId, defaultValue);
     if (context) {
       const children = <Component {...childProps} />;
 
@@ -139,8 +165,9 @@ const withContext = <P extends object>(
     }
     return (
       <div>
-        Could not get `LocalContext`. Check if you have mocking enabled, or if you are running in an
-        iframe, that the parent window replies to your messages
+        Could not get `LocalContext`. Check if you have mocking enabled, or if
+        you are running in an iframe, that the parent window replies to your
+        messages
       </div>
     );
   };
