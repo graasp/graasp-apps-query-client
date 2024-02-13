@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.4.3](https://github.com/graasp/graasp-apps-query-client/compare/v3.4.2...v3.4.3) (2024-02-13)
+
+
+### Bug Fixes
+
+* allow reload of document  ([#261](https://github.com/graasp/graasp-apps-query-client/issues/261)) ([78d2574](https://github.com/graasp/graasp-apps-query-client/commit/78d2574e6cd88fe3406962aee083b0894439ac1d))
+
 ## [3.4.2](https://github.com/graasp/graasp-apps-query-client/compare/v3.4.1...v3.4.2) (2024-02-09)
 
 
