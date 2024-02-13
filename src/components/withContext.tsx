@@ -6,7 +6,8 @@ import { UseQueryResult } from '@tanstack/react-query';
 
 import { LocalContext } from '../types';
 import { AutoResizer } from './AutoResizer';
-import { Button } from '@mui/material';
+import { Button, Stack, Typography } from '@mui/material';
+import { Refresh } from '@mui/icons-material';
 
 export const defaultContextValue: LocalContext = {
   apiHost: '',
@@ -78,11 +79,16 @@ const WithLocalContext = ({
     }
   }
   return (
-    <div>
-      Could not get `LocalContext`. Check if you have mocking enabled, or if you
-      are running in an iframe, that the parent window replies to your messages.
-      <Button onClick={() => window.location.reload()}>Refresh</Button>
-    </div>
+    <Stack direction="column" alignItems="center" spacing={2}>
+      <Typography maxWidth="50ch">
+        Could not get `LocalContext`. Check if you have mocking enabled, or if
+        you are running in an iframe, that the parent window replies to your
+        messages.
+      </Typography>
+      <Button onClick={() => window.location.reload()} startIcon={<Refresh />}>
+        Refresh
+      </Button>
+    </Stack>
   );
 };
 
