@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.4.4](https://github.com/graasp/graasp-apps-query-client/compare/v3.4.3...v3.4.4) (2024-02-14)
+
+
+### Bug Fixes
+
+* **ws:** insert data without duplication ([#264](https://github.com/graasp/graasp-apps-query-client/issues/264)) ([9b02d93](https://github.com/graasp/graasp-apps-query-client/commit/9b02d934a0ae9605e7a18bfcf40aeb848766b046)), closes [#263](https://github.com/graasp/graasp-apps-query-client/issues/263)
+
 ## [3.4.3](https://github.com/graasp/graasp-apps-query-client/compare/v3.4.2...v3.4.3) (2024-02-13)
 
 
