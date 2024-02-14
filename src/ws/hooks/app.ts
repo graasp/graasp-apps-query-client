@@ -59,11 +59,8 @@ export const configureWsAppDataHooks = (websocketClient?: WebsocketClient) => ({
               if (appDataList) {
                 const appDataPatchedIndex = appDataList.findIndex((a) => a.id === newAppData.id);
                 if (appDataPatchedIndex >= 0) {
-                  queryClient.setQueryData(appDataKey, [
-                    ...appDataList.slice(0, appDataPatchedIndex),
-                    newAppData,
-                    ...appDataList.slice(appDataPatchedIndex, appDataList.length),
-                  ]);
+                  appDataList[appDataPatchedIndex] = newAppData;
+                  queryClient.setQueryData(appDataKey, [...appDataList]);
                 }
               }
               break;
@@ -187,11 +184,8 @@ export const configureWsAppSettingHooks = (websocketClient?: WebsocketClient) =>
                   (a) => a.id === newAppSetting.id,
                 );
                 if (appSettingPatchedIndex >= 0) {
-                  queryClient.setQueryData(appSettingsKey, [
-                    ...appSettingList.slice(0, appSettingPatchedIndex),
-                    newAppSetting,
-                    ...appSettingList.slice(appSettingPatchedIndex, appSettingList.length),
-                  ]);
+                  appSettingList[appSettingPatchedIndex] = newAppSetting;
+                  queryClient.setQueryData(appSettingsKey, [...appSettingList]);
                 }
               }
               break;

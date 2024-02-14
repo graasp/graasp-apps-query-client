@@ -1,4 +1,4 @@
-import { AppAction, AppData } from '@graasp/sdk';
+import { AppAction, AppData, AppSetting } from '@graasp/sdk';
 
 import {
   FIXTURE_APP_ACTIONS,
@@ -86,6 +86,10 @@ describe('Websockets App Hooks', () => {
       };
 
       getHandlerByChannel(handlers, channel)?.handler(appDataEvent);
+      expect(
+        queryClient.getQueryData<AppData[]>(appDataKey)?.filter((a) => a.id === newAppData.id)
+          .length,
+      ).toEqual(1);
       expect(
         queryClient.getQueryData<AppData[]>(appDataKey)?.find((a) => a.id === newAppData.id),
       ).toEqual(newAppData);
@@ -207,7 +211,9 @@ describe('Websockets App Hooks', () => {
       const h = getHandlerByChannel(handlers, channel);
       h?.handler(appDataEvent);
       expect(
-        queryClient.getQueryData<AppData[]>(appSettingsKey)?.find((a) => a.id === newAppSetting.id),
+        queryClient
+          .getQueryData<AppSetting[]>(appSettingsKey)
+          ?.find((a) => a.id === newAppSetting.id),
       ).toEqual(newAppSetting);
     });
 
@@ -226,8 +232,16 @@ describe('Websockets App Hooks', () => {
 
       getHandlerByChannel(handlers, channel)?.handler(appDataEvent);
 
+      // The app setting should be unique.
       expect(
-        queryClient.getQueryData<AppData[]>(appSettingsKey)?.find((a) => a.id === newAppSetting.id),
+        queryClient
+          .getQueryData<AppSetting[]>(appSettingsKey)
+          ?.filter((a) => a.id === newAppSetting.id).length,
+      ).toEqual(1);
+      expect(
+        queryClient
+          .getQueryData<AppSetting[]>(appSettingsKey)
+          ?.find((a) => a.id === newAppSetting.id),
       ).toEqual(newAppSetting);
     });
 
@@ -250,7 +264,9 @@ describe('Websockets App Hooks', () => {
       getHandlerByChannel(handlers, channel)?.handler(appDataEvent);
 
       expect(
-        queryClient.getQueryData<AppData[]>(appSettingsKey)?.find((a) => a.id === newAppSetting.id),
+        queryClient
+          .getQueryData<AppSetting[]>(appSettingsKey)
+          ?.find((a) => a.id === newAppSetting.id),
       ).toBeUndefined();
     });
   });
