@@ -6,7 +6,7 @@ import { useEffect } from 'react';
 
 import { AppAction, AppData, AppSetting, UUID } from '@graasp/sdk';
 
-import { useQueryClient } from '@tanstack/react-query';
+import { QueryKey, useQueryClient } from '@tanstack/react-query';
 
 import { APP_ACTIONS_TOPIC, APP_DATA_TOPIC, APP_SETTINGS_TOPIC } from '../../config/constants';
 import { appActionKeys, appDataKeys, appSettingKeys } from '../../config/keys';
@@ -26,6 +26,42 @@ import { Channel, WebsocketClient } from '../ws-client';
  */
 const useAppDataUpdates = (itemId?: UUID | null, websocketClient?: WebsocketClient) => {
   const queryClient = useQueryClient();
+
+  const handler = (event: AppDataEvent, appDataKey: QueryKey): void => {
+    if (event.kind === AppEventKinds.AppData) {
+      const appDataList = queryClient.getQueryData<AppData[]>(appDataKey);
+      const newAppData: AppData = event.appData;
+      switch (event.op) {
+        case AppOperations.POST: {
+          if (!appDataList?.some(({ id }) => id === newAppData.id))
+            queryClient.setQueryData(
+              appDataKey,
+              appDataList ? [...(appDataList ?? []), newAppData] : [newAppData],
+            );
+          break;
+        }
+        case AppOperations.PATCH: {
+          if (appDataList) {
+            const newAppDataList = appDataList.filter((a) => a.id !== newAppData.id);
+            newAppDataList.push(newAppData);
+            queryClient.setQueryData(appDataKey, newAppDataList);
+          }
+          break;
+        }
+        case AppOperations.DELETE: {
+          queryClient.setQueryData(
+            appDataKey,
+            appDataList?.filter(({ id }) => id !== newAppData.id),
+          );
+          break;
+        }
+        default:
+          console.warn('unhandled event for useAppDataUpdates');
+          break;
+      }
+    }
+  };
+
   useEffect(() => {
     if (!websocketClient) {
       // do nothing
@@ -40,44 +76,12 @@ const useAppDataUpdates = (itemId?: UUID | null, websocketClient?: WebsocketClie
     const channel: Channel = { name: itemId, topic: APP_DATA_TOPIC };
     const appDataKey = appDataKeys.single(itemId);
 
-    const handler = (event: AppDataEvent): void => {
-      if (event.kind === AppEventKinds.AppData) {
-        const appDataList = queryClient.getQueryData<AppData[]>(appDataKey);
-        const newAppData: AppData = event.appData;
-        switch (event.op) {
-          case AppOperations.POST: {
-            if (!appDataList?.some(({ id }) => id === newAppData.id))
-              queryClient.setQueryData(
-                appDataKey,
-                appDataList ? [...(appDataList ?? []), newAppData] : [newAppData],
-              );
-            break;
-          }
-          case AppOperations.PATCH: {
-            if (appDataList) {
-              const newAppDataList = appDataList.filter((a) => a.id !== newAppData.id);
-              newAppDataList.push(newAppData);
-              queryClient.setQueryData(appDataKey, newAppDataList);
-            }
-            break;
-          }
-          case AppOperations.DELETE: {
-            queryClient.setQueryData(
-              appDataKey,
-              appDataList?.filter(({ id }) => id !== newAppData.id),
-            );
-            break;
-          }
-          default:
-            console.warn('unhandled event for useAppDataUpdates');
-            break;
-        }
-      }
-    };
-    websocketClient.subscribe(channel, handler);
+    const configuredHandler = (event: AppDataEvent) => handler(event, appDataKey);
+
+    websocketClient.subscribe(channel, configuredHandler);
 
     return () => {
-      websocketClient.unsubscribe(channel, handler);
+      websocketClient.unsubscribe(channel, configuredHandler);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [itemId]);
