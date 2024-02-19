@@ -6,7 +6,7 @@ import { useEffect } from 'react';
 
 import { AppAction, AppData, AppSetting, UUID } from '@graasp/sdk';
 
-import { useQueryClient } from '@tanstack/react-query';
+import { QueryKey, useQueryClient } from '@tanstack/react-query';
 
 import { APP_ACTIONS_TOPIC, APP_DATA_TOPIC, APP_SETTINGS_TOPIC } from '../../config/constants';
 import { appActionKeys, appDataKeys, appSettingKeys } from '../../config/keys';
@@ -19,73 +19,77 @@ import {
 } from '../types';
 import { Channel, WebsocketClient } from '../ws-client';
 
+/**
+ * React hook to subscribe to the updates of the app data for
+ * the given item ID.
+ * @param itemId The ID of the item of which to observe updates
+ */
+const useAppDataUpdates = (itemId?: UUID | null, websocketClient?: WebsocketClient) => {
+  const queryClient = useQueryClient();
+
+  const handler = (event: AppDataEvent, appDataKey: QueryKey): void => {
+    if (event.kind === AppEventKinds.AppData) {
+      const appDataList = queryClient.getQueryData<AppData[]>(appDataKey);
+      const newAppData: AppData = event.appData;
+      switch (event.op) {
+        case AppOperations.POST: {
+          if (!appDataList?.some(({ id }) => id === newAppData.id))
+            queryClient.setQueryData(
+              appDataKey,
+              appDataList ? [...(appDataList ?? []), newAppData] : [newAppData],
+            );
+          break;
+        }
+        case AppOperations.PATCH: {
+          if (appDataList) {
+            const newAppDataList = appDataList.filter((a) => a.id !== newAppData.id);
+            newAppDataList.push(newAppData);
+            queryClient.setQueryData(appDataKey, newAppDataList);
+          }
+          break;
+        }
+        case AppOperations.DELETE: {
+          queryClient.setQueryData(
+            appDataKey,
+            appDataList?.filter(({ id }) => id !== newAppData.id),
+          );
+          break;
+        }
+        default:
+          console.warn('unhandled event for useAppDataUpdates');
+          break;
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (!websocketClient) {
+      // do nothing
+      console.warn('No websocket client was provided.');
+      return () => undefined;
+    }
+    if (!itemId) {
+      // do nothing
+      return () => undefined;
+    }
+
+    const channel: Channel = { name: itemId, topic: APP_DATA_TOPIC };
+    const appDataKey = appDataKeys.single(itemId);
+
+    const configuredHandler = (event: AppDataEvent) => handler(event, appDataKey);
+
+    websocketClient.subscribe(channel, configuredHandler);
+
+    return () => {
+      websocketClient.unsubscribe(channel, configuredHandler);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [itemId]);
+};
+
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export const configureWsAppDataHooks = (websocketClient?: WebsocketClient) => ({
-  /**
-   * React hook to subscribe to the updates of the app data for
-   * the given item ID.
-   * @param itemId The ID of the item of which to observe updates
-   */
-  useAppDataUpdates: (itemId?: UUID | null) => {
-    const queryClient = useQueryClient();
-    useEffect(() => {
-      if (!websocketClient) {
-        // do nothing
-        console.warn('No websocket client was provided.');
-        return () => undefined;
-      }
-      if (!itemId) {
-        // do nothing
-        return () => undefined;
-      }
-
-      const channel: Channel = { name: itemId, topic: APP_DATA_TOPIC };
-      const appDataKey = appDataKeys.single(itemId);
-
-      const handler = (event: AppDataEvent): void => {
-        if (event.kind === AppEventKinds.AppData) {
-          const appDataList = queryClient.getQueryData<AppData[]>(appDataKey);
-          const newAppData: AppData = event.appData;
-          switch (event.op) {
-            case AppOperations.POST: {
-              if (!appDataList?.some(({ id }) => id === newAppData.id))
-                queryClient.setQueryData(
-                  appDataKey,
-                  appDataList ? [...(appDataList ?? []), newAppData] : [newAppData],
-                );
-              break;
-            }
-            case AppOperations.PATCH: {
-              if (appDataList) {
-                const appDataPatchedIndex = appDataList.findIndex((a) => a.id === newAppData.id);
-                if (appDataPatchedIndex >= 0) {
-                  appDataList[appDataPatchedIndex] = newAppData;
-                  queryClient.setQueryData(appDataKey, [...appDataList]);
-                }
-              }
-              break;
-            }
-            case AppOperations.DELETE: {
-              queryClient.setQueryData(
-                appDataKey,
-                appDataList?.filter(({ id }) => id !== newAppData.id),
-              );
-              break;
-            }
-            default:
-              console.warn('unhandled event for useAppDataUpdates');
-              break;
-          }
-        }
-      };
-      websocketClient.subscribe(channel, handler);
-
-      return () => {
-        websocketClient.unsubscribe(channel, handler);
-      };
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [itemId]);
-  },
+  useAppDataUpdates: (itemId?: UUID | null) => useAppDataUpdates(itemId, websocketClient),
 });
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
@@ -180,13 +184,9 @@ export const configureWsAppSettingHooks = (websocketClient?: WebsocketClient) =>
             }
             case AppOperations.PATCH: {
               if (appSettingList) {
-                const appSettingPatchedIndex = appSettingList.findIndex(
-                  (a) => a.id === newAppSetting.id,
-                );
-                if (appSettingPatchedIndex >= 0) {
-                  appSettingList[appSettingPatchedIndex] = newAppSetting;
-                  queryClient.setQueryData(appSettingsKey, [...appSettingList]);
-                }
+                const newAppSettingList = appSettingList.filter((a) => a.id !== newAppSetting.id);
+                newAppSettingList.push(newAppSetting);
+                queryClient.setQueryData(appSettingsKey, newAppSettingList);
               }
               break;
             }
