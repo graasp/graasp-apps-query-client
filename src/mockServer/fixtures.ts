@@ -30,6 +30,7 @@ export const MOCK_SERVER_ITEM: AppItemType = {
       url: 'myappurl',
     },
   },
+  lang: 'en',
   type: ItemType.APP,
   createdAt: new Date().toISOString(),
   updatedAt: new Date().toISOString(),

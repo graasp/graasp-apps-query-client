@@ -5,6 +5,7 @@ import {
   AppSetting,
   CompleteMember,
   Context,
+  FolderItemFactory,
   FolderItemType,
   ItemType,
   MemberType,
@@ -72,18 +73,13 @@ export const APPS = [
   },
 ];
 
-export const MOCK_ITEM: FolderItemType = {
+export const MOCK_ITEM: FolderItemType = FolderItemFactory({
   description: '',
   type: ItemType.FOLDER,
   extra: { [ItemType.FOLDER]: { childrenOrder: [] } },
   id: '123',
-  name: '',
-  path: '',
-  createdAt: new Date().toISOString(),
-  updatedAt: new Date().toISOString(),
   creator: MEMBER_RESPONSE,
-  settings: {},
-};
+});
 
 export const buildAppData = ({ id = v4(), data = {} }: Partial<AppData> = {}): AppData => ({
   id,
