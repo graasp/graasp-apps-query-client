@@ -1187,10 +1187,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@faker-js/faker@npm:8.4.0":
-  version: 8.4.0
-  resolution: "@faker-js/faker@npm:8.4.0"
-  checksum: 10/f9253d0b4846ab0fd769cd78be88c4ea24741d9201cccb0038b3627ac21041a2aef150b0f843b2f63d5a056737bec28bcdf493e0b72201a892df4423be0dff79
+"@faker-js/faker@npm:8.4.1":
+  version: 8.4.1
+  resolution: "@faker-js/faker@npm:8.4.1"
+  checksum: 10/5983c2ea64f26055ad6648de748878e11ebe2fb751e3c7435ae141cdffabc2dccfe4c4f49da69a3d2add71e21b415c683ac5fba196fab0d5ed6779fbec436c80
   languageName: node
   linkType: hard
 
@@ -1240,7 +1240,7 @@ __metadata:
     "@commitlint/config-conventional": "npm:19.0.0"
     "@emotion/react": "npm:11.11.4"
     "@emotion/styled": "npm:11.11.0"
-    "@graasp/sdk": "npm:3.10.0"
+    "@graasp/sdk": "npm:4.0.1"
     "@mui/icons-material": "npm:5.15.11"
     "@mui/material": "npm:5.15.11"
     "@tanstack/react-query": "npm:4.36.1"
@@ -1298,17 +1298,17 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@graasp/sdk@npm:3.10.0":
-  version: 3.10.0
-  resolution: "@graasp/sdk@npm:3.10.0"
+"@graasp/sdk@npm:4.0.1":
+  version: 4.0.1
+  resolution: "@graasp/sdk@npm:4.0.1"
   dependencies:
-    "@faker-js/faker": "npm:8.4.0"
+    "@faker-js/faker": "npm:8.4.1"
     js-cookie: "npm:3.0.5"
     validator: "npm:13.11.0"
   peerDependencies:
     date-fns: ^3
     uuid: ^9
-  checksum: 10/4a2353869d4bdbcd5e9fac19cf11adf2a63a25864eedb8be938b788d3028844ebf28565d6164c84b7ff5b4da56e6821071d0623f4793c6ff590ae45866edd239
+  checksum: 10/6bd311228762e5c6e18e1585b5fbe72472add562a7025c9c5d55a980e0c2ff6c85e1e200e308d23a6c0a6e2c76ba84d5a64e848669cecc9cd210b95b579e596a
   languageName: node
   linkType: hard
 
