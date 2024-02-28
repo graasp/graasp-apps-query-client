@@ -15,7 +15,6 @@ import { API_HOST, MOCK_APP_ORIGIN, RequestMethods, WS_HOST } from './constants'
 
 type Args = { enableWebsocket?: boolean; notifier?: Notifier; GRAASP_APP_KEY?: string };
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export const setUpTest = (args?: Args) => {
   const {
     notifier = () => {
@@ -86,7 +85,7 @@ export const mockEndpoints = (endpoints: Endpoint[]): nock.Scope => {
   // we open to all hosts specially for redirection to aws (get file endpoints)
   const server = nock(/.*/);
   endpoints.forEach(({ route, method, statusCode, response, headers }) => {
-    server[(method || HttpMethod.GET).toLowerCase() as NockMethodType](route).reply(
+    server[(method ?? HttpMethod.Get).toLowerCase() as NockMethodType](route).reply(
       statusCode || StatusCodes.OK,
       response,
       headers,

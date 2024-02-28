@@ -41,7 +41,7 @@
   "dependencies": {
     "@emotion/react": "11.11.4",
     "@emotion/styled": "11.11.0",
-    "@graasp/sdk": "3.10.0",
+    "@graasp/sdk": "4.0.1",
     "@mui/icons-material": "5.15.11",
     "@mui/material": "5.15.11",
     "axios": "0.28.0",
@@ -52,8 +52,8 @@
     "uuid": "9.0.1"
   },
   "devDependencies": {
-    "@commitlint/cli": "19.0.2",
-    "@commitlint/config-conventional": "19.0.0",
+    "@commitlint/cli": "19.0.3",
+    "@commitlint/config-conventional": "19.0.3",
     "@tanstack/react-query": "4.36.1",
     "@tanstack/react-query-devtools": "4.36.1",
     "@testing-library/react": "14.2.1",
