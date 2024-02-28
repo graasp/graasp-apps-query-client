@@ -85,7 +85,7 @@ export const mockEndpoints = (endpoints: Endpoint[]): nock.Scope => {
   // we open to all hosts specially for redirection to aws (get file endpoints)
   const server = nock(/.*/);
   endpoints.forEach(({ route, method, statusCode, response, headers }) => {
-    server[(method || HttpMethod.Get).toLowerCase() as NockMethodType](route).reply(
+    server[(method ?? HttpMethod.Get).toLowerCase() as NockMethodType](route).reply(
       statusCode || StatusCodes.OK,
       response,
       headers,
