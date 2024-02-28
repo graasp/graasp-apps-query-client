@@ -41,7 +41,7 @@ const GraaspContextDevTool = ({ members, context, setContext }: Props): JSX.Elem
   const queryClient = useQueryClient();
 
   const handleResetDB = (): void => {
-    fetch('/__mocks/reset', { method: HttpMethod.DELETE });
+    fetch('/__mocks/reset', { method: HttpMethod.Delete });
   };
 
   const handleNotifyDBOfContext = <K extends keyof LocalContext>(
@@ -49,7 +49,7 @@ const GraaspContextDevTool = ({ members, context, setContext }: Props): JSX.Elem
     newValue: LocalContext[K],
   ): void => {
     fetch('/__mocks/context', {
-      method: HttpMethod.POST,
+      method: HttpMethod.Post,
       body: JSON.stringify({ ...context, [key]: newValue }),
       headers: [['authorization', token]],
     }).then(() => {
