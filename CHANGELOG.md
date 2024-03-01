@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.4.7](https://github.com/graasp/graasp-apps-query-client/compare/v3.4.6...v3.4.7) (2024-02-28)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @emotion/react to v11.11.4 ([#276](https://github.com/graasp/graasp-apps-query-client/issues/276)) ([3aae33f](https://github.com/graasp/graasp-apps-query-client/commit/3aae33f9b9be5684eca451cf918d9a222cc50e54))
+* **deps:** update dependency @graasp/sdk to v4 ([d55b531](https://github.com/graasp/graasp-apps-query-client/commit/d55b531d225c692292c3f13560f6988fb17b42d3))
+
 ## [3.4.6](https://github.com/graasp/graasp-apps-query-client/compare/v3.4.5...v3.4.6) (2024-02-26)
 
 
