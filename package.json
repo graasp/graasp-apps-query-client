@@ -1,6 +1,6 @@
 {
   "name": "@graasp/apps-query-client",
-  "version": "3.4.7",
+  "version": "3.4.8",
   "description": "Query client repository for Graasp apps",
   "main": "./dist/index.cjs.js",
   "module": "./dist/index.es.js",
@@ -41,7 +41,7 @@
   "dependencies": {
     "@emotion/react": "11.11.4",
     "@emotion/styled": "11.11.0",
-    "@graasp/sdk": "4.1.0",
+    "@graasp/sdk": "4.0.1",
     "@mui/icons-material": "5.15.11",
     "@mui/material": "5.15.11",
     "axios": "0.28.0",
