@@ -73,8 +73,8 @@ export type LocalContext = {
   permission: PermissionLevel;
 };
 
-export type AppContext = DiscriminatedItem & {
-  children: DiscriminatedItem[];
+export type AppContext = {
+  item: DiscriminatedItem;
   members: Member[];
 };
 

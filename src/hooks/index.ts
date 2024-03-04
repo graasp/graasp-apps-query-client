@@ -6,10 +6,12 @@ import configureAppDataHooks from './appData';
 import configureAppSettingHooks from './appSetting';
 import configurePostMessageHooks from './postMessage';
 
-export default (queryConfig: QueryClientConfig, websocketClient?: WebsocketClient) => ({
+const configHooks = (queryConfig: QueryClientConfig, websocketClient?: WebsocketClient) => ({
   ...configureAppsHooks(queryConfig),
   ...configureAppDataHooks(queryConfig, websocketClient),
   ...configurePostMessageHooks(queryConfig),
   ...configureAppSettingHooks(queryConfig, websocketClient),
   ...configureAppActionHooks(queryConfig, websocketClient),
 });
+
+export default configHooks;
