@@ -1266,7 +1266,7 @@ __metadata:
     "@vitejs/plugin-react": "npm:4.2.1"
     axios: "npm:0.28.0"
     date-fns: "npm:3.6.0"
-    dexie: "npm:3.2.7"
+    dexie: "npm:4.0.1"
     eslint: "npm:8.57.0"
     eslint-config-airbnb: "npm:19.0.4"
     eslint-config-airbnb-typescript: "npm:18.0.0"
@@ -4309,10 +4309,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dexie@npm:3.2.7":
-  version: 3.2.7
-  resolution: "dexie@npm:3.2.7"
-  checksum: 10/e70dae162b1589ff02b98810d1cdc157be0e0f66710be28ab2477db4ccd5cc7364f8c681e3f21883c3835ea800f8100ec975b015fa3ac6cdcb5686d187b31043
+"dexie@npm:4.0.1":
+  version: 4.0.1
+  resolution: "dexie@npm:4.0.1"
+  checksum: 10/c58760b3b0fd5d3781ccfa049fdb730958322c767f03598539e058307248845e846aa8aa9bcfc5279271a4e816d4eba6e049dcd883af2c2b7142cba1475958da
   languageName: node
   linkType: hard
 
