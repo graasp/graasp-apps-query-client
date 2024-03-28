@@ -44,7 +44,7 @@
     "@graasp/sdk": "4.4.0",
     "@mui/icons-material": "5.15.14",
     "@mui/material": "5.15.14",
-    "axios": "0.28.0",
+    "axios": "0.28.1",
     "dexie": "4.0.1",
     "http-status-codes": "2.3.0",
     "miragejs": "0.1.48",
