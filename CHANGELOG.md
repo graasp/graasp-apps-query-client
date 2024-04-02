@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.4.10](https://github.com/graasp/graasp-apps-query-client/compare/v3.4.9...v3.4.10) (2024-04-02)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @emotion/styled to v11.11.5 ([#311](https://github.com/graasp/graasp-apps-query-client/issues/311)) ([ff95899](https://github.com/graasp/graasp-apps-query-client/commit/ff95899105525602a595c7814b4479febcc79be5))
+* **deps:** update dependency @graasp/sdk to v4.4.0 ([#304](https://github.com/graasp/graasp-apps-query-client/issues/304)) ([ab85087](https://github.com/graasp/graasp-apps-query-client/commit/ab85087979d8123a9c1d5737255ee9d7a868d1b6))
+* **deps:** update dependency axios to v0.28.1 ([#308](https://github.com/graasp/graasp-apps-query-client/issues/308)) ([70ba6e5](https://github.com/graasp/graasp-apps-query-client/commit/70ba6e50ca13a11f0524510fb47e11ea94bfbfee))
+* **deps:** update dependency dexie to v4 ([#306](https://github.com/graasp/graasp-apps-query-client/issues/306)) ([2ba327e](https://github.com/graasp/graasp-apps-query-client/commit/2ba327e447e326aa747499b64e95d02864160bb4))
+
 ## [3.4.9](https://github.com/graasp/graasp-apps-query-client/compare/v3.4.8...v3.4.9) (2024-03-25)
 
 
