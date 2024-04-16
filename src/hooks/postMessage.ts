@@ -117,7 +117,13 @@ const configurePostMessageHooks = (queryConfig: QueryClientConfig) => {
       );
       return;
     }
-    window.parent.postMessage(JSON.stringify(data), '*');
+
+    // we try catch because apps in android apps don't support *
+    try {
+      window.parent.postMessage(JSON.stringify(data), '*');
+    } catch (e) {
+      window.parent.postMessage(JSON.stringify(data));
+    }
   };
 
   /**
