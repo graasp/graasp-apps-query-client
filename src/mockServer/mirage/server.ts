@@ -4,6 +4,7 @@ import {
   AppDataVisibility,
   AppSetting,
   CompleteMember,
+  MemberFactory,
   MemberType,
 } from '@graasp/sdk';
 
@@ -66,7 +67,7 @@ export const mockMirageServer = ({
   const currentMember: CompleteMember =
     currentMemberId === MOCK_SERVER_MEMBER.id
       ? MOCK_SERVER_MEMBER
-      : {
+      : MemberFactory({
           id: currentMemberId,
           name: 'current-member-name',
           email: 'memberId@email.com',
@@ -74,7 +75,7 @@ export const mockMirageServer = ({
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
           type: MemberType.Individual,
-        };
+        });
   const currentItem = items.find(({ id }) => id === currentItemId);
   if (!currentItem) {
     throw new Error('context.itemId does not have a corresponding item in mocked database');
@@ -128,6 +129,7 @@ export const mockMirageServer = ({
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
         type: MemberType.Individual,
+        enableSaveActions: true,
       }),
     },
 
