@@ -485,12 +485,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@commitlint/cli@npm:19.2.1":
-  version: 19.2.1
-  resolution: "@commitlint/cli@npm:19.2.1"
+"@commitlint/cli@npm:19.2.2":
+  version: 19.2.2
+  resolution: "@commitlint/cli@npm:19.2.2"
   dependencies:
     "@commitlint/format": "npm:^19.0.3"
-    "@commitlint/lint": "npm:^19.1.0"
+    "@commitlint/lint": "npm:^19.2.2"
     "@commitlint/load": "npm:^19.2.0"
     "@commitlint/read": "npm:^19.2.1"
     "@commitlint/types": "npm:^19.0.3"
@@ -498,7 +498,7 @@ __metadata:
     yargs: "npm:^17.0.0"
   bin:
     commitlint: cli.js
-  checksum: 10/6d3555039c96e21664d5159b06317558d31ca150f3326a2bd75aa82335032956c8f09481bf30b3aa3a2f8a2037b0a8e1947a787d57f4cb2007e3f69814e9c31f
+  checksum: 10/bff139177aecffe809ec8665a7ffd3f9acae144ec8634b6ed93802ae9a3333bc978f69ba26dacd2bbc0e06e3dada8ca49fe49bd5316c916e626f8df8dcc03dc9
   languageName: node
   linkType: hard
 
@@ -553,25 +553,25 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@commitlint/is-ignored@npm:^19.0.3":
-  version: 19.0.3
-  resolution: "@commitlint/is-ignored@npm:19.0.3"
+"@commitlint/is-ignored@npm:^19.2.2":
+  version: 19.2.2
+  resolution: "@commitlint/is-ignored@npm:19.2.2"
   dependencies:
     "@commitlint/types": "npm:^19.0.3"
     semver: "npm:^7.6.0"
-  checksum: 10/1a2fcd1dadb37334ed025a0f2bf07493a69d6c8afa126119f2b13f57f7a406babc99b5e8dbf5a624e810f30e4f7c612b64281b139cf61e7923fb3123a107c1bd
+  checksum: 10/f412734496aba808c8bcbddd59c615600d62447ad2b62049805a044b1f299ff6628e2c9ce5022e55848099edc2591f62a7780842d9dffcd60ab3889bc93fea62
   languageName: node
   linkType: hard
 
-"@commitlint/lint@npm:^19.1.0":
-  version: 19.1.0
-  resolution: "@commitlint/lint@npm:19.1.0"
+"@commitlint/lint@npm:^19.2.2":
+  version: 19.2.2
+  resolution: "@commitlint/lint@npm:19.2.2"
   dependencies:
-    "@commitlint/is-ignored": "npm:^19.0.3"
+    "@commitlint/is-ignored": "npm:^19.2.2"
     "@commitlint/parse": "npm:^19.0.3"
     "@commitlint/rules": "npm:^19.0.3"
     "@commitlint/types": "npm:^19.0.3"
-  checksum: 10/caeac7a989e186fb2e0fbd42ea6f32e3eff68525fbd8cd0a8c9bd242e038c3bfaac89c0da9c8f98dd07247b5656d6986163746eed225c3dd5374cd39cc7664a8
+  checksum: 10/9bf2ffa0f6cdde3d53d755b95ca717afd193f4560ae5bb0f5ffd7f1bbd571ddc99b27417733c70e1adbd74a5197e4525493b2dfc116680a939db7728fefa805c
   languageName: node
   linkType: hard
 
@@ -1258,21 +1258,21 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@graasp/apps-query-client@workspace:."
   dependencies:
-    "@commitlint/cli": "npm:19.2.1"
+    "@commitlint/cli": "npm:19.2.2"
     "@commitlint/config-conventional": "npm:19.2.2"
     "@emotion/react": "npm:11.11.4"
     "@emotion/styled": "npm:11.11.5"
-    "@graasp/sdk": "npm:4.5.0"
+    "@graasp/sdk": "npm:4.7.2"
     "@mui/icons-material": "npm:5.15.15"
     "@mui/material": "npm:5.15.15"
     "@tanstack/react-query": "npm:4.36.1"
     "@tanstack/react-query-devtools": "npm:4.36.1"
-    "@testing-library/react": "npm:15.0.0"
+    "@testing-library/react": "npm:15.0.2"
     "@trivago/prettier-plugin-sort-imports": "npm:4.3.0"
     "@types/jest": "npm:29.5.12"
     "@types/node": "npm:20.12.7"
-    "@types/react": "npm:18.2.75"
-    "@types/react-dom": "npm:18.2.24"
+    "@types/react": "npm:18.2.79"
+    "@types/react-dom": "npm:18.2.25"
     "@types/uuid": "npm:9.0.8"
     "@typescript-eslint/eslint-plugin": "npm:7.7.0"
     "@typescript-eslint/parser": "npm:7.7.0"
@@ -1305,9 +1305,9 @@ __metadata:
     ts-node: "npm:10.9.2"
     typescript: "npm:5.4.5"
     uuid: "npm:9.0.1"
-    vite: "npm:5.2.8"
+    vite: "npm:5.2.9"
     vite-plugin-checker: "npm:0.6.4"
-    vite-plugin-dts: "npm:3.8.1"
+    vite-plugin-dts: "npm:3.8.3"
     vitest: "npm:1.5.0"
   peerDependencies:
     "@mui/icons-material": ^5.15.5
@@ -1320,9 +1320,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@graasp/sdk@npm:4.5.0":
-  version: 4.5.0
-  resolution: "@graasp/sdk@npm:4.5.0"
+"@graasp/sdk@npm:4.7.2":
+  version: 4.7.2
+  resolution: "@graasp/sdk@npm:4.7.2"
   dependencies:
     "@faker-js/faker": "npm:8.4.1"
     js-cookie: "npm:3.0.5"
@@ -1330,7 +1330,7 @@ __metadata:
   peerDependencies:
     date-fns: ^3
     uuid: ^9
-  checksum: 10/835e7613126e3fb7e0d6175c4df30f75812b578ad7a5299d538c64259ee56aec2be4a0a967ebb88162d5ddd800fd999525db747d677b8b8daa6bd5b09e60d166
+  checksum: 10/f37de1eb4fb02fa748a00e630f8f133d937fd9eb0aa0016a6e071fa37a44d1599be61ff8754a03f77bb5996f9aebf8e6c969fdb52f4463111c71f6ce6d1fcb38
   languageName: node
   linkType: hard
 
@@ -2357,9 +2357,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@testing-library/react@npm:15.0.0":
-  version: 15.0.0
-  resolution: "@testing-library/react@npm:15.0.0"
+"@testing-library/react@npm:15.0.2":
+  version: 15.0.2
+  resolution: "@testing-library/react@npm:15.0.2"
   dependencies:
     "@babel/runtime": "npm:^7.12.5"
     "@testing-library/dom": "npm:^10.0.0"
@@ -2367,7 +2367,7 @@ __metadata:
   peerDependencies:
     react: ^18.0.0
     react-dom: ^18.0.0
-  checksum: 10/78217cb67c2e0fb72dc4f51d19a25fbc290f298f3ca73a517ceda67a352741405740e0daa9ba5d93e4496a8f51f1465774e84d2a828863133b539304e0759dad
+  checksum: 10/6327e465733cec9455792acee7781d1437f7494ddbb976ca72e07446daaf8e7fe5dadd27d05690f09e8d4adce651984ed9aeca4ede9b87bf69b172f450085ede
   languageName: node
   linkType: hard
 
@@ -2628,12 +2628,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-dom@npm:18.2.24":
-  version: 18.2.24
-  resolution: "@types/react-dom@npm:18.2.24"
+"@types/react-dom@npm:18.2.25":
+  version: 18.2.25
+  resolution: "@types/react-dom@npm:18.2.25"
   dependencies:
     "@types/react": "npm:*"
-  checksum: 10/bbd4005f2f65b7606505e9b8759b6e99e222d503602765594ea327893fb7061de8951279baef47a1932f04d94d1865daea05a32f9fcf6f9f1143dbabce5b33de
+  checksum: 10/0e45856a2fdbf09e74632b132b3af773c6b18fc2ab0bd04595c9f2bcc0bb04d5e732ac8156d145b712dedab7484a8fe9dce5cf720a5437b5d26099c7060c7ba4
   languageName: node
   linkType: hard
 
@@ -2666,13 +2666,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react@npm:18.2.75":
-  version: 18.2.75
-  resolution: "@types/react@npm:18.2.75"
+"@types/react@npm:18.2.79":
+  version: 18.2.79
+  resolution: "@types/react@npm:18.2.79"
   dependencies:
     "@types/prop-types": "npm:*"
     csstype: "npm:^3.0.2"
-  checksum: 10/d609cdc52d3c89871e0b1b0a77ed2d4077c1393709d0ac51a03b04c17704eb337484405aa646b193ac0c54f4fb286e311739b243ce50023ef8ba5bed422a0e8b
+  checksum: 10/2ef833e7d0a5c226beddbbe090811582371f6ae5e2f092a3d9f47cc6087c8bce0b96ee33e351de6d1d470f0a0ec5892d971933f841ef31538c1821681fc6569e
   languageName: node
   linkType: hard
 
@@ -10048,9 +10048,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vite-plugin-dts@npm:3.8.1":
-  version: 3.8.1
-  resolution: "vite-plugin-dts@npm:3.8.1"
+"vite-plugin-dts@npm:3.8.3":
+  version: 3.8.3
+  resolution: "vite-plugin-dts@npm:3.8.3"
   dependencies:
     "@microsoft/api-extractor": "npm:7.43.0"
     "@rollup/pluginutils": "npm:^5.1.0"
@@ -10065,13 +10065,13 @@ __metadata:
   peerDependenciesMeta:
     vite:
       optional: true
-  checksum: 10/47957d256e3866d7fb6c9e6f72bbdb1dd645e3598281fbf040692f88ff881d00ce5ae5848bd475c65fdc25c80c22687fdd6d6d0ea79506e9b073316794b6f5cd
+  checksum: 10/52c486044503daade3771bfd1d819bdfd6482ad05a89697399869128938b547b95638ca224d4443eb9a15e3f58f18f42fc534e435c4ea8e6748fddae56f0653d
   languageName: node
   linkType: hard
 
-"vite@npm:5.2.8":
-  version: 5.2.8
-  resolution: "vite@npm:5.2.8"
+"vite@npm:5.2.9":
+  version: 5.2.9
+  resolution: "vite@npm:5.2.9"
   dependencies:
     esbuild: "npm:^0.20.1"
     fsevents: "npm:~2.3.3"
@@ -10105,7 +10105,7 @@ __metadata:
       optional: true
   bin:
     vite: bin/vite.js
-  checksum: 10/caa40343c2c4e6d8e257fccb4c3029f62909c319a86063ce727ed550925c0a834460b0d1ca20c4d6c915f35302aa1052f6ec5193099a47ce21d74b9b817e69e1
+  checksum: 10/26342c8dde540e4161fdad2c9c8f2f0e23567f051c7a40abb8e4796d6c4292fbd118ab7a4ac252515e78c4f99525b557731e6117287b2bccde0ea61d73bcff27
   languageName: node
   linkType: hard
 

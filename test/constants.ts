@@ -8,6 +8,7 @@ import {
   FolderItemFactory,
   FolderItemType,
   ItemType,
+  MemberFactory,
   MemberType,
   PermissionLevel,
 } from '@graasp/sdk';
@@ -21,27 +22,21 @@ export const WS_HOST = 'ws://localhost:3000';
 export const DOMAIN = 'domain';
 export const UNAUTHORIZED_RESPONSE = { some: 'error' };
 
-export const MEMBER_RESPONSE: CompleteMember = {
-  id: '42',
+export const MEMBER_RESPONSE: CompleteMember = MemberFactory({
   name: 'username',
   type: MemberType.Individual,
   email: 'username@graasp.org',
   extra: {},
-  createdAt: new Date().toISOString(),
-  updatedAt: new Date().toISOString(),
-};
+});
 
 export const MEMBERS_RESPONSE: CompleteMember[] = [
   MEMBER_RESPONSE,
-  {
-    id: '421',
+  MemberFactory({
     name: 'username1',
     email: 'username1@graasp.org',
     type: MemberType.Individual,
     extra: {},
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-  },
+  }),
 ];
 
 export const OK_RESPONSE = {};
