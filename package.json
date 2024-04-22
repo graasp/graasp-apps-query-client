@@ -1,6 +1,6 @@
 {
   "name": "@graasp/apps-query-client",
-  "version": "3.4.11",
+  "version": "3.4.12",
   "description": "Query client repository for Graasp apps",
   "main": "./dist/index.cjs.js",
   "module": "./dist/index.es.js",
@@ -67,7 +67,7 @@
     "@typescript-eslint/parser": "7.7.0",
     "@vitejs/plugin-react": "4.2.1",
     "date-fns": "3.6.0",
-    "eslint": "8.57.0",
+    "eslint": "8.56.0",
     "eslint-config-airbnb": "19.0.4",
     "eslint-config-airbnb-typescript": "18.0.0",
     "eslint-config-prettier": "9.1.0",
