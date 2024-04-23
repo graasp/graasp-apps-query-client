@@ -1,4 +1,4 @@
-import { ChatBotMessage } from '@graasp/sdk';
+import { ChatBotMessage, GPTVersion } from '@graasp/sdk';
 
 import { ApiData, ChatBotCompletion } from 'types';
 
@@ -10,11 +10,16 @@ const axios = configureAxios();
 export const postChatBot = (
   args: ApiData & {
     body: ChatBotMessage[];
+    gptModelVersion?: GPTVersion;
   },
 ) => {
-  const { token, itemId, apiHost, body } = args;
+  const { token, itemId, apiHost, body, gptModelVersion } = args;
+  const url = new URL(buildPostChatBotRoute(itemId), apiHost);
+  if (gptModelVersion) {
+    url.searchParams.set('gptVersion', gptModelVersion);
+  }
   return axios
-    .post<ChatBotCompletion>(`${apiHost}/${buildPostChatBotRoute(itemId)}`, body, {
+    .post<ChatBotCompletion>(url.toString(), body, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

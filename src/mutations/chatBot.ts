@@ -1,4 +1,4 @@
-import { ChatBotMessage } from '@graasp/sdk';
+import { ChatBotMessage, GPTVersion } from '@graasp/sdk';
 
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
@@ -10,14 +10,14 @@ import { QueryClientConfig } from '../types';
 export default (queryConfig: QueryClientConfig) => {
   const { notifier } = queryConfig;
 
-  const usePostChatBot = () => {
+  const usePostChatBot = (gptModelVersion?: GPTVersion) => {
     const queryClient = useQueryClient();
     return useMutation(
       async (payload: ChatBotMessage[]) => {
         const apiHost = getApiHost(queryClient);
         const data = getDataOrThrow(queryClient);
 
-        return Api.postChatBot({ ...data, body: payload, apiHost });
+        return Api.postChatBot({ ...data, body: payload, apiHost, gptModelVersion });
       },
       {
         onError: (error: Error) => {
