@@ -1262,7 +1262,7 @@ __metadata:
     "@commitlint/config-conventional": "npm:19.2.2"
     "@emotion/react": "npm:11.11.4"
     "@emotion/styled": "npm:11.11.5"
-    "@graasp/sdk": "github:graasp/graasp-sdk#493-add-gpt-enum"
+    "@graasp/sdk": "npm:4.7.6"
     "@mui/icons-material": "npm:5.15.15"
     "@mui/material": "npm:5.15.15"
     "@tanstack/react-query": "npm:4.36.1"
@@ -1320,9 +1320,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@graasp/sdk@github:graasp/graasp-sdk#493-add-gpt-enum":
-  version: 4.7.5
-  resolution: "@graasp/sdk@https://github.com/graasp/graasp-sdk.git#commit=0e39fb2ecc2fa7ea5b30efc90426141e9c246159"
+"@graasp/sdk@npm:4.7.6":
+  version: 4.7.6
+  resolution: "@graasp/sdk@npm:4.7.6"
   dependencies:
     "@faker-js/faker": "npm:8.4.1"
     filesize: "npm:10.1.1"
@@ -1331,7 +1331,7 @@ __metadata:
   peerDependencies:
     date-fns: ^3
     uuid: ^9
-  checksum: 10/3a96c50178228da1778a21163f10973ffda78b55b3386162d4ebb0071d26a27a37bf39abc9f2c4e5d8b0ca7fd3d4072d98d68d1c5b68f70f72a2464e4f36d806
+  checksum: 10/ac12c6438b0c71502b4b837f98b0dbc164c604a98c23064a5bc0ef233486be8012176fd4cbee3879db2cd468cefd5489678703709ae1b4e766f431ef3ac9f7b2
   languageName: node
   linkType: hard
 
