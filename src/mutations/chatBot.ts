@@ -10,14 +10,15 @@ import { QueryClientConfig } from '../types';
 export default (queryConfig: QueryClientConfig) => {
   const { notifier } = queryConfig;
 
-  const usePostChatBot = () => {
+  // TODO: should use enum from the backend ?
+  const usePostChatBot = (gptModelVersion?: string) => {
     const queryClient = useQueryClient();
     return useMutation(
       async (payload: ChatBotMessage[]) => {
         const apiHost = getApiHost(queryClient);
         const data = getDataOrThrow(queryClient);
 
-        return Api.postChatBot({ ...data, body: payload, apiHost });
+        return Api.postChatBot({ ...data, body: payload, apiHost, gptModelVersion });
       },
       {
         onError: (error: Error) => {
