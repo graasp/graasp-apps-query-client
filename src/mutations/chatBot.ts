@@ -1,4 +1,4 @@
-import { ChatBotMessage } from '@graasp/sdk';
+import { ChatBotMessage, GPTVersion } from '@graasp/sdk';
 
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
@@ -10,8 +10,7 @@ import { QueryClientConfig } from '../types';
 export default (queryConfig: QueryClientConfig) => {
   const { notifier } = queryConfig;
 
-  // TODO: should use enum from the backend ?
-  const usePostChatBot = (gptModelVersion?: string) => {
+  const usePostChatBot = (gptModelVersion?: GPTVersion) => {
     const queryClient = useQueryClient();
     return useMutation(
       async (payload: ChatBotMessage[]) => {

@@ -1,4 +1,4 @@
-import { ChatBotMessage } from '@graasp/sdk';
+import { ChatBotMessage, GPTVersion } from '@graasp/sdk';
 
 import { ApiData, ChatBotCompletion } from 'types';
 
@@ -10,7 +10,7 @@ const axios = configureAxios();
 export const postChatBot = (
   args: ApiData & {
     body: ChatBotMessage[];
-    gptModelVersion?: string;
+    gptModelVersion?: GPTVersion;
   },
 ) => {
   const { token, itemId, apiHost, body, gptModelVersion } = args;
