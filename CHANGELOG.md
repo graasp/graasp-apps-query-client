@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.4.13](https://github.com/graasp/graasp-apps-query-client/compare/v3.4.12...v3.4.13) (2024-04-23)
+
+
+### Bug Fixes
+
+* add gpt version in query ([#342](https://github.com/graasp/graasp-apps-query-client/issues/342)) ([7b91058](https://github.com/graasp/graasp-apps-query-client/commit/7b91058d6c5543db1e1e4f8ef5742470dd48b0cf))
+
 ## [3.4.12](https://github.com/graasp/graasp-apps-query-client/compare/v3.4.11...v3.4.12) (2024-04-22)
 
 
