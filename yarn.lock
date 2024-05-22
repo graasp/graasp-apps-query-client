@@ -1262,7 +1262,7 @@ __metadata:
     "@commitlint/config-conventional": "npm:19.2.2"
     "@emotion/react": "npm:11.11.4"
     "@emotion/styled": "npm:11.11.5"
-    "@graasp/sdk": "npm:4.10.1"
+    "@graasp/sdk": "npm:4.10.2"
     "@mui/icons-material": "npm:5.15.17"
     "@mui/material": "npm:5.15.17"
     "@tanstack/react-query": "npm:4.36.1"
@@ -1320,9 +1320,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@graasp/sdk@npm:4.10.1":
-  version: 4.10.1
-  resolution: "@graasp/sdk@npm:4.10.1"
+"@graasp/sdk@npm:4.10.2":
+  version: 4.10.2
+  resolution: "@graasp/sdk@npm:4.10.2"
   dependencies:
     "@faker-js/faker": "npm:8.4.1"
     filesize: "npm:10.1.2"
@@ -1331,7 +1331,7 @@ __metadata:
   peerDependencies:
     date-fns: ^3
     uuid: ^9
-  checksum: 10/cfaad81a16875f1ad26c8c4e15abf3d5f3f0b93a9d257e9d72f8f391a9f5a26a80be913d66a6f8d9cdeed9d6cbe6c1ee72b1f2726f2a718f196bd04b8542cace
+  checksum: 10/c8dc393e1a99772e26be8e151c252644927ef052ac54724ee945662e73ef4319011f05dc01ec1ddbd36f8c4dddf07ea3d8abf641b13c5f0128b7f5b61732f8bd
   languageName: node
   linkType: hard
 
