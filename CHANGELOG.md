@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.4.15](https://github.com/graasp/graasp-apps-query-client/compare/v3.4.14...v3.4.15) (2024-05-24)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @graasp/sdk to v4.10.2 ([#358](https://github.com/graasp/graasp-apps-query-client/issues/358)) ([b12495d](https://github.com/graasp/graasp-apps-query-client/commit/b12495db78af0ec38030b9c82fda860a1cfaec50))
+* **deps:** update dependency @graasp/sdk to v4.12.0 ([#360](https://github.com/graasp/graasp-apps-query-client/issues/360)) ([e2ba2c9](https://github.com/graasp/graasp-apps-query-client/commit/e2ba2c96e1764a98b1c75dd15d9f26a02db6d241))
+* **deps:** update mui (non-major) to v5.15.18 ([#355](https://github.com/graasp/graasp-apps-query-client/issues/355)) ([2f80cb3](https://github.com/graasp/graasp-apps-query-client/commit/2f80cb39cb2c91b7713930fae8855924152f8f67))
+
 ## [3.4.14](https://github.com/graasp/graasp-apps-query-client/compare/v3.4.13...v3.4.14) (2024-05-15)
 
 
