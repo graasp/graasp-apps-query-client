@@ -1439,13 +1439,13 @@ __metadata:
     "@testing-library/react": "npm:15.0.7"
     "@trivago/prettier-plugin-sort-imports": "npm:4.3.0"
     "@types/jest": "npm:29.5.12"
-    "@types/node": "npm:20.12.12"
+    "@types/node": "npm:20.12.14"
     "@types/react": "npm:18.3.3"
     "@types/react-dom": "npm:18.3.0"
     "@types/uuid": "npm:9.0.8"
     "@typescript-eslint/eslint-plugin": "npm:7.10.0"
     "@typescript-eslint/parser": "npm:7.10.0"
-    "@vitejs/plugin-react": "npm:4.3.0"
+    "@vitejs/plugin-react": "npm:4.3.1"
     axios: "npm:0.28.1"
     date-fns: "npm:3.6.0"
     dexie: "npm:4.0.4"
@@ -1470,11 +1470,11 @@ __metadata:
     react: "npm:18.3.1"
     react-dom: "npm:18.3.1"
     react-test-renderer: "npm:18.3.1"
-    ts-jest: "npm:29.1.3"
+    ts-jest: "npm:29.1.5"
     ts-node: "npm:10.9.2"
     typescript: "npm:5.4.5"
     uuid: "npm:9.0.1"
-    vite: "npm:5.2.11"
+    vite: "npm:5.2.13"
     vite-plugin-checker: "npm:0.6.4"
     vite-plugin-dts: "npm:3.9.1"
     vitest: "npm:1.6.0"
@@ -2807,12 +2807,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:20.12.12":
-  version: 20.12.12
-  resolution: "@types/node@npm:20.12.12"
+"@types/node@npm:20.12.14":
+  version: 20.12.14
+  resolution: "@types/node@npm:20.12.14"
   dependencies:
     undici-types: "npm:~5.26.4"
-  checksum: 10/e3945da0a3017bdc1f88f15bdfb823f526b2a717bd58d4640082d6eb0bd2794b5c99bfb914b9e9324ec116dce36066990353ed1c777e8a7b0641f772575793c4
+  checksum: 10/8ce987f0b7e15116e92894c51ee53fe0cbd98dafb5693a2e7d490f16396552528114d055ca1b144d3fdc5ba7d5f5ce28ad091a693c24337615f047cefc3faa36
   languageName: node
   linkType: hard
 
@@ -3049,9 +3049,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@vitejs/plugin-react@npm:4.3.0":
-  version: 4.3.0
-  resolution: "@vitejs/plugin-react@npm:4.3.0"
+"@vitejs/plugin-react@npm:4.3.1":
+  version: 4.3.1
+  resolution: "@vitejs/plugin-react@npm:4.3.1"
   dependencies:
     "@babel/core": "npm:^7.24.5"
     "@babel/plugin-transform-react-jsx-self": "npm:^7.24.5"
@@ -3060,7 +3060,7 @@ __metadata:
     react-refresh: "npm:^0.14.2"
   peerDependencies:
     vite: ^4.2.0 || ^5.0.0
-  checksum: 10/b96cfcfef10a7bb9a27cc4678c3828acd05522ce31793679d414300f29902f55d6dd88054e5801b5e67c34817a610a7fcb350a4896ac719320777653c98ca7a9
+  checksum: 10/a9d1eb30c968bf719a3277067211493746579aee14a7af8c0edb2cde38e8e5bbd461e62a41c3590e2c6eb04a047114eb3e97dcd591967625fbbc7aead8dfaf90
   languageName: node
   linkType: hard
 
@@ -9807,9 +9807,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ts-jest@npm:29.1.3":
-  version: 29.1.3
-  resolution: "ts-jest@npm:29.1.3"
+"ts-jest@npm:29.1.5":
+  version: 29.1.5
+  resolution: "ts-jest@npm:29.1.5"
   dependencies:
     bs-logger: "npm:0.x"
     fast-json-stable-stringify: "npm:2.x"
@@ -9839,7 +9839,7 @@ __metadata:
       optional: true
   bin:
     ts-jest: cli.js
-  checksum: 10/cc1f608bb5859e112ffb8a6d84ddb5c20954b7ec8c89a8c7f95e373368d8946b5843594fe7779078eec2b7e825962848f1a1ba7a44c71b8a08ed4e75d3a3f8d8
+  checksum: 10/11a29a49130f1c9bef5aebe8007f6be3e630af6c2dea6b00ff5a86d649321854a43966b4990a43960d77a3f98d7a753b9b7e19c20c42a2d38341d6e67a3e48d1
   languageName: node
   linkType: hard
 
@@ -10283,9 +10283,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vite@npm:5.2.11":
-  version: 5.2.11
-  resolution: "vite@npm:5.2.11"
+"vite@npm:5.2.13":
+  version: 5.2.13
+  resolution: "vite@npm:5.2.13"
   dependencies:
     esbuild: "npm:^0.20.1"
     fsevents: "npm:~2.3.3"
@@ -10319,7 +10319,7 @@ __metadata:
       optional: true
   bin:
     vite: bin/vite.js
-  checksum: 10/ee0ad038f0831c9514796522deb1e2dcb84bc311abbccb77e4b12216d37fc9559137f4f1b8e75187d51007b954e845c6518e36ee3acac2e2a2789c1181ebb16c
+  checksum: 10/eee65eebff8c839935fdf1a6f2bbc90b923d53a447cc0949abea71577166e7ad7ceb41f3ea42c79a54997319eacfa45445509da371a8ba0699fce8f7de137882
   languageName: node
   linkType: hard
 
