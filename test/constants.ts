@@ -71,7 +71,7 @@ export const APPS = [
 export const MOCK_ITEM: FolderItemType = FolderItemFactory({
   description: '',
   type: ItemType.FOLDER,
-  extra: { [ItemType.FOLDER]: { childrenOrder: [] } },
+  extra: { [ItemType.FOLDER]: {} },
   id: '123',
   creator: MEMBER_RESPONSE,
 });
@@ -138,6 +138,7 @@ export enum RequestMethods {
   DELETE = 'DELETE',
   PUT = 'PUT',
   PATCH = 'PATCH',
+  OPTIONS = 'OPTIONS',
 }
 
 export const buildMockLocalContext = ({

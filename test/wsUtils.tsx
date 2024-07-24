@@ -2,6 +2,7 @@ import React from 'react';
 
 import { QueryClient } from '@tanstack/react-query';
 import { renderHook } from '@testing-library/react';
+import { vi } from 'vitest';
 
 import configureQueryClient from '../src/queryClient';
 import { Notifier, QueryClientConfig } from '../src/types';
@@ -12,11 +13,11 @@ export type Handler = { channel: Channel; handler: (event: unknown) => void };
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const MockedWebsocket = (handlers: Handler[]) => ({
-  subscribe: jest.fn((channel, handler) => {
+  subscribe: vi.fn((channel, handler) => {
     // eslint-disable-next-line no-param-reassign
     handlers.push({ channel, handler });
   }),
-  unsubscribe: jest.fn(),
+  unsubscribe: vi.fn(),
 });
 
 export const setUpWsTest = (args?: {

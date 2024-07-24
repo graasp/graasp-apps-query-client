@@ -7,6 +7,7 @@ import { RenderHookOptions, renderHook, waitFor } from '@testing-library/react';
 import { StatusCodes } from 'http-status-codes';
 import nock, { InterceptFunction, ReplyHeaders, Scope } from 'nock';
 import { v4 } from 'uuid';
+import { expect, vi } from 'vitest';
 
 import configureHooks from '../src/hooks';
 import configureQueryClient from '../src/queryClient';
@@ -88,7 +89,11 @@ export const mockEndpoints = (endpoints: Endpoint[]): nock.Scope => {
     server[(method ?? HttpMethod.Get).toLowerCase() as NockMethodType](route).reply(
       statusCode || StatusCodes.OK,
       response,
-      headers,
+      {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Credentials': 'true',
+        ...headers,
+      },
     );
   });
   return server;
@@ -154,9 +159,9 @@ export const mockWindowForPostMessage = (
   globalThis.window = {
     location: { origin },
     parent: {
-      postMessage: jest.fn(),
+      postMessage: vi.fn(),
     },
-    removeEventListener: jest.fn(),
+    removeEventListener: vi.fn(),
     // eslint-disable-next-line @typescript-eslint/ban-types, arrow-body-style
     addEventListener: (_event: string, f: Function) => {
       // check event listener works as expected given mock input

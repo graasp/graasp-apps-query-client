@@ -2,6 +2,7 @@ import { Context } from '@graasp/sdk';
 
 import { renderHook } from '@testing-library/react';
 import { v4 } from 'uuid';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { API_HOST, buildMockLocalContext } from '../../test/constants';
 import { mockHook, mockWindowForPostMessage, setUpTest } from '../../test/utils';
@@ -27,7 +28,7 @@ describe.skip('PostMessage Hooks', () => {
       const hook = () => hooks.useGetLocalContext(mockItemId, defaultContextValue);
 
       afterEach(() => {
-        jest.resetAllMocks();
+        vi.resetAllMocks();
         queryClient.clear();
       });
 
@@ -253,14 +254,14 @@ describe.skip('PostMessage Hooks', () => {
         throw new Error('Method not implemented.');
       }
     }
-    globalThis.ResizeObserver = jest.fn();
-    const resizeObserverSpy = jest.spyOn(globalThis, 'ResizeObserver');
+    globalThis.ResizeObserver = vi.fn();
+    const resizeObserverSpy = vi.spyOn(globalThis, 'ResizeObserver');
     const { hooks, wrapper } = setUpTest();
 
     /// mock port
     const port = {
-      postMessage: jest.fn(),
-      onmessage: jest.fn(),
+      postMessage: vi.fn(),
+      onmessage: vi.fn(),
     };
 
     it('Sends height', async () => {
@@ -296,7 +297,7 @@ describe.skip('PostMessage Hooks', () => {
         new MockResizeObserver(),
       );
 
-      const portSpy = jest.spyOn(port, 'postMessage');
+      const portSpy = vi.spyOn(port, 'postMessage');
       // expect initial height
       expect(portSpy).toHaveBeenCalledWith(
         JSON.stringify({ type: POST_MESSAGE_KEYS.POST_AUTO_RESIZE, payload: 420 }),

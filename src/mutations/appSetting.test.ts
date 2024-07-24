@@ -4,6 +4,7 @@ import { act } from '@testing-library/react';
 import { StatusCodes } from 'http-status-codes';
 import nock from 'nock';
 import { v4 } from 'uuid';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import {
   FIXTURE_APP_SETTINGS,
@@ -22,7 +23,7 @@ import { MOCK_TOKEN } from '../config/constants';
 import { AUTH_TOKEN_KEY, LOCAL_CONTEXT_KEY, appSettingKeys } from '../config/keys';
 import { patchAppSettingRoutine, postAppSettingRoutine } from '../routines';
 
-const mockedNotifier = jest.fn();
+const mockedNotifier = vi.fn();
 const { wrapper, queryClient, mutations } = setUpTest({
   notifier: mockedNotifier,
 });

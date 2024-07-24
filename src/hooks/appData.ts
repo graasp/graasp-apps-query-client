@@ -61,15 +61,15 @@ export default (
       const queryClient = useQueryClient();
       const apiHost = getApiHost(queryClient);
 
+      const fileId = payload?.fileId;
+
       return useQuery({
-        queryKey: appDataKeys.fileContent(payload?.fileId),
+        queryKey: appDataKeys.fileContent(fileId),
         queryFn: () => {
           const { token } = getDataOrThrow(queryClient);
-
-          if (!payload?.fileId) {
+          if (!fileId) {
             throw new MissingFileIdError();
           }
-          const { fileId } = payload;
           return Api.getAppDataFile({ id: fileId, apiHost, token });
         },
         ...defaultOptions,

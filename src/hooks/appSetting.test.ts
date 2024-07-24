@@ -1,9 +1,11 @@
 import { StatusCodes } from 'http-status-codes';
 import nock from 'nock';
 import { v4 } from 'uuid';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import {
   FIXTURE_APP_SETTINGS,
+  RequestMethods,
   S3_FILE_BLOB_RESPONSE,
   UNAUTHORIZED_RESPONSE,
   buildMockLocalContext,
@@ -121,6 +123,8 @@ describe('App Settings Hooks', () => {
       const endpoints = [
         { route, response: responseFile },
         { route: routeFile, response },
+        // necessary for axios to know which methods are allowed
+        { route: routeFile, response, method: RequestMethods.OPTIONS },
       ];
       const { data } = await mockHook({ endpoints, hook, wrapper });
 

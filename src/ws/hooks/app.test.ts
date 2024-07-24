@@ -1,5 +1,7 @@
 import { AppAction, AppData, AppSetting } from '@graasp/sdk';
 
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+
 import {
   FIXTURE_APP_ACTIONS,
   FIXTURE_APP_DATA,
