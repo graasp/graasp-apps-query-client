@@ -98,7 +98,6 @@ export const getAppDataFile = async ({
       headers: {
         'Access-Control-Allow-Credentials': true,
       },
-      // withCredentials: false,
     })
     .then(({ data }) => data);
 };
