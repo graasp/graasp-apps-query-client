@@ -2,7 +2,7 @@ import { Context } from '@graasp/sdk';
 
 import { renderHook } from '@testing-library/react';
 import { v4 } from 'uuid';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { API_HOST, buildMockLocalContext } from '../../test/constants';
 import { mockHook, mockWindowForPostMessage, setUpTest } from '../../test/utils';
@@ -172,7 +172,6 @@ describe.skip('PostMessage Hooks', () => {
         postMessage: () => {
           /* do nothing */
         },
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         onmessage: (_event: unknown) => {
           /* do nothing */
         },

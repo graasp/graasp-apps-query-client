@@ -105,7 +105,6 @@ class CommunicationChannel {
   }
 }
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const configurePostMessageHooks = (queryConfig: QueryClientConfig) => {
   let communicationChannel: CommunicationChannel | null = null;
 

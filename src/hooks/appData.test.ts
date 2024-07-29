@@ -1,5 +1,3 @@
-import { HttpMethod } from '@graasp/sdk';
-
 import { StatusCodes } from 'http-status-codes';
 import nock from 'nock';
 import { v4 } from 'uuid';
@@ -136,8 +134,7 @@ describe('App Data Hooks', () => {
         // necessary for axios to know which methods are allowed
         { route: routeFile, response, method: RequestMethods.OPTIONS },
       ] satisfies Endpoint[];
-      const { data, error } = await mockHook({ endpoints, hook, wrapper });
-      console.log(error);
+      const { data } = await mockHook({ endpoints, hook, wrapper });
       expect(data).toBeTruthy();
       // verify cache keys
       expect(queryClient.getQueryData(key)).toBeTruthy();

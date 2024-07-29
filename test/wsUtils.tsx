@@ -11,10 +11,8 @@ import { API_HOST, GRAASP_APP_KEY, WS_HOST } from './constants';
 
 export type Handler = { channel: Channel; handler: (event: unknown) => void };
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const MockedWebsocket = (handlers: Handler[]) => ({
   subscribe: vi.fn((channel, handler) => {
-    // eslint-disable-next-line no-param-reassign
     handlers.push({ channel, handler });
   }),
   unsubscribe: vi.fn(),
@@ -29,7 +27,6 @@ export const setUpWsTest = (args?: {
   configureWsAppDataHooks: Function;
   // eslint-disable-next-line @typescript-eslint/ban-types
   configureWsAppSettingHooks: Function;
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 }) => {
   const {
     notifier = () => {
@@ -84,7 +81,7 @@ export const setUpWsTest = (args?: {
   return { hooks, wrapper, queryClient, useMutation, handlers };
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/explicit-function-return-type
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const mockWsHook = async ({ hook, wrapper, enabled }: any) => {
   // wait for rendering hook
   const {

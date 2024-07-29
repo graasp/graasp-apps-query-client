@@ -154,7 +154,6 @@ export const waitForMutation = async (t = 500): Promise<void> => {
 export const mockWindowForPostMessage = (
   event: MessageEvent,
   origin: string | null = MOCK_APP_ORIGIN,
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 ) => {
   globalThis.window = {
     location: { origin },

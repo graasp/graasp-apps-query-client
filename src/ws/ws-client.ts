@@ -79,8 +79,8 @@ export interface WebsocketClient {
 
   /**
    * Unsubscribe a handler from a channel, THE HANDLER MUST === THE ONE PASSED TO SUBSCRIBE
-   * @param channel Channel from wihch to unsubscribe the provided handler from
-   * @param handler Handler function to unregster, MUST BE EQUAL (===) TO PREVIOUSLY REGISTERED HANDLE WITH @see subscribe !
+   * @param channel Channel from which to unsubscribe the provided handler from
+   * @param handler Handler function to unregister, MUST BE EQUAL (===) TO PREVIOUSLY REGISTERED HANDLE WITH @see subscribe !
    */
   unsubscribe<T>(channel: Channel, handler: (data: T) => void): void;
 }
@@ -148,7 +148,6 @@ export const configureWebsocketClient = (
 
     remove: (channel: Channel, handler: UpdateHandlerFn): boolean => {
       // helper to remove from a subscription map
-      // eslint-disable-next-line no-underscore-dangle
       const helperRemove = (
         map: Map<string, Array<UpdateHandlerFn>>,
         channelKey: string,
@@ -161,7 +160,6 @@ export const configureWebsocketClient = (
         return false;
       };
       // helper to cleanup mapped array if it is empty
-      // eslint-disable-next-line no-underscore-dangle
       const helperCleanup = (
         map: Map<string, Array<UpdateHandlerFn>>,
         channelKey: string,
@@ -206,7 +204,7 @@ export const configureWebsocketClient = (
     // send early subscriptions
     subscriptions.early.forEach((queue, channelKey) => {
       const channel = keyToChannel(channelKey);
-      // move all handlers and send only one subscribtion per channel
+      // move all handlers and send only one subscription per channel
       queue.forEach((handler) => {
         // move handler to waitingAck (guaranteed now since ws.readyState === OPEN)
         subscriptions.add(channel, handler);

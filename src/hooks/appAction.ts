@@ -9,7 +9,6 @@ import { Data, QueryClientConfig } from '../types';
 import { configureWsAppActionsHooks } from '../ws/hooks/app';
 import { WebsocketClient } from '../ws/ws-client';
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export default (queryConfig: QueryClientConfig, websocketClient?: WebsocketClient) => {
   const { retry, cacheTime, staleTime } = queryConfig;
   const defaultOptions = {

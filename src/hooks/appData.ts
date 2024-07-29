@@ -8,7 +8,6 @@ import { Data, QueryClientConfig } from '../types';
 import { configureWsAppDataHooks } from '../ws/hooks/app';
 import { WebsocketClient } from '../ws/ws-client';
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export default (
   queryConfig: QueryClientConfig,
 
