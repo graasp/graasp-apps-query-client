@@ -1,7 +1,7 @@
 import react from '@vitejs/plugin-react';
 import { resolve } from 'path';
-import { defineConfig } from 'vite';
 import dts from 'vite-plugin-dts';
+import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
   plugins: [
@@ -10,6 +10,9 @@ export default defineConfig({
       insertTypesEntry: true,
     }),
   ],
+  test: {
+    environment: 'happy-dom',
+  },
   build: {
     lib: {
       entry: resolve(__dirname, 'src/index.ts'),

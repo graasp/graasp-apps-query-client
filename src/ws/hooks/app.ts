@@ -87,12 +87,10 @@ const useAppDataUpdates = (itemId?: UUID | null, websocketClient?: WebsocketClie
   }, [itemId]);
 };
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export const configureWsAppDataHooks = (websocketClient?: WebsocketClient) => ({
   useAppDataUpdates: (itemId?: UUID | null) => useAppDataUpdates(itemId, websocketClient),
 });
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export const configureWsAppActionsHooks = (websocketClient?: WebsocketClient) => ({
   /**
    * React hook to subscribe to the updates of the app data for
@@ -145,7 +143,6 @@ export const configureWsAppActionsHooks = (websocketClient?: WebsocketClient) =>
   },
 });
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export const configureWsAppSettingHooks = (websocketClient?: WebsocketClient) => ({
   /**
    * React hook to subscribe to the updates of the app data for

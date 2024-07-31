@@ -1,15 +1,15 @@
 import { AppAction } from '@graasp/sdk';
 
-import { ApiData } from '../types';
+import { ApiData, Data } from '../types';
 import configureAxios from './axios';
 import { buildGetAppActionsRoute, buildPostAppActionRoute } from './routes';
 
 const axios = configureAxios();
 
-export const getAppActions = async (args: ApiData) => {
+export const getAppActions = async <DataType extends Data = Data>(args: ApiData) => {
   const { token, itemId, apiHost } = args;
   return axios
-    .get<AppAction[]>(`${apiHost}/${buildGetAppActionsRoute(itemId)}`, {
+    .get<AppAction<DataType>[]>(`${apiHost}/${buildGetAppActionsRoute(itemId)}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

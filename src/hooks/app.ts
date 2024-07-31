@@ -5,7 +5,6 @@ import { buildAppContextKey } from '../config/keys';
 import { getApiHost, getDataOrThrow } from '../config/utils';
 import { QueryClientConfig } from '../types';
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export default (queryConfig: QueryClientConfig) => {
   const { retry, cacheTime, staleTime } = queryConfig;
   const defaultOptions = {

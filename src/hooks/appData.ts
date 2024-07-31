@@ -8,7 +8,6 @@ import { Data, QueryClientConfig } from '../types';
 import { configureWsAppDataHooks } from '../ws/hooks/app';
 import { WebsocketClient } from '../ws/ws-client';
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export default (
   queryConfig: QueryClientConfig,
 
@@ -61,15 +60,15 @@ export default (
       const queryClient = useQueryClient();
       const apiHost = getApiHost(queryClient);
 
+      const fileId = payload?.fileId;
+
       return useQuery({
-        queryKey: appDataKeys.fileContent(payload?.fileId),
+        queryKey: appDataKeys.fileContent(fileId),
         queryFn: () => {
           const { token } = getDataOrThrow(queryClient);
-
-          if (!payload?.fileId) {
+          if (!fileId) {
             throw new MissingFileIdError();
           }
-          const { fileId } = payload;
           return Api.getAppDataFile({ id: fileId, apiHost, token });
         },
         ...defaultOptions,

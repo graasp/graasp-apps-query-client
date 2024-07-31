@@ -18,7 +18,7 @@
     "esModuleInterop": true,
     "declarationMap": true,
     "baseUrl": "src",
-    "types": ["vite/client", "jest", "node"]
+    "types": ["vite/client", "node"]
   },
   "include": ["src"],
   "references": [
