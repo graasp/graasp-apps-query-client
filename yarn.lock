@@ -1268,7 +1268,7 @@ __metadata:
     "@testing-library/dom": "npm:10.4.0"
     "@testing-library/react": "npm:16"
     "@trivago/prettier-plugin-sort-imports": "npm:4.3.0"
-    "@types/node": "npm:20.14.12"
+    "@types/node": "npm:20.14.14"
     "@types/react": "npm:18.3.3"
     "@types/react-dom": "npm:18.3.0"
     "@types/uuid": "npm:10.0.0"
@@ -1291,7 +1291,7 @@ __metadata:
     globals: "npm:15.9.0"
     happy-dom: "npm:14.12.3"
     http-status-codes: "npm:2.3.0"
-    husky: "npm:9.1.1"
+    husky: "npm:9.1.4"
     miragejs: "npm:0.1.48"
     msw: "npm:1.3.3"
     nock: "npm:13.5.4"
@@ -1302,10 +1302,10 @@ __metadata:
     ts-node: "npm:10.9.2"
     typescript: "npm:5.5.4"
     uuid: "npm:10.0.0"
-    vite: "npm:5.3.4"
+    vite: "npm:5.3.5"
     vite-plugin-checker: "npm:0.7.2"
-    vite-plugin-dts: "npm:4.0.0-beta.1"
-    vitest: "npm:2.0.4"
+    vite-plugin-dts: "npm:4.0.0-beta.2"
+    vitest: "npm:2.0.5"
   peerDependencies:
     "@mui/icons-material": ^5.15.5
     "@mui/material": ^5.15.5
@@ -1411,6 +1411,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@jridgewell/sourcemap-codec@npm:^1.5.0":
+  version: 1.5.0
+  resolution: "@jridgewell/sourcemap-codec@npm:1.5.0"
+  checksum: 10/4ed6123217569a1484419ac53f6ea0d9f3b57e5b57ab30d7c267bdb27792a27eb0e4b08e84a2680aa55cc2f2b411ffd6ec3db01c44fdc6dc43aca4b55f8374fd
+  languageName: node
+  linkType: hard
+
 "@jridgewell/trace-mapping@npm:0.3.9":
   version: 0.3.9
   resolution: "@jridgewell/trace-mapping@npm:0.3.9"
@@ -1441,28 +1448,28 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@microsoft/api-extractor-model@npm:7.29.3":
-  version: 7.29.3
-  resolution: "@microsoft/api-extractor-model@npm:7.29.3"
+"@microsoft/api-extractor-model@npm:7.29.4":
+  version: 7.29.4
+  resolution: "@microsoft/api-extractor-model@npm:7.29.4"
   dependencies:
     "@microsoft/tsdoc": "npm:~0.15.0"
     "@microsoft/tsdoc-config": "npm:~0.17.0"
-    "@rushstack/node-core-library": "npm:5.5.0"
-  checksum: 10/4629606b25cce8e9e298b6ad9c0376cc0ec9ad39ebf6b6ad31739b7734b6f884bb4c36375be549a8299c2ad7b220d3ad5175e5c490f5a379d9d2b6967130e1ce
+    "@rushstack/node-core-library": "npm:5.5.1"
+  checksum: 10/50bd4e58bfe9d43e0ca4a72324601ce17c015e517b0803bb787d1067bef9372a23bbbf2551f47d1c5a7fef742826ffa18aea43b96c823b82c07f745e3ea25657
   languageName: node
   linkType: hard
 
-"@microsoft/api-extractor@npm:7.47.2":
-  version: 7.47.2
-  resolution: "@microsoft/api-extractor@npm:7.47.2"
+"@microsoft/api-extractor@npm:7.47.4":
+  version: 7.47.4
+  resolution: "@microsoft/api-extractor@npm:7.47.4"
   dependencies:
-    "@microsoft/api-extractor-model": "npm:7.29.3"
+    "@microsoft/api-extractor-model": "npm:7.29.4"
     "@microsoft/tsdoc": "npm:~0.15.0"
     "@microsoft/tsdoc-config": "npm:~0.17.0"
-    "@rushstack/node-core-library": "npm:5.5.0"
-    "@rushstack/rig-package": "npm:0.5.2"
-    "@rushstack/terminal": "npm:0.13.2"
-    "@rushstack/ts-command-line": "npm:4.22.2"
+    "@rushstack/node-core-library": "npm:5.5.1"
+    "@rushstack/rig-package": "npm:0.5.3"
+    "@rushstack/terminal": "npm:0.13.3"
+    "@rushstack/ts-command-line": "npm:4.22.3"
     lodash: "npm:~4.17.15"
     minimatch: "npm:~3.0.3"
     resolve: "npm:~1.22.1"
@@ -1471,7 +1478,7 @@ __metadata:
     typescript: "npm:5.4.2"
   bin:
     api-extractor: bin/api-extractor
-  checksum: 10/5aed91767e8939199a4feb90fbdf3f47906c5847da5790f4bff3f05785d7890e3d27153c31c4960e0705a0c912ec8bb07bb3e2f37ded699c4281820147806814
+  checksum: 10/e7be27981cc4ba34d3fcc694d044bb952835d77ab908ce1d528cd76d7100cee33137c0d13257332dd12e07dae1d0937f0f5218348f3c9f7b2258dda89dce47cc
   languageName: node
   linkType: hard
 
@@ -1955,9 +1962,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@rushstack/node-core-library@npm:5.5.0":
-  version: 5.5.0
-  resolution: "@rushstack/node-core-library@npm:5.5.0"
+"@rushstack/node-core-library@npm:5.5.1":
+  version: 5.5.1
+  resolution: "@rushstack/node-core-library@npm:5.5.1"
   dependencies:
     ajv: "npm:~8.13.0"
     ajv-draft-04: "npm:~1.0.0"
@@ -1972,44 +1979,44 @@ __metadata:
   peerDependenciesMeta:
     "@types/node":
       optional: true
-  checksum: 10/8b60669d05fa8548339256ff7da7df39c455627200fef9ff57458ecc5f0c9946ebce43cac216b69e98f3994185de84508f0bc9608b0ac863193a34c428218868
+  checksum: 10/e2d44c9bd00ecff3a108ae4aeff707a724e50cd3c6cb229f42fcee5be0aeafb1f3a420dd4e3eeaad4968c47b280d5d1a4017adf557479fe9314271b8efd44468
   languageName: node
   linkType: hard
 
-"@rushstack/rig-package@npm:0.5.2":
-  version: 0.5.2
-  resolution: "@rushstack/rig-package@npm:0.5.2"
+"@rushstack/rig-package@npm:0.5.3":
+  version: 0.5.3
+  resolution: "@rushstack/rig-package@npm:0.5.3"
   dependencies:
     resolve: "npm:~1.22.1"
     strip-json-comments: "npm:~3.1.1"
-  checksum: 10/2fd178a46c1662f110d06bcc7771898cc4316db62735f9b76281995b86263c1b248c60aead5c2f7ac6be023eb23f7ed28cff78ef813df7fb2b68a945e416814d
+  checksum: 10/b58a3925a41d7a0e79f4fde7c400a379683cc7b0073c447aba6d36231529a37e7d2f4559f459be785ad862ecb01b618b2d0ff60661046e5223437356155ccb14
   languageName: node
   linkType: hard
 
-"@rushstack/terminal@npm:0.13.2":
-  version: 0.13.2
-  resolution: "@rushstack/terminal@npm:0.13.2"
+"@rushstack/terminal@npm:0.13.3":
+  version: 0.13.3
+  resolution: "@rushstack/terminal@npm:0.13.3"
   dependencies:
-    "@rushstack/node-core-library": "npm:5.5.0"
+    "@rushstack/node-core-library": "npm:5.5.1"
     supports-color: "npm:~8.1.1"
   peerDependencies:
     "@types/node": "*"
   peerDependenciesMeta:
     "@types/node":
       optional: true
-  checksum: 10/1480e1838d9aa7a5679d28ab9a8c9c8207efe56d3d89a8c15628d63876b839271dcfa35d926db5d0cdeee908409c200c218c348ca99297c35571c20464d29ac9
+  checksum: 10/2cc2fc62d811e539f7f6cd7902cf0fcc78a5061732c444e05c3e9466cf45f8129e605da763e1b94e78420699fab8ede4421c6b97ca8733bc87e660f6d0e39acb
   languageName: node
   linkType: hard
 
-"@rushstack/ts-command-line@npm:4.22.2":
-  version: 4.22.2
-  resolution: "@rushstack/ts-command-line@npm:4.22.2"
+"@rushstack/ts-command-line@npm:4.22.3":
+  version: 4.22.3
+  resolution: "@rushstack/ts-command-line@npm:4.22.3"
   dependencies:
-    "@rushstack/terminal": "npm:0.13.2"
+    "@rushstack/terminal": "npm:0.13.3"
     "@types/argparse": "npm:1.0.38"
     argparse: "npm:~1.0.9"
     string-argv: "npm:~0.3.1"
-  checksum: 10/4f75c3e2030427330ea6406da2b311c1ec7332df9c7957a432c37276324f5d67b2f8eb0a6caac3f8f07c3f2b820e511b1c131739bcff0b9c046fa88ed2483864
+  checksum: 10/64509a787022944ee8bbb5e860f6791d004bc5c8a0c8a74f35b4e30622ea3ef5b1912acf1c7af3eb183407d62059eb4982c9ad2d69eea7e3b53c4d1c76736b43
   languageName: node
   linkType: hard
 
@@ -2264,12 +2271,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:20.14.12":
-  version: 20.14.12
-  resolution: "@types/node@npm:20.14.12"
+"@types/node@npm:20.14.14":
+  version: 20.14.14
+  resolution: "@types/node@npm:20.14.14"
   dependencies:
     undici-types: "npm:~5.26.4"
-  checksum: 10/9205bf46ef6a99d99cdde9efeb8218cd15803cc407249c2336557cd630b006380dad68c03ee574934414639f8e450044f45530c92788a8e82078bae45ee40f93
+  checksum: 10/035bc347e3de04888d537801e23eb4b4f99522975ca002dbfef978edd853710031b7cd43bf022670d6aba4ed5d4ac75ea1b5ff77ff8f80998bffd943b7bcef48
   languageName: node
   linkType: hard
 
@@ -2489,75 +2496,66 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@vitest/expect@npm:2.0.4":
-  version: 2.0.4
-  resolution: "@vitest/expect@npm:2.0.4"
+"@vitest/expect@npm:2.0.5":
+  version: 2.0.5
+  resolution: "@vitest/expect@npm:2.0.5"
   dependencies:
-    "@vitest/spy": "npm:2.0.4"
-    "@vitest/utils": "npm:2.0.4"
+    "@vitest/spy": "npm:2.0.5"
+    "@vitest/utils": "npm:2.0.5"
     chai: "npm:^5.1.1"
     tinyrainbow: "npm:^1.2.0"
-  checksum: 10/9e77266306a9ee6c982956e79e5086edeaec9f387fb9f8840d749ba9e026b27c01f68987a732b53746cd7fb0fce4a2620dbd0359ca3efe891a8ba89300568111
+  checksum: 10/ca9a218f50254b2259fd16166b2d8c9ccc8ee2cc068905e6b3d6281da10967b1590cc7d34b5fa9d429297f97e740450233745583b4cc12272ff11705faf70a37
   languageName: node
   linkType: hard
 
-"@vitest/pretty-format@npm:2.0.4, @vitest/pretty-format@npm:^2.0.4":
-  version: 2.0.4
-  resolution: "@vitest/pretty-format@npm:2.0.4"
+"@vitest/pretty-format@npm:2.0.5, @vitest/pretty-format@npm:^2.0.5":
+  version: 2.0.5
+  resolution: "@vitest/pretty-format@npm:2.0.5"
   dependencies:
     tinyrainbow: "npm:^1.2.0"
-  checksum: 10/16223d1c9f8c86cea7a064cf625380e90b20a5c2f95fda6ab3643c16cce1925afa337109ee12dcbf54834a161fd2b68be16179da9fd9fb948de986c33942203b
+  checksum: 10/70bf452dd0b8525e658795125b3f11110bd6baadfaa38c5bb91ca763bded35ec6dc80e27964ad4e91b91be6544d35e18ea7748c1997693988f975a7283c3e9a0
   languageName: node
   linkType: hard
 
-"@vitest/runner@npm:2.0.4":
-  version: 2.0.4
-  resolution: "@vitest/runner@npm:2.0.4"
+"@vitest/runner@npm:2.0.5":
+  version: 2.0.5
+  resolution: "@vitest/runner@npm:2.0.5"
   dependencies:
-    "@vitest/utils": "npm:2.0.4"
+    "@vitest/utils": "npm:2.0.5"
     pathe: "npm:^1.1.2"
-  checksum: 10/a94872a08296b72316d1259fa8f12e314a47614b614cba03f1d0ba7f00e82f5d724b740ab17b8f6ddbe281acea278dec212f5050ac557b108df8f50b7aab6cbd
+  checksum: 10/464449abb84b3c779e1c6d1bedfc9e7469240ba3ccc4b4fa884386d1752d6572b68b9a87440159d433f17f61aca4012ee3bb78a3718d0e2bc64d810e9fc574a5
   languageName: node
   linkType: hard
 
-"@vitest/snapshot@npm:2.0.4":
-  version: 2.0.4
-  resolution: "@vitest/snapshot@npm:2.0.4"
+"@vitest/snapshot@npm:2.0.5":
+  version: 2.0.5
+  resolution: "@vitest/snapshot@npm:2.0.5"
   dependencies:
-    "@vitest/pretty-format": "npm:2.0.4"
+    "@vitest/pretty-format": "npm:2.0.5"
     magic-string: "npm:^0.30.10"
     pathe: "npm:^1.1.2"
-  checksum: 10/bbdc491d42a95945589a7006ef40beb199332b28b5832f111bd25e26b24bd78134efdb05b670e65dc82f83c654e1aedc445c26be20bdaa758a6c3cf844bd05b5
+  checksum: 10/fb46bc65851d4c8dcbbf86279c4146d5e7c17ad0d1be97132dedd98565d37f70ac8b0bf51ead0c6707786ffb15652535398c14d4304fa2146b0393d3db26fdff
   languageName: node
   linkType: hard
 
-"@vitest/spy@npm:2.0.4":
-  version: 2.0.4
-  resolution: "@vitest/spy@npm:2.0.4"
+"@vitest/spy@npm:2.0.5":
+  version: 2.0.5
+  resolution: "@vitest/spy@npm:2.0.5"
   dependencies:
     tinyspy: "npm:^3.0.0"
-  checksum: 10/c18d0fc28e40a40f701a116a117d98916ec90f18e1643a37379b18f5fbee841e7c35fcb65202503506b471df761e0907053912d475e159399b887c1be6f91ef1
+  checksum: 10/ed19f4c3bb4d3853241e8070979615138e24403ce4c137fa48c903b3af2c8b3ada2cc26aca9c1aa323bb314a457a8130a29acbb18dafd4e42737deefb2abf1ca
   languageName: node
   linkType: hard
 
-"@vitest/utils@npm:2.0.4":
-  version: 2.0.4
-  resolution: "@vitest/utils@npm:2.0.4"
+"@vitest/utils@npm:2.0.5":
+  version: 2.0.5
+  resolution: "@vitest/utils@npm:2.0.5"
   dependencies:
-    "@vitest/pretty-format": "npm:2.0.4"
+    "@vitest/pretty-format": "npm:2.0.5"
     estree-walker: "npm:^3.0.3"
     loupe: "npm:^3.1.1"
     tinyrainbow: "npm:^1.2.0"
-  checksum: 10/a17497cd3c12b72b315bda6a6a4addcbc206367f6bcdedb83d5d708ac40cf52fcc48403539d10528e1893348b2f107416e9065b6b5c39329f2512eea8f104578
-  languageName: node
-  linkType: hard
-
-"@volar/language-core@npm:2.2.5, @volar/language-core@npm:~2.2.4":
-  version: 2.2.5
-  resolution: "@volar/language-core@npm:2.2.5"
-  dependencies:
-    "@volar/source-map": "npm:2.2.5"
-  checksum: 10/88bc1fd6fd5bb460658a5658362eac893308db278f091677d1321fc0a0bcde0a09a7404a2f90ebab3f2ae348ca0648c8a084d198086a1c0c4546399fe2320e3e
+  checksum: 10/d631d56d29c33bc8de631166b2b6691c470187a345469dfef7048befe6027e1c6ff9552f2ee11c8a247522c325c4a64bfcc73f8f0f0c525da39cb9f190f119f8
   languageName: node
   linkType: hard
 
@@ -2570,12 +2568,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@volar/source-map@npm:2.2.5":
-  version: 2.2.5
-  resolution: "@volar/source-map@npm:2.2.5"
+"@volar/language-core@npm:2.4.0-alpha.18, @volar/language-core@npm:~2.4.0-alpha.18":
+  version: 2.4.0-alpha.18
+  resolution: "@volar/language-core@npm:2.4.0-alpha.18"
   dependencies:
-    muggle-string: "npm:^0.4.0"
-  checksum: 10/d4b5976d5948f532aa461e1bb35242f66fed0d3572fa37f3206996e44f055dc9a42ca6cc2e174368f9daa5e2739d757a1dd5d1193ad5cc3bf7d95014013a5e6f
+    "@volar/source-map": "npm:2.4.0-alpha.18"
+  checksum: 10/82cb160aeccca770a937235f7bdcb2ab51dd4aa5182a16d1a30b057728111b7828bc3e22c7287d80888043a4ec5b67339ac3eaf1ce7338e8cd5efdb4a933608d
   languageName: node
   linkType: hard
 
@@ -2583,6 +2581,13 @@ __metadata:
   version: 2.3.4
   resolution: "@volar/source-map@npm:2.3.4"
   checksum: 10/4892024d34661e3687560077565a53759b90feea01cd98d941eb4d82a77e8928a87c791d9ff5f9734702d9180b6d0e2c39ebd2d0a557de913089b3594eecc5ba
+  languageName: node
+  linkType: hard
+
+"@volar/source-map@npm:2.4.0-alpha.18":
+  version: 2.4.0-alpha.18
+  resolution: "@volar/source-map@npm:2.4.0-alpha.18"
+  checksum: 10/7cf5540fffc86a2528222caa87accfe4f8e18f331b1a72b9608a557f17014bf6b3d7a09a3157502e7515fd55ac448b0535e067e0127f3bfefb711003efb2fad3
   languageName: node
   linkType: hard
 
@@ -2597,13 +2602,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@volar/typescript@npm:~2.2.4":
-  version: 2.2.5
-  resolution: "@volar/typescript@npm:2.2.5"
+"@volar/typescript@npm:~2.4.0-alpha.18":
+  version: 2.4.0-alpha.18
+  resolution: "@volar/typescript@npm:2.4.0-alpha.18"
   dependencies:
-    "@volar/language-core": "npm:2.2.5"
+    "@volar/language-core": "npm:2.4.0-alpha.18"
     path-browserify: "npm:^1.0.1"
-  checksum: 10/65e79b77de04edfd610afa9f13a082b9fb14b762e9efc78d10a9ec7041f4fdf4691d8001a88202c55fb2dac9f745ca19bf7f58108a254b8b13494305caeb3cab
+    vscode-uri: "npm:^3.0.8"
+  checksum: 10/860dce51f5f9442ef4a6ff34840a3303ce07adcc1ec080f113ab62b1284d765dfd587cee5af500c2960b73d196e2d3e58329e760b1a6fb45658fb0e950d37f13
   languageName: node
   linkType: hard
 
@@ -2630,23 +2636,34 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@vue/language-core@npm:2.0.19":
-  version: 2.0.19
-  resolution: "@vue/language-core@npm:2.0.19"
+"@vue/compiler-vue2@npm:^2.7.16":
+  version: 2.7.16
+  resolution: "@vue/compiler-vue2@npm:2.7.16"
   dependencies:
-    "@volar/language-core": "npm:~2.2.4"
+    de-indent: "npm:^1.0.2"
+    he: "npm:^1.2.0"
+  checksum: 10/739ad06be19206b2715707c226a070509bcf28c31b539a6fc932d220eb7b0c09109d71fded573ed0c4073429793a3513ca4a4e69ad4f7afc0c5bc3c28639e871
+  languageName: node
+  linkType: hard
+
+"@vue/language-core@npm:2.0.29":
+  version: 2.0.29
+  resolution: "@vue/language-core@npm:2.0.29"
+  dependencies:
+    "@volar/language-core": "npm:~2.4.0-alpha.18"
     "@vue/compiler-dom": "npm:^3.4.0"
+    "@vue/compiler-vue2": "npm:^2.7.16"
     "@vue/shared": "npm:^3.4.0"
     computeds: "npm:^0.0.1"
     minimatch: "npm:^9.0.3"
+    muggle-string: "npm:^0.4.1"
     path-browserify: "npm:^1.0.1"
-    vue-template-compiler: "npm:^2.7.14"
   peerDependencies:
     typescript: "*"
   peerDependenciesMeta:
     typescript:
       optional: true
-  checksum: 10/c59e195b3fb3c3b4c341153858febbfeda27c183d0792c4cc855518c6a0365c415f377742c524aaea9ff0a706c62e0d7b6ceab0d306f4ec4e75a8d0e35cd1964
+  checksum: 10/60859b53f8df2f8da336c126750c4f96ffa1c3da050181dc1e8bb80b40d482fa43194e7f2d255e31f2ebd842e11b57f89789b57a8bd9cc79f3b584eb2e0fe251
   languageName: node
   linkType: hard
 
@@ -3730,6 +3747,18 @@ __metadata:
     supports-color:
       optional: true
   checksum: 10/cb6eab424c410e07813ca1392888589972ce9a32b8829c6508f5e1f25f3c3e70a76731610ae55b4bbe58d1a2fffa1424b30e97fa8d394e49cd2656a9643aedd2
+  languageName: node
+  linkType: hard
+
+"debug@npm:^4.3.6":
+  version: 4.3.6
+  resolution: "debug@npm:4.3.6"
+  dependencies:
+    ms: "npm:2.1.2"
+  peerDependenciesMeta:
+    supports-color:
+      optional: true
+  checksum: 10/d3adb9af7d57a9e809a68f404490cf776122acca16e6359a2702c0f462e510e91f9765c07f707b8ab0d91e03bad57328f3256f5082631cefb5393d0394d50fb7
   languageName: node
   linkType: hard
 
@@ -5332,12 +5361,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"husky@npm:9.1.1":
-  version: 9.1.1
-  resolution: "husky@npm:9.1.1"
+"husky@npm:9.1.4":
+  version: 9.1.4
+  resolution: "husky@npm:9.1.4"
   bin:
     husky: bin.js
-  checksum: 10/c3be0392071b78c680fc6b9fd7978f52c26e18238a2840c6eabfc0db395e19fcd798da8eff0e31a9e76c479d6019a567d83a8de80f360d28552bc83bd1839b7c
+  checksum: 10/c43aa7cbf98246d4f347bc3da807049555b5003af7c6e1658c5cea44a9743b4d0683c72973a4fe02a4ccceb81031a664ecaa7a1a86efe4d37a80a0af17c988ea
   languageName: node
   linkType: hard
 
@@ -6247,6 +6276,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"magic-string@npm:^0.30.11":
+  version: 0.30.11
+  resolution: "magic-string@npm:0.30.11"
+  dependencies:
+    "@jridgewell/sourcemap-codec": "npm:^1.5.0"
+  checksum: 10/b784d2240252f5b1e755d487354ada4c672cbca16f045144f7185a75b059210e5fcca7be7be03ef1bac2ca754c4428b21d36ae64a9057ba429916f06b8c54eb2
+  languageName: node
+  linkType: hard
+
 "make-error@npm:^1.1.1":
   version: 1.3.6
   resolution: "make-error@npm:1.3.6"
@@ -6542,7 +6580,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"muggle-string@npm:^0.4.0":
+"muggle-string@npm:^0.4.1":
   version: 0.4.1
   resolution: "muggle-string@npm:0.4.1"
   checksum: 10/8fa2ea08f497c04069718bd3fd1909b382114dacbad832d10967ca72690de43f5f8492d8ccfbf827d6be63868ed5fc10395e7b7c082aa95997eea498586c6620
@@ -8573,9 +8611,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vite-node@npm:2.0.4":
-  version: 2.0.4
-  resolution: "vite-node@npm:2.0.4"
+"vite-node@npm:2.0.5":
+  version: 2.0.5
+  resolution: "vite-node@npm:2.0.5"
   dependencies:
     cac: "npm:^6.7.14"
     debug: "npm:^4.3.5"
@@ -8584,7 +8622,7 @@ __metadata:
     vite: "npm:^5.0.0"
   bin:
     vite-node: vite-node.mjs
-  checksum: 10/27040a5d614fa315cc735867d7e6778640b2dcfb164e1a18d6a275b991a21e99ac6d720448b1b8de6e6d10b8169e79d0cb022807d537246b816f0260eb5f8b15
+  checksum: 10/de259cdf4b9ff82f39ba92ffca99db8a80783efd2764d3553b62cd8c8864488d590114a75bc93a93bf5ba2a2086bea1bee4b0029da9e62c4c0d3bf6c1f364eed
   languageName: node
   linkType: hard
 
@@ -8640,33 +8678,33 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vite-plugin-dts@npm:4.0.0-beta.1":
-  version: 4.0.0-beta.1
-  resolution: "vite-plugin-dts@npm:4.0.0-beta.1"
+"vite-plugin-dts@npm:4.0.0-beta.2":
+  version: 4.0.0-beta.2
+  resolution: "vite-plugin-dts@npm:4.0.0-beta.2"
   dependencies:
-    "@microsoft/api-extractor": "npm:7.47.2"
+    "@microsoft/api-extractor": "npm:7.47.4"
     "@rollup/pluginutils": "npm:^5.1.0"
     "@volar/typescript": "npm:^2.3.4"
-    "@vue/language-core": "npm:2.0.19"
+    "@vue/language-core": "npm:2.0.29"
     compare-versions: "npm:^6.1.1"
-    debug: "npm:^4.3.5"
+    debug: "npm:^4.3.6"
     kolorist: "npm:^1.8.0"
     local-pkg: "npm:^0.5.0"
-    magic-string: "npm:^0.30.10"
-    vue-tsc: "npm:2.0.19"
+    magic-string: "npm:^0.30.11"
+    vue-tsc: "npm:2.0.29"
   peerDependencies:
     typescript: "*"
     vite: "*"
   peerDependenciesMeta:
     vite:
       optional: true
-  checksum: 10/e07ac3266e5198bb0220686d15212b4fd9185c84fc68f5ce13cc6de41853a296eae576f9e5bd76b08adbe3bca1e28504f487cd7c60943bde268b141ace89fa0b
+  checksum: 10/575838697bfc11686293773133c895ff9a52350d69fce878c209bb6c3d2000812da8419165f2c259c4d5b281b17da5d84f28ead90676583c2b98e2192e9f9ec5
   languageName: node
   linkType: hard
 
-"vite@npm:5.3.4":
-  version: 5.3.4
-  resolution: "vite@npm:5.3.4"
+"vite@npm:5.3.5":
+  version: 5.3.5
+  resolution: "vite@npm:5.3.5"
   dependencies:
     esbuild: "npm:^0.21.3"
     fsevents: "npm:~2.3.3"
@@ -8700,7 +8738,7 @@ __metadata:
       optional: true
   bin:
     vite: bin/vite.js
-  checksum: 10/9eadb261be1f5f6335a67cb44a8803febd8b190202909385fd2ae7849991095ee13c5af914da53da48a421ee0901a8fedbb7519dc7d1b8ade3ea6e42bd9b2b39
+  checksum: 10/5672dde4a969349d9cf90a9e43029c8489dfff60fb04d6a10717d6224553cf12283a8cace633fa80b006df6037f72d08a459a38bf8ea66cb19075d60fe159482
   languageName: node
   linkType: hard
 
@@ -8744,17 +8782,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vitest@npm:2.0.4":
-  version: 2.0.4
-  resolution: "vitest@npm:2.0.4"
+"vitest@npm:2.0.5":
+  version: 2.0.5
+  resolution: "vitest@npm:2.0.5"
   dependencies:
     "@ampproject/remapping": "npm:^2.3.0"
-    "@vitest/expect": "npm:2.0.4"
-    "@vitest/pretty-format": "npm:^2.0.4"
-    "@vitest/runner": "npm:2.0.4"
-    "@vitest/snapshot": "npm:2.0.4"
-    "@vitest/spy": "npm:2.0.4"
-    "@vitest/utils": "npm:2.0.4"
+    "@vitest/expect": "npm:2.0.5"
+    "@vitest/pretty-format": "npm:^2.0.5"
+    "@vitest/runner": "npm:2.0.5"
+    "@vitest/snapshot": "npm:2.0.5"
+    "@vitest/spy": "npm:2.0.5"
+    "@vitest/utils": "npm:2.0.5"
     chai: "npm:^5.1.1"
     debug: "npm:^4.3.5"
     execa: "npm:^8.0.1"
@@ -8765,13 +8803,13 @@ __metadata:
     tinypool: "npm:^1.0.0"
     tinyrainbow: "npm:^1.2.0"
     vite: "npm:^5.0.0"
-    vite-node: "npm:2.0.4"
+    vite-node: "npm:2.0.5"
     why-is-node-running: "npm:^2.3.0"
   peerDependencies:
     "@edge-runtime/vm": "*"
     "@types/node": ^18.0.0 || >=20.0.0
-    "@vitest/browser": 2.0.4
-    "@vitest/ui": 2.0.4
+    "@vitest/browser": 2.0.5
+    "@vitest/ui": 2.0.5
     happy-dom: "*"
     jsdom: "*"
   peerDependenciesMeta:
@@ -8789,7 +8827,7 @@ __metadata:
       optional: true
   bin:
     vitest: vitest.mjs
-  checksum: 10/01a173adbf40273adce5ff0ffd7b538fcc98286b15441651be4a3b9cc48748acf6cedb1f4966b4eff07ed91695847b9352591fd419c2da62181440bc6edf79ee
+  checksum: 10/abb916e3496a3fa9e9d05ecd806332dc4000aa0e433f0cb1e99f9dd1fa5c06d2c66656874b9860a683cec0f32abe1519599babef02e5c0ca80e9afbcdbddfdbd
   languageName: node
   linkType: hard
 
@@ -8853,28 +8891,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vue-template-compiler@npm:^2.7.14":
-  version: 2.7.16
-  resolution: "vue-template-compiler@npm:2.7.16"
+"vue-tsc@npm:2.0.29":
+  version: 2.0.29
+  resolution: "vue-tsc@npm:2.0.29"
   dependencies:
-    de-indent: "npm:^1.0.2"
-    he: "npm:^1.2.0"
-  checksum: 10/8b05748dc64ee709a6077d576b4af234b229ecd36f7fda7cd2e17851403b66d168ad81c91636b5c28da6356d7723fd1ffe1202c73ffcdcc3ac9ad3ba748e42c7
-  languageName: node
-  linkType: hard
-
-"vue-tsc@npm:2.0.19":
-  version: 2.0.19
-  resolution: "vue-tsc@npm:2.0.19"
-  dependencies:
-    "@volar/typescript": "npm:~2.2.4"
-    "@vue/language-core": "npm:2.0.19"
+    "@volar/typescript": "npm:~2.4.0-alpha.18"
+    "@vue/language-core": "npm:2.0.29"
     semver: "npm:^7.5.4"
   peerDependencies:
-    typescript: "*"
+    typescript: ">=5.0.0"
   bin:
-    vue-tsc: bin/vue-tsc.js
-  checksum: 10/b95afad59e59314338f2588e1d8b826a25b5eeeddb3118dd6d40f539e267561ef8553a082e4a3a29c0a424196a88035df3ef1acb87d53921f7c9b38462c90e63
+    vue-tsc: ./bin/vue-tsc.js
+  checksum: 10/deabe919d3d3a9c9974791d91c32244c7e831a7d613a281e1e9a9f65bfaa917723883afda79d1d06b67f886dbd23cfdf3ec902a40674f907f0bb792e8eeab088
   languageName: node
   linkType: hard
 
