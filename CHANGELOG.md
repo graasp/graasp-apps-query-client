@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.5.0](https://github.com/graasp/graasp-apps-query-client/compare/v3.4.15...v3.5.0) (2024-08-05)
+
+
+### Features
+
+* update deps and use vitest ([#373](https://github.com/graasp/graasp-apps-query-client/issues/373)) ([a6124c1](https://github.com/graasp/graasp-apps-query-client/commit/a6124c1b095c728231a813c9260c71ed1b365caf))
+
+
+### Bug Fixes
+
+* **deps:** update dependency @graasp/sdk to v4.22.0 ([#376](https://github.com/graasp/graasp-apps-query-client/issues/376)) ([67e93c2](https://github.com/graasp/graasp-apps-query-client/commit/67e93c2b1e4f3fce05eafa11dbd5ae8cd4f6ee23))
+* **deps:** update dependency axios to v1.7.3 ([#378](https://github.com/graasp/graasp-apps-query-client/issues/378)) ([46ecb23](https://github.com/graasp/graasp-apps-query-client/commit/46ecb23173634e28f1405ebb6d4af4151c35e920))
+* **deps:** update mui (non-major) to v5.16.6 ([#366](https://github.com/graasp/graasp-apps-query-client/issues/366)) ([ded5bdd](https://github.com/graasp/graasp-apps-query-client/commit/ded5bdd073449c997a1f318966ef09c1671301b8))
+
 ## [3.4.15](https://github.com/graasp/graasp-apps-query-client/compare/v3.4.14...v3.4.15) (2024-05-24)
 
 
