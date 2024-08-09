@@ -1304,7 +1304,7 @@ __metadata:
     uuid: "npm:10.0.0"
     vite: "npm:5.3.5"
     vite-plugin-checker: "npm:0.7.2"
-    vite-plugin-dts: "npm:4.0.0-beta.2"
+    vite-plugin-dts: "npm:4.0.2"
     vitest: "npm:2.0.5"
   peerDependencies:
     "@mui/icons-material": ^5.15.5
@@ -8679,9 +8679,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vite-plugin-dts@npm:4.0.0-beta.2":
-  version: 4.0.0-beta.2
-  resolution: "vite-plugin-dts@npm:4.0.0-beta.2"
+"vite-plugin-dts@npm:4.0.2":
+  version: 4.0.2
+  resolution: "vite-plugin-dts@npm:4.0.2"
   dependencies:
     "@microsoft/api-extractor": "npm:7.47.4"
     "@rollup/pluginutils": "npm:^5.1.0"
@@ -8699,7 +8699,7 @@ __metadata:
   peerDependenciesMeta:
     vite:
       optional: true
-  checksum: 10/575838697bfc11686293773133c895ff9a52350d69fce878c209bb6c3d2000812da8419165f2c259c4d5b281b17da5d84f28ead90676583c2b98e2192e9f9ec5
+  checksum: 10/7028ee320d4e743317d244c553524a3dbfbf871651ad59368a6a5fba71ff4778548ce109fa5348500ff7d55c6b64570cfe14207489bad9ba9ef04948d62fe40d
   languageName: node
   linkType: hard
 
