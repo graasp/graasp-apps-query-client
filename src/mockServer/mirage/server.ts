@@ -320,7 +320,11 @@ export const mockMirageServer = ({
         if (url.includes('.pdf')) {
           // Simulate a PDF file response
           const pdfData = new Uint8Array([0x25, 0x50, 0x44, 0x46, 0x2d]); // This represents '%PDF-' (start of a PDF file)
-          return pdfData.buffer;
+          return new Response(
+            200,
+            { 'Content-Type': 'application/pdf' }, // Set correct MIME type
+            pdfData.buffer, // Return the simulated binary data for the PDF
+          );
         }
 
         if (url.includes('.png')) {
@@ -343,7 +347,11 @@ export const mockMirageServer = ({
             0x44,
             0x52, // IHDR chunk
           ]);
-          return pngData.buffer;
+          return new Response(
+            200,
+            { 'Content-Type': 'image/png' }, // Set correct MIME type
+            pngData.buffer, // Return the simulated binary data for the PDF
+          );
         }
 
         return new Response(404, {}, { errors: ['not found'] });
