@@ -309,9 +309,13 @@ export const buildMSWMocks = (
       `${apiHost}/${buildDownloadAppSettingFileRoute(':appSettingId')}`,
       async (req, res, ctx) => {
         const reqItemId = req.params.appSettingId;
-
+        console.log('hi getting download');
         const value = await db.appSetting.get(reqItemId as string);
+        console.log(value, 'value');
+
         const url = value?.data?.fileUrl; // assume that we have fileUrl within data setting
+
+        console.log(url, 'url');
 
         if (!url) {
           // Handle the case where the URL is not found
