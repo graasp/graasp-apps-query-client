@@ -1,4 +1,4 @@
-import { SetupWorker, setupWorker } from 'msw';
+import { SetupWorker, setupWorker } from 'msw/browser';
 
 import { Database, LocalContext } from '../../types';
 import { buildMockLocalContext } from '../fixtures';
@@ -22,20 +22,23 @@ export const mockServiceWorkerServer = ({
     if (database) {
       // seed database with data
       console.debug('Populating the DB with provided mock data');
-      if (database.items.length) {
+      if (database.items?.length) {
         transaction.table('item').bulkAdd(database?.items);
       }
-      if (database.members.length) {
+      if (database.members?.length) {
         transaction.table('member').bulkAdd(database.members);
       }
-      if (database.appData.length) {
+      if (database.appData?.length) {
         transaction.table('appData').bulkAdd(database.appData);
       }
-      if (database.appActions.length) {
+      if (database.appActions?.length) {
         transaction.table('appAction').bulkAdd(database.appActions);
       }
-      if (database.appSettings.length) {
+      if (database.appSettings?.length) {
         transaction.table('appSetting').bulkAdd(database.appSettings);
+      }
+      if (database.uploadedFiles?.length) {
+        transaction.table('uploadedFiles').bulkAdd(database.uploadedFiles);
       }
       transaction.table('appContext').add(fullAppContext, fullAppContext.memberId);
     } else {

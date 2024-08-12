@@ -2,7 +2,7 @@ import { AppAction, AppData, AppSetting, DiscriminatedItem, Member } from '@graa
 
 import Dexie from 'dexie';
 
-import { Database, LocalContext } from '../../types';
+import { Database, LocalContext, MockUploadedFile } from '../../types';
 
 type OptionalIndexed<T extends { id: string }, P extends keyof T = 'id'> = {
   [Key in keyof T as Key extends P ? Key : never]?: T[Key];
@@ -27,6 +27,8 @@ export class AppMocks extends Dexie {
 
   appAction!: Dexie.Table<AppAction, string>;
 
+  uploadedFiles!: Dexie.Table<MockUploadedFile, string>;
+
   constructor(name?: string) {
     super(name ?? 'graasp-app-mocks');
 
@@ -41,6 +43,10 @@ export class AppMocks extends Dexie {
       appData: 'id, item.id, [item.id+creator.id], member.id, type, visibility',
       appSetting: 'id, item.id, name',
       appAction: 'id, memberId',
+    });
+
+    this.version(2).stores({
+      uploadedFiles: 'id',
     });
   }
 
@@ -63,6 +69,9 @@ export class AppMocks extends Dexie {
     }
     if (data.appActions?.length) {
       this.appAction.bulkAdd(data.appActions);
+    }
+    if (data.uploadedFiles?.length) {
+      this.uploadedFiles.bulkAdd(data.uploadedFiles);
     }
   }
 

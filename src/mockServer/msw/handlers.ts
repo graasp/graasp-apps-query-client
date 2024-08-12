@@ -8,10 +8,10 @@ import {
   PermissionLevel,
 } from '@graasp/sdk';
 
-import { RestHandler, rest } from 'msw';
+import { HttpResponse, RequestHandler, http } from 'msw';
 import { v4 } from 'uuid';
 
-import { API_ROUTES } from '../../api/routes';
+import { API_ROUTES, buildUploadAppSettingFilesRoute } from '../../api/routes';
 import { Database, LocalContext, MockAppSetting } from '../../types';
 import { AppMocks } from './dexie-db';
 
@@ -25,6 +25,7 @@ const {
   // todo: implement mock file upload
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   buildDownloadAppDataFileRoute,
+  buildDownloadAppSettingFileRoute,
   buildGetAppActionsRoute,
   buildGetAppSettingsRoute,
   buildPatchAppSettingRoute,
@@ -48,9 +49,12 @@ export const buildMSWMocks = (
   appContext: LocalContext,
   database?: Database,
   dbName?: string,
-): { handlers: RestHandler[]; db: AppMocks } => {
+): { handlers: RequestHandler[]; db: AppMocks } => {
   const { apiHost } = appContext;
   const db = new AppMocks(dbName);
+
+  const buildAppSettingDownloadUrl = (id: string): string =>
+    `${apiHost}/download-app-setting-url/${id}`;
 
   const getPermissionForMember = async (memberId: string): Promise<PermissionLevel> => {
     const localContextForMember = await db.appContext.get(memberId);
@@ -83,11 +87,11 @@ export const buildMSWMocks = (
     // *************************
 
     // GET /app-items/:itemId/app-data
-    rest.get(`${apiHost}/${buildGetAppDataRoute(':itemId')}`, async (req, res, ctx) => {
-      const reqItemId = req.params.itemId;
-      const dataType = new URL(req.url).searchParams.get('type');
+    http.get(`${apiHost}/${buildGetAppDataRoute(':itemId')}`, async ({ params, request }) => {
+      const reqItemId = params.itemId;
+      const dataType = new URL(request.url).searchParams.get('type');
 
-      const memberId = getMemberIdFromToken(req.headers.get('Authorization'));
+      const memberId = getMemberIdFromToken(request.headers.get('Authorization'));
       const permission = await getPermissionForMember(memberId);
       let value;
       if (permission === PermissionLevel.Admin) {
@@ -115,21 +119,21 @@ export const buildMSWMocks = (
           .toArray();
       }
 
-      return res(ctx.status(200), ctx.json(value));
+      return HttpResponse.json(value);
     }),
 
     // POST /app-items/:itemId/app-data
-    rest.post(
+    http.post(
       `${apiHost}/${buildPostAppDataRoute({ itemId: ':itemId' })}`,
-      async (req, res, ctx) => {
-        const reqItemId = req.params.itemId;
+      async ({ request, params }) => {
+        const reqItemId = params.itemId;
         const item = await getItemFromId(reqItemId as string);
-        const memberId = getMemberIdFromToken(req.headers.get('Authorization'));
+        const memberId = getMemberIdFromToken(request.headers.get('Authorization'));
         const member = await getMemberFromId(memberId);
 
-        const body: Pick<AppData, 'data' | 'type'> & {
+        const body = (await request.json()) as Pick<AppData, 'data' | 'type'> & {
           visibility?: AppData['visibility'];
-        } = await req.json();
+        };
 
         const appData: AppData = {
           id: v4(),
@@ -144,19 +148,19 @@ export const buildMSWMocks = (
         const newId = await db.appData.add(appData);
         const value = await db.appData.get(newId);
 
-        return res(ctx.status(200), ctx.json(value));
+        return HttpResponse.json(value);
       },
     ),
 
     // PATCH /app-items/:itemId/app-data/:id
-    rest.patch(
+    http.patch(
       `${apiHost}/${buildPatchAppDataRoute({ itemId: ':itemId', id: ':id' })}`,
-      async (req, res, ctx) => {
-        const { id } = req.params;
+      async ({ params, request }) => {
+        const { id } = params;
 
-        const body: Pick<AppData, 'data' | 'id'> & {
+        const body = (await request.json()) as Pick<AppData, 'data' | 'id'> & {
           visibility?: AppData['visibility'];
-        } = await req.json();
+        };
 
         const appData: Partial<AppData> = {
           updatedAt: new Date().toISOString(),
@@ -165,20 +169,20 @@ export const buildMSWMocks = (
         await db.appData.update(id as string, appData);
         const value = await db.appData.get(id as string);
 
-        return res(ctx.status(200), ctx.json(value));
+        return HttpResponse.json(value);
       },
     ),
 
     // DELETE /app-items/:itemId/app-data/:id
-    rest.delete(
+    http.delete(
       `${apiHost}/${buildDeleteAppDataRoute({ itemId: ':itemId', id: ':id' })}`,
-      async (req, res, ctx) => {
-        const { id } = req.params;
+      async ({ params }) => {
+        const { id } = params;
 
         const value = await db.appData.get(id as string);
         await db.appData.delete(id as string);
 
-        return res(ctx.status(200), ctx.json(value));
+        return HttpResponse.json(value);
       },
     ),
 
@@ -187,10 +191,10 @@ export const buildMSWMocks = (
     // *************************
 
     // GET /app-items/:itemId/app-settings
-    rest.get(`${apiHost}/${buildGetAppSettingsRoute(':itemId')}`, async (req, res, ctx) => {
-      const reqItemId = req.params.itemId;
+    http.get(`${apiHost}/${buildGetAppSettingsRoute(':itemId')}`, async ({ params, request }) => {
+      const reqItemId = params.itemId;
 
-      const url = new URL(req.url);
+      const url = new URL(request.url);
       const settingName = url.searchParams.get('name');
 
       const value = await db.appSetting
@@ -199,25 +203,25 @@ export const buildMSWMocks = (
         // filter settings and return only setting with the given name if parameter was set otherwise return everything
         .and((x) => (settingName ? x.name === settingName : true))
         .toArray();
-      return res(ctx.status(200), ctx.json(value));
+      return HttpResponse.json(value);
     }),
 
     // POST /app-items/:itemId/app-settings
-    rest.post(
+    http.post(
       `${apiHost}/${buildPostAppSettingRoute({ itemId: ':itemId' })}`,
-      async (req, res, ctx) => {
-        const reqItemId = req.params.itemId;
+      async ({ params, request }) => {
+        const reqItemId = params.itemId;
         const item = await getItemFromId(reqItemId as string);
-        const memberId = getMemberIdFromToken(req.headers.get('Authorization'));
+        const memberId = getMemberIdFromToken(request.headers.get('Authorization'));
         const member = await getMemberFromId(memberId);
         const permission = await getPermissionForMember(memberId);
 
         // when member is not an admin -> return an error
         if (PermissionLevel.Admin !== permission) {
-          return res(ctx.status(403), ctx.json({ message: 'member can not admin' }));
+          return new HttpResponse('member can not admin', { status: 403 });
         }
 
-        const body: Pick<AppSetting, 'data' | 'name'> = await req.json();
+        const body = (await request.json()) as Pick<AppSetting, 'data' | 'name'>;
         const appSetting: AppSetting = {
           id: v4(),
           createdAt: new Date().toISOString(),
@@ -229,28 +233,28 @@ export const buildMSWMocks = (
         const newId = await db.appSetting.add(appSetting);
         const value = await db.appSetting.get(newId);
 
-        return res(ctx.status(200), ctx.json(value));
+        return HttpResponse.json(value);
       },
     ),
 
     // PATCH /app-items/:itemId/app-settings/:id
-    rest.patch(
+    http.patch(
       `${apiHost}/${buildPatchAppSettingRoute({
         itemId: ':itemId',
         id: ':id',
       })}`,
-      async (req, res, ctx) => {
-        const { id } = req.params;
+      async ({ params, request }) => {
+        const { id } = params;
 
-        const memberId = getMemberIdFromToken(req.headers.get('Authorization'));
+        const memberId = getMemberIdFromToken(request.headers.get('Authorization'));
         const permission = await getPermissionForMember(memberId);
 
         // when member is not an admin -> return an error
         if (PermissionLevel.Admin !== permission) {
-          return res(ctx.status(403), ctx.json({ message: 'member can not admin' }));
+          return new HttpResponse('member can not admin', { status: 403 });
         }
 
-        const body: Pick<AppSetting, 'data' | 'id'> = await req.json();
+        const body = (await request.json()) as Pick<AppSetting, 'data' | 'id'>;
         const appSetting: Partial<MockAppSetting> = {
           updatedAt: new Date().toISOString(),
           ...body,
@@ -258,41 +262,118 @@ export const buildMSWMocks = (
         await db.appSetting.update(id as string, appSetting);
         const value = await db.appSetting.get(id as string);
 
-        return res(ctx.status(200), ctx.json(value));
+        return HttpResponse.json(value);
       },
     ),
 
     // DELETE /app-items/:itemId/app-setting/:id
-    rest.delete(
+    http.delete(
       `${apiHost}/${buildDeleteAppSettingRoute({
         itemId: ':itemId',
         id: ':id',
       })}`,
-      async (req, res, ctx) => {
-        const { id } = req.params;
+      async ({ params, request }) => {
+        const { id } = params;
 
-        const memberId = getMemberIdFromToken(req.headers.get('Authorization'));
+        const memberId = getMemberIdFromToken(request.headers.get('Authorization'));
         const permission = await getPermissionForMember(memberId);
 
         // when member is not an admin -> return an error
         if (PermissionLevel.Admin !== permission) {
-          return res(ctx.status(403), ctx.json({ message: 'member can not admin' }));
+          return new HttpResponse('member can not admin', { status: 403 });
         }
 
         const value = await db.appSetting.get(id as string);
         await db.appSetting.delete(id as string);
 
-        return res(ctx.status(200), ctx.json(value));
+        return HttpResponse.json(value);
       },
     ),
+
+    // mock upload file
+    http.post(`${apiHost}/${buildUploadAppSettingFilesRoute(':id')}`, async ({ request }) => {
+      const url = new URL(request.url);
+      const itemId = url.searchParams.get('id');
+
+      const data = await request.formData();
+      const file = data.get('file');
+
+      if (!file) {
+        return new HttpResponse('Missing document', { status: 400 });
+      }
+
+      if (!(file instanceof File)) {
+        return new HttpResponse('Uploaded document is not a File', {
+          status: 400,
+        });
+      }
+
+      const item = await getItemFromId(itemId as string);
+      const memberId = getMemberIdFromToken(request.headers.get('Authorization'));
+      const member = await getMemberFromId(memberId);
+      const permission = await getPermissionForMember(memberId);
+
+      // when member is not an admin -> return an error
+      if (PermissionLevel.Admin !== permission) {
+        return new HttpResponse('member can not admin', { status: 403 });
+      }
+
+      const appSettingId = v4();
+      const path = `apps/app-setting/${item.id}/${appSettingId}`;
+      const appSetting: AppSetting = {
+        id: appSettingId,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        item,
+        creator: member,
+        name: 'file',
+        data: {
+          path,
+        },
+      };
+      const newId = await db.appSetting.add(appSetting);
+      const value = await db.appSetting.get(newId);
+
+      // save the file in the mocked database
+      await db.uploadedFiles.add({ id: appSettingId, file });
+
+      return HttpResponse.json(value);
+    }),
+    // GET /app-items/app-settings/:appSettingId/download
+    http.get(
+      `${apiHost}/${buildDownloadAppSettingFileRoute(':appSettingId')}`,
+      async ({ params }) => {
+        const { appSettingId } = params;
+        const url = buildAppSettingDownloadUrl(appSettingId as string);
+
+        return HttpResponse.text(url);
+      },
+    ),
+    // GET /download-app-setting-url/:id
+    http.get(`${buildAppSettingDownloadUrl(':appSettingId')}`, async ({ params }) => {
+      const { appSettingId } = params;
+
+      try {
+        // retrieve the file from the mocked db (in prod, it's retrieving the path on AWS)
+        const res = await db.uploadedFiles.get(appSettingId as string);
+        if (!res) {
+          throw new Error('The file was not found');
+        }
+
+        return new HttpResponse(res.file);
+      } catch (e) {
+        console.error(e);
+        return HttpResponse.json({ error: 'file not found' }, { status: 404 });
+      }
+    }),
 
     // *************************
     //       App Action
     // *************************
 
     // GET /app-items/:itemId/app-action
-    rest.get(`${apiHost}/${buildGetAppActionsRoute(':itemId')}`, async (req, res, ctx) => {
-      const memberId = getMemberIdFromToken(req.headers.get('Authorization'));
+    http.get(`${apiHost}/${buildGetAppActionsRoute(':itemId')}`, async ({ request }) => {
+      const memberId = getMemberIdFromToken(request.headers.get('Authorization'));
       const permission = await getPermissionForMember(memberId);
       let value;
       switch (permission) {
@@ -307,19 +388,19 @@ export const buildMSWMocks = (
           value = await db.appAction.where('memberId').equals(memberId).toArray();
           break;
       }
-      return res(ctx.status(200), ctx.json(value));
+      return HttpResponse.json(value);
     }),
 
     // POST /app-items/:itemId/app-action
-    rest.post(
+    http.post(
       `${apiHost}/${buildPostAppActionRoute({ itemId: ':itemId' })}`,
-      async (req, res, ctx) => {
-        const reqItemId = req.params.itemId;
+      async ({ params, request }) => {
+        const reqItemId = params.itemId;
         const item = await getItemFromId(reqItemId as string);
-        const memberId = getMemberIdFromToken(req.headers.get('Authorization'));
+        const memberId = getMemberIdFromToken(request.headers.get('Authorization'));
         const member = await getMemberFromId(memberId);
 
-        const body: Pick<AppAction, 'data' | 'type'> = await req.json();
+        const body = (await request.json()) as Pick<AppAction, 'data' | 'type'>;
         const appAction: AppAction = {
           id: v4(),
           createdAt: new Date().toISOString(),
@@ -329,7 +410,7 @@ export const buildMSWMocks = (
         };
         const value = await db.appAction.add(appAction);
 
-        return res(ctx.status(200), ctx.json(value));
+        return HttpResponse.json(value);
       },
     ),
 
@@ -337,49 +418,48 @@ export const buildMSWMocks = (
     //       App Context
     // *************************
     // /app-items/:itemId/context
-    rest.get(`${apiHost}/${buildGetContextRoute(':itemId')}`, async (req, res, ctx) => {
-      const { itemId: reqItemId } = req.params;
+    http.get(`${apiHost}/${buildGetContextRoute(':itemId')}`, async ({ params }) => {
+      const { itemId: reqItemId } = params;
       const value = {
         members: await db.member.toArray(),
         ...(await db.item.get(reqItemId as string)),
       };
 
-      return res(ctx.status(200), ctx.json(value));
+      return HttpResponse.json(value);
     }),
 
     // *************************
     //       Chatbot
     // *************************
     // /app-items/:itemId/chat-bot
-    rest.post(`${apiHost}/${buildPostChatBotRoute(':itemId')}`, async (_req, res, ctx) =>
-      res(
-        ctx.status(200),
-        ctx.json({ completion: 'biiip boop I am a chatbot', model: 'fake-gpt' }),
-      ),
+    http.post(`${apiHost}/${buildPostChatBotRoute(':itemId')}`, async () =>
+      HttpResponse.json({ completion: 'biiip boop I am a chatbot', model: 'fake-gpt' }),
     ),
 
     // plumbing
-    rest.delete('/__mocks/reset', (_req, res, ctx) => {
+    http.delete('/__mocks/reset', () => {
       db.resetDB({ ...database, appContext });
-      return res(ctx.status(200));
+      return new HttpResponse();
     }),
-    rest.post('/__mocks/seed', async (req, res, ctx) => {
-      const seedData = await req.json();
+    http.post('/__mocks/seed', async ({ request }) => {
+      const seedData = (await request.json()) as { data?: Partial<Database> } & {
+        appContext?: LocalContext;
+      };
       db.resetDB(seedData);
-      return res(ctx.status(200));
+      return new HttpResponse();
     }),
-    rest.get('/__mocks/context', async (req, res, ctx) => {
-      const memberId = getMemberIdFromToken(req.headers.get('Authorization'));
+    http.get('/__mocks/context', async ({ request }) => {
+      const memberId = getMemberIdFromToken(request.headers.get('Authorization'));
       const value = await db.appContext.where('memberId').equals(memberId).first();
-      return res(ctx.status(200), ctx.json(value));
+      return HttpResponse.json(value);
     }),
-    rest.post('/__mocks/context', async (req, res, ctx) => {
-      const memberId = getMemberIdFromToken(req.headers.get('Authorization'));
-      const body: Partial<LocalContext> = await req.json();
+    http.post('/__mocks/context', async ({ request }) => {
+      const memberId = getMemberIdFromToken(request.headers.get('Authorization'));
+      const body = (await request.json()) as Partial<LocalContext>;
       await db.appContext.update(memberId, body);
 
       const value = await db.appContext.where('memberId').equals(memberId).first();
-      return res(ctx.status(200), ctx.json(value));
+      return HttpResponse.json(value);
     }),
   ];
 

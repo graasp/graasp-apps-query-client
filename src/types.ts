@@ -97,6 +97,7 @@ export type MockAppSetting = Omit<AppSetting, 'item' | 'creator'> & {
   itemId: string;
   creatorId: string;
 };
+export type MockUploadedFile = { id: string; file: File };
 
 export interface Database {
   appData: AppData[];
@@ -105,6 +106,8 @@ export interface Database {
   // we pass the members as `CompleteMember` to be able to access all their properties, but they will be exposed as `Member`
   members: CompleteMember[];
   items: DiscriminatedItem[];
+  // allows to mock uploaded files normally stored in AWS
+  uploadedFiles: MockUploadedFile[];
 }
 
 export type ChatBotCompletion = {
