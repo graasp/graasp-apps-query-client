@@ -11,7 +11,7 @@ import {
 import { Factory, Model, Response, RestSerializer, Server, createServer } from 'miragejs';
 import { v4 } from 'uuid';
 
-import { API_ROUTES, buildDownloadAppSettingFileRoute } from '../../api/routes';
+import { API_ROUTES, buildDownloadAppSettingFileRoute, buildGetFile } from '../../api/routes';
 import { Database, LocalContext } from '../../types';
 import { MOCK_SERVER_MEMBER, buildDatabase, buildMockLocalContext } from '../fixtures';
 import { ExternalUrls } from '../types';
@@ -314,6 +314,41 @@ export const mockMirageServer = ({
 
         return a.attrs.data.fileUrl;
       });
+      this.get(`/${buildGetFile(':url')}`, (schema, request) => {
+        const { url } = request.params;
+
+        if (url.includes('.pdf')) {
+          // Simulate a PDF file response
+          const pdfData = new Uint8Array([0x25, 0x50, 0x44, 0x46, 0x2d]); // This represents '%PDF-' (start of a PDF file)
+          return pdfData.buffer;
+        }
+
+        if (url.includes('.png')) {
+          // Simulate a PNG file response
+          const pngData = new Uint8Array([
+            0x89,
+            0x50,
+            0x4e,
+            0x47,
+            0x0d,
+            0x0a,
+            0x1a,
+            0x0a, // PNG file signature
+            0x00,
+            0x00,
+            0x00,
+            0x0d,
+            0x49,
+            0x48,
+            0x44,
+            0x52, // IHDR chunk
+          ]);
+          return pngData.buffer;
+        }
+
+        return new Response(404, {}, { errors: ['not found'] });
+      });
+
       // context
       this.get(`/${buildGetContextRoute(currentItem.id)}`, (schema) =>
         // todo: complete returned data
