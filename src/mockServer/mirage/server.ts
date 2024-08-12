@@ -11,7 +11,7 @@ import {
 import { Factory, Model, Response, RestSerializer, Server, createServer } from 'miragejs';
 import { v4 } from 'uuid';
 
-import { API_ROUTES } from '../../api/routes';
+import { API_ROUTES, buildDownloadAppSettingFileRoute } from '../../api/routes';
 import { Database, LocalContext } from '../../types';
 import { MOCK_SERVER_MEMBER, buildDatabase, buildMockLocalContext } from '../fixtures';
 import { ExternalUrls } from '../types';
@@ -301,7 +301,19 @@ export const mockMirageServer = ({
           return data.attrs;
         },
       );
+      this.get(`/${buildDownloadAppSettingFileRoute(':id')}`, (schema: any, request) => {
+        if (!currentMember) {
+          return new Response(401, {}, { errors: ['user not authenticated'] });
+        }
 
+        const { id } = request.params;
+        const a = schema.findBy('appSetting', { id });
+        if (!a) {
+          return new Response(404, {}, { errors: ['not found'] });
+        }
+
+        return a.attrs.data.fileUrl;
+      });
       // context
       this.get(`/${buildGetContextRoute(currentItem.id)}`, (schema) =>
         // todo: complete returned data
