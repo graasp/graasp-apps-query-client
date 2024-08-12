@@ -11,7 +11,7 @@ import {
 import { RestHandler, rest } from 'msw';
 import { v4 } from 'uuid';
 
-import { API_ROUTES } from '../../api/routes';
+import { API_ROUTES, buildGetFile } from '../../api/routes';
 import { Database, LocalContext, MockAppSetting } from '../../types';
 import { AppMocks } from './dexie-db';
 
@@ -25,6 +25,7 @@ const {
   // todo: implement mock file upload
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   buildDownloadAppDataFileRoute,
+  buildDownloadAppSettingFileRoute,
   buildGetAppActionsRoute,
   buildGetAppSettingsRoute,
   buildPatchAppSettingRoute,
@@ -285,6 +286,84 @@ export const buildMSWMocks = (
         return res(ctx.status(200), ctx.json(value));
       },
     ),
+
+    // GET /app-items/app-settings/:appSettingId/download
+    rest.get(
+      `${apiHost}/${buildDownloadAppSettingFileRoute(':appSettingId')}`,
+      async (req, res, ctx) => {
+        const reqItemId = req.params.appSettingId;
+
+        const value = await db.appSetting.get(reqItemId as string);
+        const url = value?.data?.fileUrl; // assume that we have fileUrl within data setting
+
+        if (!url) {
+          // Handle the case where the URL is not found
+          return res(ctx.status(404), ctx.json({ error: 'URL not found' }));
+        }
+
+        return res(ctx.status(200), ctx.text(url as string));
+      },
+    ),
+    // GET /app-items/app-settings/:appSettingId/download
+    rest.get(
+      `${apiHost}/${buildDownloadAppSettingFileRoute(':appSettingId')}`,
+      async (req, res, ctx) => {
+        const reqItemId = req.params.appSettingId;
+
+        const value = await db.appSetting.get(reqItemId as string);
+        const url = value?.data?.fileUrl; // assume that we have fileUrl within data setting
+
+        if (!url) {
+          // Handle the case where the URL is not found
+          return res(ctx.status(404), ctx.json({ error: 'URL not found' }));
+        }
+
+        return res(ctx.status(200), ctx.text(url as string));
+      },
+    ),
+
+    // GET /app-items/app-settings/:fileUrl
+    rest.get(`${apiHost}/${buildGetFile(':fileURL')}`, async (req, res, ctx) => {
+      const fileURL = req.params.fileURL;
+
+      if (fileURL.includes('.pdf')) {
+        // Simulate a PDF file response
+        const pdfData = new Uint8Array([0x25, 0x50, 0x44, 0x46, 0x2d]); // This represents '%PDF-' (start of a PDF file)
+        return res(
+          ctx.status(200),
+          ctx.set('Content-Type', 'application/pdf'), // MIME type for PDF
+          ctx.body(pdfData.buffer), // Return the simulated binary data for the PDF
+        );
+      }
+
+      if (fileURL.includes('.png')) {
+        // Simulate a PNG file response
+        const pngData = new Uint8Array([
+          0x89,
+          0x50,
+          0x4e,
+          0x47,
+          0x0d,
+          0x0a,
+          0x1a,
+          0x0a, // PNG file signature
+          0x00,
+          0x00,
+          0x00,
+          0x0d,
+          0x49,
+          0x48,
+          0x44,
+          0x52, // IHDR chunk
+        ]);
+        return res(
+          ctx.status(200),
+          ctx.set('Content-Type', 'image/png'), // MIME type for PNG
+          ctx.body(pngData.buffer), // Return the simulated binary data for the PNG
+        );
+      }
+      return res(ctx.status(404), ctx.json({ error: 'File not found or unsupported file type' }));
+    }),
 
     // *************************
     //       App Action
