@@ -11,7 +11,7 @@ import {
 import { Factory, Model, Response, RestSerializer, Server, createServer } from 'miragejs';
 import { v4 } from 'uuid';
 
-import { API_ROUTES, buildDownloadAppSettingFileRoute, buildGetFile } from '../../api/routes';
+import { API_ROUTES, buildDownloadAppSettingFileRoute } from '../../api/routes';
 import { Database, LocalContext } from '../../types';
 import { MOCK_SERVER_MEMBER, buildDatabase, buildMockLocalContext } from '../fixtures';
 import { ExternalUrls } from '../types';
@@ -39,6 +39,7 @@ const ApplicationSerializer = RestSerializer.extend({
 });
 
 const buildAppDataDownloadUrl = (id: string): string => `/download-app-data-url/${id}`;
+const buildAppSettingDownloadUrl = (id: string): string => `/download-app-setting-url/${id}`;
 
 export const mockMirageServer = ({
   database = buildDatabase(),
@@ -301,60 +302,21 @@ export const mockMirageServer = ({
           return data.attrs;
         },
       );
-      this.get(`/${buildDownloadAppSettingFileRoute(':id')}`, (schema: any, request) => {
-        if (!currentMember) {
-          return new Response(401, {}, { errors: ['user not authenticated'] });
-        }
-
+      this.get(`/${buildDownloadAppSettingFileRoute(':id')}`, (schema, request) => {
         const { id } = request.params;
-        const a = schema.findBy('appSetting', { id });
-        if (!a) {
-          return new Response(404, {}, { errors: ['not found'] });
-        }
 
-        return a.attrs.data.fileUrl;
+        // this call returns the app settings itself for simplification
+        return buildAppSettingDownloadUrl(id);
       });
-      this.get(`/${buildGetFile(':url')}`, (schema, request) => {
-        const { url } = request.params;
+      this.get(`/${buildAppSettingDownloadUrl(':id')}`, (schema, request) => {
+        const { id } = request.params;
 
-        if (url.includes('.pdf')) {
-          // Simulate a PDF file response
-          const pdfData = new Uint8Array([0x25, 0x50, 0x44, 0x46, 0x2d]); // This represents '%PDF-' (start of a PDF file)
-          return new Response(
-            200,
-            { 'Content-Type': 'application/pdf' }, // Set correct MIME type
-            pdfData.buffer, // Return the simulated binary data for the PDF
-          );
-        }
-
-        if (url.includes('.png')) {
-          // Simulate a PNG file response
-          const pngData = new Uint8Array([
-            0x89,
-            0x50,
-            0x4e,
-            0x47,
-            0x0d,
-            0x0a,
-            0x1a,
-            0x0a, // PNG file signature
-            0x00,
-            0x00,
-            0x00,
-            0x0d,
-            0x49,
-            0x48,
-            0x44,
-            0x52, // IHDR chunk
-          ]);
-          return new Response(
-            200,
-            { 'Content-Type': 'image/png' }, // Set correct MIME type
-            pngData.buffer, // Return the simulated binary data for the PDF
-          );
-        }
-
-        return new Response(404, {}, { errors: ['not found'] });
+        // bug: this is supposed to be a blob
+        return new Response(
+          400,
+          {},
+          { errors: [`mirage doesn't support formats rather than text, fileId ${id}`] },
+        );
       });
 
       // context

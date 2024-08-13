@@ -53,10 +53,6 @@ export const buildDeleteAppSettingRoute = (payload: { itemId: string; id: string
 export const buildPostChatBotRoute = (itemId: string) =>
   `${APP_ITEMS_ROUTE}/${itemId}/${CHAT_BOT_ENDPOINT}`;
 
-// this only used in mock api to get files
-export const buildGetFile = (fileURl: string): string =>
-  `${APP_ITEMS_ROUTE}/${APP_SETTINGS_ROUTE}/${fileURl}`;
-
 export const API_ROUTES = {
   buildDownloadAppDataFileRoute,
   buildDeleteAppDataRoute,
@@ -74,5 +70,4 @@ export const API_ROUTES = {
   buildUploadAppSettingFilesRoute,
   buildDownloadAppSettingFileRoute,
   buildPostChatBotRoute,
-  buildGetFile,
 };

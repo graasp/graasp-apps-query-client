@@ -8,10 +8,12 @@ import {
   PermissionLevel,
 } from '@graasp/sdk';
 
+import fs from 'fs';
 import { RestHandler, rest } from 'msw';
+import path from 'path';
 import { v4 } from 'uuid';
 
-import { API_ROUTES, buildGetFile } from '../../api/routes';
+import { API_ROUTES } from '../../api/routes';
 import { Database, LocalContext, MockAppSetting } from '../../types';
 import { AppMocks } from './dexie-db';
 
@@ -52,6 +54,9 @@ export const buildMSWMocks = (
 ): { handlers: RestHandler[]; db: AppMocks } => {
   const { apiHost } = appContext;
   const db = new AppMocks(dbName);
+
+  const buildAppSettingDownloadUrl = (id: string, format?: string): string =>
+    `${apiHost}/download-app-setting-url/${id}?format=${format}`;
 
   const getPermissionForMember = async (memberId: string): Promise<PermissionLevel> => {
     const localContextForMember = await db.appContext.get(memberId);
@@ -288,85 +293,43 @@ export const buildMSWMocks = (
     ),
 
     // GET /app-items/app-settings/:appSettingId/download
+    // here we get file format from data.format to enable mocking file based on different format
     rest.get(
       `${apiHost}/${buildDownloadAppSettingFileRoute(':appSettingId')}`,
       async (req, res, ctx) => {
-        const reqItemId = req.params.appSettingId;
+        const { appSettingId } = req.params;
 
-        const value = await db.appSetting.get(reqItemId as string);
-        const url = value?.data?.fileUrl; // assume that we have fileUrl within data setting
+        const value = await db.appSetting.get(appSettingId as string);
+        const format = value?.data?.format; // assume that we have file format within data setting
+        const url = buildAppSettingDownloadUrl(appSettingId as string, format as string);
 
-        if (!url) {
-          // Handle the case where the URL is not found
-          return res(ctx.status(404), ctx.json({ error: 'URL not found' }));
-        }
-
-        return res(ctx.status(200), ctx.text(url as string));
+        return res(ctx.status(200), ctx.text(url));
       },
     ),
-    // GET /app-items/app-settings/:appSettingId/download
-    rest.get(
-      `${apiHost}/${buildDownloadAppSettingFileRoute(':appSettingId')}`,
-      async (req, res, ctx) => {
-        const reqItemId = req.params.appSettingId;
-        console.log('hi getting download');
-        const value = await db.appSetting.get(reqItemId as string);
-        console.log(value, 'value');
+    // GET /download-app-setting-url/:id
+    rest.get(`${apiHost}/${buildAppSettingDownloadUrl(':id')}`, async (req, res, ctx) => {
+      const url = new URL(req.url);
+      const format = url.searchParams.get('format');
 
-        const url = value?.data?.fileUrl; // assume that we have fileUrl within data setting
+      if (format === 'png') {
+        const filePath = path.resolve(__dirname, 'mock-img.png');
+        const imgBuffer = fs.readFileSync(filePath);
 
-        console.log(url, 'url');
-
-        if (!url) {
-          // Handle the case where the URL is not found
-          return res(ctx.status(404), ctx.json({ error: 'URL not found' }));
-        }
-
-        return res(ctx.status(200), ctx.text(url as string));
-      },
-    ),
-
-    // GET /app-items/app-settings/:fileUrl
-    rest.get(`${apiHost}/${buildGetFile(':fileURL')}`, async (req, res, ctx) => {
-      const fileURL = req.params.fileURL;
-
-      if (fileURL.includes('.pdf')) {
-        // Simulate a PDF file response
-        const pdfData = new Uint8Array([0x25, 0x50, 0x44, 0x46, 0x2d]); // This represents '%PDF-' (start of a PDF file)
-        return res(
-          ctx.status(200),
-          ctx.set('Content-Type', 'application/pdf'), // MIME type for PDF
-          ctx.body(pdfData.buffer), // Return the simulated binary data for the PDF
-        );
-      }
-
-      if (fileURL.includes('.png')) {
-        // Simulate a PNG file response
-        const pngData = new Uint8Array([
-          0x89,
-          0x50,
-          0x4e,
-          0x47,
-          0x0d,
-          0x0a,
-          0x1a,
-          0x0a, // PNG file signature
-          0x00,
-          0x00,
-          0x00,
-          0x0d,
-          0x49,
-          0x48,
-          0x44,
-          0x52, // IHDR chunk
-        ]);
         return res(
           ctx.status(200),
           ctx.set('Content-Type', 'image/png'), // MIME type for PNG
-          ctx.body(pngData.buffer), // Return the simulated binary data for the PNG
+          ctx.body(imgBuffer),
         );
       }
-      return res(ctx.status(404), ctx.json({ error: 'File not found or unsupported file type' }));
+      if (format === 'pdf') {
+        const pdfData = new Uint8Array([0x25, 0x50, 0x44, 0x46, 0x2d]); // This represents '%PDF-' (start of a PDF file)
+        return res(
+          ctx.status(200),
+          ctx.set('Content-Type', 'image/png'), // MIME type for PNG
+          ctx.body(pdfData.buffer),
+        );
+      }
+      return res(ctx.status(404), ctx.json({ error: 'file not found' }));
     }),
 
     // *************************
