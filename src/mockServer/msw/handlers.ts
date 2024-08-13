@@ -307,7 +307,7 @@ export const buildMSWMocks = (
       },
     ),
     // GET /download-app-setting-url/:id
-    rest.get(`${apiHost}/${buildAppSettingDownloadUrl(':id')}`, async (req, res, ctx) => {
+    rest.get(`${buildAppSettingDownloadUrl(':id')}`, async (req, res, ctx) => {
       const url = new URL(req.url);
       const format = url.searchParams.get('format');
 
