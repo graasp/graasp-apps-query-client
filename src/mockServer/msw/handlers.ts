@@ -312,7 +312,7 @@ export const buildMSWMocks = (
       const format = url.searchParams.get('format');
 
       if (format === 'png') {
-        const filePath = path.resolve(__dirname, 'mock-img.png');
+        const filePath = path.resolve('../mock-img.png');
         const imgBuffer = fs.readFileSync(filePath);
 
         return res(
