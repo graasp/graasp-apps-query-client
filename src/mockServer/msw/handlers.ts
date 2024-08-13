@@ -55,8 +55,8 @@ export const buildMSWMocks = (
   const { apiHost } = appContext;
   const db = new AppMocks(dbName);
 
-  const buildAppSettingDownloadUrl = (id: string, format?: string): string =>
-    `${apiHost}/download-app-setting-url/${id}?format=${format}`;
+  const buildAppSettingDownloadUrl = (id: string): string =>
+    `${apiHost}/download-app-setting-url/${id}`;
 
   const getPermissionForMember = async (memberId: string): Promise<PermissionLevel> => {
     const localContextForMember = await db.appContext.get(memberId);
@@ -301,9 +301,9 @@ export const buildMSWMocks = (
 
         const value = await db.appSetting.get(appSettingId as string);
         const format = value?.data?.format; // assume that we have file format within data setting
-        const url = buildAppSettingDownloadUrl(appSettingId as string, format as string);
+        const url = buildAppSettingDownloadUrl(appSettingId as string);
 
-        return res(ctx.status(200), ctx.text(url));
+        return res(ctx.status(200), ctx.text(format ? `${url}?format=${format}` : url));
       },
     ),
     // GET /download-app-setting-url/:id
