@@ -313,7 +313,7 @@ export const buildMSWMocks = (
 
       if (format === 'png') {
         const buffer = await fetch(
-          `https://www.kindpng.com/picc/m/148-1481404_clipart-small-size-image-download-hd-png-download.png`,
+          `https://careforplant.com/wp-content/uploads/2024/01/1677123490_gagaru-club-p-krasivie-malenkie-tsvetochki-krasivo-52-min-1-1080x675.jpg`,
         ).then((response) => response.arrayBuffer());
 
         return res(
