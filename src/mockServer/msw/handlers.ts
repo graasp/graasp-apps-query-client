@@ -8,14 +8,13 @@ import {
   PermissionLevel,
 } from '@graasp/sdk';
 
-import fs from 'fs';
 import { RestHandler, rest } from 'msw';
-import path from 'path';
 import { v4 } from 'uuid';
 
 import { API_ROUTES } from '../../api/routes';
 import { Database, LocalContext, MockAppSetting } from '../../types';
 import { AppMocks } from './dexie-db';
+import mockImg from './mock-img.png';
 
 const {
   buildGetAppDataRoute,
@@ -312,9 +311,7 @@ export const buildMSWMocks = (
       const format = url.searchParams.get('format');
 
       if (format === 'png') {
-        const buffer = await fetch(
-          `https://careforplant.com/wp-content/uploads/2024/01/1677123490_gagaru-club-p-krasivie-malenkie-tsvetochki-krasivo-52-min-1-1080x675.jpg`,
-        ).then((response) => response.arrayBuffer());
+        const buffer = await fetch(mockImg).then((response) => response.arrayBuffer());
 
         return res(
           ctx.status(200),
