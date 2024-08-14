@@ -312,13 +312,14 @@ export const buildMSWMocks = (
       const format = url.searchParams.get('format');
 
       if (format === 'png') {
-        const filePath = path.resolve('../mock-img.png');
-        const imgBuffer = fs.readFileSync(filePath);
+        const buffer = await fetch(
+          `https://www.kindpng.com/picc/m/148-1481404_clipart-small-size-image-download-hd-png-download.png`,
+        ).then((response) => response.arrayBuffer());
 
         return res(
           ctx.status(200),
           ctx.set('Content-Type', 'image/png'), // MIME type for PNG
-          ctx.body(imgBuffer),
+          ctx.body(buffer),
         );
       }
       if (format === 'pdf') {
