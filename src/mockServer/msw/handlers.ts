@@ -293,7 +293,11 @@ export const buildMSWMocks = (
 
     // mock up upload file
     rest.post(`${apiHost}/upload-file`, async (req, res, ctx) => {
+      // eslint-disable-next-line no-console
+      console.log('here Iam');
       const { format, name, itemId, memberId } = await req.json();
+      // eslint-disable-next-line no-console
+      console.log({ format, name, itemId, memberId }, 'here Iam');
       const item = await getItemFromId(itemId as string);
       const member = await getMemberFromId(memberId);
 
@@ -309,6 +313,8 @@ export const buildMSWMocks = (
         },
       };
       await db.appSetting.add(appSetting);
+      // eslint-disable-next-line no-console
+      console.log('after db insertion');
       return res(ctx.status(201));
     }),
     // GET /app-items/app-settings/:appSettingId/download
