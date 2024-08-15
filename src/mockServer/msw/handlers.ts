@@ -292,7 +292,7 @@ export const buildMSWMocks = (
     ),
 
     // mock up upload file
-    rest.post(`/upload-file`, async (req, res, ctx) => {
+    rest.post(`${apiHost}/upload-file`, async (req, res, ctx) => {
       // eslint-disable-next-line no-console
       console.log('here Iam');
       const { format, name, itemId, memberId } = await req.json();
