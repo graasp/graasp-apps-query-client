@@ -291,6 +291,26 @@ export const buildMSWMocks = (
       },
     ),
 
+    // mock up upload file
+    rest.post(`/upload-file`, async (req, res, ctx) => {
+      const { format, name, itemId, memberId } = await req.json();
+      const item = await getItemFromId(itemId as string);
+      const member = await getMemberFromId(memberId);
+
+      const appSetting: AppSetting = {
+        id: v4(),
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        item,
+        name,
+        creator: member,
+        data: {
+          format,
+        },
+      };
+      await db.appSetting.add(appSetting);
+      return res(ctx.status(201));
+    }),
     // GET /app-items/app-settings/:appSettingId/download
     // here we get file format from data.format to enable mocking file based on different format
     rest.get(
