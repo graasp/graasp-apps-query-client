@@ -292,7 +292,7 @@ export const buildMSWMocks = (
     ),
 
     // mock up upload file
-    rest.post(`/upload-file`, async (req, res, ctx) => {
+    rest.post(`${apiHost}/upload-file`, async (req, res, ctx) => {
       const { format, name, itemId, memberId } = await req.json();
       const item = await getItemFromId(itemId as string);
       const member = await getMemberFromId(memberId);
