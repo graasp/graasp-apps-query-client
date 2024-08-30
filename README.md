@@ -101,19 +101,16 @@ if (process.env.REACT_APP_ENABLE_MOCK_API === 'true') {
 ```js
 import { buildDatabase } from '@graasp/apps-query-client';
 
-Cypress.Commands.add(
-  'setUpApi',
-  ({ currentMember = CURRENT_MEMBER, database = {}, appContext } = {}) => {
-    // mock api and database
-    Cypress.on('window:before:load', (win) => {
-      win.database = buildDatabase({
-        members: Object.values(MEMBERS),
-        ...database,
-      });
-      win.appContext = appContext;
+Cypress.Commands.add('setUpApi', ({ currentMember = CURRENT_MEMBER, database = {}, appContext } = {}) => {
+  // mock api and database
+  Cypress.on('window:before:load', (win) => {
+    win.database = buildDatabase({
+      members: Object.values(MEMBERS),
+      ...database,
     });
-  },
-);
+    win.appContext = appContext;
+  });
+});
 ```
 
 3. Then in all your tests you will need to set up the database and context. The default values are configured so you can easily mount an empty and operational database.
@@ -131,3 +128,41 @@ cy.setUpApi({
   },
 });
 ```
+
+### Mock Uploaded files
+
+If you need to have files in the mocked server, you can use the `uploadedFiles` array of the `setupApi`. The following are steps to follow if you want to upload and retrieve a file for an app.
+
+1. Create a new `AppSetting` and add it in the `appSettings` array of the `setupApi` (in the Cypress test of the frontend).
+
+```ts
+// MOCK_FILE_APP_SETTING
+{
+  id: mockFileSettingId,
+  name: 'file', // should be named `file`! Do not change it!
+  data: {
+    path: `apps/app-setting/${item.id}/${mockFileSettingId}`, // This path should be mocked in the MSW! If you want to use another path, you just have to mock it.
+  },
+  item,
+  creator,
+  createdAt,
+  updatedAt,
+};
+```
+
+2. Load a file and transform it into a `File` type. With Cypress, have a look to `cy.fixtures` (put the `setupApi` in the `then` callback).
+3. Add the loaded file in the array.
+
+```ts
+uploadedFiles: [
+  {
+    id: MOCK_FILE_APP_SETTING.id,
+    file,
+  },
+],
+```
+
+4. Use the mocked route `GET /app-items/app-settings/:appSettingId/download` (or your mocked route) to retrieve the path of the file.
+5. Use the result of the previous request to download the file. In this example, it's the route `GET /download-app-setting-url/:appSettingId`.
+
+Another solution could be to upload your file from the Cypress test, by using the route `/app-items/app-settings-/upload?id=:itemId` for example.

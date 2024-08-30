@@ -58,10 +58,12 @@ export const buildDatabase = ({
   appSettings = [],
   members = [MOCK_SERVER_MEMBER],
   items = [MOCK_SERVER_ITEM],
+  uploadedFiles = [],
 }: Partial<Database> = {}): Database => ({
   appData,
   appActions,
   appSettings,
   members,
   items,
+  uploadedFiles,
 });
