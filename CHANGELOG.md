@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file. See [standa
 
 ## [3.5.1](https://github.com/graasp/graasp-apps-query-client/compare/v3.5.0...v3.5.1) (2024-08-30)
 
+### Features
+
+* feat(deps): migrates msw to v.2 ([#389](https://github.com/graasp/graasp-apps-query-client/issues/389)) ([6ffb427e](https://github.com/graasp/graasp-apps-query-client/commit/6ffb427e64f5bcc7633e6df65d4dd5c5ea6573a5))
+* feat: mocks upload app settings files ([#389](https://github.com/graasp/graasp-apps-query-client/issues/389)) ([6ffb427e](https://github.com/graasp/graasp-apps-query-client/commit/6ffb427e64f5bcc7633e6df65d4dd5c5ea6573a5))
 
 ### Bug Fixes
 
