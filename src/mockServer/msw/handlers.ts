@@ -422,7 +422,7 @@ export const buildMSWMocks = (
       const { itemId: reqItemId } = params;
       const value = {
         members: await db.member.toArray(),
-        ...(await db.item.get(reqItemId as string)),
+        item: await db.item.get(reqItemId as string),
       };
 
       return HttpResponse.json(value);
