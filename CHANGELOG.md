@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.5.2](https://github.com/graasp/graasp-apps-query-client/compare/v3.5.1...v3.5.2) (2024-09-12)
+
+
+### Bug Fixes
+
+* do not spread item in msw ([#393](https://github.com/graasp/graasp-apps-query-client/issues/393)) ([51be238](https://github.com/graasp/graasp-apps-query-client/commit/51be238edac9642188d25be17b3800eda2ebc8fa))
+
 ## [3.5.1](https://github.com/graasp/graasp-apps-query-client/compare/v3.5.0...v3.5.1) (2024-08-30)
 
 ### Features
