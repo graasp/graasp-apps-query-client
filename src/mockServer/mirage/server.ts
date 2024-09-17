@@ -1,11 +1,11 @@
 import {
+  AccountType,
   AppAction,
   AppData,
   AppDataVisibility,
   AppSetting,
   CompleteMember,
   MemberFactory,
-  MemberType,
 } from '@graasp/sdk';
 
 import { Factory, Model, Response, RestSerializer, Server, createServer } from 'miragejs';
@@ -74,7 +74,7 @@ export const mockMirageServer = ({
           extra: {},
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
-          type: MemberType.Individual,
+          type: AccountType.Individual,
         });
   const currentItem = items.find(({ id }) => id === currentItemId);
   if (!currentItem) {
@@ -100,6 +100,8 @@ export const mockMirageServer = ({
         data: () => ({}),
         type: (idx) => `app-data-type-${idx}`,
         item: currentItem,
+        account: currentMember,
+        /** deprecated use account */
         member: currentMember,
         creator: currentMember,
         visibility: () => AppDataVisibility.Member, // TODO: Is it right?
@@ -107,6 +109,8 @@ export const mockMirageServer = ({
       appActionResource: Factory.extend<AppAction>({
         id: () => v4(),
         item: currentItem,
+        account: currentMember,
+        /** deprecated use account */
         member: currentMember,
         createdAt: () => new Date().toISOString(),
         data: () => ({}),
@@ -128,7 +132,7 @@ export const mockMirageServer = ({
         name: (idx) => `member-${idx}`,
         createdAt: () => new Date().toISOString(),
         updatedAt: () => new Date().toISOString(),
-        type: MemberType.Individual,
+        type: AccountType.Individual,
         enableSaveActions: true,
         isValidated: true,
       }),
@@ -171,6 +175,8 @@ export const mockMirageServer = ({
         const data = JSON.parse(requestBody);
         return schema.create('appDataResource', {
           item: currentItem,
+          account: currentMember,
+          /** deprecated use account */
           member: currentMember,
           creator: currentMember,
           createdAt: new Date().toISOString(),
@@ -232,6 +238,8 @@ export const mockMirageServer = ({
         return schema.create('appActionResource', {
           ...data,
           item: currentItem,
+          account: currentMember,
+          /** deprecated use account */
           member: currentMember,
         });
       });
@@ -256,6 +264,8 @@ export const mockMirageServer = ({
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
           item: currentItem,
+          account: currentMember,
+          /** deprecated use account */
           member: currentMember,
           ...data,
         });
