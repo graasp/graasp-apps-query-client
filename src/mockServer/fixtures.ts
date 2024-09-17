@@ -1,11 +1,11 @@
 import {
+  AccountType,
   AppItemFactory,
   AppItemType,
   CompleteMember,
   Context,
   ItemType,
   MemberFactory,
-  MemberType,
   PermissionLevel,
 } from '@graasp/sdk';
 
@@ -17,7 +17,7 @@ export const MOCK_SERVER_MEMBER: CompleteMember = MemberFactory({
   name: 'mock-member-name',
   email: 'email@email.com',
   extra: {},
-  type: MemberType.Individual,
+  type: AccountType.Individual,
   createdAt: new Date().toISOString(),
   updatedAt: new Date().toISOString(),
 });

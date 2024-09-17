@@ -1,4 +1,5 @@
 import {
+  AccountType,
   AppAction,
   AppData,
   AppDataVisibility,
@@ -9,7 +10,6 @@ import {
   FolderItemType,
   ItemType,
   MemberFactory,
-  MemberType,
   PermissionLevel,
 } from '@graasp/sdk';
 
@@ -24,7 +24,7 @@ export const UNAUTHORIZED_RESPONSE = { some: 'error' };
 
 export const MEMBER_RESPONSE: CompleteMember = MemberFactory({
   name: 'username',
-  type: MemberType.Individual,
+  type: AccountType.Individual,
   email: 'username@graasp.org',
   extra: {},
 });
@@ -34,7 +34,7 @@ export const MEMBERS_RESPONSE: CompleteMember[] = [
   MemberFactory({
     name: 'username1',
     email: 'username1@graasp.org',
-    type: MemberType.Individual,
+    type: AccountType.Individual,
     extra: {},
   }),
 ];
