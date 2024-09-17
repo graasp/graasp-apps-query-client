@@ -63,7 +63,7 @@ export type LocalContext = {
   mobile?: boolean;
   apiHost: string;
   itemId: UUID;
-  memberId: UUID;
+  accountId: UUID;
   settings?: unknown;
   dev?: boolean;
   offline?: boolean;
@@ -84,14 +84,14 @@ export interface ApiData {
   apiHost: string;
 }
 
-export type MockAppData = Omit<AppData, 'item' | 'creator' | 'member'> & {
+export type MockAppData = Omit<AppData, 'item' | 'creator' | 'account'> & {
   itemId: string;
   creatorId: string;
-  memberId: string;
+  accountId: string;
 };
-export type MockAppAction = Omit<AppAction, 'item' | 'member'> & {
+export type MockAppAction = Omit<AppAction, 'item' | 'account'> & {
   itemId: string;
-  memberId: string;
+  accountId: string;
 };
 export type MockAppSetting = Omit<AppSetting, 'item' | 'creator'> & {
   itemId: string;

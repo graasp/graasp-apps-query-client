@@ -39,7 +39,7 @@ export const MOCK_SERVER_ITEM: AppItemType = AppItemFactory({
 
 export const buildMockLocalContext = (appContext?: Partial<LocalContext>): LocalContext => {
   const context: LocalContext = {
-    memberId: MOCK_SERVER_MEMBER.id,
+    accountId: MOCK_SERVER_MEMBER.id,
     itemId: MOCK_SERVER_ITEM.id,
     offline: false,
     apiHost: 'http://localhost:3000',

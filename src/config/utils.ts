@@ -42,7 +42,7 @@ export const getPermissionLevel = (queryClient: QueryClient) => {
 export const getData = (
   queryClient: QueryClient,
   options: { shouldMemberExist?: boolean } = {},
-): { itemId: string; memberId?: string; token: string } => {
+): { itemId: string; accountId?: string; token: string } => {
   const data = queryClient.getQueryData<LocalContext>(LOCAL_CONTEXT_KEY);
   if (!data) {
     throw new Error('`LocalContext` was undefined');
@@ -51,11 +51,11 @@ export const getData = (
   if (!token) {
     throw new MissingNecessaryDataError({ token });
   }
-  const { itemId, memberId } = data;
+  const { itemId, accountId } = data;
 
   if (options.shouldMemberExist ?? true) {
-    if (!memberId) {
-      console.debug('member id is not defined');
+    if (!accountId) {
+      console.debug('account id is not defined');
     }
   }
   if (!itemId) {
@@ -65,23 +65,23 @@ export const getData = (
     console.error('token is not defined');
   }
 
-  return { itemId, memberId, token };
+  return { itemId, accountId, token };
 };
 
 export const getDataOrThrow = (
   queryClient: QueryClient,
   options: { shouldMemberExist?: boolean } = {},
-): { itemId: string; memberId?: string; token: string } => {
-  const { itemId, token, memberId } = getData(queryClient);
+): { itemId: string; accountId?: string; token: string } => {
+  const { itemId, token, accountId } = getData(queryClient);
   if (!itemId || !token) {
     throw new MissingNecessaryDataError({ itemId, token });
   }
   if (options.shouldMemberExist ?? true) {
-    if (!memberId) {
-      throw new MissingNecessaryDataError({ itemId, token, memberId });
+    if (!accountId) {
+      throw new MissingNecessaryDataError({ itemId, token, accountId });
     }
   }
-  return { itemId, token, memberId };
+  return { itemId, token, accountId };
 };
 
 export const buildAppKeyAndOriginPayload = (

@@ -83,7 +83,7 @@ export const buildAppData = ({ id = v4(), data = {} }: Partial<AppData> = {}): A
   creator: MEMBER_RESPONSE,
   createdAt: new Date().toISOString(),
   updatedAt: new Date().toISOString(),
-  member: MEMBER_RESPONSE,
+  account: MEMBER_RESPONSE,
   item: MOCK_ITEM,
   visibility: AppDataVisibility.Member,
 });
@@ -95,7 +95,7 @@ export const buildAppAction = ({ id = v4(), data = {} }: Partial<AppAction> = {}
   data,
   type: 'action',
   createdAt: new Date().toISOString(),
-  member: MEMBER_RESPONSE,
+  account: MEMBER_RESPONSE,
   item: MOCK_ITEM,
 });
 
@@ -143,11 +143,11 @@ export enum RequestMethods {
 
 export const buildMockLocalContext = ({
   itemId = v4(),
-  memberId = v4(),
+  accountId = v4(),
 }: Partial<LocalContext> = {}): LocalContext => ({
   apiHost: API_HOST,
   itemId,
-  memberId,
+  accountId,
   settings: {},
   mobile: false,
   context: Context.Builder,

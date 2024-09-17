@@ -13,7 +13,7 @@ import { AutoResizer } from './AutoResizer';
 export const defaultContextValue: LocalContext = {
   apiHost: '',
   itemId: '',
-  memberId: '',
+  accountId: '',
   settings: {},
   mobile: false,
   dev: false,

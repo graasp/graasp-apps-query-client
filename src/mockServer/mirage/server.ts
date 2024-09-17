@@ -56,7 +56,7 @@ export const mockMirageServer = ({
   const { appData, appActions, appSettings, members, items } = database;
   const {
     itemId: currentItemId,
-    memberId: currentMemberId = MOCK_SERVER_MEMBER.id,
+    accountId: currentMemberId = MOCK_SERVER_MEMBER.id,
     apiHost,
   } = appContext;
   // mocked errors

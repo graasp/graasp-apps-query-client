@@ -50,9 +50,9 @@ export class MissingMessageChannelPortError extends Error {
 }
 
 export class MissingNecessaryDataError extends Error {
-  constructor({ itemId, memberId, token }: { itemId?: UUID; memberId?: UUID; token?: string }) {
+  constructor({ itemId, accountId, token }: { itemId?: UUID; accountId?: UUID; token?: string }) {
     super(
-      `itemId '${itemId}', memberId '${memberId}', token of length ${token?.length} are necessary data, but some are missing!`,
+      `itemId '${itemId}', accountId '${accountId}', token of length ${token?.length} are necessary data, but some are missing!`,
     );
   }
 }

@@ -40,7 +40,7 @@ export const mockServiceWorkerServer = ({
       if (database.uploadedFiles?.length) {
         transaction.table('uploadedFiles').bulkAdd(database.uploadedFiles);
       }
-      transaction.table('appContext').add(fullAppContext, fullAppContext.memberId);
+      transaction.table('appContext').add(fullAppContext, fullAppContext.accountId);
     } else {
       console.debug('There was no data to populate the database');
     }

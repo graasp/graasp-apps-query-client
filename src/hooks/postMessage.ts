@@ -18,7 +18,7 @@ import { LocalContext, QueryClientConfig, WindowPostMessage } from '../types';
 export const buildContext = (payload: LocalContext): LocalContext => {
   const {
     apiHost,
-    memberId,
+    accountId,
     itemId,
     permission = DEFAULT_PERMISSION, // write, admin, read
     context = DEFAULT_CONTEXT, // builder, explorer..., null = standalone
@@ -35,7 +35,7 @@ export const buildContext = (payload: LocalContext): LocalContext => {
     context,
     permission,
     itemId,
-    memberId,
+    accountId,
     lang,
     offline,
     dev,
@@ -259,7 +259,7 @@ const configurePostMessageHooks = (queryConfig: QueryClientConfig) => {
         if (queryConfig.isStandalone) {
           const context = queryClient.getQueryData<LocalContext>(LOCAL_CONTEXT_KEY);
           if (context) {
-            return `${MOCK_TOKEN} ${context.memberId}`;
+            return `${MOCK_TOKEN} ${context.accountId}`;
           }
           throw new Error('there was an error getting the query data for the LocalContext');
         }

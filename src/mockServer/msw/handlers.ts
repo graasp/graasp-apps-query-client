@@ -112,7 +112,7 @@ export const buildMSWMocks = (
               return true;
             }
             // if app data is not "visibility item" only return app data that were created by the member or addressed to him
-            return x.creator?.id === memberId || x.member.id === memberId;
+            return x.creator?.id === memberId || x.account.id === memberId;
           })
           // filter the app data by type if specified
           .and((x) => (dataType ? x.type === dataType : true))
@@ -129,7 +129,7 @@ export const buildMSWMocks = (
         const reqItemId = params.itemId;
         const item = await getItemFromId(reqItemId as string);
         const memberId = getMemberIdFromToken(request.headers.get('Authorization'));
-        const member = await getMemberFromId(memberId);
+        const account = await getMemberFromId(memberId);
 
         const body = (await request.json()) as Pick<AppData, 'data' | 'type'> & {
           visibility?: AppData['visibility'];
@@ -140,8 +140,8 @@ export const buildMSWMocks = (
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
           item,
-          creator: member,
-          member,
+          creator: account,
+          account,
           visibility: AppDataVisibility.Member,
           ...body,
         };
@@ -398,14 +398,14 @@ export const buildMSWMocks = (
         const reqItemId = params.itemId;
         const item = await getItemFromId(reqItemId as string);
         const memberId = getMemberIdFromToken(request.headers.get('Authorization'));
-        const member = await getMemberFromId(memberId);
+        const account = await getMemberFromId(memberId);
 
         const body = (await request.json()) as Pick<AppAction, 'data' | 'type'>;
         const appAction: AppAction = {
           id: v4(),
           createdAt: new Date().toISOString(),
           item,
-          member,
+          account,
           ...body,
         };
         const value = await db.appAction.add(appAction);

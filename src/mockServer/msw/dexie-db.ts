@@ -39,10 +39,10 @@ export class AppMocks extends Dexie {
     this.version(1).stores({
       item: 'id',
       member: 'id',
-      appContext: 'memberId',
-      appData: 'id, item.id, [item.id+creator.id], member.id, type, visibility',
+      appContext: 'accountId',
+      appData: 'id, item.id, [item.id+creator.id], member.id, account.id, type, visibility',
       appSetting: 'id, item.id, name',
-      appAction: 'id, memberId',
+      appAction: 'id, accountId',
     });
 
     this.version(2).stores({
@@ -59,7 +59,7 @@ export class AppMocks extends Dexie {
       this.member.bulkAdd(data.members);
     }
     if (data.appContext) {
-      this.appContext.add(data.appContext, data.appContext.memberId);
+      this.appContext.add(data.appContext, data.appContext.accountId);
     }
     if (data.appData?.length) {
       this.appData.bulkAdd(data.appData);
