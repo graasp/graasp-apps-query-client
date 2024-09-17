@@ -38,11 +38,11 @@ const getMemberIdFromToken = (bearer: string | null): string => {
   if (!bearer) {
     throw new Error('no bearer token');
   }
-  const memberId = bearer.split(' ').at(-1);
-  if (!memberId) {
+  const accountId = bearer.split(' ').at(-1);
+  if (!accountId) {
     throw new Error('Unable to extract memberId from token');
   }
-  return memberId;
+  return accountId;
 };
 
 export const buildMSWMocks = (
@@ -56,8 +56,8 @@ export const buildMSWMocks = (
   const buildAppSettingDownloadUrl = (id: string): string =>
     `${apiHost}/download-app-setting-url/${id}`;
 
-  const getPermissionForMember = async (memberId: string): Promise<PermissionLevel> => {
-    const localContextForMember = await db.appContext.get(memberId);
+  const getPermissionForMember = async (accountId: string): Promise<PermissionLevel> => {
+    const localContextForMember = await db.appContext.get(accountId);
     if (!localContextForMember) {
       throw new Error('Member was not found in localContext database');
     }
@@ -73,8 +73,8 @@ export const buildMSWMocks = (
     return item;
   };
 
-  const getMemberFromId = async (memberId: string): Promise<Member> => {
-    const member = await db.member.where('id').equals(memberId).first();
+  const getMemberFromId = async (accountId: string): Promise<Member> => {
+    const member = await db.member.where('id').equals(accountId).first();
     if (!member) {
       throw new Error('Item was not found in items database');
     }

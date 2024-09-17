@@ -151,12 +151,12 @@ describe('Apps Mutations', () => {
         // since the itemid is not defined, we do not check data for its key
       });
 
-      it('Throw if memberId is undefined', async () => {
+      it('Throw if accountId is undefined', async () => {
         // set necessary data
         queryClient.setQueryData(AUTH_TOKEN_KEY, MOCK_TOKEN);
         queryClient.setQueryData(LOCAL_CONTEXT_KEY, {
           ...buildMockLocalContext({ itemId }),
-          memberId: null,
+          accountId: null,
         });
         queryClient.setQueryData(key, initData);
 
@@ -345,12 +345,12 @@ describe('Apps Mutations', () => {
         // since the itemid is not defined, we do not check data for its key
       });
 
-      it('Throw if memberId is undefined', async () => {
+      it('Throw if accountId is undefined', async () => {
         // set necessary data
         queryClient.setQueryData(AUTH_TOKEN_KEY, MOCK_TOKEN);
         queryClient.setQueryData(LOCAL_CONTEXT_KEY, {
           ...buildMockLocalContext({ itemId }),
-          memberId: null,
+          accountId: null,
         });
         queryClient.setQueryData(key, initData);
 
@@ -525,12 +525,12 @@ describe('Apps Mutations', () => {
         // since the itemid is not defined, we do not check data for its key
       });
 
-      it('Throw if memberId is undefined', async () => {
+      it('Throw if accountId is undefined', async () => {
         // set necessary data
         queryClient.setQueryData(AUTH_TOKEN_KEY, MOCK_TOKEN);
         queryClient.setQueryData(LOCAL_CONTEXT_KEY, {
           ...buildMockLocalContext({ itemId }),
-          memberId: null,
+          accountId: null,
         });
 
         const initData = [toDelete];
