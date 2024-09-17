@@ -1335,6 +1335,7 @@ __metadata:
     vite-plugin-dts: "npm:4.0.0-beta.2"
     vitest: "npm:2.0.5"
   peerDependencies:
+    "@graasp/sdk": ^4.22.0
     "@mui/icons-material": ^5.15.5
     "@mui/material": ^5.15.5
     "@tanstack/react-query": ^4.28.0
