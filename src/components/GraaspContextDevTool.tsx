@@ -103,8 +103,8 @@ const GraaspContextDevTool = ({ members, context, setContext }: Props): JSX.Elem
             {/* Needs some work to work correctly */}
             <FormControl disabled>
               <Select
-                value={context.memberId}
-                onChange={({ target }) => onChange('memberId', target.value)}
+                value={context.accountId}
+                onChange={({ target }) => onChange('accountId', target.value)}
               >
                 {members.map((member) => (
                   <MenuItem key={member.id} value={member.id}>

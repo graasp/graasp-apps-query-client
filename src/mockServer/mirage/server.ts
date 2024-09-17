@@ -101,8 +101,6 @@ export const mockMirageServer = ({
         type: (idx) => `app-data-type-${idx}`,
         item: currentItem,
         account: currentMember,
-        /** deprecated use account */
-        member: currentMember,
         creator: currentMember,
         visibility: () => AppDataVisibility.Member, // TODO: Is it right?
       }),
@@ -110,8 +108,6 @@ export const mockMirageServer = ({
         id: () => v4(),
         item: currentItem,
         account: currentMember,
-        /** deprecated use account */
-        member: currentMember,
         createdAt: () => new Date().toISOString(),
         data: () => ({}),
         type: 'app-action-type',
