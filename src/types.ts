@@ -3,15 +3,10 @@ import {
   AppData,
   AppSetting,
   CompleteMember,
-  Context,
   DiscriminatedItem,
   Member,
-  PermissionLevel,
   UUID,
 } from '@graasp/sdk';
-
-// generic type
-type EnumToUnionType<T> = T extends `${infer R}` ? R : never;
 
 export type Notifier = (e: {
   type: string;
@@ -58,20 +53,6 @@ export class UndefinedArgument extends Error {
 }
 
 export type WindowPostMessage = (message: unknown) => void;
-
-export type LocalContext = {
-  mobile?: boolean;
-  apiHost: string;
-  itemId: UUID;
-  accountId: UUID;
-  settings?: unknown;
-  dev?: boolean;
-  offline?: boolean;
-  lang?: string;
-  context: EnumToUnionType<Context> | 'standalone' | Context;
-  standalone?: boolean;
-  permission: PermissionLevel;
-};
 
 export type AppContext = {
   item: DiscriminatedItem;

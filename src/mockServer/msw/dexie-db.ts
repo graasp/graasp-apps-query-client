@@ -1,8 +1,15 @@
-import { AppAction, AppData, AppSetting, DiscriminatedItem, Member } from '@graasp/sdk';
+import {
+  AppAction,
+  AppData,
+  AppSetting,
+  DiscriminatedItem,
+  LocalContext,
+  Member,
+} from '@graasp/sdk';
 
 import Dexie from 'dexie';
 
-import { Database, LocalContext, MockUploadedFile } from '../../types';
+import { Database, MockUploadedFile } from '../../types';
 
 type OptionalIndexed<T extends { id: string }, P extends keyof T = 'id'> = {
   [Key in keyof T as Key extends P ? Key : never]?: T[Key];

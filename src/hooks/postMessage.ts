@@ -4,6 +4,8 @@
  */
 import { useEffect } from 'react';
 
+import { LocalContext } from '@graasp/sdk';
+
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 
 import * as Api from '../api';
@@ -12,7 +14,7 @@ import { MissingMessageChannelPortError } from '../config/errors';
 import { AUTH_TOKEN_KEY, LOCAL_CONTEXT_KEY, buildPostMessageKeys } from '../config/keys';
 import { buildAppKeyAndOriginPayload } from '../config/utils';
 import { getAuthTokenRoutine, getLocalContextRoutine } from '../routines';
-import { LocalContext, QueryClientConfig, WindowPostMessage } from '../types';
+import { QueryClientConfig, WindowPostMessage } from '../types';
 
 // build context from given data and default values
 export const buildContext = (payload: LocalContext): LocalContext => {

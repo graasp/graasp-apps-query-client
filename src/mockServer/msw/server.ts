@@ -1,6 +1,8 @@
+import { LocalContext } from '@graasp/sdk';
+
 import { SetupWorker, setupWorker } from 'msw/browser';
 
-import { Database, LocalContext } from '../../types';
+import { Database } from '../../types';
 import { buildMockLocalContext } from '../fixtures';
 import { buildMSWMocks } from './handlers';
 

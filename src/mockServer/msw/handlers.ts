@@ -4,6 +4,7 @@ import {
   AppDataVisibility,
   AppSetting,
   DiscriminatedItem,
+  LocalContext,
   Member,
   PermissionLevel,
 } from '@graasp/sdk';
@@ -12,7 +13,7 @@ import { HttpResponse, RequestHandler, http } from 'msw';
 import { v4 } from 'uuid';
 
 import { API_ROUTES, buildUploadAppSettingFilesRoute } from '../../api/routes';
-import { Database, LocalContext, MockAppSetting } from '../../types';
+import { Database, MockAppSetting } from '../../types';
 import { AppMocks } from './dexie-db';
 
 const {

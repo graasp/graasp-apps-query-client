@@ -5,6 +5,7 @@ import {
   AppDataVisibility,
   AppSetting,
   CompleteMember,
+  LocalContext,
   MemberFactory,
 } from '@graasp/sdk';
 
@@ -12,7 +13,7 @@ import { Factory, Model, Response, RestSerializer, Server, createServer } from '
 import { v4 } from 'uuid';
 
 import { API_ROUTES } from '../../api/routes';
-import { Database, LocalContext } from '../../types';
+import { Database } from '../../types';
 import { MOCK_SERVER_MEMBER, buildDatabase, buildMockLocalContext } from '../fixtures';
 import { ExternalUrls } from '../types';
 
