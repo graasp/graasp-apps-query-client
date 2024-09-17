@@ -1,18 +1,19 @@
 import {
+  AccountType,
   AppAction,
   AppData,
   AppDataVisibility,
   AppSetting,
   CompleteMember,
+  LocalContext,
   MemberFactory,
-  MemberType,
 } from '@graasp/sdk';
 
 import { Factory, Model, Response, RestSerializer, Server, createServer } from 'miragejs';
 import { v4 } from 'uuid';
 
 import { API_ROUTES } from '../../api/routes';
-import { Database, LocalContext } from '../../types';
+import { Database } from '../../types';
 import { MOCK_SERVER_MEMBER, buildDatabase, buildMockLocalContext } from '../fixtures';
 import { ExternalUrls } from '../types';
 
@@ -56,7 +57,7 @@ export const mockMirageServer = ({
   const { appData, appActions, appSettings, members, items } = database;
   const {
     itemId: currentItemId,
-    memberId: currentMemberId = MOCK_SERVER_MEMBER.id,
+    accountId: currentMemberId = MOCK_SERVER_MEMBER.id,
     apiHost,
   } = appContext;
   // mocked errors
@@ -74,7 +75,7 @@ export const mockMirageServer = ({
           extra: {},
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
-          type: MemberType.Individual,
+          type: AccountType.Individual,
         });
   const currentItem = items.find(({ id }) => id === currentItemId);
   if (!currentItem) {
@@ -100,14 +101,14 @@ export const mockMirageServer = ({
         data: () => ({}),
         type: (idx) => `app-data-type-${idx}`,
         item: currentItem,
-        member: currentMember,
+        account: currentMember,
         creator: currentMember,
         visibility: () => AppDataVisibility.Member, // TODO: Is it right?
       }),
       appActionResource: Factory.extend<AppAction>({
         id: () => v4(),
         item: currentItem,
-        member: currentMember,
+        account: currentMember,
         createdAt: () => new Date().toISOString(),
         data: () => ({}),
         type: 'app-action-type',
@@ -128,7 +129,7 @@ export const mockMirageServer = ({
         name: (idx) => `member-${idx}`,
         createdAt: () => new Date().toISOString(),
         updatedAt: () => new Date().toISOString(),
-        type: MemberType.Individual,
+        type: AccountType.Individual,
         enableSaveActions: true,
         isValidated: true,
       }),
@@ -171,6 +172,8 @@ export const mockMirageServer = ({
         const data = JSON.parse(requestBody);
         return schema.create('appDataResource', {
           item: currentItem,
+          account: currentMember,
+          /** deprecated use account */
           member: currentMember,
           creator: currentMember,
           createdAt: new Date().toISOString(),
@@ -232,6 +235,8 @@ export const mockMirageServer = ({
         return schema.create('appActionResource', {
           ...data,
           item: currentItem,
+          account: currentMember,
+          /** deprecated use account */
           member: currentMember,
         });
       });
@@ -256,6 +261,8 @@ export const mockMirageServer = ({
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
           item: currentItem,
+          account: currentMember,
+          /** deprecated use account */
           member: currentMember,
           ...data,
         });

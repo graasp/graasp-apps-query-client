@@ -1,6 +1,8 @@
+import { LocalContext } from '@graasp/sdk';
+
 import { SetupWorker, setupWorker } from 'msw/browser';
 
-import { Database, LocalContext } from '../../types';
+import { Database } from '../../types';
 import { buildMockLocalContext } from '../fixtures';
 import { buildMSWMocks } from './handlers';
 
@@ -40,7 +42,7 @@ export const mockServiceWorkerServer = ({
       if (database.uploadedFiles?.length) {
         transaction.table('uploadedFiles').bulkAdd(database.uploadedFiles);
       }
-      transaction.table('appContext').add(fullAppContext, fullAppContext.memberId);
+      transaction.table('appContext').add(fullAppContext, fullAppContext.accountId);
     } else {
       console.debug('There was no data to populate the database');
     }

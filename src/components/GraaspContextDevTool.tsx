@@ -17,12 +17,11 @@ import {
   ToggleButtonGroup,
 } from '@mui/material';
 
-import { Context, HttpMethod, Member, PermissionLevel } from '@graasp/sdk';
+import { Context, HttpMethod, LocalContext, Member, PermissionLevel } from '@graasp/sdk';
 
 import { useQueryClient } from '@tanstack/react-query';
 
 import { LOCAL_CONTEXT_KEY } from '../config/keys';
-import { LocalContext } from '../types';
 import { UpdateArgument } from './utils/hooks';
 import { TokenContext } from './withToken';
 
@@ -103,8 +102,8 @@ const GraaspContextDevTool = ({ members, context, setContext }: Props): JSX.Elem
             {/* Needs some work to work correctly */}
             <FormControl disabled>
               <Select
-                value={context.memberId}
-                onChange={({ target }) => onChange('memberId', target.value)}
+                value={context.accountId}
+                onChange={({ target }) => onChange('accountId', target.value)}
               >
                 {members.map((member) => (
                   <MenuItem key={member.id} value={member.id}>

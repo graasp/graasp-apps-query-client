@@ -20,9 +20,9 @@ export default (queryConfig: QueryClientConfig) => {
     const queryClient = useQueryClient();
     return useMutation(
       (
-        payload: Pick<AppData, 'data' | 'type'> & { memberId?: Member['id'] } & Partial<
-            Pick<AppData, 'visibility'>
-          >,
+        payload: Pick<AppData, 'data' | 'type'> & {
+          accountId?: Member['id'];
+        } & Partial<Pick<AppData, 'visibility'>>,
       ) => {
         const apiHost = getApiHost(queryClient);
         const data = getDataOrThrow(queryClient);

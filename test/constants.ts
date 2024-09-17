@@ -1,4 +1,5 @@
 import {
+  AccountType,
   AppAction,
   AppData,
   AppDataVisibility,
@@ -8,14 +9,12 @@ import {
   FolderItemFactory,
   FolderItemType,
   ItemType,
+  LocalContext,
   MemberFactory,
-  MemberType,
   PermissionLevel,
 } from '@graasp/sdk';
 
 import { v4 } from 'uuid';
-
-import { LocalContext } from '../src/types';
 
 export const API_HOST = 'http://localhost:3000';
 export const WS_HOST = 'ws://localhost:3000';
@@ -24,7 +23,7 @@ export const UNAUTHORIZED_RESPONSE = { some: 'error' };
 
 export const MEMBER_RESPONSE: CompleteMember = MemberFactory({
   name: 'username',
-  type: MemberType.Individual,
+  type: AccountType.Individual,
   email: 'username@graasp.org',
   extra: {},
 });
@@ -34,7 +33,7 @@ export const MEMBERS_RESPONSE: CompleteMember[] = [
   MemberFactory({
     name: 'username1',
     email: 'username1@graasp.org',
-    type: MemberType.Individual,
+    type: AccountType.Individual,
     extra: {},
   }),
 ];
@@ -83,7 +82,7 @@ export const buildAppData = ({ id = v4(), data = {} }: Partial<AppData> = {}): A
   creator: MEMBER_RESPONSE,
   createdAt: new Date().toISOString(),
   updatedAt: new Date().toISOString(),
-  member: MEMBER_RESPONSE,
+  account: MEMBER_RESPONSE,
   item: MOCK_ITEM,
   visibility: AppDataVisibility.Member,
 });
@@ -95,7 +94,7 @@ export const buildAppAction = ({ id = v4(), data = {} }: Partial<AppAction> = {}
   data,
   type: 'action',
   createdAt: new Date().toISOString(),
-  member: MEMBER_RESPONSE,
+  account: MEMBER_RESPONSE,
   item: MOCK_ITEM,
 });
 
@@ -143,11 +142,11 @@ export enum RequestMethods {
 
 export const buildMockLocalContext = ({
   itemId = v4(),
-  memberId = v4(),
+  accountId = v4(),
 }: Partial<LocalContext> = {}): LocalContext => ({
   apiHost: API_HOST,
   itemId,
-  memberId,
+  accountId,
   settings: {},
   mobile: false,
   context: Context.Builder,

@@ -46,7 +46,7 @@ describe.skip('PostMessage Hooks', () => {
         const { data } = await mockHook({ hook, wrapper });
         expect(data).toEqual({
           apiHost: undefined, // @see LocalContext
-          memberId: undefined, // @see LocalContext
+          accountId: undefined, // @see LocalContext
           itemId: undefined, // @see LocalContext
           context: DEFAULT_CONTEXT,
           lang: DEFAULT_LANG,
@@ -67,7 +67,7 @@ describe.skip('PostMessage Hooks', () => {
           permission: 'write',
           lang: 'fr',
           itemId: v4(),
-          memberId: v4(),
+          accountId: v4(),
           settings: { some: 'value' },
           offline: true,
           dev: true,

@@ -3,15 +3,10 @@ import {
   AppData,
   AppSetting,
   CompleteMember,
-  Context,
   DiscriminatedItem,
   Member,
-  PermissionLevel,
   UUID,
 } from '@graasp/sdk';
-
-// generic type
-type EnumToUnionType<T> = T extends `${infer R}` ? R : never;
 
 export type Notifier = (e: {
   type: string;
@@ -59,20 +54,6 @@ export class UndefinedArgument extends Error {
 
 export type WindowPostMessage = (message: unknown) => void;
 
-export type LocalContext = {
-  mobile?: boolean;
-  apiHost: string;
-  itemId: UUID;
-  memberId: UUID;
-  settings?: unknown;
-  dev?: boolean;
-  offline?: boolean;
-  lang?: string;
-  context: EnumToUnionType<Context> | 'standalone' | Context;
-  standalone?: boolean;
-  permission: PermissionLevel;
-};
-
 export type AppContext = {
   item: DiscriminatedItem;
   members: Member[];
@@ -84,14 +65,14 @@ export interface ApiData {
   apiHost: string;
 }
 
-export type MockAppData = Omit<AppData, 'item' | 'creator' | 'member'> & {
+export type MockAppData = Omit<AppData, 'item' | 'creator' | 'account'> & {
   itemId: string;
   creatorId: string;
-  memberId: string;
+  accountId: string;
 };
-export type MockAppAction = Omit<AppAction, 'item' | 'member'> & {
+export type MockAppAction = Omit<AppAction, 'item' | 'account'> & {
   itemId: string;
-  memberId: string;
+  accountId: string;
 };
 export type MockAppSetting = Omit<AppSetting, 'item' | 'creator'> & {
   itemId: string;

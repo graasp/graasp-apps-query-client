@@ -1,4 +1,6 @@
-import { LocalContext, Token } from '../types';
+import { LocalContext } from '@graasp/sdk';
+
+import { Token } from '../types';
 import configureAxios from './axios';
 
 const axios = configureAxios();

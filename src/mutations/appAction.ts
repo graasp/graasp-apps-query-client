@@ -14,7 +14,7 @@ export default (queryConfig: QueryClientConfig) => {
   const usePostAppAction = () => {
     const queryClient = useQueryClient();
     return useMutation(
-      (payload: Partial<AppAction>) => {
+      (payload: Pick<AppAction, 'type' | 'data'>) => {
         const apiHost = getApiHost(queryClient);
         const data = getDataOrThrow(queryClient);
         return Api.postAppAction({ ...data, body: payload, apiHost });

@@ -4,6 +4,7 @@ import {
   AppDataVisibility,
   AppSetting,
   DiscriminatedItem,
+  LocalContext,
   Member,
   PermissionLevel,
 } from '@graasp/sdk';
@@ -12,7 +13,7 @@ import { HttpResponse, RequestHandler, http } from 'msw';
 import { v4 } from 'uuid';
 
 import { API_ROUTES, buildUploadAppSettingFilesRoute } from '../../api/routes';
-import { Database, LocalContext, MockAppSetting } from '../../types';
+import { Database, MockAppSetting } from '../../types';
 import { AppMocks } from './dexie-db';
 
 const {
@@ -38,11 +39,11 @@ const getMemberIdFromToken = (bearer: string | null): string => {
   if (!bearer) {
     throw new Error('no bearer token');
   }
-  const memberId = bearer.split(' ').at(-1);
-  if (!memberId) {
+  const accountId = bearer.split(' ').at(-1);
+  if (!accountId) {
     throw new Error('Unable to extract memberId from token');
   }
-  return memberId;
+  return accountId;
 };
 
 export const buildMSWMocks = (
@@ -56,8 +57,8 @@ export const buildMSWMocks = (
   const buildAppSettingDownloadUrl = (id: string): string =>
     `${apiHost}/download-app-setting-url/${id}`;
 
-  const getPermissionForMember = async (memberId: string): Promise<PermissionLevel> => {
-    const localContextForMember = await db.appContext.get(memberId);
+  const getPermissionForMember = async (accountId: string): Promise<PermissionLevel> => {
+    const localContextForMember = await db.appContext.get(accountId);
     if (!localContextForMember) {
       throw new Error('Member was not found in localContext database');
     }
@@ -73,8 +74,8 @@ export const buildMSWMocks = (
     return item;
   };
 
-  const getMemberFromId = async (memberId: string): Promise<Member> => {
-    const member = await db.member.where('id').equals(memberId).first();
+  const getMemberFromId = async (accountId: string): Promise<Member> => {
+    const member = await db.member.where('id').equals(accountId).first();
     if (!member) {
       throw new Error('Item was not found in items database');
     }
@@ -112,7 +113,7 @@ export const buildMSWMocks = (
               return true;
             }
             // if app data is not "visibility item" only return app data that were created by the member or addressed to him
-            return x.creator?.id === memberId || x.member.id === memberId;
+            return x.creator?.id === memberId || x.account.id === memberId;
           })
           // filter the app data by type if specified
           .and((x) => (dataType ? x.type === dataType : true))
@@ -129,7 +130,7 @@ export const buildMSWMocks = (
         const reqItemId = params.itemId;
         const item = await getItemFromId(reqItemId as string);
         const memberId = getMemberIdFromToken(request.headers.get('Authorization'));
-        const member = await getMemberFromId(memberId);
+        const account = await getMemberFromId(memberId);
 
         const body = (await request.json()) as Pick<AppData, 'data' | 'type'> & {
           visibility?: AppData['visibility'];
@@ -140,8 +141,8 @@ export const buildMSWMocks = (
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
           item,
-          creator: member,
-          member,
+          creator: account,
+          account,
           visibility: AppDataVisibility.Member,
           ...body,
         };
@@ -398,14 +399,14 @@ export const buildMSWMocks = (
         const reqItemId = params.itemId;
         const item = await getItemFromId(reqItemId as string);
         const memberId = getMemberIdFromToken(request.headers.get('Authorization'));
-        const member = await getMemberFromId(memberId);
+        const account = await getMemberFromId(memberId);
 
         const body = (await request.json()) as Pick<AppAction, 'data' | 'type'>;
         const appAction: AppAction = {
           id: v4(),
           createdAt: new Date().toISOString(),
           item,
-          member,
+          account,
           ...body,
         };
         const value = await db.appAction.add(appAction);

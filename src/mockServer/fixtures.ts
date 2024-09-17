@@ -1,23 +1,24 @@
 import {
+  AccountType,
   AppItemFactory,
   AppItemType,
   CompleteMember,
   Context,
   ItemType,
+  LocalContext,
   MemberFactory,
-  MemberType,
   PermissionLevel,
 } from '@graasp/sdk';
 
 import { buildContext } from '../hooks/postMessage';
-import { Database, LocalContext } from '../types';
+import { Database } from '../types';
 
 export const MOCK_SERVER_MEMBER: CompleteMember = MemberFactory({
   id: 'mock-member-id',
   name: 'mock-member-name',
   email: 'email@email.com',
   extra: {},
-  type: MemberType.Individual,
+  type: AccountType.Individual,
   createdAt: new Date().toISOString(),
   updatedAt: new Date().toISOString(),
 });
@@ -39,7 +40,7 @@ export const MOCK_SERVER_ITEM: AppItemType = AppItemFactory({
 
 export const buildMockLocalContext = (appContext?: Partial<LocalContext>): LocalContext => {
   const context: LocalContext = {
-    memberId: MOCK_SERVER_MEMBER.id,
+    accountId: MOCK_SERVER_MEMBER.id,
     itemId: MOCK_SERVER_ITEM.id,
     offline: false,
     apiHost: 'http://localhost:3000',
