@@ -21,8 +21,6 @@ export default (queryConfig: QueryClientConfig) => {
     return useMutation(
       (
         payload: Pick<AppData, 'data' | 'type'> & {
-          /** @deprecated use accountId */
-          memberId?: Member['id'];
           accountId?: Member['id'];
         } & Partial<Pick<AppData, 'visibility'>>,
       ) => {
