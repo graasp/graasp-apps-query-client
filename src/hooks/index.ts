@@ -1,10 +1,10 @@
-import { QueryClientConfig } from '../types';
-import { WebsocketClient } from '../ws/ws-client';
-import configureAppsHooks from './app';
-import configureAppActionHooks from './appAction';
-import configureAppDataHooks from './appData';
-import configureAppSettingHooks from './appSetting';
-import configurePostMessageHooks from './postMessage';
+import { QueryClientConfig } from '../types.js';
+import { WebsocketClient } from '../ws/ws-client.js';
+import configureAppsHooks from './app.js';
+import configureAppActionHooks from './appAction.js';
+import configureAppDataHooks from './appData.js';
+import configureAppSettingHooks from './appSetting.js';
+import configurePostMessageHooks from './postMessage.js';
 
 const configHooks = (queryConfig: QueryClientConfig, websocketClient?: WebsocketClient) => ({
   ...configureAppsHooks(queryConfig),

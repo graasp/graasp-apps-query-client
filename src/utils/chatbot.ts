@@ -1,6 +1,6 @@
 import { ChatBotMessage, ChatbotRole } from '@graasp/sdk';
 
-import { ChatbotThreadMessage } from 'types';
+import { ChatbotThreadMessage } from '../types.js';
 
 export const buildPrompt = (
   initialPrompt: string | undefined,

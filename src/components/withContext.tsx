@@ -7,7 +7,7 @@ import { Context, LocalContext, PermissionLevel } from '@graasp/sdk';
 
 import { UseQueryResult } from '@tanstack/react-query';
 
-import { AutoResizer } from './AutoResizer';
+import { AutoResizer } from './AutoResizer.js';
 
 export const defaultContextValue: LocalContext = {
   apiHost: '',
@@ -31,7 +31,7 @@ interface WithLocalContextProps {
     itemId: string,
     defaultValue: LocalContext,
   ) => UseQueryResult<LocalContext, unknown>;
-  LoadingComponent?: React.ReactElement;
+  LoadingComponent?: ReactElement;
   defaultValue: LocalContext;
   onError?: (error: unknown) => void;
   useAutoResize?: (itemId: string) => void;

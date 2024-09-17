@@ -2,4 +2,4 @@ export {
   configureWsAppActionsHooks,
   configureWsAppDataHooks,
   configureWsAppSettingHooks,
-} from './app';
+} from './app.js';

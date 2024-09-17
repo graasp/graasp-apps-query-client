@@ -12,10 +12,6 @@
       "default": {
         "types": "./dist/index.d.ts",
         "default": "./dist/index.js"
-      },
-      "require": {
-        "types": "./dist/index.d.cts",
-        "default": "./dist/index.cjs"
       }
     }
   },
@@ -31,7 +27,7 @@
   "license": "AGPL3.0-only",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "tsc -p tsconfig.build.json",
     "commit-msg": "commitlint --edit $1",
     "hooks:uninstall": "husky uninstall",
     "hooks:install": "husky install",
@@ -99,7 +95,6 @@
     "react-dom": "18.3.1",
     "react-test-renderer": "18.3.1",
     "ts-node": "10.9.2",
-    "tsup": "8.3.0",
     "typescript": "5.5.4",
     "vite": "5.3.5",
     "vite-plugin-checker": "0.7.2",

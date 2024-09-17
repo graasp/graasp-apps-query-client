@@ -3,14 +3,14 @@ import { LocalContext } from '@graasp/sdk';
 import { QueryClient } from '@tanstack/react-query';
 import { StatusCodes } from 'http-status-codes';
 
-import { QueryClientConfig } from '../types';
+import { QueryClientConfig } from '../types.js';
 import {
   MissingAppKeyError,
   MissingAppOriginError,
   MissingNecessaryDataError,
   MissingPermissionError,
-} from './errors';
-import { AUTH_TOKEN_KEY, LOCAL_CONTEXT_KEY } from './keys';
+} from './errors.js';
+import { AUTH_TOKEN_KEY, LOCAL_CONTEXT_KEY } from './keys.js';
 
 export class MissingApiHostError extends Error {
   statusCode: number;

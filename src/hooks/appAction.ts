@@ -2,12 +2,12 @@ import { PermissionLevel } from '@graasp/sdk';
 
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 
-import * as Api from '../api';
-import { appActionKeys } from '../config/keys';
-import { getApiHost, getData, getDataOrThrow, getPermissionLevel } from '../config/utils';
-import { Data, QueryClientConfig } from '../types';
-import { configureWsAppActionsHooks } from '../ws/hooks/app';
-import { WebsocketClient } from '../ws/ws-client';
+import * as Api from '../api/index.js';
+import { appActionKeys } from '../config/keys.js';
+import { getApiHost, getData, getDataOrThrow, getPermissionLevel } from '../config/utils.js';
+import { Data, QueryClientConfig } from '../types.js';
+import { configureWsAppActionsHooks } from '../ws/hooks/app.js';
+import { WebsocketClient } from '../ws/ws-client.js';
 
 export default (queryConfig: QueryClientConfig, websocketClient?: WebsocketClient) => {
   const { retry, cacheTime, staleTime } = queryConfig;

@@ -1,9 +1,8 @@
 import { ChatBotMessage, GPTVersion } from '@graasp/sdk';
 
-import { ApiData, ChatBotCompletion } from 'types';
-
-import configureAxios from './axios';
-import { buildPostChatBotRoute } from './routes';
+import { ApiData, ChatBotCompletion } from '../types.js';
+import configureAxios from './axios.js';
+import { buildPostChatBotRoute } from './routes.js';
 
 const axios = configureAxios();
 

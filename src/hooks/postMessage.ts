@@ -8,13 +8,18 @@ import { LocalContext } from '@graasp/sdk';
 
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 
-import * as Api from '../api';
-import { DEFAULT_CONTEXT, DEFAULT_LANG, DEFAULT_PERMISSION, MOCK_TOKEN } from '../config/constants';
-import { MissingMessageChannelPortError } from '../config/errors';
-import { AUTH_TOKEN_KEY, LOCAL_CONTEXT_KEY, buildPostMessageKeys } from '../config/keys';
-import { buildAppKeyAndOriginPayload } from '../config/utils';
-import { getAuthTokenRoutine, getLocalContextRoutine } from '../routines';
-import { QueryClientConfig, WindowPostMessage } from '../types';
+import * as Api from '../api/index.js';
+import {
+  DEFAULT_CONTEXT,
+  DEFAULT_LANG,
+  DEFAULT_PERMISSION,
+  MOCK_TOKEN,
+} from '../config/constants.js';
+import { MissingMessageChannelPortError } from '../config/errors.js';
+import { AUTH_TOKEN_KEY, LOCAL_CONTEXT_KEY, buildPostMessageKeys } from '../config/keys.js';
+import { buildAppKeyAndOriginPayload } from '../config/utils.js';
+import { getAuthTokenRoutine, getLocalContextRoutine } from '../routines/index.js';
+import { QueryClientConfig, WindowPostMessage } from '../types.js';
 
 // build context from given data and default values
 export const buildContext = (payload: LocalContext): LocalContext => {

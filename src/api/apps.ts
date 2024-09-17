@@ -1,6 +1,6 @@
-import { ApiData, AppContext } from '../types';
-import configureAxios from './axios';
-import { buildGetContextRoute } from './routes';
+import { ApiData, AppContext } from '../types.js';
+import configureAxios from './axios.js';
+import { buildGetContextRoute } from './routes.js';
 
 const axios = configureAxios();
 

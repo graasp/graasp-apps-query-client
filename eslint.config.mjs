@@ -21,7 +21,7 @@ const compat = new FlatCompat({
 
 export default [
   {
-    ignores: ['.yarn', 'dist/*', '**/*.d.ts', 'coverage/*', '**/commitlint.config.js'],
+    ignores: ['.yarn', 'dist/*', '**/*.d.ts', 'coverage/*', '**/commitlint.config.ts'],
   },
   ...fixupConfigRules(
     compat.extends(

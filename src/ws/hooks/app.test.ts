@@ -10,22 +10,22 @@ import {
   buildAppAction,
   buildAppData,
   buildAppSetting,
-} from '../../../test/constants';
-import { getHandlerByChannel, mockWsHook, setUpWsTest } from '../../../test/wsUtils';
-import { APP_ACTIONS_TOPIC, APP_DATA_TOPIC, APP_SETTINGS_TOPIC } from '../../config/constants';
-import { appActionKeys, appDataKeys, appSettingKeys } from '../../config/keys';
+} from '../../../test/constants.js';
+import { getHandlerByChannel, mockWsHook, setUpWsTest } from '../../../test/wsUtils.js';
+import { APP_ACTIONS_TOPIC, APP_DATA_TOPIC, APP_SETTINGS_TOPIC } from '../../config/constants.js';
+import { appActionKeys, appDataKeys, appSettingKeys } from '../../config/keys.js';
 import {
   AppActionEvent,
   AppDataEvent,
   AppEventKinds,
   AppOperations,
   AppSettingEvent,
-} from '../types';
+} from '../types.js';
 import {
   configureWsAppActionsHooks,
   configureWsAppDataHooks,
   configureWsAppSettingHooks,
-} from './app';
+} from './app.js';
 
 const { hooks, wrapper, queryClient, handlers } = setUpWsTest({
   configureWsAppActionsHooks,

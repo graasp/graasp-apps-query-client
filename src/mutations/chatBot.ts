@@ -2,10 +2,10 @@ import { ChatBotMessage, GPTVersion } from '@graasp/sdk';
 
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import * as Api from '../api';
-import { getApiHost, getDataOrThrow } from '../config/utils';
-import { postChatBotRoutine } from '../routines';
-import { QueryClientConfig } from '../types';
+import * as Api from '../api/index.js';
+import { getApiHost, getDataOrThrow } from '../config/utils.js';
+import { postChatBotRoutine } from '../routines/index.js';
+import { QueryClientConfig } from '../types.js';
 
 export default (queryConfig: QueryClientConfig) => {
   const { notifier } = queryConfig;

@@ -1,4 +1,4 @@
-import createRoutine from './utils';
+import createRoutine from './utils.js';
 
 export const getAppSettingsRoutine = createRoutine('GET_APP_SETTINGS');
 export const postAppSettingRoutine = createRoutine('POST_APP_SETTING');

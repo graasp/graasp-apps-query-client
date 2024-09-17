@@ -1,13 +1,13 @@
-import React from 'react';
+import { ReactNode } from 'react';
 
 import { QueryClient } from '@tanstack/react-query';
 import { renderHook } from '@testing-library/react';
 import { vi } from 'vitest';
 
-import configureQueryClient from '../src/queryClient';
-import { Notifier, QueryClientConfig } from '../src/types';
-import { Channel } from '../src/ws/ws-client';
-import { API_HOST, GRAASP_APP_KEY, WS_HOST } from './constants';
+import configureQueryClient from '../src/queryClient.js';
+import { Notifier, QueryClientConfig } from '../src/types.js';
+import { Channel } from '../src/ws/ws-client.js';
+import { API_HOST, GRAASP_APP_KEY, WS_HOST } from './constants.js';
 
 export type Handler = { channel: Channel; handler: (event: unknown) => void };
 
@@ -74,7 +74,7 @@ export const setUpWsTest = (args?: {
 
   const queryClient = new QueryClient();
 
-  const wrapper = ({ children }: { children: React.ReactNode }): JSX.Element => (
+  const wrapper = ({ children }: { children: ReactNode }): JSX.Element => (
     <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
   );
 

@@ -2,9 +2,9 @@ import { LocalContext } from '@graasp/sdk';
 
 import { SetupWorker, setupWorker } from 'msw/browser';
 
-import { Database } from '../../types';
-import { buildMockLocalContext } from '../fixtures';
-import { buildMSWMocks } from './handlers';
+import { Database } from '../../types.js';
+import { buildMockLocalContext } from '../fixtures.js';
+import { buildMSWMocks } from './handlers.js';
 
 /**
  * Creates and launches a mock server using MSW and IndexedDB

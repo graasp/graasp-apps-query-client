@@ -5,7 +5,7 @@
  */
 import { Websocket } from '@graasp/sdk';
 
-import { QueryClientConfig } from '../types';
+import { QueryClientConfig } from '../types.js';
 
 export type Channel = {
   topic: string;

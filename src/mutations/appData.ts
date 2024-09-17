@@ -2,16 +2,16 @@ import { AppData, Member, UUID } from '@graasp/sdk';
 
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import * as Api from '../api';
-import { appDataKeys } from '../config/keys';
-import { getApiHost, getData, getDataOrThrow } from '../config/utils';
+import * as Api from '../api/index.js';
+import { appDataKeys } from '../config/keys.js';
+import { getApiHost, getData, getDataOrThrow } from '../config/utils.js';
 import {
   deleteAppDataRoutine,
   patchAppDataRoutine,
   postAppDataRoutine,
   uploadAppDataFileRoutine,
-} from '../routines';
-import { QueryClientConfig } from '../types';
+} from '../routines/index.js';
+import { QueryClientConfig } from '../types.js';
 
 export default (queryConfig: QueryClientConfig) => {
   const { notifier, enableWebsocket } = queryConfig;
