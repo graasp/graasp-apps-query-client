@@ -7,6 +7,18 @@
   "source": "./src/index.ts",
   "types": "./dist/index.d.ts",
   "type": "module",
+  "exports": {
+    ".": {
+      "default": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    }
+  },
   "sideEffects": false,
   "repository": "git@github.com:graasp/graasp-apps-query-client.git",
   "author": "Graasp",
@@ -87,6 +99,7 @@
     "react-dom": "18.3.1",
     "react-test-renderer": "18.3.1",
     "ts-node": "10.9.2",
+    "tsup": "8.3.0",
     "typescript": "5.5.4",
     "vite": "5.3.5",
     "vite-plugin-checker": "0.7.2",
