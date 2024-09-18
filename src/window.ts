@@ -1,6 +1,6 @@
 import { LocalContext } from '@graasp/sdk';
 
-import { Database } from './types';
+import { Database } from './types.js';
 
 // extend the Window interface with the new properties
 declare global {

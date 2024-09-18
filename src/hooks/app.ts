@@ -1,9 +1,9 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 
-import * as Api from '../api';
-import { buildAppContextKey } from '../config/keys';
-import { getApiHost, getDataOrThrow } from '../config/utils';
-import { QueryClientConfig } from '../types';
+import * as Api from '../api/index.js';
+import { buildAppContextKey } from '../config/keys.js';
+import { getApiHost, getDataOrThrow } from '../config/utils.js';
+import { QueryClientConfig } from '../types.js';
 
 export default (queryConfig: QueryClientConfig) => {
   const { retry, cacheTime, staleTime } = queryConfig;

@@ -21,9 +21,9 @@ import { Context, HttpMethod, LocalContext, Member, PermissionLevel } from '@gra
 
 import { useQueryClient } from '@tanstack/react-query';
 
-import { LOCAL_CONTEXT_KEY } from '../config/keys';
-import { UpdateArgument } from './utils/hooks';
-import { TokenContext } from './withToken';
+import { LOCAL_CONTEXT_KEY } from '../config/keys.js';
+import { UpdateArgument } from './utils/hooks.js';
+import { TokenContext } from './withToken.js';
 
 type Props = {
   members: Member[];

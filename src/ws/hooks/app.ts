@@ -8,16 +8,16 @@ import { AppAction, AppData, AppSetting, UUID } from '@graasp/sdk';
 
 import { QueryKey, useQueryClient } from '@tanstack/react-query';
 
-import { APP_ACTIONS_TOPIC, APP_DATA_TOPIC, APP_SETTINGS_TOPIC } from '../../config/constants';
-import { appActionKeys, appDataKeys, appSettingKeys } from '../../config/keys';
+import { APP_ACTIONS_TOPIC, APP_DATA_TOPIC, APP_SETTINGS_TOPIC } from '../../config/constants.js';
+import { appActionKeys, appDataKeys, appSettingKeys } from '../../config/keys.js';
 import {
   AppActionEvent,
   AppDataEvent,
   AppEventKinds,
   AppOperations,
   AppSettingEvent,
-} from '../types';
-import { Channel, WebsocketClient } from '../ws-client';
+} from '../types.js';
+import { Channel, WebsocketClient } from '../ws-client.js';
 
 /**
  * React hook to subscribe to the updates of the app data for

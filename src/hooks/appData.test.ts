@@ -9,12 +9,12 @@ import {
   S3_FILE_BLOB_RESPONSE,
   UNAUTHORIZED_RESPONSE,
   buildMockLocalContext,
-} from '../../test/constants';
-import { Endpoint, mockHook, setUpTest } from '../../test/utils';
-import { buildDownloadAppDataFileRoute, buildGetAppDataRoute } from '../api/routes';
-import { MOCK_TOKEN } from '../config/constants';
-import { AUTH_TOKEN_KEY, LOCAL_CONTEXT_KEY, appDataKeys } from '../config/keys';
-import { MissingApiHostError } from '../config/utils';
+} from '../../test/constants.js';
+import { Endpoint, mockHook, setUpTest } from '../../test/utils.js';
+import { buildDownloadAppDataFileRoute, buildGetAppDataRoute } from '../api/routes.js';
+import { MOCK_TOKEN } from '../config/constants.js';
+import { AUTH_TOKEN_KEY, LOCAL_CONTEXT_KEY, appDataKeys } from '../config/keys.js';
+import { MissingApiHostError } from '../config/utils.js';
 
 const { hooks, wrapper, queryClient } = setUpTest();
 const itemId = v4();

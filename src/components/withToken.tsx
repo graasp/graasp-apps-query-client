@@ -2,7 +2,7 @@ import React, { ReactElement, createContext } from 'react';
 
 import { UseQueryResult } from '@tanstack/react-query';
 
-import { Token } from '../types';
+import { Token } from '../types.js';
 
 const TokenContext = createContext<string>('');
 

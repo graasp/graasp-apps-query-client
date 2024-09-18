@@ -10,8 +10,8 @@ import {
   PermissionLevel,
 } from '@graasp/sdk';
 
-import { buildContext } from '../hooks/postMessage';
-import { Database } from '../types';
+import { buildContext } from '../hooks/postMessage.js';
+import { Database } from '../types.js';
 
 export const MOCK_SERVER_MEMBER: CompleteMember = MemberFactory({
   id: 'mock-member-id',

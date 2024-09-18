@@ -4,16 +4,21 @@ import { renderHook } from '@testing-library/react';
 import { v4 } from 'uuid';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import { API_HOST, buildMockLocalContext } from '../../test/constants';
-import { mockHook, mockWindowForPostMessage, setUpTest } from '../../test/utils';
-import { defaultContextValue } from '../components/withContext';
-import { DEFAULT_CONTEXT, DEFAULT_LANG, DEFAULT_PERMISSION, MOCK_TOKEN } from '../config/constants';
+import { API_HOST, buildMockLocalContext } from '../../test/constants.js';
+import { mockHook, mockWindowForPostMessage, setUpTest } from '../../test/utils.js';
+import { defaultContextValue } from '../components/withContext.js';
+import {
+  DEFAULT_CONTEXT,
+  DEFAULT_LANG,
+  DEFAULT_PERMISSION,
+  MOCK_TOKEN,
+} from '../config/constants.js';
 import {
   MissingAppKeyError,
   MissingAppOriginError,
   MissingMessageChannelPortError,
-} from '../config/errors';
-import { AUTH_TOKEN_KEY, LOCAL_CONTEXT_KEY, buildPostMessageKeys } from '../config/keys';
+} from '../config/errors.js';
+import { AUTH_TOKEN_KEY, LOCAL_CONTEXT_KEY, buildPostMessageKeys } from '../config/keys.js';
 
 const mockItemId = 'mock-item-id';
 const POST_MESSAGE_KEYS = buildPostMessageKeys(mockItemId);

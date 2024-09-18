@@ -7,12 +7,12 @@ import {
   FIXTURE_CONTEXT,
   UNAUTHORIZED_RESPONSE,
   buildMockLocalContext,
-} from '../../test/constants';
-import { mockHook, setUpTest } from '../../test/utils';
-import { buildGetContextRoute } from '../api/routes';
-import { MOCK_TOKEN } from '../config/constants';
-import { AUTH_TOKEN_KEY, LOCAL_CONTEXT_KEY, buildAppContextKey } from '../config/keys';
-import { MissingApiHostError } from '../config/utils';
+} from '../../test/constants.js';
+import { mockHook, setUpTest } from '../../test/utils.js';
+import { buildGetContextRoute } from '../api/routes.js';
+import { MOCK_TOKEN } from '../config/constants.js';
+import { AUTH_TOKEN_KEY, LOCAL_CONTEXT_KEY, buildAppContextKey } from '../config/keys.js';
+import { MissingApiHostError } from '../config/utils.js';
 
 const { hooks, wrapper, queryClient } = setUpTest();
 const itemId = v4();

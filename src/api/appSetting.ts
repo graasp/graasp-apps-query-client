@@ -1,14 +1,14 @@
 import { AppSetting, appendQueryParamToUrl } from '@graasp/sdk';
 
-import { ApiData, Data } from '../types';
-import configureAxios from './axios';
+import { ApiData, Data } from '../types.js';
+import configureAxios from './axios.js';
 import {
   buildDeleteAppSettingRoute,
   buildDownloadAppSettingFileRoute,
   buildGetAppSettingsRoute,
   buildPatchAppSettingRoute,
   buildPostAppSettingRoute,
-} from './routes';
+} from './routes.js';
 
 const axios = configureAxios();
 

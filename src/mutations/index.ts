@@ -1,8 +1,8 @@
-import { QueryClientConfig } from '../types';
-import appActionMutations from './appAction';
-import appMutations from './appData';
-import appSettingMutations from './appSetting';
-import chatBotMutations from './chatBot';
+import { QueryClientConfig } from '../types.js';
+import appActionMutations from './appAction.js';
+import appMutations from './appData.js';
+import appSettingMutations from './appSetting.js';
+import chatBotMutations from './chatBot.js';
 
 const configureMutations = (queryConfig: QueryClientConfig) => ({
   ...appMutations(queryConfig),

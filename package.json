@@ -7,6 +7,14 @@
   "source": "./src/index.ts",
   "types": "./dist/index.d.ts",
   "type": "module",
+  "exports": {
+    ".": {
+      "default": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      }
+    }
+  },
   "sideEffects": false,
   "repository": "git@github.com:graasp/graasp-apps-query-client.git",
   "author": "Graasp",
@@ -19,7 +27,7 @@
   "license": "AGPL3.0-only",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "tsc -p tsconfig.build.json",
     "commit-msg": "commitlint --edit $1",
     "hooks:uninstall": "husky uninstall",
     "hooks:install": "husky install",

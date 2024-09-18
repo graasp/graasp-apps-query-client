@@ -12,10 +12,10 @@ import {
 import { Factory, Model, Response, RestSerializer, Server, createServer } from 'miragejs';
 import { v4 } from 'uuid';
 
-import { API_ROUTES } from '../../api/routes';
-import { Database } from '../../types';
-import { MOCK_SERVER_MEMBER, buildDatabase, buildMockLocalContext } from '../fixtures';
-import { ExternalUrls } from '../types';
+import { API_ROUTES } from '../../api/routes.js';
+import { Database } from '../../types.js';
+import { MOCK_SERVER_MEMBER, buildDatabase, buildMockLocalContext } from '../fixtures.js';
+import { ExternalUrls } from '../types.js';
 
 const {
   buildGetAppDataRoute,

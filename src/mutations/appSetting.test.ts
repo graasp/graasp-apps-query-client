@@ -12,16 +12,16 @@ import {
   UNAUTHORIZED_RESPONSE,
   buildAppSetting,
   buildMockLocalContext,
-} from '../../test/constants';
-import { mockMutation, setUpTest, waitForMutation } from '../../test/utils';
+} from '../../test/constants.js';
+import { mockMutation, setUpTest, waitForMutation } from '../../test/utils.js';
 import {
   buildDeleteAppSettingRoute,
   buildPatchAppSettingRoute,
   buildPostAppSettingRoute,
-} from '../api/routes';
-import { MOCK_TOKEN } from '../config/constants';
-import { AUTH_TOKEN_KEY, LOCAL_CONTEXT_KEY, appSettingKeys } from '../config/keys';
-import { patchAppSettingRoutine, postAppSettingRoutine } from '../routines';
+} from '../api/routes.js';
+import { MOCK_TOKEN } from '../config/constants.js';
+import { AUTH_TOKEN_KEY, LOCAL_CONTEXT_KEY, appSettingKeys } from '../config/keys.js';
+import { patchAppSettingRoutine, postAppSettingRoutine } from '../routines/index.js';
 
 const mockedNotifier = vi.fn();
 const { wrapper, queryClient, mutations } = setUpTest({

@@ -1,10 +1,10 @@
 import { LocalContext } from '@graasp/sdk';
 
-import { Database } from '../types';
-import { buildDatabase, buildMockLocalContext } from './fixtures';
-import { mockMirageServer } from './mirage/server';
-import { mockServiceWorkerServer } from './msw/server';
-import { ExternalUrls } from './types';
+import { Database } from '../types.js';
+import { buildDatabase, buildMockLocalContext } from './fixtures.js';
+import { mockMirageServer } from './mirage/server.js';
+import { mockServiceWorkerServer } from './msw/server.js';
+import { ExternalUrls } from './types.js';
 
 export enum MockSolution {
   MirageJS = 'mirage',

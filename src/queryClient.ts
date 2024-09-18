@@ -9,13 +9,17 @@ import {
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
-import { API_ROUTES } from './api/routes';
-import { CACHE_TIME_MILLISECONDS, STALE_TIME_MILLISECONDS } from './config/constants';
-import { QUERY_KEYS, buildPostMessageKeys } from './config/keys';
-import configureHooks from './hooks';
-import configureMutations from './mutations';
-import { OptionalQueryClientConfig, QueryClientConfig, RequiredQueryClientConfig } from './types';
-import { getWebsocketClient } from './ws';
+import { API_ROUTES } from './api/routes.js';
+import { CACHE_TIME_MILLISECONDS, STALE_TIME_MILLISECONDS } from './config/constants.js';
+import { QUERY_KEYS, buildPostMessageKeys } from './config/keys.js';
+import configureHooks from './hooks/index.js';
+import configureMutations from './mutations/index.js';
+import {
+  OptionalQueryClientConfig,
+  QueryClientConfig,
+  RequiredQueryClientConfig,
+} from './types.js';
+import { getWebsocketClient } from './ws/index.js';
 
 const makeWsHostFromAPIHost = (apiHost?: string): string | undefined => {
   if (apiHost) {

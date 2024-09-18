@@ -1,12 +1,12 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 
-import * as Api from '../api';
-import { MissingFileIdError } from '../config/errors';
-import { appSettingKeys } from '../config/keys';
-import { getApiHost, getData, getDataOrThrow } from '../config/utils';
-import { Data, QueryClientConfig } from '../types';
-import { configureWsAppSettingHooks } from '../ws/hooks/app';
-import { WebsocketClient } from '../ws/ws-client';
+import * as Api from '../api/index.js';
+import { MissingFileIdError } from '../config/errors.js';
+import { appSettingKeys } from '../config/keys.js';
+import { getApiHost, getData, getDataOrThrow } from '../config/utils.js';
+import { Data, QueryClientConfig } from '../types.js';
+import { configureWsAppSettingHooks } from '../ws/hooks/app.js';
+import { WebsocketClient } from '../ws/ws-client.js';
 
 export default (queryConfig: QueryClientConfig, websocketClient?: WebsocketClient) => {
   const { retry, cacheTime, staleTime } = queryConfig;
