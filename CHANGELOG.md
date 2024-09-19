@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.7.0](https://github.com/graasp/graasp-apps-query-client/compare/v3.6.0...v3.7.0) (2024-09-19)
+
+
+### Features
+
+* build with typescript ([#402](https://github.com/graasp/graasp-apps-query-client/issues/402)) ([41dccc9](https://github.com/graasp/graasp-apps-query-client/commit/41dccc9ccc04f12e50005632d845af01a6423987))
+
+
+### Bug Fixes
+
+* **deps:** update dependency @emotion/react to v11.13.3 ([#390](https://github.com/graasp/graasp-apps-query-client/issues/390)) ([faa0800](https://github.com/graasp/graasp-apps-query-client/commit/faa0800efb045471d444766af9bb5716d1dabe35))
+* **deps:** update dependency axios to v1.7.7 ([#388](https://github.com/graasp/graasp-apps-query-client/issues/388)) ([ff450f7](https://github.com/graasp/graasp-apps-query-client/commit/ff450f7eec1ada83a77da9ba88d0b09f597f4981))
+* **deps:** update dependency msw to v2.4.8 ([#397](https://github.com/graasp/graasp-apps-query-client/issues/397)) ([a4c1313](https://github.com/graasp/graasp-apps-query-client/commit/a4c1313cb8c969bbf0c6294c2d9bfd9eae9890b4))
+* **deps:** update mui (non-major) to v5.16.7 ([#385](https://github.com/graasp/graasp-apps-query-client/issues/385)) ([fde31a9](https://github.com/graasp/graasp-apps-query-client/commit/fde31a925f4a9e503ce8869620a8b740d2ae6449))
+* move sdk to peer dependency ([#398](https://github.com/graasp/graasp-apps-query-client/issues/398)) ([3ffc5ac](https://github.com/graasp/graasp-apps-query-client/commit/3ffc5ac465ba7178271b254a47d545f644d76ace))
+* update release-please workflow ([052576e](https://github.com/graasp/graasp-apps-query-client/commit/052576ee5bd54b8be77826f9f7550c8829f2184d))
+
 ## [3.6.0](https://github.com/graasp/graasp-apps-query-client/compare/v3.5.2...v3.6.0) (2024-09-17)
 
 
