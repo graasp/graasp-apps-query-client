@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.7.1](https://github.com/graasp/graasp-apps-query-client/compare/v3.7.0...v3.7.1) (2024-09-23)
+
+
+### Bug Fixes
+
+* **deps:** update dependency msw to v2.4.9 ([#409](https://github.com/graasp/graasp-apps-query-client/issues/409)) ([b642353](https://github.com/graasp/graasp-apps-query-client/commit/b6423539d6b1206e33d06060c05ce0e2847713bd))
+
 ## [3.7.0](https://github.com/graasp/graasp-apps-query-client/compare/v3.6.0...v3.7.0) (2024-09-19)
 
 
