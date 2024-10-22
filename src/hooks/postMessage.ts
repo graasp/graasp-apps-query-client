@@ -7,6 +7,7 @@ import { useEffect } from 'react';
 import { LocalContext } from '@graasp/sdk';
 
 import { useQuery, useQueryClient } from '@tanstack/react-query';
+import debounce from 'lodash.debounce';
 
 import * as Api from '../api/index.js';
 import {
@@ -314,14 +315,14 @@ const configurePostMessageHooks = (queryConfig: QueryClientConfig) => {
 
     useEffect(() => {
       if (!queryConfig.isStandalone) {
-        const sendHeight = (height: number): void => {
+        const sendHeight = debounce((height: number): void => {
           console.debug('[app-postMessage] Sending height', height);
           console.debug('communication channel is', communicationChannel);
           communicationChannel?.postMessage({
             type: POST_MESSAGE_KEYS.POST_AUTO_RESIZE,
             payload: height,
           });
-        };
+        }, 150); // TODO: factor out
         if (!communicationChannel) {
           const error = new MissingMessageChannelPortError();
           console.error(error);
@@ -340,7 +341,10 @@ const configurePostMessageHooks = (queryConfig: QueryClientConfig) => {
         });
         resizeObserver.observe(document.body);
 
-        return () => resizeObserver.disconnect();
+        return () => {
+          sendHeight.cancel();
+          resizeObserver.disconnect();
+        };
       }
       return () => {};
       // eslint-disable-next-line react-hooks/exhaustive-deps
