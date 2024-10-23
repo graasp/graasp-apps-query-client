@@ -17,3 +17,5 @@ export const MOCK_TOKEN = 'mock-token';
 export const APP_ACTIONS_TOPIC = 'app-actions';
 export const APP_DATA_TOPIC = 'app-data';
 export const APP_SETTINGS_TOPIC = 'app-settings';
+
+export const DEBOUNCE_TIME_AUTORESIZE = 150; // Unit: ms

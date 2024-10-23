@@ -34,6 +34,7 @@ export type OptionalQueryClientConfig = {
   WS_HOST?: string;
   enableWebsocket: boolean;
   isStandalone: boolean;
+  debounceTimeAutoResize: number;
 
   /**
    * @deprecated Use GRAASP_APP_KEY instead
