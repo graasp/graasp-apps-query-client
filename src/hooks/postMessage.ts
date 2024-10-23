@@ -322,7 +322,7 @@ const configurePostMessageHooks = (queryConfig: QueryClientConfig) => {
             type: POST_MESSAGE_KEYS.POST_AUTO_RESIZE,
             payload: height,
           });
-        }, 150); // TODO: factor out
+        }, queryConfig.debounceTimeAutoResize);
         if (!communicationChannel) {
           const error = new MissingMessageChannelPortError();
           console.error(error);
