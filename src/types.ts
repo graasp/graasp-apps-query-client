@@ -34,6 +34,14 @@ export type OptionalQueryClientConfig = {
   WS_HOST?: string;
   enableWebsocket: boolean;
   isStandalone: boolean;
+  /**
+   * Time in milliseconds for debouncing the autoresize hook defined in {@link postMessage}.
+   * Sending the height from the app to the parent window will be delayed until after
+   * `debounceTimeAutoResize` milliseconds have elapsed since the last time the height was
+   * sent.
+   * @see {@link https://lodash.com/docs/#debounce}
+   */
+  debounceTimeAutoResize: number;
 
   /**
    * @deprecated Use GRAASP_APP_KEY instead
