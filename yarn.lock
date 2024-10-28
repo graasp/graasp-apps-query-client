@@ -1004,7 +1004,7 @@ __metadata:
     husky: "npm:9.1.6"
     lodash.debounce: "npm:4.0.8"
     miragejs: "npm:0.1.48"
-    msw: "npm:2.4.11"
+    msw: "npm:2.4.13"
     nock: "npm:13.5.5"
     prettier: "npm:3.3.3"
     react: "npm:18.3.1"
@@ -1082,17 +1082,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@inquirer/confirm@npm:^3.0.0":
-  version: 3.2.0
-  resolution: "@inquirer/confirm@npm:3.2.0"
+"@inquirer/confirm@npm:^4.0.0":
+  version: 4.0.1
+  resolution: "@inquirer/confirm@npm:4.0.1"
   dependencies:
-    "@inquirer/core": "npm:^9.1.0"
-    "@inquirer/type": "npm:^1.5.3"
-  checksum: 10/6b032a26c64075dc14769558720b17f09bc6784a223bbf2c85ec42e491be6ce4c4b83518433c47e05d7e8836ba680ab1b2f6b9c553410d4326582308a1fd2259
+    "@inquirer/core": "npm:^9.2.1"
+    "@inquirer/type": "npm:^2.0.0"
+  checksum: 10/9f80834fcba308b047f4953abee4ff3837693400402797bd160dee64c019a63d9d9d866bbbf03d56f4aae8013c27991a0d405765120fe49aea2a57103af53426
   languageName: node
   linkType: hard
 
-"@inquirer/core@npm:^9.1.0":
+"@inquirer/core@npm:^9.2.1":
   version: 9.2.1
   resolution: "@inquirer/core@npm:9.2.1"
   dependencies:
@@ -1116,15 +1116,6 @@ __metadata:
   version: 1.0.6
   resolution: "@inquirer/figures@npm:1.0.6"
   checksum: 10/1b9023d331c41f09d0848b8920885d535cdaf52edd782009e003b2f3b2df6a6a6a26fb8ecd05eb3c3df3df9d080e042ca525438a1513cdcc4410f3eefce3e4e0
-  languageName: node
-  linkType: hard
-
-"@inquirer/type@npm:^1.5.3":
-  version: 1.5.5
-  resolution: "@inquirer/type@npm:1.5.5"
-  dependencies:
-    mute-stream: "npm:^1.0.0"
-  checksum: 10/bd3f3d7510785af4ad599e042e99e4be6380f52f79f3db140fe6fed0a605acf27b1a0a20fb5cc688eaf7b8aa0c36dacb1d89c7bba4586f38cbf58ba9f159e7b5
   languageName: node
   linkType: hard
 
@@ -1263,9 +1254,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mswjs/interceptors@npm:^0.35.8":
-  version: 0.35.8
-  resolution: "@mswjs/interceptors@npm:0.35.8"
+"@mswjs/interceptors@npm:^0.36.5":
+  version: 0.36.5
+  resolution: "@mswjs/interceptors@npm:0.36.5"
   dependencies:
     "@open-draft/deferred-promise": "npm:^2.2.0"
     "@open-draft/logger": "npm:^0.3.0"
@@ -1273,7 +1264,7 @@ __metadata:
     is-node-process: "npm:^1.2.0"
     outvariant: "npm:^1.4.3"
     strict-event-emitter: "npm:^0.5.1"
-  checksum: 10/e8406f0c368d3efda581542c64cf4d04f189ac1fcb74f4162129460a050806e5f4414d235ec5cf47e93c6ddcb1fbf0f1f6aa4304fea63e1e8771b5c59daee216
+  checksum: 10/a6f72135220d88034e50f9a0391a8679057c34b85ce9bcb343d9f5df4ce47e747ec61853d04a77831ef4ce6ab57fd877f990738df89874215ce2a64448e78a30
   languageName: node
   linkType: hard
 
@@ -5772,15 +5763,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"msw@npm:2.4.11":
-  version: 2.4.11
-  resolution: "msw@npm:2.4.11"
+"msw@npm:2.4.13":
+  version: 2.4.13
+  resolution: "msw@npm:2.4.13"
   dependencies:
     "@bundled-es-modules/cookie": "npm:^2.0.0"
     "@bundled-es-modules/statuses": "npm:^1.0.1"
     "@bundled-es-modules/tough-cookie": "npm:^0.1.6"
-    "@inquirer/confirm": "npm:^3.0.0"
-    "@mswjs/interceptors": "npm:^0.35.8"
+    "@inquirer/confirm": "npm:^4.0.0"
+    "@mswjs/interceptors": "npm:^0.36.5"
     "@open-draft/until": "npm:^2.1.0"
     "@types/cookie": "npm:^0.6.0"
     "@types/statuses": "npm:^2.0.4"
@@ -5800,7 +5791,7 @@ __metadata:
       optional: true
   bin:
     msw: cli/index.js
-  checksum: 10/d073ede4bfc7f1f41f7a0cb05b3d20d9befc1658e53faacd3f217a7cb78e3e748a3ee8e937e2a4d93fd09f16b35cba00d71df767736dd567ac15fd8e01aa7d6e
+  checksum: 10/db48a8897f6ee97457c227aed47460d27a4add8200bd576d323edae32fcd863bb746c2b6fa2aba4f3c4956ab18c97f366dbf78a4dc122c7d442a5202757dab7a
   languageName: node
   linkType: hard
 
