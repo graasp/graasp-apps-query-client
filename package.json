@@ -54,7 +54,7 @@
     "http-status-codes": "2.3.0",
     "lodash.debounce": "4.0.8",
     "miragejs": "0.1.48",
-    "msw": "2.6.0",
+    "msw": "2.6.5",
     "uuid": "11.0.2"
   },
   "devDependencies": {
