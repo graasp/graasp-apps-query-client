@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.7.3](https://github.com/graasp/graasp-apps-query-client/compare/v3.7.2...v3.7.3) (2024-11-19)
+
+
+### Bug Fixes
+
+* **deps:** update dependency dexie to v4.0.10 ([#443](https://github.com/graasp/graasp-apps-query-client/issues/443)) ([5d8f737](https://github.com/graasp/graasp-apps-query-client/commit/5d8f7376c79b330169c1da31fae46a0c991334ff))
+* **deps:** update dependency msw to v2.6.5 ([#439](https://github.com/graasp/graasp-apps-query-client/issues/439)) ([4384b91](https://github.com/graasp/graasp-apps-query-client/commit/4384b911ef91dbfc2e0dc5df17773e371f25586a))
+* **deps:** update dependency uuid to v11.0.3 ([#441](https://github.com/graasp/graasp-apps-query-client/issues/441)) ([4162563](https://github.com/graasp/graasp-apps-query-client/commit/4162563c347fc1cb0080a3893eb45641a530d953))
+* **deps:** update mui (non-major) to v6.1.7 ([#442](https://github.com/graasp/graasp-apps-query-client/issues/442)) ([cd5d6f1](https://github.com/graasp/graasp-apps-query-client/commit/cd5d6f146974bc30b71a6de84a5db2e8960a71f8))
+
 ## [3.7.2](https://github.com/graasp/graasp-apps-query-client/compare/v3.7.1...v3.7.2) (2024-11-06)
 
 
