@@ -45,8 +45,8 @@
     "test:ci": "yarn && cd example && yarn && cd .. && yarn test"
   },
   "dependencies": {
-    "@emotion/react": "11.13.3",
-    "@emotion/styled": "11.13.0",
+    "@emotion/react": "11.13.5",
+    "@emotion/styled": "11.13.5",
     "@mui/icons-material": "6.1.7",
     "@mui/material": "6.1.7",
     "axios": "1.7.7",
