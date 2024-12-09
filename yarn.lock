@@ -1095,7 +1095,7 @@ __metadata:
     husky: "npm:9.1.7"
     lodash.debounce: "npm:4.0.8"
     miragejs: "npm:0.1.48"
-    msw: "npm:2.6.5"
+    msw: "npm:2.6.8"
     nock: "npm:13.5.6"
     prettier: "npm:3.3.3"
     react: "npm:18.3.1"
@@ -5852,9 +5852,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"msw@npm:2.6.5":
-  version: 2.6.5
-  resolution: "msw@npm:2.6.5"
+"msw@npm:2.6.8":
+  version: 2.6.8
+  resolution: "msw@npm:2.6.8"
   dependencies:
     "@bundled-es-modules/cookie": "npm:^2.0.1"
     "@bundled-es-modules/statuses": "npm:^1.0.1"
@@ -5881,7 +5881,7 @@ __metadata:
       optional: true
   bin:
     msw: cli/index.js
-  checksum: 10/ab02f44c9e54a5b0fe2ef61689886869a4b353f2757d73dea9dbfd16d5d3c1d4fe9b52d5b718bb9e0c18bfa7c6ce95ce8a31bf97f156cef312837c8157309304
+  checksum: 10/35d551c0fffe8b12cf174ae70ea8560bcc2e67f8887f20b43c7a3903ad4dc4272dc1c92f9ae68d30ad56435b391bcc5379495b1f9f0badcd4f2fdb614fbf7244
   languageName: node
   linkType: hard
 
