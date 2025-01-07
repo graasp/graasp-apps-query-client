@@ -9,7 +9,7 @@ import { buildMSWMocks } from './handlers.js';
 /**
  * Creates and launches a mock server using MSW and IndexedDB
  */
-export const mockServiceWorkerServer = ({
+export const mockServiceWorkerServer = async ({
   appContext,
   database,
   dbName,
@@ -17,7 +17,7 @@ export const mockServiceWorkerServer = ({
   appContext: Partial<LocalContext> & Pick<LocalContext, 'itemId'>;
   database?: Database;
   dbName?: string;
-}): { worker: SetupWorker; resetDB: (data: Database) => void } => {
+}): Promise<{ worker: SetupWorker; resetDB: (data: Database) => void }> => {
   const fullAppContext = buildMockLocalContext(appContext);
   const mswMocks = buildMSWMocks(fullAppContext, database, dbName);
   mswMocks.db.on('populate', (transaction) => {
@@ -50,7 +50,7 @@ export const mockServiceWorkerServer = ({
 
   // This configures a Service Worker with the given request handlers.
   const worker = setupWorker(...mswMocks.handlers);
-  worker.start({ waitUntilReady: true, onUnhandledRequest: 'warn' });
+  await worker.start({ waitUntilReady: true, onUnhandledRequest: 'warn' });
 
   return { worker, resetDB: mswMocks.db.resetDB };
 };

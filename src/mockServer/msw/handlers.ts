@@ -92,8 +92,8 @@ export const buildMSWMocks = (
       const reqItemId = params.itemId;
       const dataType = new URL(request.url).searchParams.get('type');
 
-      const memberId = getMemberIdFromToken(request.headers.get('Authorization'));
-      const permission = await getPermissionForMember(memberId);
+      const accountId = getMemberIdFromToken(request.headers.get('Authorization'));
+      const permission = await getPermissionForMember(accountId);
       let value;
       if (permission === PermissionLevel.Admin) {
         // return all app data of the item
@@ -113,7 +113,7 @@ export const buildMSWMocks = (
               return true;
             }
             // if app data is not "visibility item" only return app data that were created by the member or addressed to him
-            return x.creator?.id === memberId || x.account.id === memberId;
+            return x.creator?.id === accountId || x.account.id === accountId;
           })
           // filter the app data by type if specified
           .and((x) => (dataType ? x.type === dataType : true))
@@ -129,8 +129,8 @@ export const buildMSWMocks = (
       async ({ request, params }) => {
         const reqItemId = params.itemId;
         const item = await getItemFromId(reqItemId as string);
-        const memberId = getMemberIdFromToken(request.headers.get('Authorization'));
-        const account = await getMemberFromId(memberId);
+        const accountId = getMemberIdFromToken(request.headers.get('Authorization'));
+        const account = await getMemberFromId(accountId);
 
         const body = (await request.json()) as Pick<AppData, 'data' | 'type'> & {
           visibility?: AppData['visibility'];
@@ -213,9 +213,9 @@ export const buildMSWMocks = (
       async ({ params, request }) => {
         const reqItemId = params.itemId;
         const item = await getItemFromId(reqItemId as string);
-        const memberId = getMemberIdFromToken(request.headers.get('Authorization'));
-        const member = await getMemberFromId(memberId);
-        const permission = await getPermissionForMember(memberId);
+        const accountId = getMemberIdFromToken(request.headers.get('Authorization'));
+        const account = await getMemberFromId(accountId);
+        const permission = await getPermissionForMember(accountId);
 
         // when member is not an admin -> return an error
         if (PermissionLevel.Admin !== permission) {
@@ -228,7 +228,7 @@ export const buildMSWMocks = (
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
           item,
-          creator: member,
+          creator: account,
           ...body,
         };
         const newId = await db.appSetting.add(appSetting);
@@ -247,8 +247,8 @@ export const buildMSWMocks = (
       async ({ params, request }) => {
         const { id } = params;
 
-        const memberId = getMemberIdFromToken(request.headers.get('Authorization'));
-        const permission = await getPermissionForMember(memberId);
+        const accountId = getMemberIdFromToken(request.headers.get('Authorization'));
+        const permission = await getPermissionForMember(accountId);
 
         // when member is not an admin -> return an error
         if (PermissionLevel.Admin !== permission) {
@@ -276,8 +276,8 @@ export const buildMSWMocks = (
       async ({ params, request }) => {
         const { id } = params;
 
-        const memberId = getMemberIdFromToken(request.headers.get('Authorization'));
-        const permission = await getPermissionForMember(memberId);
+        const accountId = getMemberIdFromToken(request.headers.get('Authorization'));
+        const permission = await getPermissionForMember(accountId);
 
         // when member is not an admin -> return an error
         if (PermissionLevel.Admin !== permission) {
@@ -310,9 +310,9 @@ export const buildMSWMocks = (
       }
 
       const item = await getItemFromId(itemId as string);
-      const memberId = getMemberIdFromToken(request.headers.get('Authorization'));
-      const member = await getMemberFromId(memberId);
-      const permission = await getPermissionForMember(memberId);
+      const accountId = getMemberIdFromToken(request.headers.get('Authorization'));
+      const member = await getMemberFromId(accountId);
+      const permission = await getPermissionForMember(accountId);
 
       // when member is not an admin -> return an error
       if (PermissionLevel.Admin !== permission) {
@@ -374,8 +374,8 @@ export const buildMSWMocks = (
 
     // GET /app-items/:itemId/app-action
     http.get(`${apiHost}/${buildGetAppActionsRoute(':itemId')}`, async ({ request }) => {
-      const memberId = getMemberIdFromToken(request.headers.get('Authorization'));
-      const permission = await getPermissionForMember(memberId);
+      const accountId = getMemberIdFromToken(request.headers.get('Authorization'));
+      const permission = await getPermissionForMember(accountId);
       let value;
       switch (permission) {
         case PermissionLevel.Admin:
@@ -386,7 +386,7 @@ export const buildMSWMocks = (
         case PermissionLevel.Read:
         default:
           // get only own actions
-          value = await db.appAction.where('memberId').equals(memberId).toArray();
+          value = await db.appAction.where('accountId').equals(accountId).toArray();
           break;
       }
       return HttpResponse.json(value);
@@ -398,8 +398,8 @@ export const buildMSWMocks = (
       async ({ params, request }) => {
         const reqItemId = params.itemId;
         const item = await getItemFromId(reqItemId as string);
-        const memberId = getMemberIdFromToken(request.headers.get('Authorization'));
-        const account = await getMemberFromId(memberId);
+        const accountId = getMemberIdFromToken(request.headers.get('Authorization'));
+        const account = await getMemberFromId(accountId);
 
         const body = (await request.json()) as Pick<AppAction, 'data' | 'type'>;
         const appAction: AppAction = {
@@ -450,16 +450,16 @@ export const buildMSWMocks = (
       return new HttpResponse();
     }),
     http.get('/__mocks/context', async ({ request }) => {
-      const memberId = getMemberIdFromToken(request.headers.get('Authorization'));
-      const value = await db.appContext.where('memberId').equals(memberId).first();
+      const accountId = getMemberIdFromToken(request.headers.get('Authorization'));
+      const value = await db.appContext.where('accountId').equals(accountId).first();
       return HttpResponse.json(value);
     }),
     http.post('/__mocks/context', async ({ request }) => {
-      const memberId = getMemberIdFromToken(request.headers.get('Authorization'));
+      const accountId = getMemberIdFromToken(request.headers.get('Authorization'));
       const body = (await request.json()) as Partial<LocalContext>;
-      await db.appContext.update(memberId, body);
+      await db.appContext.update(accountId, body);
 
-      const value = await db.appContext.where('memberId').equals(memberId).first();
+      const value = await db.appContext.where('memberId').equals(accountId).first();
       return HttpResponse.json(value);
     }),
   ];
