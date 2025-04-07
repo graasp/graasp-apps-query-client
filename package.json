@@ -50,7 +50,7 @@
     "@mui/icons-material": "6.1.10",
     "@mui/material": "6.1.10",
     "axios": "1.7.9",
-    "dexie": "4.0.10",
+    "dexie": "4.0.11",
     "http-status-codes": "2.3.0",
     "lodash.debounce": "4.0.8",
     "miragejs": "0.1.48",
