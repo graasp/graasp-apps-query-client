@@ -1,5 +1,6 @@
 import {
-  Hydrate,
+  hydrate as Hydrate,
+  QueryCache,
   QueryClient,
   QueryClientProvider,
   dehydrate,
@@ -93,6 +94,14 @@ const configure = (
         retry: queryConfig.retry,
       },
     },
+    queryCache: new QueryCache({
+      onError: (error: Error, query) => {
+        queryConfig?.notifier?.({
+          type: (query.meta?.errorType as string) || 'UNKNOWN',
+          payload: { error },
+        });
+      },
+    }),
   });
 
   // set up mutations given config

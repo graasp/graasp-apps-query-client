@@ -58,6 +58,7 @@ export const setUpWsTest = (args?: {
     refetchOnWindowFocus: false,
     keepPreviousData: true,
     isStandalone: false,
+    debounceTimeAutoResize: 100,
   };
 
   const { QueryClientProvider, useMutation } = configureQueryClient(queryConfig);

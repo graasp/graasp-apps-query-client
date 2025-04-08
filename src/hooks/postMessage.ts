@@ -242,18 +242,16 @@ const configurePostMessageHooks = (queryConfig: QueryClientConfig) => {
           });
         });
       },
-      onError: (error: Error) => {
-        queryConfig.notifier({
-          type: getLocalContextRoutine.FAILURE,
-          payload: { error },
-        });
+      meta: {
+        errorType: getLocalContextRoutine.FAILURE,
       },
-      onSettled: () => {
-        // stop to listen to window message
-        if (getLocalContextFunction) {
-          window.removeEventListener('message', getLocalContextFunction);
-        }
-      },
+      // TODO: Replace this function
+      // onSettled: () => {
+      //   // stop to listen to window message
+      //   if (getLocalContextFunction) {
+      //     window.removeEventListener('message', getLocalContextFunction);
+      //   }
+      // },
     });
   };
 
@@ -301,11 +299,8 @@ const configurePostMessageHooks = (queryConfig: QueryClientConfig) => {
           });
         });
       },
-      onError: (error: Error) => {
-        queryConfig?.notifier?.({
-          type: getAuthTokenRoutine.FAILURE,
-          payload: { error },
-        });
+      meta: {
+        errorType: getAuthTokenRoutine.FAILURE,
       },
     });
   };

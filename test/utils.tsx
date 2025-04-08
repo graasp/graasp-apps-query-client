@@ -2,7 +2,7 @@ import { ReactNode } from 'react';
 
 import { HttpMethod } from '@graasp/sdk';
 
-import { QueryObserverBaseResult, UseMutationResult } from '@tanstack/react-query';
+import { QueryObserverBaseResult, UseMutationResult, UseQueryResult } from '@tanstack/react-query';
 import { RenderHookOptions, renderHook, waitFor } from '@testing-library/react';
 import { StatusCodes } from 'http-status-codes';
 import nock, { InterceptFunction, ReplyHeaders, Scope } from 'nock';
@@ -36,6 +36,7 @@ export const setUpTest = (args?: Args) => {
     WS_HOST,
     enableWebsocket: false,
     isStandalone: false,
+    debounceTimeAutoResize: 500, // Default value.
   };
 
   const { queryClient, QueryClientProvider, mutations, useMutation } =
@@ -64,7 +65,7 @@ interface MockArguments<TProps> {
   endpoints?: Endpoint[];
   wrapper: RenderHookOptions<TProps>['wrapper'];
 }
-interface MockHookArguments<TProps, TResult extends QueryObserverBaseResult>
+interface MockHookArguments<TProps, TResult extends UseQueryResult<unknown, unknown>>
   extends MockArguments<TProps> {
   hook: (props: TProps) => TResult;
   enabled?: boolean;
@@ -99,7 +100,7 @@ export const mockEndpoints = (endpoints: Endpoint[]): nock.Scope => {
   return server;
 };
 
-export const mockHook = async <TProps, TResult extends QueryObserverBaseResult>({
+export const mockHook = async <TProps, TResult extends UseQueryResult<unknown, unknown>>({
   endpoints,
   hook,
   wrapper,
