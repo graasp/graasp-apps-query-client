@@ -53,7 +53,7 @@ const GraaspContextDevTool = ({ members, context, setContext }: Props): JSX.Elem
       headers: [['authorization', token]],
     }).then(() => {
       console.debug('invalidating local Context');
-      queryClient.refetchQueries(LOCAL_CONTEXT_KEY);
+      queryClient.refetchQueries({queryKey: LOCAL_CONTEXT_KEY });
     });
   };
 

@@ -12,22 +12,21 @@ export default (queryConfig: QueryClientConfig) => {
 
   const usePostChatBot = (gptModelVersion?: GPTVersion) => {
     const queryClient = useQueryClient();
-    return useMutation(
-      async (payload: ChatBotMessage[]) => {
+    return useMutation({
+      mutationFn: async (payload: ChatBotMessage[]) => {
         const apiHost = getApiHost(queryClient);
         const data = getDataOrThrow(queryClient);
 
         return Api.postChatBot({ ...data, body: payload, apiHost, gptModelVersion });
       },
-      {
-        onError: (error: Error) => {
-          notifier?.({
-            type: postChatBotRoutine.FAILURE,
-            payload: { error },
-          });
-        },
+
+      onError: (error: Error) => {
+        notifier?.({
+          type: postChatBotRoutine.FAILURE,
+          payload: { error },
+        });
       },
-    );
+    });
   };
 
   return { usePostChatBot };

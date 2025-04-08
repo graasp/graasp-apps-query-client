@@ -18,119 +18,124 @@ export default (queryConfig: QueryClientConfig) => {
 
   const usePostAppSetting = () => {
     const queryClient = useQueryClient();
-    return useMutation(
-      (payload: Partial<AppSetting>) => {
+    return useMutation({
+      mutationFn: (payload: Partial<AppSetting>) => {
         const apiHost = getApiHost(queryClient);
         const data = getDataOrThrow(queryClient);
         return Api.postAppSetting({ ...data, body: payload, apiHost });
       },
-      {
-        onSuccess: (newAppSetting: AppSetting) => {
-          queryConfig?.notifier?.({ type: postAppSettingRoutine.SUCCESS, payload: newAppSetting });
-        },
-        onError: (error: Error) => {
-          queryConfig?.notifier?.({ type: postAppSettingRoutine.FAILURE, payload: { error } });
-        },
-        onSettled: () => {
-          // only invalidate when websockets are disabled (ws update the cache when they are enabled)
-          if (!enableWebsocket) {
-            // invalidate all appSettings queries that depend on a single id
-            queryClient.invalidateQueries(appSettingKeys.allSingles());
-          }
-        },
+
+      onSuccess: (newAppSetting: AppSetting) => {
+        queryConfig?.notifier?.({ type: postAppSettingRoutine.SUCCESS, payload: newAppSetting });
       },
-    );
+
+      onError: (error: Error) => {
+        queryConfig?.notifier?.({ type: postAppSettingRoutine.FAILURE, payload: { error } });
+      },
+
+      onSettled: () => {
+        // only invalidate when websockets are disabled (ws update the cache when they are enabled)
+        if (!enableWebsocket) {
+          // invalidate all appSettings queries that depend on a single id
+          queryClient.invalidateQueries({ queryKey: appSettingKeys.allSingles() });
+        }
+      },
+    });
   };
 
   const usePatchAppSetting = () => {
     const queryClient = useQueryClient();
-    return useMutation(
-      (payload: Partial<AppSetting> & { id: string }) => {
+    return useMutation({
+      mutationFn: (payload: Partial<AppSetting> & { id: string }) => {
         const apiHost = getApiHost(queryClient);
         const data = getDataOrThrow(queryClient);
         return Api.patchAppSetting({ ...data, id: payload.id, data: payload.data, apiHost });
       },
-      {
-        onMutate: async (payload) => {
-          let context;
-          const { itemId } = getData(queryClient);
-          const prevData = queryClient.getQueryData<AppSetting[]>(appSettingKeys.single(itemId));
-          if (itemId && prevData) {
-            const newData = prevData.map((appData) =>
-              appData.id === payload.id ? { ...appData, ...payload } : appData,
-            );
-            queryClient.setQueryData(appSettingKeys.single(itemId), newData);
-            context = prevData;
-          }
-          return context;
-        },
-        onSuccess: (newData) => {
-          queryConfig?.notifier?.({ type: postAppSettingRoutine.SUCCESS, payload: newData });
-        },
-        onError: (error: Error, _payload, prevData) => {
-          queryConfig?.notifier?.({ type: patchAppSettingRoutine.FAILURE, payload: { error } });
 
-          if (prevData) {
-            const { itemId } = getData(queryClient);
-            const data = queryClient.getQueryData<AppSetting[]>(appSettingKeys.single(itemId));
-            if (itemId && data) {
-              queryClient.setQueryData(appSettingKeys.single(itemId), prevData);
-            }
-          }
-        },
-        onSettled: () => {
-          if (!enableWebsocket) {
-            queryClient.invalidateQueries(appSettingKeys.allSingles());
-          }
-        },
+      onMutate: async (payload) => {
+        let context;
+        const { itemId } = getData(queryClient);
+        const prevData = queryClient.getQueryData<AppSetting[]>(appSettingKeys.single(itemId));
+        if (itemId && prevData) {
+          const newData = prevData.map((appData) =>
+            appData.id === payload.id ? { ...appData, ...payload } : appData,
+          );
+          queryClient.setQueryData(appSettingKeys.single(itemId), newData);
+          context = prevData;
+        }
+        return context;
       },
-    );
+
+      onSuccess: (newData) => {
+        queryConfig?.notifier?.({ type: postAppSettingRoutine.SUCCESS, payload: newData });
+      },
+
+      onError: (error: Error, _payload, prevData) => {
+        queryConfig?.notifier?.({ type: patchAppSettingRoutine.FAILURE, payload: { error } });
+
+        if (prevData) {
+          const { itemId } = getData(queryClient);
+          const data = queryClient.getQueryData<AppSetting[]>(appSettingKeys.single(itemId));
+          if (itemId && data) {
+            queryClient.setQueryData(appSettingKeys.single(itemId), prevData);
+          }
+        }
+      },
+
+      onSettled: () => {
+        if (!enableWebsocket) {
+          queryClient.invalidateQueries({ queryKey: appSettingKeys.allSingles() });
+        }
+      },
+    });
   };
 
   const useDeleteAppSetting = () => {
     const queryClient = useQueryClient();
-    return useMutation(
-      (payload: { id: string }) => {
+    return useMutation({
+      mutationFn: (payload: { id: string }) => {
         const apiHost = getApiHost(queryClient);
         const data = getDataOrThrow(queryClient);
         return Api.deleteAppSetting({ ...data, id: payload.id, apiHost });
       },
-      {
-        onMutate: async (payload) => {
-          const { itemId } = getDataOrThrow(queryClient);
-          const prevData = queryClient.getQueryData<AppSetting[]>(appSettingKeys.single(itemId));
-          if (prevData && itemId) {
-            queryClient.setQueryData(
-              appSettingKeys.single(itemId),
-              prevData?.filter(({ id: appDataId }) => appDataId !== payload.id),
-            );
-          }
-          return prevData;
-        },
-        onSuccess: (prevData) => {
-          queryConfig?.notifier?.({ type: deleteAppSettingRoutine.SUCCESS, payload: prevData });
-        },
-        onError: (error: Error, _payload, prevData) => {
-          queryConfig?.notifier?.({ type: deleteAppSettingRoutine.FAILURE, payload: { error } });
 
-          if (prevData) {
-            const { itemId } = getData(queryClient);
-            const data = queryClient.getQueryData<AppSetting[]>(appSettingKeys.single(itemId));
-            if (itemId && data) {
-              queryClient.setQueryData(appSettingKeys.single(itemId), prevData);
-            }
-          }
-        },
-        onSettled: () => {
-          if (!enableWebsocket) {
-            const { itemId } = getData(queryClient);
-            if (itemId) {
-              queryClient.invalidateQueries(appSettingKeys.allSingles());
-            }
-          }
-        },
+      onMutate: async (payload) => {
+        const { itemId } = getDataOrThrow(queryClient);
+        const prevData = queryClient.getQueryData<AppSetting[]>(appSettingKeys.single(itemId));
+        if (prevData && itemId) {
+          queryClient.setQueryData(
+            appSettingKeys.single(itemId),
+            prevData?.filter(({ id: appDataId }) => appDataId !== payload.id),
+          );
+        }
+        return prevData;
       },
-    );
+
+      onSuccess: (prevData) => {
+        queryConfig?.notifier?.({ type: deleteAppSettingRoutine.SUCCESS, payload: prevData });
+      },
+
+      onError: (error: Error, _payload, prevData) => {
+        queryConfig?.notifier?.({ type: deleteAppSettingRoutine.FAILURE, payload: { error } });
+
+        if (prevData) {
+          const { itemId } = getData(queryClient);
+          const data = queryClient.getQueryData<AppSetting[]>(appSettingKeys.single(itemId));
+          if (itemId && data) {
+            queryClient.setQueryData(appSettingKeys.single(itemId), prevData);
+          }
+        }
+      },
+
+      onSettled: () => {
+        if (!enableWebsocket) {
+          const { itemId } = getData(queryClient);
+          if (itemId) {
+            queryClient.invalidateQueries({ queryKey: appSettingKeys.allSingles() });
+          }
+        }
+      },
+    });
   };
 
   // this mutation is used for its callback and invalidate the keys
@@ -140,29 +145,30 @@ export default (queryConfig: QueryClientConfig) => {
    */
   const useUploadAppSettingFile = () => {
     const queryClient = useQueryClient();
-    return useMutation(
-      async ({ error }: { data?: unknown; error?: Error }) => {
+    return useMutation({
+      mutationFn: async ({ error }: { data?: unknown; error?: Error }) => {
         if (error) throw new Error(JSON.stringify(error));
       },
-      {
-        onSuccess: (_result, { data, error }) => {
-          if (error) {
-            throw error;
-          } else {
-            notifier?.({ type: uploadAppSettingFileRoutine.SUCCESS, payload: { data } });
-          }
-        },
-        onError: (_error, { error }) => {
-          notifier?.({ type: uploadAppSettingFileRoutine.FAILURE, payload: { error } });
-        },
-        onSettled: () => {
-          const { itemId } = getData(queryClient);
-          if (itemId) {
-            queryClient.invalidateQueries(appSettingKeys.allSingles());
-          }
-        },
+
+      onSuccess: (_result, { data, error }) => {
+        if (error) {
+          throw error;
+        } else {
+          notifier?.({ type: uploadAppSettingFileRoutine.SUCCESS, payload: { data } });
+        }
       },
-    );
+
+      onError: (_error, { error }) => {
+        notifier?.({ type: uploadAppSettingFileRoutine.FAILURE, payload: { error } });
+      },
+
+      onSettled: () => {
+        const { itemId } = getData(queryClient);
+        if (itemId) {
+          queryClient.invalidateQueries({ queryKey: appSettingKeys.allSingles() });
+        }
+      },
+    });
   };
 
   return { usePostAppSetting, usePatchAppSetting, useDeleteAppSetting, useUploadAppSettingFile };
