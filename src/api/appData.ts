@@ -95,9 +95,7 @@ export const getAppDataFile = async ({
   return axios
     .get<Blob>(url, {
       responseType: 'blob',
-      headers: {
-        'Access-Control-Allow-Credentials': true,
-      },
+      withCredentials: false,
     })
     .then(({ data }) => data);
 };
