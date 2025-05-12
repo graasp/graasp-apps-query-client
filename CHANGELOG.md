@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.7.5](https://github.com/graasp/graasp-apps-query-client/compare/v3.7.4...v3.7.5) (2025-05-12)
+
+
+### Bug Fixes
+
+* remove credentials for app data blob download ([#464](https://github.com/graasp/graasp-apps-query-client/issues/464)) ([1535645](https://github.com/graasp/graasp-apps-query-client/commit/15356457818240cc9ee44791152c23a3ef30e1eb))
+
 ## [3.7.4](https://github.com/graasp/graasp-apps-query-client/compare/v3.7.3...v3.7.4) (2025-04-07)
 
 
