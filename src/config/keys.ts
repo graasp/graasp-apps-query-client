@@ -42,6 +42,7 @@ export const buildPostMessageKeys = (itemId: UUID) =>
     GET_AUTH_TOKEN_SUCCESS: `GET_AUTH_TOKEN_SUCCESS_${itemId}`,
     GET_AUTH_TOKEN_FAILURE: `GET_AUTH_TOKEN_FAILURE_${itemId}`,
     POST_AUTO_RESIZE: `POST_AUTO_RESIZE_${itemId}`,
+    POST_MAX_RESIZE: `POST_MAX_RESIZE_${itemId}`,
   }) as const;
 
 export const QUERY_KEYS = {
