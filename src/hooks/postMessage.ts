@@ -351,10 +351,36 @@ const configurePostMessageHooks = (queryConfig: QueryClientConfig) => {
     }, [itemId]);
   };
 
+  const useMaxResize = (itemId: string): void => {
+    const POST_MESSAGE_KEYS = buildPostMessageKeys(itemId);
+
+    useEffect(() => {
+      if (!queryConfig.isStandalone) {
+        const sendHeight = (): void => {
+          console.debug('[app-postMessage] Requesting max height');
+          console.debug('communication channel is', communicationChannel);
+          communicationChannel?.postMessage({
+            type: POST_MESSAGE_KEYS.POST_MAX_RESIZE,
+          });
+        };
+        if (!communicationChannel) {
+          const error = new MissingMessageChannelPortError();
+          console.error(error);
+        }
+
+        // send the current height first: since useEffect runs after the first render
+        // the host is never informed of the initial app size otherwise
+        sendHeight();
+      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [itemId]);
+  };
+
   return {
     useGetLocalContext,
     useAuthToken,
     useAutoResize,
+    useMaxResize,
   };
 };
 
