@@ -47,8 +47,8 @@
   "dependencies": {
     "@emotion/react": "11.13.5",
     "@emotion/styled": "11.13.5",
-    "@mui/icons-material": "6.1.10",
-    "@mui/material": "6.1.10",
+    "@mui/icons-material": "6.4.12",
+    "@mui/material": "6.4.12",
     "axios": "1.7.9",
     "dexie": "4.0.11",
     "http-status-codes": "2.3.0",
