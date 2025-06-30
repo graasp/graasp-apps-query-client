@@ -1,5 +1,8 @@
 {
   "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "allowJs": true
+  },
   "include": [
     "vite.config.ts",
     "src/**/*.tsx",
@@ -7,6 +10,6 @@
     "test/**/*.ts",
     "test/**/*.tsx",
     "./commitlint.config.ts",
-    "./eslint.config.mjs"
+    "eslint.config.mjs"
   ]
 }

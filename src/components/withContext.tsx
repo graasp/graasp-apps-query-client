@@ -1,4 +1,4 @@
-import React, { ReactElement, createContext, useContext } from 'react';
+import React, { type JSX, type ReactElement, createContext, useContext } from 'react';
 
 import { Refresh } from '@mui/icons-material';
 import { Button, Stack, Typography } from '@mui/material';

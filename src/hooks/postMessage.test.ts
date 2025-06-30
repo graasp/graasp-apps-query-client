@@ -243,17 +243,14 @@ describe.skip('PostMessage Hooks', () => {
 
   describe('useAutoResize', () => {
     class MockResizeObserver implements ResizeObserver {
-      // eslint-disable-next-line class-methods-use-this
       disconnect(): void {
         throw new Error('Method not implemented.');
       }
 
-      // eslint-disable-next-line class-methods-use-this
       observe(): void {
         throw new Error('Method not implemented.');
       }
 
-      // eslint-disable-next-line class-methods-use-this
       unobserve(): void {
         throw new Error('Method not implemented.');
       }

@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import type { JSX, ReactNode } from 'react';
 
 import { QueryClient } from '@tanstack/react-query';
 import { renderHook } from '@testing-library/react';
@@ -21,11 +21,11 @@ const MockedWebsocket = (handlers: Handler[]) => ({
 export const setUpWsTest = (args?: {
   enableWebsocket?: boolean;
   notifier?: Notifier;
-  // eslint-disable-next-line @typescript-eslint/ban-types
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
   configureWsAppActionsHooks: Function;
-  // eslint-disable-next-line @typescript-eslint/ban-types
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
   configureWsAppDataHooks: Function;
-  // eslint-disable-next-line @typescript-eslint/ban-types
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
   configureWsAppSettingHooks: Function;
 }) => {
   const {
@@ -58,6 +58,7 @@ export const setUpWsTest = (args?: {
     refetchOnWindowFocus: false,
     keepPreviousData: true,
     isStandalone: false,
+    debounceTimeAutoResize: 500,
   };
 
   const { QueryClientProvider, useMutation } = configureQueryClient(queryConfig);

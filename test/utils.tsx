@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import type { JSX, ReactNode } from 'react';
 
 import { HttpMethod } from '@graasp/sdk';
 
@@ -36,6 +36,7 @@ export const setUpTest = (args?: Args) => {
     WS_HOST,
     enableWebsocket: false,
     isStandalone: false,
+    debounceTimeAutoResize: 500,
   };
 
   const { queryClient, QueryClientProvider, mutations, useMutation } =
@@ -161,7 +162,7 @@ export const mockWindowForPostMessage = (
       postMessage: vi.fn(),
     },
     removeEventListener: vi.fn(),
-    // eslint-disable-next-line @typescript-eslint/ban-types, arrow-body-style
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
     addEventListener: (_event: string, f: Function) => {
       // check event listener works as expected given mock input
       return f(event);

@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { type JSX, useContext, useState } from 'react';
 
 import { Construction, Loop } from '@mui/icons-material';
 import {

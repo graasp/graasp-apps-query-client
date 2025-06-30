@@ -9,9 +9,7 @@ import globals from 'globals';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-// eslint-disable-next-line no-underscore-dangle, @typescript-eslint/naming-convention
 const __filename = fileURLToPath(import.meta.url);
-// eslint-disable-next-line no-underscore-dangle, @typescript-eslint/naming-convention
 const __dirname = path.dirname(__filename);
 const compat = new FlatCompat({
   baseDirectory: __dirname,
@@ -25,8 +23,6 @@ export default [
   },
   ...fixupConfigRules(
     compat.extends(
-      'airbnb',
-      'airbnb-typescript',
       'plugin:import/typescript',
       'prettier',
       'plugin:react/recommended',
@@ -83,13 +79,6 @@ export default [
       '@typescript-eslint/ban-ts-comment': 'off',
       'import/no-import-module-exports': 'off',
 
-      'import/no-extraneous-dependencies': [
-        'error',
-        {
-          devDependencies: true,
-        },
-      ],
-
       'no-console': [
         'warn',
         {
@@ -99,16 +88,6 @@ export default [
 
       'import/prefer-default-export': 'off',
       'prettier/prettier': 'error',
-
-      'import/extensions': [
-        'error',
-        'ignorePackages',
-        {
-          ts: 'never',
-          js: 'never',
-          tsx: 'never',
-        },
-      ],
 
       '@typescript-eslint/explicit-function-return-type': [
         'error',
