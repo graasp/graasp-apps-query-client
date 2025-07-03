@@ -333,11 +333,6 @@ export const mockMirageServer = ({
       });
 
       this.post(`/${buildUploadAppDataFilesRoute(currentItem.id)})`, (schema) => {
-        // const appData: Partial<AppData> = {
-        //   data: {},
-        //   itemId: currentItemId,
-        //   memberId: currentMemberId,
-        // }
         return schema.create('appDataResource');
       });
 
