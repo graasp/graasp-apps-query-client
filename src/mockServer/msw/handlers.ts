@@ -7,6 +7,7 @@ import {
   LocalContext,
   Member,
   PermissionLevel,
+  PermissionLevelOptions,
 } from '@graasp/sdk';
 
 import { HttpResponse, RequestHandler, http } from 'msw';
@@ -57,7 +58,7 @@ export const buildMSWMocks = (
   const buildAppSettingDownloadUrl = (id: string): string =>
     `${apiHost}/download-app-setting-url/${id}`;
 
-  const getPermissionForMember = async (accountId: string): Promise<PermissionLevel> => {
+  const getPermissionForMember = async (accountId: string): Promise<PermissionLevelOptions> => {
     const localContextForMember = await db.appContext.get(accountId);
     if (!localContextForMember) {
       throw new Error('Member was not found in localContext database');
@@ -90,6 +91,10 @@ export const buildMSWMocks = (
     // GET /app-items/:itemId/app-data
     http.get(`${apiHost}/${buildGetAppDataRoute(':itemId')}`, async ({ params, request }) => {
       const reqItemId = params.itemId;
+
+      if (!reqItemId) {
+        return HttpResponse.error();
+      }
       const dataType = new URL(request.url).searchParams.get('type');
 
       const memberId = getMemberIdFromToken(request.headers.get('Authorization'));
@@ -194,6 +199,10 @@ export const buildMSWMocks = (
     // GET /app-items/:itemId/app-settings
     http.get(`${apiHost}/${buildGetAppSettingsRoute(':itemId')}`, async ({ params, request }) => {
       const reqItemId = params.itemId;
+
+      if (!reqItemId) {
+        return HttpResponse.error();
+      }
 
       const url = new URL(request.url);
       const settingName = url.searchParams.get('name');

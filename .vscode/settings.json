@@ -1,0 +1,6 @@
+{
+  "sonarlint.connectedMode.project": {
+    "connectionId": "graasp",
+    "projectKey": "graasp_graasp-apps-query-client"
+  }
+}

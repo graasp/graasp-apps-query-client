@@ -332,18 +332,9 @@ export const mockMirageServer = ({
         return localAppData;
       });
 
-      this.post(
-        `/${buildUploadAppDataFilesRoute(currentItem.id)})`,
-        // eslint-disable-next-line arrow-body-style
-        (schema) => {
-          // const appData: Partial<AppData> = {
-          //   data: {},
-          //   itemId: currentItemId,
-          //   memberId: currentMemberId,
-          // }
-          return schema.create('appDataResource');
-        },
-      );
+      this.post(`/${buildUploadAppDataFilesRoute(currentItem.id)})`, (schema) => {
+        return schema.create('appDataResource');
+      });
 
       // OpenAI routes
       this.post(`/${buildPostChatBotRoute(currentItem.id)}`, () => ({

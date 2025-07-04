@@ -1,4 +1,4 @@
-import React, { ReactElement, createContext } from 'react';
+import React, { type JSX, type ReactElement, createContext } from 'react';
 
 import { UseQueryResult } from '@tanstack/react-query';
 
