@@ -1118,7 +1118,7 @@ __metadata:
     "@testing-library/react": "npm:16.3.0"
     "@trivago/prettier-plugin-sort-imports": "npm:5.2.2"
     "@types/lodash.debounce": "npm:^4.0.9"
-    "@types/node": "npm:22.15.34"
+    "@types/node": "npm:22.16.0"
     "@types/react": "npm:19.1.8"
     "@types/react-dom": "npm:19.1.6"
     "@types/uuid": "npm:10.0.0"
@@ -1136,7 +1136,7 @@ __metadata:
     eslint-plugin-prettier: "npm:5.5.1"
     eslint-plugin-react: "npm:7.37.5"
     eslint-plugin-react-hooks: "npm:5.2.0"
-    globals: "npm:16.2.0"
+    globals: "npm:16.3.0"
     happy-dom: "npm:18.0.1"
     http-status-codes: "npm:2.3.0"
     husky: "npm:9.1.7"
@@ -2185,12 +2185,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:22.15.34":
-  version: 22.15.34
-  resolution: "@types/node@npm:22.15.34"
+"@types/node@npm:22.16.0":
+  version: 22.16.0
+  resolution: "@types/node@npm:22.16.0"
   dependencies:
     undici-types: "npm:~6.21.0"
-  checksum: 10/b0fb6674f6c17e3d515531d7f787ccd6676641ba161a6a0e6a93a2d5bc2089fde492eac24b5152a11413bf07a818055a9ec9077d3200b03cf7ea9718470a8417
+  checksum: 10/26ebbbd24749caa4a692664290c53cdca63ec717ca250cd2babf3d3da796e9d3d0b6b9814d160693261b5e881796bf0f3c1887fef355b19e9a78fe27cd5e2ce2
   languageName: node
   linkType: hard
 
@@ -5216,10 +5216,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"globals@npm:16.2.0":
-  version: 16.2.0
-  resolution: "globals@npm:16.2.0"
-  checksum: 10/37fc33502973ebbee5a44b58939aa8574abc00ca1fc4c1d4ec0571a2c6620843ae647eff8bd082adf6bb5975ad221a887522b9a7961125764f0cb6dfab0b7483
+"globals@npm:16.3.0":
+  version: 16.3.0
+  resolution: "globals@npm:16.3.0"
+  checksum: 10/accb0939d993a1c461df8d961ce9911a9a96120929e0a61057ae8e75b7df0a8bf8089da0f4e3a476db0211156416fbd26e222a56f74b389a140b34481c0a72b0
   languageName: node
   linkType: hard
 
