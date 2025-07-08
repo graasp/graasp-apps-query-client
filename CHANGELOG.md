@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.8.0](https://github.com/graasp/graasp-apps-query-client/compare/v3.7.5...v3.8.0) (2025-07-08)
+
+
+### Features
+
+* add maxResize hook ([#469](https://github.com/graasp/graasp-apps-query-client/issues/469)) ([b85d43c](https://github.com/graasp/graasp-apps-query-client/commit/b85d43c33a47f2124644775e6a6b5f07d473372e))
+
+
+### Bug Fixes
+
+* **deps:** update dependency uuid to v11.0.5 ([#460](https://github.com/graasp/graasp-apps-query-client/issues/460)) ([a6e564a](https://github.com/graasp/graasp-apps-query-client/commit/a6e564ab89b312d65d26e06f783766ffcd5a31b8))
+* upgrade dependencies and add sonar lint connection setting ([#470](https://github.com/graasp/graasp-apps-query-client/issues/470)) ([ee2be2e](https://github.com/graasp/graasp-apps-query-client/commit/ee2be2ec602a6328f1928c3bfbe3ccd9f3f58420))
+
 ## [3.7.5](https://github.com/graasp/graasp-apps-query-client/compare/v3.7.4...v3.7.5) (2025-05-12)
 
 
