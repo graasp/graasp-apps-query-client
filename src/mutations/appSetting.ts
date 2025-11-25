@@ -136,7 +136,7 @@ export default (queryConfig: QueryClientConfig) => {
   /**
    * Upload given file as app setting with given name
    */
-  const useUploadSettingFile = () => {
+  const useUploadAppSettingFile = () => {
     const queryClient = useQueryClient();
     return useMutation({
       mutationFn: (payload: { file: Blob; name?: string }) => {
@@ -197,19 +197,11 @@ export default (queryConfig: QueryClientConfig) => {
     );
   };
 
-  /**
-   * @deprecated use useUploadAppSettingFileFeedback
-   * @param {UUID} id parent item id where the file is uploaded in
-   * @param {error} [error] error occurred during the file uploading
-   */
-  const useUploadAppSettingFile = useUploadAppSettingFileFeedback;
-
   return {
     usePostAppSetting,
     usePatchAppSetting,
     useDeleteAppSetting,
     useUploadAppSettingFile,
-    useUploadSettingFile,
     useUploadAppSettingFileFeedback,
   };
 };

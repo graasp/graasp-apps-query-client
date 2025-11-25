@@ -590,11 +590,11 @@ describe('App Settings Mutations', () => {
     });
   });
 
-  describe('useUploadSettingFile', () => {
+  describe('useUploadAppSettingFile', () => {
     const itemId = v4();
     const key = appSettingKeys.single(itemId);
     const route = `/${buildUploadAppSettingFilesRoute(itemId)}`;
-    const mutation = mutations.useUploadSettingFile;
+    const mutation = mutations.useUploadAppSettingFile;
 
     describe('Successful requests', () => {
       const response = OK_RESPONSE;
