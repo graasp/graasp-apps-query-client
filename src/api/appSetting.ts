@@ -8,6 +8,7 @@ import {
   buildGetAppSettingsRoute,
   buildPatchAppSettingRoute,
   buildPostAppSettingRoute,
+  buildUploadAppSettingFilesRoute,
 } from './routes.js';
 
 const axios = configureAxios();
@@ -74,6 +75,35 @@ export const deleteAppSetting = (
     .delete<AppSetting>(`${apiHost}/${buildDeleteAppSettingRoute({ itemId, id })}`, {
       headers: {
         Authorization: `Bearer ${token}`,
+      },
+    })
+    .then(({ data }) => data);
+};
+
+export const uploadAppSettingFile = async (
+  args: ApiData & {
+    name?: string;
+    file: Blob;
+  },
+) => {
+  const { token, itemId, apiHost } = args;
+
+  const payload = new FormData();
+
+  if (args.name) {
+    payload.append('name', args.name);
+  }
+  /* WARNING: this file field needs to be the last one,
+   * otherwise the normal fields can not be read
+   * https://github.com/fastify/fastify-multipart?tab=readme-ov-file#usage
+   */
+  payload.append('files', args.file);
+
+  return axios
+    .post(`${apiHost}/${buildUploadAppSettingFilesRoute(itemId)}`, payload, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        authorization: `Bearer ${token}`,
       },
     })
     .then(({ data }) => data);
