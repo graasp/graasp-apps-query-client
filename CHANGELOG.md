@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [4.0.0](https://github.com/graasp/graasp-apps-query-client/compare/v3.8.0...v4.0.0) (2025-11-27)
+
+
+### ⚠ BREAKING CHANGES
+
+* introduce new `useUploadAppSettingFile` to upload app setting file and rename previous to `useUploadAppSettingFileFeedback` ([#479](https://github.com/graasp/graasp-apps-query-client/issues/479))
+
+### Features
+
+* introduce new `useUploadAppSettingFile` to upload app setting file and rename previous to `useUploadAppSettingFileFeedback` ([#479](https://github.com/graasp/graasp-apps-query-client/issues/479)) ([4f2e04e](https://github.com/graasp/graasp-apps-query-client/commit/4f2e04e3fc0edeeeab73d6faa54c69e3cfa59544))
+
 ## [3.8.0](https://github.com/graasp/graasp-apps-query-client/compare/v3.7.5...v3.8.0) (2025-07-08)
 
 
