@@ -133,12 +133,44 @@ export default (queryConfig: QueryClientConfig) => {
     );
   };
 
-  // this mutation is used for its callback and invalidate the keys
   /**
+   * Upload given file as app setting with given name
+   */
+  const useUploadAppSettingFile = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+      mutationFn: (payload: { file: Blob; name?: string }) => {
+        const apiHost = getApiHost(queryClient);
+        const data = getDataOrThrow(queryClient);
+
+        return Api.uploadAppSettingFile({
+          ...data,
+          file: payload.file,
+          name: payload.name,
+          apiHost,
+        });
+      },
+      onSuccess: (_result, { name }) => {
+        notifier?.({ type: uploadAppSettingFileRoutine.SUCCESS, payload: { name } });
+      },
+      onError: (error: Error) => {
+        notifier?.({ type: uploadAppSettingFileRoutine.FAILURE, payload: { error } });
+      },
+      onSettled: () => {
+        const { itemId } = getData(queryClient);
+        if (itemId) {
+          queryClient.invalidateQueries(appSettingKeys.allSingles());
+        }
+      },
+    });
+  };
+
+  /**
+   * this mutation is used for its callback and invalidate the keys
    * @param {UUID} id parent item id where the file is uploaded in
    * @param {error} [error] error occurred during the file uploading
    */
-  const useUploadAppSettingFile = () => {
+  const useUploadAppSettingFileFeedback = () => {
     const queryClient = useQueryClient();
     return useMutation(
       async ({ error }: { data?: unknown; error?: Error }) => {
@@ -165,5 +197,11 @@ export default (queryConfig: QueryClientConfig) => {
     );
   };
 
-  return { usePostAppSetting, usePatchAppSetting, useDeleteAppSetting, useUploadAppSettingFile };
+  return {
+    usePostAppSetting,
+    usePatchAppSetting,
+    useDeleteAppSetting,
+    useUploadAppSettingFile,
+    useUploadAppSettingFileFeedback,
+  };
 };

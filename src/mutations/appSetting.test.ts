@@ -8,6 +8,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import {
   FIXTURE_APP_SETTINGS,
+  OK_RESPONSE,
   RequestMethods,
   UNAUTHORIZED_RESPONSE,
   buildAppSetting,
@@ -18,6 +19,7 @@ import {
   buildDeleteAppSettingRoute,
   buildPatchAppSettingRoute,
   buildPostAppSettingRoute,
+  buildUploadAppSettingFilesRoute,
 } from '../api/routes.js';
 import { MOCK_TOKEN } from '../config/constants.js';
 import { AUTH_TOKEN_KEY, LOCAL_CONTEXT_KEY, appSettingKeys } from '../config/keys.js';
@@ -583,6 +585,189 @@ describe('App Settings Mutations', () => {
         });
 
         expect(queryClient.getQueryData(key)).toEqual(initData);
+        expect(queryClient.getQueryState(key)?.isInvalidated).toBeFalsy();
+      });
+    });
+  });
+
+  describe('useUploadAppSettingFile', () => {
+    const itemId = v4();
+    const key = appSettingKeys.single(itemId);
+    const route = `/${buildUploadAppSettingFilesRoute(itemId)}`;
+    const mutation = mutations.useUploadAppSettingFile;
+
+    describe('Successful requests', () => {
+      const response = OK_RESPONSE;
+      beforeEach(() => {
+        // set necessary data
+        queryClient.setQueryData(AUTH_TOKEN_KEY, MOCK_TOKEN);
+        queryClient.setQueryData(LOCAL_CONTEXT_KEY, buildMockLocalContext({ itemId }));
+      });
+
+      it('upload app setting', async () => {
+        const initData = [FIXTURE_APP_SETTINGS[1]];
+        queryClient.setQueryData(key, initData);
+
+        const endpoints = [
+          {
+            response,
+            method: RequestMethods.POST,
+            route,
+          },
+        ];
+
+        const mockedMutation = await mockMutation({
+          endpoints,
+          mutation,
+          wrapper,
+        });
+
+        await act(async () => {
+          await mockedMutation.mutateAsync({ file: new Blob(), name: 'name' });
+          await waitForMutation();
+        });
+
+        expect(queryClient.getQueryState(key)?.isInvalidated).toBeTruthy();
+      });
+    });
+
+    describe('Failed requests', () => {
+      it('Unauthorized', async () => {
+        // set necessary data
+        queryClient.setQueryData(AUTH_TOKEN_KEY, MOCK_TOKEN);
+        queryClient.setQueryData(LOCAL_CONTEXT_KEY, buildMockLocalContext({ itemId }));
+
+        queryClient.setQueryData(key, []);
+
+        const response = UNAUTHORIZED_RESPONSE;
+
+        const endpoints = [
+          {
+            response,
+            statusCode: StatusCodes.UNAUTHORIZED,
+            method: RequestMethods.POST,
+            route,
+          },
+        ];
+
+        const mockedMutation = await mockMutation({
+          endpoints,
+          mutation,
+          wrapper,
+        });
+
+        try {
+          await act(async () => {
+            await mockedMutation.mutateAsync({ file: new Blob(), name: 'name' });
+            await waitForMutation();
+          });
+        } catch {
+          // expected to throw
+        }
+        expect(queryClient.getQueryState(key)?.isInvalidated).toBeTruthy();
+      });
+
+      it('Throw if itemId is undefined', async () => {
+        // set necessary data
+        queryClient.setQueryData(AUTH_TOKEN_KEY, MOCK_TOKEN);
+        queryClient.setQueryData(LOCAL_CONTEXT_KEY, { ...buildMockLocalContext(), itemId: null });
+
+        queryClient.setQueryData(key, []);
+
+        const endpoints = [
+          {
+            response: OK_RESPONSE,
+            method: RequestMethods.POST,
+            route,
+          },
+        ];
+
+        const mockedMutation = await mockMutation({
+          endpoints,
+          mutation,
+          wrapper,
+        });
+
+        try {
+          await act(async () => {
+            await mockedMutation.mutateAsync({ file: new Blob(), name: 'name' });
+            await waitForMutation();
+          });
+        } catch {
+          // expected to throw
+        }
+
+        expect(queryClient.getQueryData(key)).toEqual([]);
+        // since the itemId is not defined, we do not check data for its key
+      });
+
+      it('Throw if accountId is undefined', async () => {
+        // set necessary data
+        queryClient.setQueryData(AUTH_TOKEN_KEY, MOCK_TOKEN);
+        queryClient.setQueryData(LOCAL_CONTEXT_KEY, {
+          ...buildMockLocalContext({ itemId }),
+          accountId: null,
+        });
+
+        queryClient.setQueryData(key, []);
+
+        const endpoints = [
+          {
+            response: OK_RESPONSE,
+            method: RequestMethods.POST,
+            route,
+          },
+        ];
+
+        const mockedMutation = await mockMutation({
+          endpoints,
+          mutation,
+          wrapper,
+        });
+
+        try {
+          await act(async () => {
+            await mockedMutation.mutateAsync({ file: new Blob() });
+            await waitForMutation();
+          });
+        } catch {
+          // expected to throw
+        }
+
+        expect(queryClient.getQueryData(key)).toEqual([]);
+        expect(queryClient.getQueryState(key)?.isInvalidated).toBeTruthy();
+      });
+
+      it('Throw if token is undefined', async () => {
+        // set necessary data
+        queryClient.setQueryData(LOCAL_CONTEXT_KEY, buildMockLocalContext({ itemId }));
+
+        queryClient.setQueryData(key, []);
+
+        const endpoints = [
+          {
+            response: OK_RESPONSE,
+            method: RequestMethods.POST,
+            route,
+          },
+        ];
+
+        const mockedMutation = await mockMutation({
+          endpoints,
+          mutation,
+          wrapper,
+        });
+
+        try {
+          await act(async () => {
+            await mockedMutation.mutateAsync({ file: new Blob() });
+            await waitForMutation();
+          });
+        } catch {
+          // expected to throw
+        }
+
+        expect(queryClient.getQueryData(key)).toEqual([]);
         expect(queryClient.getQueryState(key)?.isInvalidated).toBeFalsy();
       });
     });
