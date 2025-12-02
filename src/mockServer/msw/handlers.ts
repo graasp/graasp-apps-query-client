@@ -443,7 +443,9 @@ export const buildMSWMocks = (
     // *************************
     // /app-items/:itemId/chat-bot
     http.post(`${apiHost}/${buildPostChatBotRoute(':itemId')}`, async () => {
+      // adds a delay for realistic use cases
       await delay(5000);
+
       return HttpResponse.json({
         completion: 'biiip boop I am a chatbot',
         model: 'fake-gpt',
