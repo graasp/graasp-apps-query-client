@@ -10,7 +10,7 @@ import {
   PermissionLevelOptions,
 } from '@graasp/sdk';
 
-import { HttpResponse, RequestHandler, http } from 'msw';
+import { HttpResponse, RequestHandler, delay, http } from 'msw';
 import { v4 } from 'uuid';
 
 import { API_ROUTES, buildUploadAppSettingFilesRoute } from '../../api/routes.js';
@@ -442,13 +442,13 @@ export const buildMSWMocks = (
     //       Chatbot
     // *************************
     // /app-items/:itemId/chat-bot
-    http.post(`${apiHost}/${buildPostChatBotRoute(':itemId')}`, async () =>
-      HttpResponse.json({
+    http.post(`${apiHost}/${buildPostChatBotRoute(':itemId')}`, async () => {
+      await delay(5000);
+      return HttpResponse.json({
         completion: 'biiip boop I am a chatbot',
         model: 'fake-gpt',
-        delay: 5000,
-      }),
-    ),
+      });
+    }),
 
     // plumbing
     http.delete('/__mocks/reset', () => {
