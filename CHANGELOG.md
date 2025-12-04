@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [4.1.0](https://github.com/graasp/graasp-apps-query-client/compare/v4.0.0...v4.1.0) (2025-12-04)
+
+
+### Features
+
+* delays chatbot answer in mock server ([#483](https://github.com/graasp/graasp-apps-query-client/issues/483)) ([daf2d6b](https://github.com/graasp/graasp-apps-query-client/commit/daf2d6b03a90019f6e279863433e2d35e50c285d))
+
 ## [4.0.0](https://github.com/graasp/graasp-apps-query-client/compare/v3.8.0...v4.0.0) (2025-11-27)
 
 
