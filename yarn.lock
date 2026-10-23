@@ -1127,7 +1127,7 @@ __metadata:
     "@vitejs/plugin-react": "npm:4.6.0"
     axios: "npm:1.10.0"
     date-fns: "npm:4.1.0"
-    dexie: "npm:4.0.11"
+    dexie: "npm:4.4.7"
     eslint: "npm:9.30.1"
     eslint-config-prettier: "npm:10.1.5"
     eslint-import-resolver-typescript: "npm:4.4.4"
@@ -3872,10 +3872,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dexie@npm:4.0.11":
-  version: 4.0.11
-  resolution: "dexie@npm:4.0.11"
-  checksum: 10/52011f03655ce90aa6701f1e0724a10a3fd6b33d6e1ec72ba27b4392f500df54788e6ed23fd692a62eb50a21ab4fe146e08a85ceca19bbeb62e12269b124b4e2
+"dexie@npm:4.4.7":
+  version: 4.4.7
+  resolution: "dexie@npm:4.4.7"
+  checksum: 10/e721f2e4979cd530c75dd4430cde8ca05213a6ca2b2b473e465d3935eddaca7c545a0c253749f2b3a4e2272489b18da2ad0e6457d5c84c62cf4423f5acf28f61
   languageName: node
   linkType: hard
 
